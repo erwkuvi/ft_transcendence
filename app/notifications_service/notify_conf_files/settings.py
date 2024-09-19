@@ -1,6 +1,5 @@
 # settings.py
 
-from pathlib import Path
 import os
 import environ
 
@@ -8,19 +7,21 @@ env = environ.Env()
 environ.Env.read_env()
 
 # Base directory of the project
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Secret key (keep it secret in production)
-SECRET_KEY = 'django-insecure-3^j@f...5$%3z5^@l'
+SECRET_KEY = os.getenv('SECRET_KEY1')
 
 # Debug mode (set to True for development)
 DEBUG = True
 
 # Allow all hosts (use specific hosts for production)
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'channels',
+	'daphne',
+	'rest_framework',
 	'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,12 +41,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'notifications_conf_files.urls'
+# CORS_ORIGIN_ALLOW_ALL = True
+
+# URL configuration
+ROOT_URLCONF = 'notify_conf_files.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -58,7 +62,20 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'notifications_conf_files.asgi.application'
+ASGI_APPLICATION = 'notify_conf_files.asgi.application'
+WSGI_APPLICATION = 'notify_conf_files.wsgi.application'
+
+#for PostgreSQL
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_NOTIFY_DB', default='karolina2'),
+        'USER': env('POSTGRES_NOTIFY_USER', default='karolina2'),
+        'PASSWORD': env('POSTGRES_NOTIFY_PASSWORD', default='qwerty'),
+        'HOST': env('POSTGRES_NOTIFY_HOST', default='postgres_notify'),
+        'PORT': env('POSTGRES_NOTIFY_PORT', default='5432'),
+    }
+}
 
 CHANNEL_LAYERS = {
     'default': {
@@ -67,13 +84,6 @@ CHANNEL_LAYERS = {
             "hosts": [('redis', 6379)],  # Redis hostname is 'redis' as per Docker Compose
         },
     },
-}
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.dummy',
-        'NAME': '',
-    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -91,6 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_CREDENTIALS = True
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -100,7 +113,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

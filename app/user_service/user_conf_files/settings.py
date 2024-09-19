@@ -11,7 +11,7 @@ environ.Env.read_env()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Secret key (keep it secret in production)
-SECRET_KEY = 'django-insecure-3^j@3f...5$%3&z5^'
+SECRET_KEY = os.getenv('SECRET_KEY3')
 
 # Debug mode (set to True for development)
 DEBUG = True
@@ -113,7 +113,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Directory where static files will be collected
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

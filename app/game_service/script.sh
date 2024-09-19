@@ -2,7 +2,7 @@
 
 echo "
 
-Script for django
+Script for game
 
 "
 

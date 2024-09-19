@@ -5,6 +5,15 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libmariadb-dev \
+        libpq-dev \
+        pkg-config \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -20,5 +29,7 @@ COPY . /app/
 # Expose the port Django will run on
 EXPOSE 3000
 
+RUN chmod +x script.sh
+
 # Command to run the Django server
-CMD ["daphne", "notifications_conf_files.asgi:application", "-b", "0.0.0.0", "-p", "3000"]
+CMD ["./script.sh"]

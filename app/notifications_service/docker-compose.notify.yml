@@ -2,14 +2,33 @@ services:
   notify_django:
     build: .
     container_name: notify_service
+    command: ./script.sh
     ports:
       - "3000:3000"
     depends_on:
       - "redis"
+      - "postgres_notify"
     networks:
       - "notify_network"
     env_file:
       - ../../.env
+    restart: unless-stopped
+
+  postgres_notify:
+    container_name: postgres_notify
+    image: postgres:16
+    env_file:
+      - ../../.env
+    environment:
+      POSTGRES_USER: karolina2
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_HOST: postgres_notify
+      POSTGRES_DB: karolina2
+      POSTGRES_PORT: 5432
+    ports:
+      - "5434:5432"
+    networks:
+      - "notify_network"
     restart: unless-stopped
 
   redis:
@@ -17,6 +36,20 @@ services:
     container_name: notify_redis
     networks:
       - "notify_network"
+  
+  notify_pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_notify
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin2@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8082:80"
+    depends_on:
+      - "postgres_notify"
+    networks:
+      - "notify_network"
+    restart: unless-stopped
   
 networks:
   notify_network:

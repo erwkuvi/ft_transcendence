@@ -33,7 +33,6 @@ services:
     networks:
       - "backend"
 
-
   frontend:
     build: app/frontend_service/
     container_name: frontend_service
@@ -78,6 +77,23 @@ services:
       - "backend"
     restart: unless-stopped
 
+  postgres_notify:
+    container_name: postgres_notify
+    image: postgres:16
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: karolina2
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_HOST: postgres_notify
+      POSTGRES_DB: karolina2
+      POSTGRES_PORT: 5432
+    ports:
+      - "5434:5432"
+    networks:
+      - "backend"
+    restart: unless-stopped
+
   notify_django:
     build: app/notifications_service/
     container_name: notify_service
@@ -85,6 +101,7 @@ services:
       - "3000:3000"
     depends_on:
       - "redis"
+      - "postgres_notify"
     networks:
       - "backend"
     env_file:

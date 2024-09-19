@@ -5,7 +5,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'notifications_conf_files.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'notify_conf_files.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
