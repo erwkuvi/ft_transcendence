@@ -9,7 +9,8 @@ services:
       POSTGRES_DB_HOST: game_postgres
       POSTGRES_PORT: 5432
     depends_on:
-      - "game_postgres"
+      game_postgres:
+        condition: service_healthy
     env_file:
       - .env
     restart: unless-stopped
@@ -26,7 +27,8 @@ services:
       POSTGRES_HOST: postgres_user
       POSTGRES_PORT: 5433
     depends_on:
-      - "postgres_user"
+      postgres_user:
+        condition: service_healthy
     env_file:
       - .env
     restart: unless-stopped
@@ -59,6 +61,11 @@ services:
     networks:
       - "backend"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U karolina1 -d karolina1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgres_user:
     container_name: postgres_user
@@ -76,6 +83,11 @@ services:
     networks:
       - "backend"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U karolina3 -d karolina3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgres_notify:
     container_name: postgres_notify
@@ -93,6 +105,11 @@ services:
     networks:
       - "backend"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U karolina2 -d karolina2"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   notify_django:
     build: app/notifications_service/
@@ -100,8 +117,10 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - "redis"
-      - "postgres_notify"
+      postgres_notify:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - "backend"
     env_file:
@@ -113,6 +132,12 @@ services:
     container_name: notify_redis
     networks:
       - "backend"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   game_pgadmin:
     image: dpage/pgadmin4

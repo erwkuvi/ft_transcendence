@@ -9,4 +9,3 @@ services:
 
 # networks:
 #   front_network:
-#     external: true
