@@ -15,6 +15,11 @@ services:
     networks:
       - "user_network"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U karolina3 -d karolina3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 #this is for going into the database
   userprofile_pgadmin:
@@ -24,7 +29,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin1@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "8081:80"
+      - "8084:80"
     depends_on:
       - "postgres_user"
     networks:
@@ -38,7 +43,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - "postgres_user"
+      postgres_user:
+        condition: service_healthy
     networks:
       - "user_network"
     env_file:

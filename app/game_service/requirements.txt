@@ -6,3 +6,4 @@ mysqlclient
 dj-database-url
 django-environ
 whitenoise
+requests

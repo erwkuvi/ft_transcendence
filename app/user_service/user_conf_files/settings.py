@@ -101,7 +101,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:8081')
+
+CORS_ALLOWED_ORIGINS = [
+    FRONTEND_URL,
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Internationalization

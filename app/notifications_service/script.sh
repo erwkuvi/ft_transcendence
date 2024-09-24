@@ -8,6 +8,7 @@ Script for notify
 
 # Apply database migrations
 python3 manage.py makemigrations
+python3 manage.py collectstatic
 python3 manage.py migrate auth
 python3 manage.py migrate --noinput
 

@@ -12,6 +12,11 @@ services:
     networks:
       - "game_network"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U karolina1 -d karolina1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 #this is for going into the database
   game_pgadmin:
@@ -21,7 +26,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "8080:80"
+      - "8088:80"
     depends_on:
       - game_postgres
     networks:
@@ -35,7 +40,8 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - game_postgres
+      game_postgres:
+        condition: service_healthy
     networks:
       - "game_network"
     env_file:
