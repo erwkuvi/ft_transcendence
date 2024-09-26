@@ -1,19 +1,20 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.9-slim
+# Use Alpine base image
+FROM python:3.9-alpine
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        build-essential \
-        libmariadb-dev \
-        libpq-dev \
-        pkg-config \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
+# Install necessary build dependencies and python libraries
+RUN apk update && apk add --no-cache \
+    gcc \
+    musl-dev \
+    postgresql-dev \
+    libffi-dev \
+    pkgconfig \
+    linux-headers \
+    build-base \
+    && apk del build-base
 
 # Copy the requirements file into the container
 COPY ./requirements.txt .
@@ -21,7 +22,7 @@ COPY ./requirements.txt .
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container
+# Set the working directory and copy the application code
 WORKDIR /code
 COPY . .
 
@@ -30,4 +31,5 @@ EXPOSE 5000
 
 RUN chmod +x script.sh
 
+# Run the start-up script
 CMD ["./script.sh"]

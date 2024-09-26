@@ -2,7 +2,6 @@ Django
 channels
 gunicorn
 psycopg2-binary
-mysqlclient
 channels_redis
 django-environ
 djangorestframework

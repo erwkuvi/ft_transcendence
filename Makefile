@@ -16,7 +16,11 @@ up:
 down:
 	docker-compose down --remove-orphans
 
-re: down up
+re: 
+	docker-compose up --remove-orphans --build 
+
+volumes: 
+	docker volume prune
 
 prune:
 	docker system prune -af

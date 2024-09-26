@@ -2,7 +2,6 @@ Django
 djangorestframework
 gunicorn
 psycopg2-binary
-mysqlclient
 dj-database-url
 django-environ
 whitenoise
