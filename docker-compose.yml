@@ -34,8 +34,23 @@ services:
     restart: unless-stopped
     networks:
       - "backend"
+      - "frontend"
 
-  frontend:
+  nginx_gateway:
+    container_name: nginx_gateway
+    build:
+      context: app/user_service/
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - user_django
+    networks:
+      - "backend"
+    restart: unless-stopped
+
+  frontend_service:
     build: app/frontend_service/
     container_name: frontend_service
     ports:

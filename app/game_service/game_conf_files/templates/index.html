@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test</h1>
+    <button id="fetchData">Fetch Data</button>
+    <pre id="response"></pre>
+
+    <script>
+        document.getElementById('fetchData').onclick = async () => {
+            const username = 'karolina3'; // Hardcoded username
+            const password = '123'; // Hardcoded password
+            let token = '';
+
+            // Step 1: Get the access token
+            try {
+                const tokenResponse = await fetch('http://localhost:8000/api/token/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'username': username,
+                        'password': password
+                    })
+                });
+
+                const tokenData = await tokenResponse.json();
+                if (tokenResponse.ok) {
+                    token = tokenData.access; // Store the access token
+                } else {
+                    document.getElementById('response').textContent = "Failed to authenticate: " + tokenData.detail;
+                    return;
+                }
+            } catch (error) {
+                console.error('Error fetching token:', error);
+                document.getElementById('response').textContent = "Error fetching token: " + error.message;
+                return;
+            }
+
+            // Step 2: Use the token to fetch data from the other service
+            try {
+                const dataResponse = await fetch('http://localhost:8000/api/code/data/', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await dataResponse.json();
+                if (dataResponse.ok) {
+                    document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                } else {
+                    document.getElementById('response').textContent = "Failed to fetch data: " + data.detail;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('response').textContent = "Error fetching data: " + error.message;
+            }
+        };
+    </script>
+</body>
+</html>

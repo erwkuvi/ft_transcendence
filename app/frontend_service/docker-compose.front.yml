@@ -1,5 +1,5 @@
 services:
-  frontend:
+  frontend_service:
     build: .
     container_name: frontend_service
     ports:
