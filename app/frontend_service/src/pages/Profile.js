@@ -17,12 +17,12 @@ const Profile = () => {
 					<p>Games played: <span>0</span></p>
 					<p>Wins: <span>0</span></p>
 				</div>
-				<div className='card basic'>
+				<div className='card basic notifications'>
 					<h2>Friends list</h2>
-					<h4>Online</h4>
-					<p>John</p>
-					<h4>Offline</h4>
-					<p>John</p>
+					<input type="text" id="messageInput" placeholder="Enter a message"/>
+					<button id="sendButton">Send Message</button>
+
+					<script src="../../tests/test.js"></script>
 				</div>
 			</div>
 		</div>
