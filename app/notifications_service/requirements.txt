@@ -1,0 +1,12 @@
+Django
+channels
+gunicorn
+psycopg2-binary
+channels_redis
+django-environ
+djangorestframework
+djangorestframework-simplejwt
+whitenoise
+psycopg2
+daphne
+requests

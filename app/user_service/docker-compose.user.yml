@@ -1,0 +1,69 @@
+services:
+  postgres_user:
+    container_name: postgres_user
+    image: postgres:16
+    env_file:
+      - ../../.env
+    environment:
+      POSTGRES_USER: karolina3
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_HOST: postgres_user
+      POSTGRES_DB: karolina3
+      POSTGRES_PORT: 5432
+    ports:
+      - "5433:5432"
+    networks:
+      - "user_network"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U karolina3 -d karolina3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#this is for going into the database
+  userprofile_pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_user
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin1@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8084:80"
+    depends_on:
+      - "postgres_user"
+    networks:
+      - "user_network"
+    restart: unless-stopped
+
+  user_django:
+    build: .
+    container_name: user_service
+    command: ./script.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres_user:
+        condition: service_healthy
+    networks:
+      - "user_network"
+    env_file:
+      - ../../.env
+    restart: unless-stopped
+
+  nginx_gateway:
+    container_name: nginx_gateway
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - user_django
+    networks:
+      - "user_network"
+    restart: unless-stopped
+  
+networks:
+  user_network:
