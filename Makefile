@@ -1,3 +1,15 @@
+
+
+#logs:
+#	docker-compose logs -f
+#
+#dev:
+#	DOCKERFILE=Dockerfile.dev docker-compose up --build
+#
+#prod:
+#	DOCKERFILE=Dockerfile.prod docker-compose up --build
+.PHONY: up down logs clean re setup front game user notify prune volumes
+
 front:
 	docker-compose -f app/frontend_service/docker-compose.front.yml up --build
 
