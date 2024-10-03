@@ -5,3 +5,6 @@ services:
     container_name: frontend_service
     ports:
       - "8081:80"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - PORT=80
