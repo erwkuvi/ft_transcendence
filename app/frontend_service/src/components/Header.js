@@ -18,7 +18,7 @@ const Header = () => {
 					<Link to="/play">Play</Link>
 					<Link to="/profile">Profile</Link>
 					<Link to="/about">About</Link>
-					<Link to="/" className="authenticate-button">Log in</Link>
+					<Link to="/login">Log in</Link>
 				</nav>
 			</div>
 		</nav>
