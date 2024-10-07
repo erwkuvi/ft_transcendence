@@ -1,5 +1,4 @@
 import React from 'react';
-import Main from '../components/Main';
 import PlayButton from '../components/PlayButton';
 import './TextBox.css';
 
@@ -16,9 +15,7 @@ const Home = () => {
 			<div className="text-box left">
 				<p>But not right now, website is still under construction :)</p>
 			</div>
-			<Main>
-				<PlayButton />
-			</Main>
+			<PlayButton />
 		</div>
 	);
 };
