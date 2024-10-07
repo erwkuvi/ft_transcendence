@@ -1,4 +1,4 @@
-.play-button {
+.login-button {
 	color: black;
 	font-size: 32px;
 	font-weight: 500;
@@ -10,14 +10,14 @@
 	transition: background-color 0.3s, opacity 0.1s, box-shadow 0.2s, transform 0.2s ease;
 }
 
-.play-button:hover {
+.login-button:hover {
 	color: black;
 	transform: translateY(-2px) scale(1.01);
 	background-color: #0bc2b6;
 	box-shadow: 2px 8px 8px rgba(0, 0, 0, 0.4);
 }
 
-.play-button:active {
+.login-button:active {
 	color: black;
 	transform: translateY(0px);
 	background-color: #0da3a5;

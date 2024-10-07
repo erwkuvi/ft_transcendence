@@ -10,7 +10,7 @@ const LogInButton = () => {
 	}
 
 	return (
-		<button className="btn play-button py-3 px-5 mt-5"onClick={handleClick}>
+		<button className="btn login-button py-2 px-5 mt-5"onClick={handleClick}>
 			LOG IN WITH 42
 		</button>
 	);
