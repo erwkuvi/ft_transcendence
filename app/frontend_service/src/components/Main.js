@@ -4,7 +4,7 @@ import './Main.css';
 const Main = ({children}) => {
 	return (
 		<main>
-			<div className="container">
+			<div className="container-fluid">
 				{children}
 			</div>
 		</main>

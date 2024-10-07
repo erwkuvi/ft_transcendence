@@ -11,14 +11,14 @@ const Header = () => {
 					viewBox= "0 0 24 24" clipRule="evenodd" className="icon mr-2 p-0" stroke="currentColor">
 						<path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z"/>
 					</svg>
-					Pong
+					miniPong
 				</Link>
-				<nav className="ml-auto menu">
+				<nav className="ml-auto menu custom-menu">
 					<Link to="/">Home</Link>
 					<Link to="/play">Play</Link>
 					<Link to="/profile">Profile</Link>
 					<Link to="/about">About</Link>
-					<Link to="/" className="authenticate-button">Log in</Link>
+					<Link to="/login">Log in</Link>
 				</nav>
 			</div>
 		</nav>
