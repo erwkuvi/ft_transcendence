@@ -26,3 +26,9 @@
 .text-box h1, .text-box p {
 	margin: 0;
 }
+
+@media (min-width: 768px) {
+	.text-box {
+		font-size: calc(2vw + 1.3rem);
+	}
+}

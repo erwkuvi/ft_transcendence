@@ -56,3 +56,9 @@ body {
 	margin-top: 20px;
 	margin-bottom: 10px;
 }
+
+@media (min-width: 768px) {
+	.page-content h1 {
+		font-size: calc(2.5vw + 1.5em);
+	}
+}
