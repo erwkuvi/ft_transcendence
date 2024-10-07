@@ -6,7 +6,9 @@ const LogIn = () => {
 	return (
 		<div className="page-content">
 			<h1>Log In</h1>
-			<LogInButton />
+			<div className="col d-flex justify-content-center align-items-center">
+				<LogInButton />
+			</div>
 		</div>
 	);
 };

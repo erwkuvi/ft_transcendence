@@ -15,7 +15,9 @@ const Home = () => {
 			<div className="text-box left">
 				<p>But not right now, website is still under construction :)</p>
 			</div>
-			<PlayButton />
+			<div className="col d-flex justify-content-center align-items-center">
+				<PlayButton />
+			</div>
 		</div>
 	);
 };
