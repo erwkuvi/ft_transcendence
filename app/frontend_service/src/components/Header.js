@@ -13,7 +13,7 @@ const Header = () => {
 					</svg>
 					miniPong
 				</Link>
-				<nav className="ml-auto menu">
+				<nav className="ml-auto menu custom-menu">
 					<Link to="/">Home</Link>
 					<Link to="/play">Play</Link>
 					<Link to="/profile">Profile</Link>
