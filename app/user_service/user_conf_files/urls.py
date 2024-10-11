@@ -23,6 +23,7 @@ urlpatterns = [
     path('api/code/data/', different_name, name='different_name'),
     path('', lambda request: redirect('/admin')),  # Redirect root URL to the login page
     path('accounts/', include('django.contrib.auth.urls')),  # This includes the login URL
+    path('management/', include('management.urls')),  # This includes the login URL
     # Include URLs from other apps
     # path('app/', include('app.urls')),
 ]
