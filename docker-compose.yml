@@ -18,13 +18,9 @@ services:
       - "backend"
 
   user_django:
-    #build: app/user_service/
-    build: 
-      context: app/user_service/
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+    build: app/user_service/
     container_name: user_service
-      #command: ./script.sh
-    command: python manage.py runserver 0.0.0.0:8000  # Use Django dev server for auto-reload
+    command: ./script.sh
     ports:
       - "8000:8000"
     environment:
@@ -35,8 +31,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    volumes:
-      - ./app/user_service:/code  # Mount the local user_service folder to /code inside the container
     restart: unless-stopped
     networks:
       - "backend"

@@ -31,8 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'corsheaders',
 	'user_conf_files',
-	'management',
-
 ]
 
 # Middleware configuration
