@@ -1,185 +1,33 @@
 services:
-  game_django:
-    build: app/game_service/
-    container_name: game_service
-    command: ./script.sh
-    ports:
-      - "5000:5000"
-    environment:
-      POSTGRES_DB_HOST: game_postgres
-      POSTGRES_PORT: 5432
-    depends_on:
-      game_postgres:
-        condition: service_healthy
-    env_file:
-      - .env
-    restart: unless-stopped
-    networks:
-      - "backend"
-
-  user_django:
-    build: app/user_service/
-    container_name: user_service
-    command: ./script.sh
-    ports:
-      - "8000:8000"
-    environment:
-      POSTGRES_HOST: postgres_user
-      POSTGRES_PORT: 5433
-    depends_on:
-      postgres_user:
-        condition: service_healthy
-    env_file:
-      - .env
-    restart: unless-stopped
-    networks:
-      - "backend"
-      - "frontend"
-
-  nginx_gateway:
-    container_name: nginx_gateway
+  react:
+    container_name: frontend
     build:
-      context: app/user_service/
-      dockerfile: nginx.Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - user_django
-    networks:
-      - "backend"
-    restart: unless-stopped
-
-  frontend_service:
-    build:
-      context: app/frontend_service/
+      context: frontend/
       dockerfile: ${DOCKERFILE:-Dockerfile.dev}
-    container_name: frontend_service
     ports:
       - "8081:80"
-    networks:
-      - "frontend"
     env_file:
       - .env
+    volumes:
+      - ./frontend/:/app
+      - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
       - PORT=80
-    # volumes:
-    #   - ./app/frontend_service:/app
-
-  game_postgres:
-    image: postgres:16
-    container_name: game_postgres
-    env_file:
-      - .env
-    environment:
-      POSTGRES_USER: karolina1
-      POSTGRES_PASSWORD: 123
-      POSTGRES_HOST: game_postgres
-      POSTGRES_DB: karolina1
-      POSTGRES_PORT: 5432
-    ports:
-      - "5432:5432"
-    networks:
-      - "backend"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U karolina1 -d karolina1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres_user:
-    container_name: postgres_user
-    image: postgres:16
-    env_file:
-      - .env
-    environment:
-      POSTGRES_USER: karolina3
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_HOST: postgres_user
-      POSTGRES_DB: karolina3
-      POSTGRES_PORT: 5433
-    ports:
-      - "5433:5432"
-    networks:
-      - "backend"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U karolina3 -d karolina3"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres_notify:
-    container_name: postgres_notify
-    image: postgres:16
-    env_file:
-      - .env
-    environment:
-      POSTGRES_USER: karolina2
-      POSTGRES_PASSWORD: qwerty
-      POSTGRES_HOST: postgres_notify
-      POSTGRES_DB: karolina2
-      POSTGRES_PORT: 5432
-    ports:
-      - "5434:5432"
-    networks:
-      - "backend"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U karolina2 -d karolina2"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  notify_django:
-    build: app/notifications_service/
-    container_name: notify_service
-    ports:
-      - "3000:3000"
-    depends_on:
-      postgres_notify:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - "backend"
-    env_file:
-      - .env
-    restart: unless-stopped
-
-  redis:
-    image: redis:latest
-    container_name: notify_redis
-    networks:
-      - "backend"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
-
-  game_pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8080:80"
-    depends_on:
-      - game_postgres
-      - postgres_user
-    networks:
-      - "backend"
-    restart: unless-stopped
     
+  django:
+    container_name: backend
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+  # postgresql:
+  #   container_name: database
+
 networks:
-  frontend:
-    name: frontend
-    driver: bridge
-  backend:
-    name: backend
+  net:
+    name: net
     driver: bridge
