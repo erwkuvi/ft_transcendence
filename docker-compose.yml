@@ -3,7 +3,7 @@ services:
     container_name: frontend
     build:
       context: frontend/
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+      dockerfile: Dockerfile.prod
     ports:
       - "8081:80"
     env_file:
@@ -14,7 +14,6 @@ services:
       - ./frontend/:/app
       - /app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=true
       - PORT=80
     
   django:
@@ -26,12 +25,29 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    volumes:
+      - ./backend:/app
     networks:
       - transcend
-  # postgresql:
-  #   container_name: database
+    depends_on:
+      - postgresql
+  
+  postgresql:
+    image: postgres:16
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    networks:
+      - transcend
+    ports:
+      - "5432:5432"
 
 networks:
-  net:
+  transcend:
     name: transcend
     driver: bridge

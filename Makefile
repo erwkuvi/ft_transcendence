@@ -1,6 +1,9 @@
 up:
 	docker-compose up --build
 
+front:
+	docker-compose -f frontend/docker-compose.yml up --build
+
 down:
 	docker-compose down --remove-orphans
 
