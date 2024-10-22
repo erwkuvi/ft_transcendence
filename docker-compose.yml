@@ -8,6 +8,8 @@ services:
       - "8081:80"
     env_file:
       - .env
+    networks:
+      - transcend
     volumes:
       - ./frontend/:/app
       - /app/node_modules
@@ -24,10 +26,12 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    networks:
+      - transcend
   # postgresql:
   #   container_name: database
 
 networks:
   net:
-    name: net
+    name: transcend
     driver: bridge
