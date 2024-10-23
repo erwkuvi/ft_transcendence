@@ -34,6 +34,7 @@ const Profile = () => {
 	const sendMessage = () => {
 		if (socket) {
 			socket.send(JSON.stringify({ message }));
+			setMessage('');
 		}
 	};
 
@@ -60,7 +61,7 @@ const Profile = () => {
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
 					/>
-					<button id="sendButton">Send Message</button>
+					<button id="sendButton" onClick={sendMessage}>Send Message</button>
 				</div>
 			</div>
 		</div>
