@@ -1,7 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Profile.css';
 
 const Profile = () => {
+	const [message, setMessage] = useState('');
+	const [socket, setSocket] = useState(null);
+
+	useEffect(() => {
+		const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
+		setSocket(ws);
+
+		ws.onopen = () => {
+			console.log('WebSocket connection established');
+		};
+
+		ws.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			console.log('Message from server:', data.message);
+		};
+
+		ws.onclose = () => {
+			console.log('WebSocket connection closed');
+		};
+
+		ws.onerror = (error) => {
+			console.error('WebSocket error:', error);
+		};
+
+		return () => {
+			ws.close();
+		};
+	}, []);
+
+	const sendMessage = () => {
+		if (socket) {
+			socket.send(JSON.stringify({ message }));
+		}
+	};
+
 	return (
 		<div className="page-content">
 			<h1>PROFILE</h1>
@@ -19,10 +54,13 @@ const Profile = () => {
 				</div>
 				<div className='card basic notifications'>
 					<h2>Friends list</h2>
-					<input type="text" id="messageInput" placeholder="Enter a message"/>
+					<input type="text"
+						id="messageInput"
+						placeholder="Enter a message"
+						value={message}
+						onChange={(e) => setMessage(e.target.value)}
+					/>
 					<button id="sendButton">Send Message</button>
-
-					<script src="../../tests/test.js"></script>
 				</div>
 			</div>
 		</div>
