@@ -3,18 +3,19 @@ services:
     container_name: frontend
     build:
       context: ./frontend/
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     ports:
       - "8081:80"
     networks:
       - transcend
     volumes:
-      - ./frontend/:/app
+      - ./frontend:/app
       - /app/node_modules
     depends_on:
       - postgresql
       - django
     environment:
+      - CHOKIDAR_USEPOLLING=TRUE
       - PORT=80
     
   django:

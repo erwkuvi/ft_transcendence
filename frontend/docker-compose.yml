@@ -1,9 +1,9 @@
 services:
-  frontend:
+  react:
+    container_name: live_react
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: frontend
     ports:
       - "8081:80"
     volumes:
