@@ -1,4 +1,5 @@
 up:
+	@chmod +x backend/script.sh
 	docker-compose up --build
 
 front:
@@ -10,7 +11,9 @@ down:
 prod:
 	DOCKERFILE=Dockerfile.prod docker-compose up --build
 
-re: down up
+re: down prune
+	docker-compose build --no-cache
+	docker-compose up
 
 prune:
 	docker system prune -af
