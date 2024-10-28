@@ -15,6 +15,8 @@ from pathlib import Path
 import os
 import environ
 
+from datetime import timedelta
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -43,12 +45,14 @@ INSTALLED_APPS = [
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	'corsheaders',
 	'rest_framework',
+    'djoser',
+    'corsheaders',
 	'channels',
 	'game',
 	'notifications',
 	'user_management',
+	'users',
 ]
 
 ASGI_APPLICATION = 'backend.asgi.application'
@@ -76,6 +80,16 @@ CORS_ALLOWED_ORIGINS = [
 	"http://localhost:8081",
 	"http://127.0.0.1:8081",
 ]
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # This is for development
+    #'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -136,20 +150,26 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+#USE_L10N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_URL = 'static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.UserCreateSerializer',
+        'current_user': 'users.serializers.UserSerializer',
+    }
+}

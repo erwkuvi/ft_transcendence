@@ -5,6 +5,9 @@ up:
 front:
 	docker-compose -f frontend/docker-compose.yml up --build
 
+backend:
+	docker-compose -f backend/docker-compose.backend.yml up --build
+
 down:
 	docker-compose down --remove-orphans
 
@@ -18,4 +21,4 @@ re: down prune
 prune:
 	docker system prune -af
 
-.PHONY: up down prod re prune
+.PHONY: up down prod re prune front backend

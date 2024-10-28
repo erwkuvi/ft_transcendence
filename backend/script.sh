@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# echo "
-# 	Script for backend
-# "
+ echo "
+ 	Script for backend
+ "
 
 python3 manage.py makemigrations
 python3 manage.py migrate auth

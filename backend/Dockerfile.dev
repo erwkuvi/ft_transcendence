@@ -20,6 +20,10 @@ RUN apk update && apk add --no-cache \
 	build-base \
 	&& apk del build-base
 
+
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir debugpy flake8 ipython
+
 COPY . /app/
 
 EXPOSE 8000
