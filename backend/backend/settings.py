@@ -51,7 +51,6 @@ INSTALLED_APPS = [
 	'channels',
 	'game',
 	'notifications',
-	'user_management',
 	'users',
 ]
 
@@ -80,6 +79,17 @@ CORS_ALLOWED_ORIGINS = [
 	"http://localhost:8081",
 	"http://127.0.0.1:8081",
 ]
+
+REST_FRAMEWORK = {
+    'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    #    'DEFAULT_PERMISSION_CLASSES': (
+    #        #'rest_framework.permissions.AllowAny',  # This is for development
+    #        'rest_framework.permissions.IsAuthenticated',  # by default
+    #    ),
+}
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
@@ -121,8 +131,8 @@ DATABASES = {
 		'NAME': env('POSTGRES_DB'),
 		'USER': env('POSTGRES_USER'),
 		'PASSWORD': env('POSTGRES_PASSWORD'),
-		'HOST': env('POSTGRES_HOST', default='postgresql'),
-		'PORT': env('POSTGRES_PORT', default='5432'),
+		'HOST': env('POSTGRES_HOST'),
+        'PORT': env('POSTGRES_PORT'),
 	}
 }
 
@@ -153,8 +163,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
-#USE_L10N = True
+USE_L10N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
