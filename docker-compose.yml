@@ -22,7 +22,7 @@ services:
     container_name: backend
     build:
       context: ./backend/
-        dockerfile: Dockerfile
+      dockerfile: Dockerfile
     command: ./script.sh
     ports:
       - "8000:8000"
@@ -31,9 +31,7 @@ services:
     networks:
       - transcend
     volumes:
-      - ./backend/:/app  # Mount the local user_service folder to /code inside the container
-        #volumes:
-        #  - ./backend:/app
+      - ./backend/:/app
     depends_on:
       - postgresql
   
