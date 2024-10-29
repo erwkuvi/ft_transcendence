@@ -1,8 +1,18 @@
 .header {
-	background-color: #3f267800;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+
+[data-bs-theme="dark"] .header {
+	background-color: #2d2c2f;
+}
+
+[data-bs-theme="light"] .header {
+	background-color: #d6d4da;
 }
 
 .logo {
