@@ -17,5 +17,5 @@ if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] &&
     || true
 fi
 
-#python3 manage.py runserver 0.0.0.0:8000
-daphne backend.asgi:application -b 0.0.0.0 -p 8000
+python3 manage.py runserver 0.0.0.0:8000
+#daphne backend.asgi:application -b 0.0.0.0 -p 8000

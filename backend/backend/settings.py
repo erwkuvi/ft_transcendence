@@ -24,6 +24,9 @@ environ.Env.read_env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+MEDIA_URL = ''
+MEDIA_ROOT = os.path.join(BASE_DIR, 'avatars')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -80,15 +83,17 @@ CORS_ALLOWED_ORIGINS = [
 	"http://127.0.0.1:8081",
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    #    'DEFAULT_PERMISSION_CLASSES': (
-    #        #'rest_framework.permissions.AllowAny',  # This is for development
-    #        'rest_framework.permissions.IsAuthenticated',  # by default
-    #    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # This is for development
+        #'rest_framework.permissions.IsAuthenticated',  # by default
+    ),
 }
 
 SIMPLE_JWT = {

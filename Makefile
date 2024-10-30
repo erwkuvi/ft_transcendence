@@ -5,7 +5,7 @@ up:
 front:
 	docker-compose -f frontend/docker-compose.yml up --build
 
-backend:
+back:
 	docker-compose -f backend/docker-compose.backend.yml up --build
 
 down:
