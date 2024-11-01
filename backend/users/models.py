@@ -22,6 +22,9 @@ class PlayerProfile(models.Model):
     def __str__(self):
         return self.display_name
 
+    def __str__(self):
+        return self.user.email  # This will display the email in the profile
+
 
 class Match(models.Model):
     date = models.DateTimeField(auto_now_add=True)

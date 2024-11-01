@@ -20,7 +20,7 @@ urlpatterns = [
     path('api/token/refresh/',
          TokenRefreshView.as_view(),
          name='token_refresh'),
-    path('', lambda request: redirect('api/admin')),
+    path('', lambda request: redirect('/api/admin/')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('users/', include('users.urls')),
     path('auth/', include('djoser.urls')),

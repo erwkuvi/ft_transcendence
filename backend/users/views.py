@@ -48,16 +48,19 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
             status=status.HTTP_400_BAD_REQUEST
         )
 
+    def get_serializer_context(self):
+        return {'request': self.request}
+
     @action(detail=False, methods=['GET', 'PUT'])
     def me(self, request):  # This method is called an custom action
         player_profile = PlayerProfile.objects.get(
             user_id=request.user.id)
         if request.method == 'GET':
-            serializer = PlayerProfileSerializer(player_profile)
+            serializer = PlayerProfileSerializer(player_profile, context=self.get_serializer_context())
             return Response(serializer.data)
         elif request.method == 'PUT':
             serializer = PlayerProfileSerializer(
-                player_profile, data=request.data)
+                player_profile, data=request.data, context=self.get_serializer_context())
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)

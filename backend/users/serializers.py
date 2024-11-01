@@ -30,12 +30,22 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     losses = serializers.IntegerField(read_only=True)
     friends = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     matches_id = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='matches')
+    email = serializers.SerializerMethodField()
 
 
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email'] # 'online_status'
+        
+    def get_email(self, obj):
+        return obj.user.email
+
+    def get_avatar(self, obj):
+        request = self.context.get('request')
+        if request and obj.avatar:
+            return request.build_absolute_uri(obj.avatar.url)
+        return None
 
 
 class SimplePlayerSerializer(serializers.ModelSerializer):
