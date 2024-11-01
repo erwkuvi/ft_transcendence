@@ -1,17 +1,23 @@
 .dropdown {
-	position: absolute;
+	position: relative;
 	float: right;
 	right: 0;
 	top: 100%;
 }
 
-.dropbtn:hover, .dropbtn:focus {
-	background-color: #2980B9;
+.dropbtn {
+	background-color: grey;
+	border: none;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.dropdown {
-	position: relative;
-	display: inline-block;
+.dropbtn:hover, .dropbtn:focus {
+	background-color: rgb(107, 107, 107);
 }
 
 .dropdown-content {
