@@ -25,6 +25,7 @@ class UserSerializer(BaseUserSerializer):
 # Serializer for Player
 class PlayerProfileSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(read_only=True)
     profile_id = serializers.IntegerField(read_only=True, source='id')
     wins = serializers.IntegerField(read_only=True)
     losses = serializers.IntegerField(read_only=True)
@@ -35,11 +36,14 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlayerProfile
-        fields = ['user_id', 'display_name', 'avatar',
+        fields = ['user_id', 'username', 'display_name', 'avatar',
                   'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email'] # 'online_status'
         
     def get_email(self, obj):
         return obj.user.email
+
+    def get_username(self, obj):
+        return obj.user.username
 
     def get_avatar(self, obj):
         request = self.context.get('request')

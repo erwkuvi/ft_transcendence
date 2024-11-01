@@ -57,7 +57,12 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
             user_id=request.user.id)
         if request.method == 'GET':
             serializer = PlayerProfileSerializer(player_profile, context=self.get_serializer_context())
-            return Response(serializer.data)
+            data = serializer.data
+            data['username'] = request.user.username
+            return Response(data)
+#        if request.method == 'GET':
+#            serializer = PlayerProfileSerializer(player_profile, context=self.get_serializer_context())
+#            return Response(serializer.data)
         elif request.method == 'PUT':
             serializer = PlayerProfileSerializer(
                 player_profile, data=request.data, context=self.get_serializer_context())

@@ -83,7 +83,7 @@ const Profile = () => {
 				<div className='card basic'>
 					<h2>Basic Information</h2>
 					<img src={profile.avatar} className='profilepic m-2' width='200' height='200' alt={`${profile.display_name}'s avatar`}/>
-					<p>Username: <span>{profile.display_name}</span></p>
+					<p>Username: <span>{profile.username}</span></p>
 					<p>Email: <span>{profile.email}</span></p>
 				</div>
 				<div className='card basic'>
