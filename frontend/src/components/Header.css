@@ -7,11 +7,15 @@
 	width: 100%;
 }
 
-[data-bs-theme="dark"] .header {
+.notif {
+	margin: 10px 5px 0px auto;
+}
+
+[data-bs-theme="dark"] .menu_bar {
 	background-color: #2d2c2f;
 }
 
-[data-bs-theme="light"] .header {
+[data-bs-theme="light"] .menu_bar {
 	background-color: #d6d4da;
 }
 
