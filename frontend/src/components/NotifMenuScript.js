@@ -1,4 +1,4 @@
-function openDropdown() {
+export function openDropdown() {
 	document.getElementById("drop").classList.toggle("show");
 }
 

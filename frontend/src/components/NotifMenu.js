@@ -1,5 +1,5 @@
 import './NotifMenu.css'
-import {openDropdown} from './NotifMenuScript'
+import { openDropdown } from './NotifMenuScript'
 
 const NotifMenu = () => {
 	return (
