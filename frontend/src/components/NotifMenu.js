@@ -4,7 +4,9 @@ import { openDropdown } from './NotifMenuScript'
 const NotifMenu = () => {
 	return (
 		<div className="dropdown">
-			<button onClick={openDropdown} className="btn btn-secondary dropbtn"> AA </button>
+			<button onClick={openDropdown} className="btn btn-secondary dropbtn">
+				<i className="fas fa-bell bell-icon"></i>
+			</button>
 			<div id="drop" className="dropdown-content">
 				<a className="dropdown-item" href="#">A</a>
 				<a className="dropdown-item" href="#">B</a>
