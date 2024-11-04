@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .validators import validate_file_size
 
 
 class User(AbstractUser):
@@ -11,7 +12,7 @@ class PlayerProfile(models.Model):
     display_name = models.CharField(max_length=50, unique=True)
     avatar = models.ImageField(
         upload_to='avatars/', default='avatar.png',
-        null=True, blank=True)
+        null=True, blank=True, validators=[validate_file_size])
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     friends = models.ManyToManyField("self", blank=True)
