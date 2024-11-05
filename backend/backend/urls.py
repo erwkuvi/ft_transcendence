@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from friends.views import UserListView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -13,6 +14,8 @@ admin.site.site_header = 'Ekuchel\'s Administration'
 admin.site.index_title = 'Awesome Administration stuff'
 
 urlpatterns = [
+    path('friends/', include('friends.urls')), 
+    path('api/users/', UserListView.as_view(), name='user-list'),
     path('api/admin/', admin.site.urls),
     path('api/token/',
          TokenObtainPairView.as_view(),

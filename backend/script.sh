@@ -27,5 +27,57 @@ else
     echo "Superuser not created. Missing environment variables."
 fi
 
+python3 manage.py shell <<EOF
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+users_data = [
+    {
+        'username': 'Lukas',
+        'email': 'user1@example.com',
+        'password': 'password123',
+        'first_name': 'Lukas1',
+        'last_name': 'Lukas2',
+    },
+	{
+        'username': 'Adam',
+        'email': 'user2@example.com',
+        'password': 'password123',
+        'first_name': 'Adam1',
+        'last_name': 'Adam2',
+    },
+	{
+        'username': 'Erwin',
+        'email': 'user3@example.com',
+        'password': 'password123',
+        'first_name': 'Erwin1',
+        'last_name': 'Erwin2',
+    },
+    {
+        'username': 'Yison',
+        'email': 'user4@example.com',
+        'password': 'password123',
+        'first_name': 'Yison1',
+        'last_name': 'Yison2',
+    },
+]
+
+for user_data in users_data:
+    user, created = User.objects.get_or_create(
+        username=user_data['username'],
+        defaults={
+            'email': user_data['email'],
+            'first_name': user_data['first_name'],
+            'last_name': user_data['last_name'],
+        }
+    )
+    if created:
+        user.set_password(user_data['password'])
+        user.save()
+        print(f'User {user.username} created successfully.')
+    else:
+        print(f'User {user.username} already exists.')
+EOF
+
 python3 manage.py runserver 0.0.0.0:8000
 #daphne backend.asgi:application -b 0.0.0.0 -p 8000

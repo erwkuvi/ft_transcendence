@@ -6,7 +6,6 @@ from .validators import validate_file_size
 class User(AbstractUser):
     email = models.EmailField(unique=True)
 
-
 class PlayerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=50, unique=True)
