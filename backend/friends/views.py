@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
+from django.core.exceptions import ObjectDoesNotExist
 from .serializers import FriendshipSerializer, BasicUserSerializer
 from .models import Friendship
 from users.models import User
@@ -118,7 +119,7 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         else:
             return Response({"error": "Friend request is not pending"}, status=400)
 
-    # Block a user
+    # Block a user, I might not need that 
     @action(detail=False, methods=['POST'], url_path='block_user')
     def block_user(self, request):
         result = self.get_sender_and_receiver(request)
@@ -126,18 +127,39 @@ class ManageOtherUsers(viewsets.GenericViewSet):
             return result
         sender, receiver = result
 
-        are_friends_backward = Friendship.objects.get(sender=receiver, receiver=sender)
-        are_friends = Friendship.objects.get(sender=sender, receiver=receiver)
+        try:
+            are_friends = Friendship.objects.get(sender=sender, receiver=receiver)
+        except ObjectDoesNotExist:
+            are_friends = None
 
-        if not are_friends or not are_friends_backward:
-            return Response({"error": "Users are not frineds."}, status=404)
+        try:
+            are_friends_backward = Friendship.objects.get(sender=receiver, receiver=sender)
+        except ObjectDoesNotExist:
+            are_friends_backward = None
 
-        if are_friends.status == 'accepted' or are_friends_backward == 'accepted':
+        if are_friends and are_friends.status != 'blocked':
             are_friends.status = 'blocked'
             are_friends.save()
             return Response({"success": "User blocked"}, status=200)
-        else:
-            return Response({"error": "Could not block."}, status=400)
+
+        elif are_friends and are_friends.status == 'blocked':
+            are_friends.delete()
+            return Response({"success": "User unblocked"}, status=200)
+
+        elif are_friends_backward and are_friends_backward.status != 'blocked':
+            are_friends_backward.status = 'blocked'
+            are_friends_backward.save()
+
+        elif are_friends_backward and are_friends_backward.status == 'blocked':
+            are_friends_backward.delete()
+            return Response({"success": "User unblocked"}, status=200)
+
+        elif not are_friends and not are_friends_backward:
+            relationship = Friendship(sender=sender, receiver=receiver, status='blocked')
+            relationship.save()
+            return Response({"success": "User blocked"}, status=200)
+        
+        return Response({"error": "Could not block."}, status=400)
 
     # Remove a friend
     @action(detail=False, methods=['delete'], url_path='remove_friend')
