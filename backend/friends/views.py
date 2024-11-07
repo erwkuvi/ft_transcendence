@@ -53,11 +53,11 @@ class ManageOtherUsers(viewsets.GenericViewSet):
 
         try:
             friendship = Friendship.objects.get(sender=sender, receiver=receiver)
-        except Friendship.DoesNotExist:
+        except ObjectDoesNotExist:
             friendship = None
         try:
             backward_friendship = Friendship.objects.get(sender=receiver, receiver=sender)
-        except Friendship.DoesNotExist:
+        except ObjectDoesNotExist:
             backward_friendship = None
     
         if friendship:
