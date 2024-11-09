@@ -141,38 +141,44 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         sender, receiver = result
 
         try:
-            are_friends = Friendship.objects.get(sender=sender, receiver=receiver)
+            are_friends = Friendship.objects.get(sender=receiver, receiver=sender)
         except ObjectDoesNotExist:
             are_friends = None
 
-        try:
-            are_friends_backward = Friendship.objects.get(sender=receiver, receiver=sender)
-        except ObjectDoesNotExist:
-            are_friends_backward = None
-
-        if are_friends and are_friends.status != 'blocked':
+        if are_friends:
+            Friendship.objects.create(sender=sender, receiver=receiver, status='unblock')
             are_friends.status = 'blocked'
             are_friends.save()
             return Response({"success": "User blocked"}, status=200)
 
-        elif are_friends and are_friends.status == 'blocked':
-            are_friends.delete()
-            return Response({"success": "User unblocked"}, status=200)
-
-        elif are_friends_backward and are_friends_backward.status != 'blocked':
-            are_friends_backward.status = 'blocked'
-            are_friends_backward.save()
-
-        elif are_friends_backward and are_friends_backward.status == 'blocked':
-            are_friends_backward.delete()
-            return Response({"success": "User unblocked"}, status=200)
-
-        elif not are_friends and not are_friends_backward:
-            relationship = Friendship(sender=sender, receiver=receiver, status='blocked')
-            relationship.save()
-            return Response({"success": "User blocked"}, status=200)
+        Friendship.objects.create(sender=receiver, receiver=sender, status='blocked')
+        Friendship.objects.create(sender=sender, receiver=receiver, status='unblock')
+        return Response({"success": "User blocked"}, status=200)
         
-        return Response({"error": "Could not block."}, status=400)
+
+    @action(detail=False, methods=['POST'], url_path='unblock_user')
+    def unblock_user(self, request):
+        result = self.get_sender_and_receiver(request)
+        if isinstance(result, Response):
+            return result
+        sender, receiver = result
+
+        try:
+            is_blocked = Friendship.objects.get(sender=receiver, receiver=sender, status='blocked')
+        except ObjectDoesNotExist:
+            is_blocked = None
+            
+        try:
+            canunblock = Friendship.objects.get(sender=sender, receiver=receiver, status='unblock')
+        except ObjectDoesNotExist:
+            canunblock = None
+
+        if is_blocked and canunblock:
+            canunblock.delete()
+            is_blocked.delete()
+            return Response({"success": "User unblocked"}, status=200)
+        
+        return Response({"error": "Could not unblock."}, status=400)
 
     # Remove a friend
     @action(detail=False, methods=['post'], url_path='remove_friend')

@@ -10,6 +10,7 @@ class Friendship(models.Model):
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
         ('blocked', 'Blocked'),
+        ('unblock', 'UnBlocked'),
         ('removed', 'Removed'),
     ]
 

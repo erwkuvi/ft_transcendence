@@ -33,8 +33,9 @@ class Migration(migrations.Migration):
                         ('pending', 'Pending'),
                         ('invited', 'Invited'),
                         ('accepted', 'Accepted'), 
-                        ('rejected', 'Rejected'), 
-                        ('blocked', 'Blocked'), 
+                        ('rejected', 'Rejected'),
+                        ('blocked', 'Blocked'),
+                        ('unblock', 'UnBlocked'),
                         ('removed', 'Removed')
                     ], 
                     max_length=10

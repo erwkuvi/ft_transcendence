@@ -46,17 +46,18 @@ const ListUsers = ({allUsers, personLoggedIn, blocked, setBlocked}) => {
             const url = `http://localhost:8000/friends/users/remove_friend/`
 			const status = 'removed'
 			await changeStatus({userId, senderId, status, url})
+        }else if (option === 'Block') {
+            const url = `http://localhost:8000/friends/users/block_user/`
+			const status = 'unblock'
+			await changeStatus({userId, senderId, status, url})
+        }else if (option === 'Unblock') {
+            const url = `http://localhost:8000/friends/users/unblock_user/`
+			const status = 'unblocked'
+			await changeStatus({userId, senderId, status, url})
         }
 
     };
 
-    const blockUser = async (userId, senderId) => {
-		console.log('User in handle block:', userId)
-		console.log('Person un/blocking:', senderId)
-		const url = `http://localhost:8000/friends/users/block_user/`
-		const status = 'blocked'
-        await changeStatus({userId, senderId, status, url})
-    };
 
 	return (
 		<p>{allUsers.map((user) => (
@@ -64,17 +65,13 @@ const ListUsers = ({allUsers, personLoggedIn, blocked, setBlocked}) => {
           		user={user}
           		personLoggedIn={personLoggedIn}
           		handleInvite={handleInvite}
-          		blockUser={blockUser}/>
+          		/>
 		))}</p>
 	)
 }
 
-const UserCard = ({ user, personLoggedIn, handleInvite, blockUser }) => {
-	// Local state for each user
-	const [userState, setUserState] = useState({
-	  status: user.status,
-	  blocked: user.blocked || false,
-	});
+const UserCard = ({ user, personLoggedIn, handleInvite }) => {
+	const [userState, setUserState] = useState({status: user.status});
     const [selectedOption, setSelectedOption] = useState("");
 
 	const handleOptionChange = async (option) => {
@@ -96,12 +93,12 @@ const UserCard = ({ user, personLoggedIn, handleInvite, blockUser }) => {
                 setUserState(prev => ({ ...prev, status: '' }));
                 break;
             case 'Block':
-				await blockUser(user.id, personLoggedIn.id);
-                setUserState(prev => ({ ...prev, status: 'blocked', blocked: !prev.blocked }));
+				await handleInvite(user.id, personLoggedIn.id, option);
+                setUserState(prev => ({ ...prev, status: 'unblock'}));
                 break;
             case 'Unblock':
-                await blockUser(user.id, personLoggedIn.id);
-                setUserState(prev => ({ ...prev, status: 'unblocked', blocked: !prev.blocked }));
+                await handleInvite(user.id, personLoggedIn.id, option);
+                setUserState(prev => ({ ...prev, status: 'unblocked'}));
                 break;
             default:
                 break;
@@ -110,8 +107,11 @@ const UserCard = ({ user, personLoggedIn, handleInvite, blockUser }) => {
     };
 
     const getOptions = () => {
-        if (userState.blocked) return ['Unblock'];
         switch (userState.status) {
+			case 'unblock':
+				return ['Unblock'];
+			case 'blocked':
+				return ['You have beed blocked'];
             case 'invite':
                 return ['Invite', 'Block'];
             case 'pending':
