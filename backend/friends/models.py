@@ -6,6 +6,7 @@ class Friendship(models.Model):
 
     STATUS_CHOICES = [
         ('pending', 'Pending'),
+        ('invited', 'Invited'),
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
         ('blocked', 'Blocked'),

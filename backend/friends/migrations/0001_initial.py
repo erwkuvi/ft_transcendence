@@ -30,7 +30,8 @@ class Migration(migrations.Migration):
                 )),
                 ('status', models.CharField(
                     choices=[
-                        ('pending', 'Pending'), 
+                        ('pending', 'Pending'),
+                        ('invited', 'Invited'),
                         ('accepted', 'Accepted'), 
                         ('rejected', 'Rejected'), 
                         ('blocked', 'Blocked'), 

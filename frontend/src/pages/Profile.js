@@ -1,66 +1,61 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+// import userService from './userService';
 import './Profile.css';
+
+const changeStatus = async ({userId, senderId, status, url}) => {
+	try {
+		const response = await axios.post(
+			url,
+			{
+				sender: senderId,
+				receiver: userId,
+				status: status
+			}
+		);
+
+		if (response.status === 200 && response.data.success) {
+			alert(response.data.success);
+		} else {
+			alert("Failed: " + (response.data.error || "Unknown error."));
+		}
+	} catch (error) {
+		console.error("Error:", error);
+		alert("Failed to change status. Please try again.");
+	}
+}
 
 const ListUsers = ({allUsers, personLoggedIn, blocked, setBlocked}) => {
 	const handleInvite = async (userId, senderId, option) => {
 		console.log('User in handle invite:', userId)
+		console.log('sender in handle invite:', senderId)
 		console.log("picked option is", option)
         if (option === 'Invite') {
-			try {
-				const response = await axios.post(
-					`http://localhost:8000/friends/users/send_invite`,
-				{
-					sender: senderId,
-					receiver: userId,
-					status: 'pending'
-				});
-				if (response.status === 200 && response.data.success)
-					alert(response.data.success);
-				else{
-					alert(response.data.error);
-				}
-			} catch (error) {
-				console.error("Error inviting user:", error);
-				alert("Failed");
-			}
-        } else if (user.status === 'pending') {
-            await axios.post(`${BASE_URL}friends/users/accept_invite/${user.id}/`);
-            user.status = 'accepted';
-		// } else if (user.status === 'pending') {
-        //     await axios.post(`${BASE_URL}friends/users/reject_invite/${user.id}/`);
-        //     user.status = 'invite';
-        } else if (user.status === 'accepted') {
-            await axios.delete(`${BASE_URL}friends/users/remove_friend/${user.id}/`); // Remove friendship
-            user.status = 'invite'; // Reset to invite
+			const url = `http://localhost:8000/friends/users/send_invite/`
+			const status = 'pending'
+			await changeStatus({userId, senderId, status, url})
+        } else if (option === 'Accept') {
+            const url = `http://localhost:8000/friends/users/accept_invite/`
+			const status = 'accepted'
+			await changeStatus({userId, senderId, status, url})
+        } else if (option === 'Reject') {
+            const url = `http://localhost:8000/friends/users/reject_invite/`
+			const status = 'rejected'
+			await changeStatus({userId, senderId, status, url})
+        }else if (option === 'Unfriend') {
+            const url = `http://localhost:8000/friends/users/remove_friend/`
+			const status = 'removed'
+			await changeStatus({userId, senderId, status, url})
         }
 
-        // setAllUsers([...allUsers]);
     };
 
     const blockUser = async (userId, senderId) => {
 		console.log('User in handle block:', userId)
 		console.log('Person un/blocking:', senderId)
-
-		try {
-			const response = await axios.post(
-				`http://localhost:8000/friends/users/block_user/`,
-				{
-					sender: senderId,
-					receiver: userId,
-					status: 'blocked'
-				}
-			);
-	
-			if (response.status === 200 && response.data.success) {
-				alert(response.data.success);
-			} else {
-				alert("Failed to block user: " + (response.data.error || "Unknown error."));
-			}
-		} catch (error) {
-			console.error("Error blocking user:", error);
-			alert("Failed to block user. Please try again.");
-		}
+		const url = `http://localhost:8000/friends/users/block_user/`
+		const status = 'blocked'
+        await changeStatus({userId, senderId, status, url})
     };
 
 	return (
@@ -82,23 +77,6 @@ const UserCard = ({ user, personLoggedIn, handleInvite, blockUser }) => {
 	});
     const [selectedOption, setSelectedOption] = useState("");
 
-	const handleUserInvite = async () => {
-	  //here logic if blocked?
-	  await handleInvite(user);
-	  setUserState(prevState => ({
-		...prevState,
-		status: user.status
-	  }));
-	};
-  
-	const handleBlock = async () => {
-	  blockUser(user.id, personLoggedIn.id);
-	  setUserState(prevState => ({
-		...prevState,
-		blocked: !prevState.blocked
-	  }));
-	};
-
 	const handleOptionChange = async (option) => {
         switch (option) {
             case 'Invite':
@@ -111,11 +89,11 @@ const UserCard = ({ user, personLoggedIn, handleInvite, blockUser }) => {
                 break;
             case 'Reject':
                 await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: 'invite' }));
+                setUserState(prev => ({ ...prev, status: '' }));
                 break;
             case 'Unfriend':
                 await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: 'invite' }));
+                setUserState(prev => ({ ...prev, status: '' }));
                 break;
             case 'Block':
 				await blockUser(user.id, personLoggedIn.id);
@@ -137,6 +115,8 @@ const UserCard = ({ user, personLoggedIn, handleInvite, blockUser }) => {
             case 'invite':
                 return ['Invite', 'Block'];
             case 'pending':
+                return ['Block'];
+            case 'invited':
                 return ['Accept', 'Reject', 'Block'];
             case 'accepted':
                 return ['Unfriend', 'Block'];
