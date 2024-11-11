@@ -6,7 +6,7 @@ psycopg2-binary==2.9.3
 daphne==4.0.0
 channels==4.0.0
 djangorestframework-simplejwt
-requests
+requests==2.31.0
 httpx
 djoser
 drf-nested-routers

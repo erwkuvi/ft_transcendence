@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+#from .users import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -25,6 +26,12 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
+    path('auth/42/', include('users.urls')),
+
+    #path('login/', views.login),
+    #path('signup/', views.signup),
+    #path('test-view/', views.TestView),
+    #path('logout/', views.logout),
 ]
 
 if settings.DEBUG:

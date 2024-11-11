@@ -1,15 +1,120 @@
+import requests
+import secrets
+import string
 from rest_framework.decorators import api_view, action
-from rest_framework import generics, viewsets, status
+from rest_framework import generics, viewsets, status, views
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, SAFE_METHODS
+from .permissions import IsAdminOrReadOnly
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.exceptions import AuthenticationFailed
-from django.http import HttpResponseRedirect
+
 from django.shortcuts import redirect
 from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer
 from .models import User, PlayerProfile, Match
-from .permissions import IsAdminOrReadOnly
-# Create your views here.
+from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.http import JsonResponse
+#from django.conf.global_settings import API_42_REDIRECT_URI, API_42_AUTH_URL, API_42_ACCESS_TOKEN_ENDPOINT, API_42_INTRA_ENTRYPOINT_URL, INTRA_UID_42, INTRA_SECRET_42
+#User = get_user_model()
+
+
+class OAuth42LoginView(views.APIView):
+    permission_classes = [AllowAny]  # Allow any user to access this view
+
+    def get(self, request):
+        # Generate a secure random string for the state parameter to prevent CSRF attacks
+        characters = string.ascii_letters + string.digits
+        state = ''.join(secrets.choice(characters) for _ in range(30))  # Adjust length as needed
+        request.session['oauth_state'] = state
+        # Construct the URL with query parameters
+        auth_url = (
+                f"{settings.API_42_AUTH_URL}"
+                f"?client_id={settings.INTRA_UID_42}"
+                f"&redirect_uri={settings.API_42_REDIRECT_URI}"
+                f"&response_type=code"
+                f"&scope=public"
+                f"&state={state}"
+                )
+        # Redirect the user to the 42 authorization URL
+        return redirect(auth_url)
+
+class OAuth42CallbackView(views.APIView):
+    permission_classes = [AllowAny]  # Allow any user to access this view
+
+    def get(self, request):
+        code = request.query_params.get('code')
+        state = request.query_params.get('state')
+        session_state = request.session.get('oauth_state')
+
+        if not code or not state:
+            raise AuthenticationFailed("Missing code or state in theh callback response.")
+#Validate state parameter
+        if state != session_state:
+            raise AuthenticationFailed("Invalid state parameter.")
+# exchange code for access token
+        token_response = requests.post(
+                'https://api.intra.42.fr/oauth/token',
+                data={
+                    'grant_type': 'authorization_code',
+                    'client_id': settings.INTRA_UID_42,
+                    'client_secret': settings.INTRA_SECRET_42,
+                    'code': code,
+                    'redirect_uri': settings.API_42_REDIRECT_URI,
+                    }
+        )
+
+        if token_response.status_code != 200:
+            raise AuthenticationFailed("Failed to obtain access token.")
+
+        token_data = token_response.json()
+        access_token = token_data.get('access_token')
+
+#fetch user info from 42 api
+        user_info_response = requests.get(
+            'https://api.intra.42.fr/v2/me',
+            headers={'Authorization': f'Bearer {access_token}'}
+        )
+        if user_info_response.status_code != 200:
+            raise AuthenticationFailed("Failed to obtain user information.")
+        
+        user_info = user_info_response.json()
+        #return JsonResponse(user_info)
+# get user's data
+        email = user_info.get("email")
+        username = user_info.get("login")
+        first_name = user_info.get("first_name")
+        last_name = user_info.get("last_name")
+        avatar = user_info.get("image", {}).get("link")
+        displayname = user_info.get("displayname")
+
+# check if user exists or should be created
+        user, created = User.objects.get_or_create(
+                email=email,
+                username=username,
+                first_name=first_name,
+                last_name=last_name,)
+
+#player_profile, profile_created = PlayerProfile.objects.get_or_create(user=user)
+#
+## Assign the avatar value to the PlayerProfile instance
+#player_profile.avatar = avatar
+#
+## Save the PlayerProfile instance
+#player_profile.save()
+
+#Generate JWT token
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'username': user.username,
+            'email': user.email
+        })
+
+
+
 
 
 class UserList(generics.ListCreateAPIView):
@@ -21,6 +126,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+
+def authorize_view(request):
+    return redirect('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-000d79361be733aa7365ca50efc33b41b38c6e1b19d4f5b16456e9e63726df67&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fusers%2Fplayers%2Fme&response_type=code')
 
 @api_view()
 def say_hello(request):
@@ -63,6 +171,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
 #        if request.method == 'GET':
 #            serializer = PlayerProfileSerializer(player_profile, context=self.get_serializer_context())
 #            return Response(serializer.data)
+# try for the automation for profile if auth_mehod is 42api then do not createa  profile
         elif request.method == 'PUT':
             serializer = PlayerProfileSerializer(
                 player_profile, data=request.data, context=self.get_serializer_context())

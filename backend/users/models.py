@@ -2,9 +2,11 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .validators import validate_file_size
 
+AUTH_PROVIDERS ={'email': 'email', '42api': '42api'}
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+    auth_provider=models.CharField(max_length=50, default=AUTH_PROVIDERS.get("email"))
 
 
 class PlayerProfile(models.Model):

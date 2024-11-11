@@ -3,15 +3,25 @@ from rest_framework import serializers
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .models import User, PlayerProfile, Match, PlayerMatch
+from django.urls import reverse
 #from users.signals.handlers import match_created
 from .signals import match_created
 
 
 # for creating a new user, which information is asked
 class UserCreateSerializer(BaseUserCreateSerializer):
+    auth_url = serializers.SerializerMethodField()
+
     class Meta(BaseUserCreateSerializer.Meta):
         fields = ['id', 'username', 'password',
-                  'email', 'first_name', 'last_name']
+                  'email', 'first_name', 'last_name', 'auth_url']
+
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        callback_uri = f"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-000d79361be733aa7365ca50efc33b41b38c6e1b19d4f5b16456e9e63726df67&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fusers%2F&response_type=code"
+        representation['callback_uri'] = callback_uri
+        return representation
 
 
 # for the current user, which information is shown
