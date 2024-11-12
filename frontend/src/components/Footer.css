@@ -43,6 +43,10 @@
 	outline: none;
 }
 
+.dark-mode-toggle:focus-visible {
+	outline: 2px solid #0078d4;
+}
+
 .invert-colors {
 	filter: invert(1) hue-rotate(180deg);
 }
