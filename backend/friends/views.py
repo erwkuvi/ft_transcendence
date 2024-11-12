@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-
+from .utils import respond_success, respond_error, respond_bad_request
 from django.core.exceptions import ObjectDoesNotExist
 from .serializers import FriendshipSerializer, BasicUserSerializer
 from .models import Friendship, FriendshipHistory
@@ -29,24 +29,18 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         if serializer.is_valid():
             sender_id = data.get('sender')
             receiver_id = data.get('receiver')
-
-            print(f"I'm getting senderid: {sender_id} and receiverid: {receiver_id}")
-
             if sender_id == receiver_id:
-                return Response({"error": "You cannot befriend/block yourself."}, status=400)
+                return respond_bad_request("You cannot befriend/block yourself.")
 
             try:
                 sender = User.objects.get(id=sender_id)
                 receiver= User.objects.get(id=receiver_id)
             except User.DoesNotExist:
-                return Response({"error": "Sender or receiver does not exist."}, status=404)
-
-            print(f"Returning sender: {sender} and receiver: {receiver}")
+                return respond_error("Sender or receiver does not exist.")
 
             return sender, receiver
-        return Response(serializer.errors, status=400)
+        return respond_bad_request(serializer.errors)
         
-    # Send a friend invite
     @action(detail=False, methods=['POST'], url_path='send_invite')
     def send_invite(self, request):
         result = self.get_sender_and_receiver(request)
@@ -55,35 +49,17 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         sender, receiver = result
 
         try:
-            friendship = Friendship.objects.get(sender=sender, receiver=receiver)
+            existing_friendships = Friendship.objects.filter(
+                Q(sender=sender, receiver=receiver) | Q(sender=receiver, receiver=sender))
         except ObjectDoesNotExist:
-            friendship = None
-        try:
-            backward_friendship = Friendship.objects.get(sender=receiver, receiver=sender)
-        except ObjectDoesNotExist:
-            backward_friendship = None
-    
-        if friendship:
-            if friendship.status == 'invited':
-                return Response({"error": "You cannot send invite to user that already invited you"}, status=409)
-    
-            if friendship.status == 'pending':
-                return Response({"error": "Friend invite already sent"}, status=409)
-    
-            if friendship.status == 'accepted':
-                return Response({"error": "Friendship already exists"}, status=400)
-
-            if friendship.status == 'blocked':
-                return Response({"error": "You cannot send a friend request to this user because you are blocked."}, status=403)
-
-        if backward_friendship:
-            if backward_friendship.status == 'pending':
-                return Response({"error": "You can't invite user that already invited you."}, status=209)
+            existing_friendships = None
+        
+        if existing_friendships:
+            return respond_bad_request("Friendship or request already exists between these users.")
 
         Friendship.objects.create(sender=sender, receiver=receiver, status='pending')
         Friendship.objects.create(sender=receiver, receiver=sender, status='invited')
-
-        return Response({"success": "You invited the user."}, status=200) 
+        return respond_success("You invited the user.")
             
     @action(detail=False, methods=['POST'], url_path='accept_invite')
     def accept_invite(self, request):
@@ -91,26 +67,13 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         if isinstance(result, Response):
             return result
         sender, receiver = result
+        
+        friendships = Friendship.objects.filter(
+            (Q(sender=sender, receiver=receiver, status='invited') |
+             Q(sender=receiver, receiver=sender, status='pending')))
 
-        try:
-            is_invited = Friendship.objects.get(sender=sender, receiver=receiver, status='invited')
-        except ObjectDoesNotExist:
-            is_invited = None
-
-        try:
-            waiting_for_response = Friendship.objects.get(sender=receiver, receiver=sender, status='pending')
-        except ObjectDoesNotExist:
-            waiting_for_response = None
-
-        if not is_invited or not waiting_for_response:
-            return Response({"error": "No pending invite found"}, status=404)
-
-        waiting_for_response.status = 'accepted'
-        waiting_for_response.save()
-        is_invited.status = 'accepted'
-        is_invited.save()
-
-        return Response({"success": "Friend request accepted"}, status=200)
+        friendships.update(status='accepted')
+        return respond_success("Friend request accepted")
         
 
     @action(detail=False, methods=['POST'], url_path='reject_invite')
@@ -120,31 +83,23 @@ class ManageOtherUsers(viewsets.GenericViewSet):
             return result
         sender, receiver = result
 
-        try:
-            is_invited = Friendship.objects.get(sender=sender, receiver=receiver, status='invited')
-        except ObjectDoesNotExist:
-            is_invited = None
+        friendships = Friendship.objects.filter(
+            (Q(sender=sender, receiver=receiver, status='invited') |
+             Q(sender=receiver, receiver=sender, status='pending')))
 
-        try:
-            waiting_for_response = Friendship.objects.get(sender=receiver, receiver=sender, status='pending')
-        except ObjectDoesNotExist:
-            waiting_for_response = None
+        if friendships.count() < 2:
+            return respond_error("No pending invite found")
 
-        if not is_invited or not waiting_for_response:
-            return Response({"error": "No pending invite found"}, status=404)
-
-        waiting_for_response.delete()
-        is_invited.delete()
-        return Response({"success": "Friend request rejected"}, status=200)
+        friendships.delete()
+        return respond_success("Friend request rejected")
 
     @action(detail=False, methods=['POST'], url_path='block_user')
     def block_user(self, request):
-        print(f"unblock_user start")
         result = self.get_sender_and_receiver(request)
         if isinstance(result, Response):
             return result
         sender, receiver = result
-        print(f"Blocking user {receiver} from sender {sender}")
+
         try:
             friends_back = Friendship.objects.get(sender=sender, receiver=receiver)
         except ObjectDoesNotExist:
@@ -155,7 +110,6 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         except ObjectDoesNotExist:
             are_friends = None
 
-
         if are_friends and friends_back:
             FriendshipHistory.objects.create(sender=sender, receiver=receiver, previous_status=friends_back.status)
             FriendshipHistory.objects.create(sender=receiver, receiver=sender, previous_status=are_friends.status)
@@ -164,7 +118,7 @@ class ManageOtherUsers(viewsets.GenericViewSet):
 
         Friendship.objects.create(sender=receiver, receiver=sender, status='blocked')
         Friendship.objects.create(sender=sender, receiver=receiver, status='unblock')
-        return Response({"success": "User blocked"}, status=200)
+        return respond_success("User blocked")
         
 
     @action(detail=False, methods=['POST'], url_path='unblock_user')
@@ -173,19 +127,15 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         if isinstance(result, Response):
             return result
         sender, receiver = result
-        print(f"Unblocking user {receiver} from sender {sender}")
         try:
             is_blocked = Friendship.objects.get(sender=receiver, receiver=sender, status='blocked')
         except ObjectDoesNotExist:
-            return Response({"error": "User is not blocked"}, status=404)
+            return respond_error("User is not blocked")
             
         try:
             canunblock = Friendship.objects.get(sender=sender, receiver=receiver, status='unblock')
         except ObjectDoesNotExist:
-            return Response({"error": "User is did not block the receiver."}, status=404)
-
-        if not is_blocked or not canunblock:
-            return Response({"error": "No un/block status between users."}, status=404)
+            return respond_error("User did not block the receiver.")
 
         is_blocked_status = None
         canunblock_status = None
@@ -205,20 +155,16 @@ class ManageOtherUsers(viewsets.GenericViewSet):
             prev_canunblock = None
 
 
-        if is_blocked and canunblock:
-            if is_blocked_status and canunblock_status:
-                is_blocked.status=is_blocked_status
-                canunblock.status=canunblock_status
-                is_blocked.save()
-                canunblock.save()
-                return Response({"success": "User unblocked"}, status=200)
-            else:
-                is_blocked.delete()
-                canunblock.delete()
-                return Response({"success": "User unblocked"}, status=200)
-        return Response({"success": "User unblocked"}, status=200)
+        if is_blocked_status and canunblock_status:
+            is_blocked.status=is_blocked_status
+            canunblock.status=canunblock_status
+            is_blocked.save()
+            canunblock.save()
+        else:
+            is_blocked.delete()
+            canunblock.delete()
+        return respond_success("User unblocked")
 
-    # Remove a friend
     @action(detail=False, methods=['post'], url_path='remove_friend')
     def remove_friend(self, request):
         result = self.get_sender_and_receiver(request)
@@ -229,16 +175,14 @@ class ManageOtherUsers(viewsets.GenericViewSet):
         try:
             friendship = Friendship.objects.get(sender=sender, receiver=receiver, status='accepted')
         except ObjectDoesNotExist:
-            friendship = None
+            return respond_error("Users are not friends.")
 
         try:
             are_friends_backward = Friendship.objects.get(sender=receiver, receiver=sender, status='accepted')
         except ObjectDoesNotExist:
-            are_friends_backward = None
+            return respond_error("Users are not friends.")
 
-        if not friendship or not are_friends_backward:
-            return Response({"error": "Users are not friends."}, status=404)
 
         are_friends_backward.delete()
         friendship.delete()
-        return Response({"success": "You are not friends anymore."}, status=200)
+        return respond_success("You are not friends anymore.")

@@ -9,11 +9,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
         model = Friendship
         fields = ['sender', 'receiver', 'status']
         
-# class FriendshipHistorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = FriendshipHistory
-#         fields = ['sender', 'receiver', 'previous_status']
-        
+
 class BasicUserSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
 

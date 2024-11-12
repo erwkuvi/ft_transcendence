@@ -15,7 +15,6 @@ echo "DJANGO_SUPERUSER_PASSWORD: $DJANGO_SUPERUSER_PASSWORD"
 echo "DJANGO_SUPERUSER_EMAIL: $DJANGO_SUPERUSER_EMAIL"
 
 
-# python3 manage.py makemigrations friends
 python3 manage.py makemigrations
 python3 manage.py migrate --noinput
 
