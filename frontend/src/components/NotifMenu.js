@@ -1,4 +1,5 @@
 import './NotifMenu.css'
+import Notification from './Notification'
 import { openDropdown } from './NotifMenuScript'
 
 const NotifMenu = () => {
@@ -8,9 +9,11 @@ const NotifMenu = () => {
 				<i className="fas fa-bell bell-icon"></i>
 			</button>
 			<div id="drop" className="dropdown-content mt-1">
-				<a className="dropdown-item" href="#">Notification 1</a>
-				<a className="dropdown-item" href="#">Notification 2</a>
-				<a className="dropdown-item" href="#">Notification 3</a>
+				<Notification
+					title="New friend request"
+					description="Lukas wants to add you as a friend"
+				/>
+				<Notification/>
 			</div>
 		</div>
 	);

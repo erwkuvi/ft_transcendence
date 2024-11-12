@@ -1,0 +1,73 @@
+.notification {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 15px;
+	color: black;
+	border: 1px solid #807c83;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	background-color: #aca8b0;
+	transition: background-color 0.3s ease;
+}
+
+.notification-text {
+	flex: 1;
+	padding-right: 2px;
+}
+
+.notification-title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.notification-description {
+	margin: 5px 0 0 0;
+	font-size: 11px;
+	color: #444444;
+}
+
+.notification-buttons {
+	display: flex;
+	align-items: center;
+}
+
+.notification .btn {
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+	font-size: 18px;
+	margin: 0;
+	padding: 6px;
+	transition: transform 0.3s ease, color 0.1s ease;
+}
+
+.notification .btn:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.notification .btn:focus-visible {
+	outline: 2px solid #0078d4;
+}
+
+.confirm-btn {
+	color: rgb(78, 101, 78);
+	transform: scale(1);
+}
+
+.confirm-btn:hover {
+	color: rgb(90, 136, 90);
+	transform: scale(1.4);
+}
+
+.reject-btn {
+	color: rgb(100, 44, 44);
+	transform: scale(1);
+}
+
+.reject-btn:hover {
+	color: rgb(141, 46, 46);
+	transform: scale(1.4);
+}
