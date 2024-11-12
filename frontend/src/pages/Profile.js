@@ -112,7 +112,10 @@ const Profile = () => {
 				</div>
 				<div className='card basic'>
 					<h2>List of users</h2>
-					<ListUsers allUsers={allUsers} personLoggedIn={personLoggedIn}/>
+					<ListUsers allUsers={allUsers}
+					           setAllUsers={setAllUsers}
+							   personLoggedIn={personLoggedIn}
+							   setPersonLoggedIn={setPersonLoggedIn}/>
 				</div>
 				<div className='card basic notifications'>
 					<h2>Friends list</h2>

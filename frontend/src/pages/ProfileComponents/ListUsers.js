@@ -1,7 +1,11 @@
 import { changeFriendStatus } from '../../services/friendService';
 import UserCard from './UserCard';
+import { fetchUsers } from '../../services/fetchUsers';
+import React, { useState } from 'react';
 
-const ListUsers = ({allUsers, personLoggedIn}) => {
+const ListUsers = ({allUsers, setAllUsers, personLoggedIn}) => {
+	const [refreshKey, setRefreshKey] = useState(0);
+
 	const handleInvite = async (userId, senderId, option) => {
 
 		const optionMapping = {
@@ -16,7 +20,13 @@ const ListUsers = ({allUsers, personLoggedIn}) => {
 		  if (option in optionMapping) {
 			const { endpoint, status } = optionMapping[option];
 			try {
+			  // Change friend status on the server
 			  await changeFriendStatus({ userId, senderId, status, endpoint });
+
+			  const updatedUsers = await fetchUsers();
+              const listUsers = updatedUsers.filter(user => user.username !== personLoggedIn.username);
+			  setAllUsers(listUsers);
+			  setRefreshKey(prevKey => prevKey + 1);
 			} catch (error) {
 			  console.error("Failed to update friend status:", error);
 			}
@@ -31,6 +41,7 @@ const ListUsers = ({allUsers, personLoggedIn}) => {
           		user={user}
           		personLoggedIn={personLoggedIn}
           		handleInvite={handleInvite}
+				refreshKey={refreshKey}
           		/>
 		))}</p>
 	)

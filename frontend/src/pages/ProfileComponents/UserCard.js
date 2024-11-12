@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const UserCard = ({ user, personLoggedIn, handleInvite }) => {
+const UserCard = ({ user, personLoggedIn, handleInvite, refreshKey }) => {
 	const [userState, setUserState] = useState({status: user.status});
     const [selectedOption, setSelectedOption] = useState("");
+
+	useEffect(() => {
+        setUserState({ status: user.status });
+    }, [refreshKey, user.status]);
 
 	const updateUserState = (newStatus) => {
         setUserState(prev => ({ ...prev, status: newStatus }));
