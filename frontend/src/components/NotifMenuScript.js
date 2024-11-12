@@ -3,7 +3,7 @@ export function openDropdown() {
 }
 
 window.onclick = function(event) {
-	if (!event.target.matches('.dropbtn')) {
+	if (!event.target.matches('.dropbtn') && !event.target.matches('.bell-icon')) {
 		var dropdowns = document.getElementsByClassName("dropdown-content");
 		var i;
 		for (i = 0; i < dropdowns.length; i++) {
