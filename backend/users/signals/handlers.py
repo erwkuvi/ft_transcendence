@@ -10,8 +10,9 @@ from users.signals import match_created
 def create_profile_for_new_user(sender, **kwargs):
     if kwargs['created']:
         user = kwargs['instance']
-        display_name = str(user.username) + str('_') + str(user.id)
-        PlayerProfile.objects.create(user=user, display_name=display_name)
+        if user.auth_provider != '42api':
+            display_name = str(user.username) + str('_') + str(user.id)
+            PlayerProfile.objects.create(user=user, display_name=display_name)
 
 
 @receiver(match_created)

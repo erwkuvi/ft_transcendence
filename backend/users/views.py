@@ -1,23 +1,21 @@
 import requests
 import secrets
 import string
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files import File
+from django.shortcuts import redirect
+from django.conf import settings
 from rest_framework.decorators import api_view, action
 from rest_framework import generics, viewsets, status, views
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
-from .permissions import IsAdminOrReadOnly
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from rest_framework.exceptions import AuthenticationFailed
-
-from django.shortcuts import redirect
+from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
 from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer
 from .models import User, PlayerProfile, Match
-from django.contrib.auth import get_user_model
-from django.conf import settings
-from django.http import JsonResponse
-#from django.conf.global_settings import API_42_REDIRECT_URI, API_42_AUTH_URL, API_42_ACCESS_TOKEN_ENDPOINT, API_42_INTRA_ENTRYPOINT_URL, INTRA_UID_42, INTRA_SECRET_42
-#User = get_user_model()
+#from .permissions import IsAdminOrReadOnly
+#from django.http import JsonResponse
 
 
 class OAuth42LoginView(views.APIView):
@@ -39,6 +37,14 @@ class OAuth42LoginView(views.APIView):
                 )
         # Redirect the user to the 42 authorization URL
         return redirect(auth_url)
+
+def save_avatar_locally(avatar_url, player_profile, user):
+    response = requests.get(avatar_url)
+    if response.status_code == 200:
+        img_temp = NamedTemporaryFile(delete=True)
+        img_temp.write(response.content)
+        img_temp.flush()
+        player_profile.avatar.save(f"{user.username}_avatar.jpg", File(img_temp), save=True)
 
 class OAuth42CallbackView(views.APIView):
     permission_classes = [AllowAny]  # Allow any user to access this view
@@ -81,40 +87,53 @@ class OAuth42CallbackView(views.APIView):
         
         user_info = user_info_response.json()
         #return JsonResponse(user_info)
-# get user's data
+
+#get user's data
         email = user_info.get("email")
         username = user_info.get("login")
         first_name = user_info.get("first_name")
         last_name = user_info.get("last_name")
-        avatar = user_info.get("image", {}).get("link")
+        #avatar = user_info.get("image", {}).get("link")
+        avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
         displayname = user_info.get("displayname")
+        provider = "42api"
 
-# check if user exists or should be created
+#check if user exists or should be created
         user, created = User.objects.get_or_create(
                 email=email,
                 username=username,
                 first_name=first_name,
-                last_name=last_name,)
-
-#player_profile, profile_created = PlayerProfile.objects.get_or_create(user=user)
-#
-## Assign the avatar value to the PlayerProfile instance
-#player_profile.avatar = avatar
-#
-## Save the PlayerProfile instance
-#player_profile.save()
+                last_name=last_name,
+                auth_provider=provider,)
+        
+#create the player profile and store corresponding info from 42 profile.
+        player_profile, profile_created = PlayerProfile.objects.get_or_create(
+                user=user,
+                #avatar=avatar,
+                display_name=displayname,
+        )
+# function for downloading the image from 42api and storing it in the avatar dir.
+        if avatar_url:
+            save_avatar_locally(avatar_url, player_profile, user)
 
 #Generate JWT token
         refresh = RefreshToken.for_user(user)
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-            'username': user.username,
-            'email': user.email
-        })
-
-
-
+        try:
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'username': user.username,
+                'email': user.email,
+                'auth_provider': user.auth_provider,
+                'displayname': player_profile.display_name,
+                #'avatar': player_profile.avatar,  # Added avatar property
+            })
+        except UnicodeDecodeError as e:
+            # Handle the decoding error
+            return Response({
+                'error': 'Unicode decoding error',
+                'message': str(e)
+            }, status=400)
 
 
 class UserList(generics.ListCreateAPIView):

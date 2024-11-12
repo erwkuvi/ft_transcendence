@@ -13,8 +13,10 @@ class PlayerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=50, unique=True)
     avatar = models.ImageField(
-        upload_to='avatars/', default='avatar.png',
-        null=True, blank=True, validators=[validate_file_size])
+        default='avatar.png',
+        null=True, blank=True,
+        validators=[validate_file_size]
+    )
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     friends = models.ManyToManyField("self", blank=True)
