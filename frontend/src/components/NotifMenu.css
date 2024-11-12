@@ -6,7 +6,7 @@
 }
 
 .dropbtn {
-	background-color: grey;
+	background-color: rgb(113, 113, 123);
 	border: none;
 	width: 40px;
 	height: 40px;
@@ -14,19 +14,30 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	outline: none;
+	box-shadow: none;
 }
 
 .dropbtn:hover, .dropbtn:focus {
-	background-color: rgb(107, 107, 107);
+	background-color: rgb(123, 120, 135);
+	outline: none;
+	box-shadow: none;
 }
+
+.dropbtn:focus-visible {
+	outline: 2px solid #0078d4;
+  }
 
 .dropdown-content {
 	display: none;
 	position: absolute;
-	background-color: #f1f1f1;
+	background-color: rgb(172, 168, 176);
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
+	right: 0;
+	box-shadow: 0px, 1px, 1px, black;
+	border-radius: 2px;
 }
 
 .dropdown-content a {
