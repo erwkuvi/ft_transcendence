@@ -1,155 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-// import userService from './userService';
+import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
+import ListUsers from './ProfileComponents/ListUsers';
 
-const changeStatus = async ({userId, senderId, status, url}) => {
-	try {
-		const response = await axios.post(
-			url,
-			{
-				sender: senderId,
-				receiver: userId,
-				status: status
-			}
-		);
-
-		if (response.status === 200 && response.data.success) {
-			alert(response.data.success);
-		} else {
-			alert("Failed: " + (response.data.error || "Unknown error."));
-		}
-	} catch (error) {
-		console.error("Error:", error);
-		alert("Failed to change status. Please try again.");
-	}
-}
-
-const ListUsers = ({allUsers, personLoggedIn, blocked, setBlocked}) => {
-	const handleInvite = async (userId, senderId, option) => {
-		console.log('User in handle invite:', userId)
-		console.log('sender in handle invite:', senderId)
-		console.log("picked option is", option)
-        if (option === 'Invite') {
-			const url = `http://localhost:8000/friends/users/send_invite/`
-			const status = 'pending'
-			await changeStatus({userId, senderId, status, url})
-        } else if (option === 'Accept') {
-            const url = `http://localhost:8000/friends/users/accept_invite/`
-			const status = 'accepted'
-			await changeStatus({userId, senderId, status, url})
-        } else if (option === 'Reject') {
-            const url = `http://localhost:8000/friends/users/reject_invite/`
-			const status = 'rejected'
-			await changeStatus({userId, senderId, status, url})
-        }else if (option === 'Unfriend') {
-            const url = `http://localhost:8000/friends/users/remove_friend/`
-			const status = 'removed'
-			await changeStatus({userId, senderId, status, url})
-        }else if (option === 'Block') {
-            const url = `http://localhost:8000/friends/users/block_user/`
-			const status = 'unblock'
-			await changeStatus({userId, senderId, status, url})
-        }else if (option === 'Unblock') {
-            const url = `http://localhost:8000/friends/users/unblock_user/`
-			const status = 'unblocked'
-			await changeStatus({userId, senderId, status, url})
-        }
-
-    };
-
-
-	return (
-		<p>{allUsers.map((user) => (
-			<UserCard 
-          		user={user}
-          		personLoggedIn={personLoggedIn}
-          		handleInvite={handleInvite}
-          		/>
-		))}</p>
-	)
-}
-
-const UserCard = ({ user, personLoggedIn, handleInvite }) => {
-	const [userState, setUserState] = useState({status: user.status});
-    const [selectedOption, setSelectedOption] = useState("");
-
-	const handleOptionChange = async (option) => {
-        switch (option) {
-            case 'Invite':
-                await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: 'pending' }));
-                break;
-            case 'Accept':
-                await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: 'accepted' }));
-                break;
-            case 'Reject':
-                await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: '' }));
-                break;
-            case 'Unfriend':
-                await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: '' }));
-                break;
-            case 'Block':
-				await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: 'unblock'}));
-                break;
-            case 'Unblock':
-                await handleInvite(user.id, personLoggedIn.id, option);
-                setUserState(prev => ({ ...prev, status: 'unblocked'}));
-                break;
-            default:
-                break;
-        }
-		setSelectedOption("");
-    };
-
-    const getOptions = () => {
-        switch (userState.status) {
-			case 'unblock':
-				return ['Unblock'];
-			case 'blocked':
-				return ['You have beed blocked'];
-            case 'invite':
-                return ['Invite', 'Block'];
-            case 'pending':
-                return ['Block'];
-            case 'invited':
-                return ['Accept', 'Reject', 'Block'];
-            case 'accepted':
-                return ['Unfriend', 'Block'];
-            default:
-                return ['Invite', 'Block'];
-        }
-    };
-
-	return (
-	  <div>
-		<div>{user.username} - Current status: {userState.status}</div>
-            <select
-                value={selectedOption}
-                onChange={(e) => {
-                    const option = e.target.value;
-                    setSelectedOption(option);
-                    handleOptionChange(option);
-                }}>
-                <option value="" disabled>Select an option</option>
-                {getOptions().map((option) => (
-                    <option key={option} value={option}>{option}</option>
-                ))}
-            </select>
-	  </div>
-	);
-  };
 
 const Profile = () => {
 	// For the fetching data fron back
     const [profile, setProfile] = useState(null);
+
     const [allUsers, setAllUsers] = useState([]);
-    const [blocked, setBlocked] = useState({sender: null, user: null, blocked: false});
-	const [personLoggedIn, setPersonLoggedIn] = useState(null)
+	const [personLoggedIn, setPersonLoggedIn] = useState(null);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -178,15 +39,13 @@ const Profile = () => {
         // Set the fetched profile data in the state
             setProfile(response.data);
 
-			const usersResponse = await axios.get(`${BASE_URL}/api/users/`);
-            const users = usersResponse.data;
+			const users = await fetchUsers();
             const profile = users.find(user => user.username === profileData.username);
 			setPersonLoggedIn(profile);
+
             const otherUsers = users.filter(user => user.username !== profileData.username);
-			console.log('what is profile.id; ', profileData.username)
-			console.log('list of users:', users)
-			console.log('Users without profile.id should be: ', otherUsers)
             setAllUsers(otherUsers);
+
             } catch (err) {
         // Handle any errors
             setError(err.message || 'An error occurred');
@@ -253,10 +112,7 @@ const Profile = () => {
 				</div>
 				<div className='card basic'>
 					<h2>List of users</h2>
-					<ListUsers allUsers={allUsers}
-					  personLoggedIn={personLoggedIn}
-					  blocked={blocked}
-					  setBlocked={setBlocked}/>
+					<ListUsers allUsers={allUsers} personLoggedIn={personLoggedIn}/>
 				</div>
 				<div className='card basic notifications'>
 					<h2>Friends list</h2>

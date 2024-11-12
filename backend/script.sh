@@ -14,8 +14,9 @@ echo "DJANGO_SUPERUSER_USERNAME: $DJANGO_SUPERUSER_USERNAME"
 echo "DJANGO_SUPERUSER_PASSWORD: $DJANGO_SUPERUSER_PASSWORD"
 echo "DJANGO_SUPERUSER_EMAIL: $DJANGO_SUPERUSER_EMAIL"
 
+
+# python3 manage.py makemigrations friends
 python3 manage.py makemigrations
-python3 manage.py migrate auth
 python3 manage.py migrate --noinput
 
 if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] && [ -n "$DJANGO_SUPERUSER_EMAIL" ]; then
@@ -35,28 +36,28 @@ users_data = [
     {
         'username': 'Lukas',
         'email': 'user1@example.com',
-        'password': 'password123',
+        'password': '123',
         'first_name': 'Lukas1',
         'last_name': 'Lukas2',
     },
 	{
         'username': 'Adam',
         'email': 'user2@example.com',
-        'password': 'password123',
+        'password': '123',
         'first_name': 'Adam1',
         'last_name': 'Adam2',
     },
 	{
         'username': 'Erwin',
         'email': 'user3@example.com',
-        'password': 'password123',
+        'password': '123',
         'first_name': 'Erwin1',
         'last_name': 'Erwin2',
     },
     {
         'username': 'Yison',
         'email': 'user4@example.com',
-        'password': 'password123',
+        'password': '123',
         'first_name': 'Yison1',
         'last_name': 'Yison2',
     },
