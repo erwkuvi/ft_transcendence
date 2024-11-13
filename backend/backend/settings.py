@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 	'game',
 	'notifications',
 	'users',
+	'friends',
 ]
 
 ASGI_APPLICATION = 'backend.asgi.application'

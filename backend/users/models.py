@@ -8,7 +8,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     auth_provider=models.CharField(max_length=50, default=AUTH_PROVIDERS.get("email"))
 
-
 class PlayerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=50, unique=True)
