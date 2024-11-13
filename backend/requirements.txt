@@ -14,3 +14,5 @@ Pillow  # Image processing
 gunicorn  # WSGI HTTP Server
 dj-database-url  # Database configuration from URL
 whitenoise  # Serve static files in production
+
+

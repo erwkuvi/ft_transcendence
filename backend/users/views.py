@@ -27,6 +27,7 @@ class OAuth42LoginView(views.APIView):
         state = ''.join(secrets.choice(characters) for _ in range(30))  # Adjust length as needed
         request.session['oauth_state'] = state
         # Construct the URL with query parameters
+
         auth_url = (
                 f"{settings.API_42_AUTH_URL}"
                 f"?client_id={settings.INTRA_UID_42}"
