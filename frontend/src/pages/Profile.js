@@ -114,8 +114,7 @@ const Profile = () => {
 					<h2>List of users</h2>
 					<ListUsers allUsers={allUsers}
 					           setAllUsers={setAllUsers}
-							   personLoggedIn={personLoggedIn}
-							   setPersonLoggedIn={setPersonLoggedIn}/>
+							   personLoggedIn={personLoggedIn}/>
 				</div>
 				<div className='card basic notifications'>
 					<h2>Friends list</h2>
