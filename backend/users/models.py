@@ -7,12 +7,20 @@ AUTH_PROVIDERS ={'email': 'email', '42api': '42api'}
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     auth_provider=models.CharField(max_length=50, default=AUTH_PROVIDERS.get("email"))
+    otpauth_url = models.CharField(max_length=225, blank=True, null=True)#represents the value encoded into the generated QR code
+    otp_base32 = models.CharField(max_length=255, null=True)#serves as a unique identifier for a user
+    qr_code = models.FileField(upload_to="qr/", blank=True, null=True)
+    qr_code = models.ImageField(upload_to="qrcode/",blank=True, null=True)
+    login_otp = models.CharField(max_length=255, null=True, blank=True)
+    login_otp_used = models.BooleanField(default=True)
+    otp_created_at = models.DateTimeField(blank=True, null=True)
 
 class PlayerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=50, unique=True)
     avatar = models.ImageField(
-        default='avatar.png',
+        upload_to="avatars/",
+        default='avatars\/avatar.png',
         null=True, blank=True,
         validators=[validate_file_size]
     )

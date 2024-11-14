@@ -1,35 +1,69 @@
 # serializers.py
+import pyotp
+import qrcode
+from io import BytesIO
+from django.contrib.auth.hashers import make_password
+from django.core.files.base import ContentFile
+from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .models import User, PlayerProfile, Match, PlayerMatch
-from django.urls import reverse
-#from users.signals.handlers import match_created
 from .signals import match_created
+# from django.urls import reverse
+# from users.signals.handlers import match_created
+
+
+class UserCreateSerializer(BaseUserCreateSerializer):
+
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = ['id', 'username',
+                  'first_name', 'last_name',
+                  'email', 'qr_code', 'password']
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "qr_code": {"read_only": True},
+        }
+
+    def create(self, validated_data: dict):
+        otp_base32 = pyotp.random_base32()
+        email = validated_data.get("email")
+        otp_auth_url = pyotp.totp.TOTP(otp_base32).provisioning_uri(
+            name=email.lower(), issuer_name="Ridwan Ray"
+        )
+        stream = BytesIO()
+        image = qrcode.make(f"{otp_auth_url}")
+        image.save(stream)
+        user_info = {
+            "email": validated_data.get("email"),
+            "password": make_password(validated_data.get("password")),
+            "otp_base32": otp_base32,
+        }
+        user: User = User.objects.create(**user_info)
+        user.qr_code = ContentFile(
+            stream.getvalue(), name=f"qr{get_random_string(10)}.png"
+        )
+        user.save()
+
+        return user
 
 
 # for creating a new user, which information is asked
-class UserCreateSerializer(BaseUserCreateSerializer):
-    auth_url = serializers.SerializerMethodField()
-
-    class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'username', 'password',
-                  'email', 'first_name', 'last_name', 'auth_url']
-
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        callback_uri = f"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-000d79361be733aa7365ca50efc33b41b38c6e1b19d4f5b16456e9e63726df67&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fusers%2F&response_type=code"
-        representation['callback_uri'] = callback_uri
-        return representation
-
+#class UserCreateSerializer(BaseUserCreateSerializer):
+#    class Meta(BaseUserCreateSerializer.Meta):
+#        fields = ['id', 'username', 'first_name',
+#                  'last_name', 'email']
 
 # for the current user, which information is shown
 class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = User
         fields = ['id', 'username', 'first_name',
-                  'last_name', 'email']
+                  'last_name', 'email', 'qr_code', 'password']
+        extra_kwargs = {
+                "qr_code": {"read_only": True},
+                }
 
 
 # Serializer for Player

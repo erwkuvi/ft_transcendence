@@ -26,15 +26,10 @@ urlpatterns = [
          name='token_refresh'),
     path('', lambda request: redirect('/api/admin/')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('users/', include('users.urls')),
+    path('user_management/', include('users.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('auth/42/', include('users.urls')),
-
-    #path('login/', views.login),
-    #path('signup/', views.signup),
-    #path('test-view/', views.TestView),
-    #path('logout/', views.logout),
 ]
 
 if settings.DEBUG:
@@ -44,6 +39,8 @@ if settings.DEBUG:
 # /jwt/create/ (JWT create a new user)
 # /jwt/refresh/ (JWT )
 # /jwt/verify/ (JSON Web Token Authentication)
+# /auth/42/login url to 42api auth
+# /auth/42/callback 
 # /users/
 # /users/me/
 # /users/confirm/
