@@ -13,6 +13,10 @@ from .signals import match_created
 # from django.urls import reverse
 # from users.signals.handlers import match_created
 
+class OTPLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6)  # OTP length is usually 6
+
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 
@@ -26,24 +30,34 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "qr_code": {"read_only": True},
         }
 
+    def validate(self, attrs: dict):
+        email = attrs.get("email").lower().strip()
+        if User.objects.filter(email__iexact=email).exists():
+            raise serializers.ValidationError({"email": "Email already exists!"})
+        return super().validate(attrs)
+
     def create(self, validated_data: dict):
         otp_base32 = pyotp.random_base32()
         email = validated_data.get("email")
         otp_auth_url = pyotp.totp.TOTP(otp_base32).provisioning_uri(
-            name=email.lower(), issuer_name="Ridwan Ray"
+            name=email.lower(), issuer_name="Ft_Transcendence_DT"
         )
         stream = BytesIO()
         image = qrcode.make(f"{otp_auth_url}")
         image.save(stream)
-        user_info = {
-            "email": validated_data.get("email"),
-            "password": make_password(validated_data.get("password")),
-            "otp_base32": otp_base32,
-        }
-        user: User = User.objects.create(**user_info)
-        user.qr_code = ContentFile(
-            stream.getvalue(), name=f"qr{get_random_string(10)}.png"
+        user = User(
+            email=email,
+            username=validated_data.get("username"),  # Inherited from AbstractUser
+            first_name=validated_data.get("first_name"),
+            last_name=validated_data.get("last_name"),
+            otp_base32=otp_base32,
+            otpauth_url=otp_auth_url,
+            qr_code=ContentFile(stream.getvalue(), name=f"qr{get_random_string(10)}.png")
         )
+
+        # Use set_password for proper password hashing
+        user.set_password(validated_data.get("password"))
+
         user.save()
 
         return user

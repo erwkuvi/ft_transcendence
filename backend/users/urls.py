@@ -17,5 +17,6 @@ urlpatterns = [
         path('', include(router.urls)),
         path('login/', views.OAuth42LoginView.as_view(), name='42-login'),
         path('callback/', views.OAuth42CallbackView.as_view(), name='42-callback'),
+        path('otp-login/', views.OTPLoginView.as_view(), name='otp-login'),
         #path('authorize/', views.authorize_view, name='api-authorize')
     ]
