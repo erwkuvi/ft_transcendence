@@ -19,7 +19,6 @@
 .notification-title {
 	margin: 0;
 	font-size: 14px;
-	font-weight: bold;
 }
 
 .notification-description {
@@ -70,4 +69,22 @@
 .reject-btn:hover {
 	color: rgb(141, 46, 46);
 	transform: scale(1.4);
+}
+
+.unread {
+	background-color: #d3d3d3;
+	border: 1px solid #a9a9a9;
+}
+
+.unread .notification-title {
+	font-weight: bold;
+}
+
+.read {
+	background-color: #bcbcbc;
+	border: 1px solid #8f8f8f;
+}
+
+.read .notification-title {
+	font-weight: normal;
 }

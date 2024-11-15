@@ -20,16 +20,18 @@ const NotifMenu = () => {
 
 	const addTestNotification = () => {
 		const newNotification = {
-			title: 'Test notificationnnn',
+			title: 'Test notification',
 			description: 'Lukas wants to be your friend',
 			read: false
 		};
-		setNotifications([...notifications, newNotification]);
+		setNotifications(prevNotifications => [...prevNotifications, newNotification]);
 	};
 
 	useEffect(() => {
 		// Add a test notification when the component mounts
 		addTestNotification();
+		addTestNotification();
+
 	}, []);
 
 	return (
