@@ -1,8 +1,23 @@
 .header {
-	background-color: #3f267800;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	position: fixed;
+	top: 0;
+	z-index: 3;
+	width: 100%;
+}
+
+.notif {
+	margin: 10px 10px 0px auto;
+}
+
+[data-bs-theme="dark"] .menu_bar {
+	background-color: #2d2c2f;
+}
+
+[data-bs-theme="light"] .menu_bar {
+	background-color: #d6d4da;
 }
 
 .logo {

@@ -3,34 +3,24 @@ import React, {useEffect} from "react";
 const DarkModeToggle = () => {
 	useEffect(() => {
 		const html = document.getElementById("htmlPage");
-		const checkbox = document.getElementById("checkbox");
+		const toggle = document.getElementById("darkModeToggleButton");
 		
-		const handleCheckboxToggle = () => {
-			if (checkbox.checked) {
-				html.setAttribute("data-bs-theme", "light");
-			}
-			else {
-				html.setAttribute("data-bs-theme", "dark");
-			}
-			console.log("Dark mode toggled");
+		const handleToggle = () => {
+			const isDarkMode = html.getAttribute("data-bs-theme") === "dark";
+			html.setAttribute("data-bs-theme", isDarkMode ? "light" : "dark");
 		};
 		
-		checkbox.addEventListener("change", handleCheckboxToggle);
+		toggle.addEventListener("click", handleToggle);
 
 		return () => {
-			checkbox.removeEventListener("change", handleCheckboxToggle);
+			toggle.removeEventListener("click", handleToggle);
 		};
 	}, []);
 
 	return (
-		<div className="dark-mode-toggle">
-			<input type="checkbox" className="checkbox" id="checkbox" />
-			<label htmlFor="checkbox" className="checkbox-label">
-				<i className="fas fa-sun" />
-				<i className="fas fa-moon" />
-				<span className="ball" />
-			</label>
-		</div>
+		<button id="darkModeToggleButton" className="dark-mode-toggle">
+			<i className="fas fa-circle-half-stroke" />
+		</button>
 	);
 }
 
