@@ -1,8 +1,8 @@
 import './Notification.css'
 
-const Notification = ({ title, description, onConfirm, onReject }) => {
+const Notification = ({ title, description, onConfirm, onReject, read }) => {
 	return (
-		<div className="notification m-0 p-3">
+		<div className={`notification m-0 p-3 ${read ? 'read' : 'unread'}`} onMouseEnter={onConfirm}>
 			<div className="notification-text">
 				<h4 className="notification-title">{title}</h4>
 				<p className="notification-description">{description}</p>

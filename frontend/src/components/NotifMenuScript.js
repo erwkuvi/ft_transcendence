@@ -3,14 +3,13 @@ export function openDropdown() {
 }
 
 window.onclick = function(event) {
-	if (!event.target.matches('.dropbtn') && !event.target.matches('.bell-icon')) {
-		var dropdowns = document.getElementsByClassName("dropdown-content");
-		var i;
-		for (i = 0; i < dropdowns.length; i++) {
-			var openDropdown = dropdowns[i];
-			if (openDropdown.classList.contains('show')) {
-				openDropdown.classList.remove('show');
-			}
+	const dropdown = document.getElementById("drop");
+	const dropbtn = document.querySelector('.dropbtn');
+	const bellIcon = document.querySelector('.bell-icon');
+
+	if (!dropdown.contains(event.target) && !dropbtn.contains(event.target) && !bellIcon.contains(event.target)) {
+		if (dropdown.classList.contains('show')) {
+			dropdown.classList.remove('show');
 		}
 	}
 }
