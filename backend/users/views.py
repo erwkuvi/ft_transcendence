@@ -6,8 +6,9 @@ from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
 from django.shortcuts import redirect
 from django.conf import settings
+from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, action
-from rest_framework import generics, viewsets, status, views
+from rest_framework import generics, viewsets, status, views, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
@@ -17,10 +18,6 @@ from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerialize
 from .models import User, PlayerProfile, Match
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
-
-@api_view()
-def say_hello(request):
-    return Response('Hello from Erwin')
 
 
 class CreateUserView(generics.GenericAPIView):
@@ -223,6 +220,34 @@ class OAuth42CallbackView(views.APIView):
 
 # ---------------OTPLOGIN ---------------------------------------------------------------------------------------------
 
+#class OTPLoginView(generics.GenericAPIView):
+#    serializer_class = OTPLoginSerializer
+#
+#    def post(self, request, *args, **kwargs):
+#        serializer = self.get_serializer(data=request.data)
+#        serializer.is_valid(raise_exception=True)
+#
+#        email = serializer.validated_data.get('email')
+#        otp = serializer.validated_data.get('otp')
+#
+#        try:
+#            user = User.objects.get(email=email)
+#        except User.DoesNotExist:
+#            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+#
+#        # Verify the OTP
+#        totp = pyotp.TOTP(user.otp_base32)
+#        if not totp.verify(otp):
+#            return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
+#
+#        # Generate JWT tokens
+#        refresh = RefreshToken.for_user(user)
+#        return Response({
+#            'refresh': str(refresh),
+#            'access': str(refresh.access_token),
+#            }, status=status.HTTP_200_OK)
+
+
 class OTPLoginView(generics.GenericAPIView):
     serializer_class = OTPLoginSerializer
 
@@ -230,22 +255,6 @@ class OTPLoginView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        email = serializer.validated_data.get('email')
-        otp = serializer.validated_data.get('otp')
-
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Verify the OTP
-        totp = pyotp.TOTP(user.otp_base32)
-        if not totp.verify(otp):
-            return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Generate JWT tokens
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-            }, status=status.HTTP_200_OK)
+        # If validation passes, JWT tokens are returned from serializer's `validate` method
+        tokens = serializer.validated_data
+        return Response(tokens, status=status.HTTP_200_OK)

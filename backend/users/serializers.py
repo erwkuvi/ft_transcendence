@@ -1,21 +1,19 @@
 # serializers.py
+import datetime
 import pyotp
 import qrcode
+import logging
 from io import BytesIO
-from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
 from django.utils.crypto import get_random_string
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
+from rest_framework_simplejwt.tokens import RefreshToken
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .models import User, PlayerProfile, Match, PlayerMatch
 from .signals import match_created
 # from django.urls import reverse
 # from users.signals.handlers import match_created
-
-class OTPLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    otp = serializers.CharField(max_length=6)  # OTP length is usually 6
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
@@ -76,8 +74,9 @@ class UserSerializer(BaseUserSerializer):
         fields = ['id', 'username', 'first_name',
                   'last_name', 'email', 'qr_code', 'password']
         extra_kwargs = {
-                "qr_code": {"read_only": True},
-                }
+            "password": {"write_only": True},
+            "qr_code": {"read_only": True},
+        }
 
 
 # Serializer for Player
@@ -139,3 +138,40 @@ class MatchSerializer(serializers.ModelSerializer):
         match_created.send_robust(self.__class__, match=instance)
         print('after signal in serializer')
         return instance
+
+
+logger = logging.getLogger(__name__)
+
+class OTPLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True)
+    otp = serializers.CharField(max_length=6, write_only=True)  # OTP length is usually 6
+    def validate(self, attrs):
+        email = attrs.get('email')
+        username = attrs.get('username')
+        password = attrs.get('password')
+        otp = attrs.get('otp')
+
+        try:
+            user = User.objects.get(email=email, username=username)
+        except User.DoesNotExist:
+            raise exceptions.AuthenticationFailed("User not found.")
+
+        if not user.check_password(password):
+            raise exceptions.AuthenticationFailed("Incorrect password.")
+
+        # Verify OTP using pyotp
+        totp = pyotp.TOTP(user.otp_base32)
+        current_time = totp.timecode(datetime.datetime.now())
+        logger.info(f"Server time: {datetime.datetime.now()}, OTP Timecode: {current_time}")
+        if not totp.verify(otp):
+            logger.warning(f"Invalid OTP for user: {user.email}, Expected: {totp.now()}")
+            raise exceptions.AuthenticationFailed("Invalid OTP code.")
+
+        # If authentication is successful, generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }

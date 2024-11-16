@@ -31,8 +31,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql'
-# SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
+# SECRET_KEY = os.environ['SECRET_KEY', 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM']
 HOST_IP = 'localhost'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -101,16 +101,16 @@ REST_FRAMEWORK = {
     ),
 }
 
+#'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # This is for development
-    #'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': {SECRET_KEY}
-}
+    'SIGNING_KEY': 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM'
+    }
 
 
 ROOT_URLCONF = 'backend.urls'
@@ -172,7 +172,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 USE_I18N = True
 USE_TZ = True
 USE_L10N = True
@@ -198,6 +198,23 @@ DJOSER = {
         'current_user': 'users.serializers.UserSerializer',
     }
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
 
 # ----------------- OAUTH 2.0 - 42 INTRA SETTINGS -----------------:
 # 42 Intra auth URL

@@ -5,6 +5,7 @@ from django.urls import path, include
 from django.shortcuts import redirect
 #from .users import views
 from friends.views import UserListView
+from users.views import OTPLoginView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -30,25 +31,26 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('auth/42/', include('users.urls')),
+    path('auth/otp-login/', OTPLoginView.as_view(), name='otp-login'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # AVAILABLE ENDPOINTS FOR DJOSER(JWT)
-# /jwt/create/ (JWT create a new user)
-# /jwt/refresh/ (JWT )
-# /jwt/verify/ (JSON Web Token Authentication)
-# /auth/42/login url to 42api auth
-# /auth/42/callback 
-# /users/
-# /users/me/
-# /users/confirm/
-# /users/resend_activation/
-# /users/set_password/
-# /users/reset_password/
-# /users/reset_password_confirm/
-# /users/set_username/
-# /users/reset_username/
-# /users/reset_username_confirm/
+# /auth/jwt/create/ (JWT create a new user)
+# /auth/jwt/refresh/ (JWT )
+# /auth/jwt/verify/ (JSON Web Token Authentication)
+# /auth/users/
+# /auth/users/me/
+# /auth/users/confirm/
+# /auth/users/resend_activation/
+# /auth/users/set_password/
+# /auth/users/reset_password/
+# /auth/users/reset_password_confirm/
+# /auth/users/set_username/
+# /auth/users/reset_username/
+# /auth/users/reset_username_confirm/
 
+# /auth/42/login/ url to 42api auth
+# /auth/42/callback/ 
