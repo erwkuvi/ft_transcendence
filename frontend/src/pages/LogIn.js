@@ -1,11 +1,10 @@
 import React from 'react';
 import LogInButton from '../components/LogInButton';
-import './TextBox.css';
 
 const LogIn = () => {
 	return (
 		<div className="page-content">
-			<h1>Log In</h1>
+			<h1>log in</h1>
 			<p>
 				You will be redirected to login with 42.
 			</p>

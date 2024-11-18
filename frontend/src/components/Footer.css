@@ -1,5 +1,6 @@
 .footer {
 	opacity: 0.5;
+	flex-shrink: 0;
 }
 
 .footer .container {

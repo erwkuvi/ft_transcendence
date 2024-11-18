@@ -1,10 +1,9 @@
 import React from 'react';
-import './TextBox.css';
 
 const Play = () => {
 	return (
 		<div className="page-content">
-			<h1>PLAY</h1>
+			<h1>play</h1>
 			<div className="text-box left">
 				<p>Ready to play some Pong?</p>
 			</div>
