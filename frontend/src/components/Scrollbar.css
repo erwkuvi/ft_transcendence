@@ -10,7 +10,7 @@
 
 ::-webkit-scrollbar-thumb {
 	border-radius: 1rem;
-	background-image: linear-gradient(to top, #434343 0%, #807f7f 100%);
+	background-image: linear-gradient(to top, var(--color-4) 0%, var(--color-3) 100%);
 }
 
 body:hover ::-webkit-scrollbar,
