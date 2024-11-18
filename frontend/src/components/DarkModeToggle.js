@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import './Footer.css'
 
 const DarkModeToggle = () => {
 	useEffect(() => {
@@ -19,7 +20,7 @@ const DarkModeToggle = () => {
 
 	return (
 		<button id="darkModeToggleButton" className="dark-mode-toggle">
-			<i className="fas fa-circle-half-stroke" />
+			<i className="fas fa-circle-half-stroke dark-icon" />
 		</button>
 	);
 }

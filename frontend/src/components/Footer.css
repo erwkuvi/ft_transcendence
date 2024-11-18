@@ -20,13 +20,15 @@
 	color: var(--text-color);
 }
 
+.dark-icon {
+	color: var(--text-color);
+}
 
 .dark-mode-toggle {
 	background: none;
 	border: none;
 	cursor: pointer;
 	font-size: 24px;
-	color: var(--text-color);
 	transition: transform 0.2s ease;
 	box-shadow: none;
 	outline: none;

@@ -10,7 +10,7 @@ const PlayButton = () => {
 	}
 
 	return (
-		<button className="btn play-button py-3 px-5 mt-5"onClick={handleClick}>
+		<button className="btn button play-button py-3 px-5 mt-5"onClick={handleClick}>
 			PLAY NOW
 		</button>
 	);

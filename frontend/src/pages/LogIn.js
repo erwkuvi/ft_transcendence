@@ -6,6 +6,9 @@ const LogIn = () => {
 	return (
 		<div className="page-content">
 			<h1>Log In</h1>
+			<p>
+				You will be redirected to login with 42.
+			</p>
 			<div className="col d-flex justify-content-center align-items-center">
 				<LogInButton />
 			</div>

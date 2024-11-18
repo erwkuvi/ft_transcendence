@@ -6,42 +6,31 @@
 	top: 0;
 	z-index: 3;
 	width: 100%;
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+}
+
+.menu, .right-menu {
+	display: flex;
+}
+
+.right-menu {
+	margin-left: auto;
+	align-items: center;
+	padding: 0;
+	margin: 0;
+}
+
+.right-menu .login {
+	width: 102px;
 }
 
 .notif {
-	margin: 10px 10px 0px auto;
+	right: 2px;
+	z-index: 3;
 }
 
-[data-bs-theme="dark"] .menu_bar {
-	background-color: #2d2c2f;
-}
-
-[data-bs-theme="light"] .menu_bar {
-	background-color: #d6d4da;
-}
-
-.logo {
-	display: flex;
-	align-items: center;
-	font-size: 20px;
-	font-weight: 200;
-	height: fit-content;
-	text-decoration: none;
-	color: var(--text-color);
-}
-
-.header .logo:hover {
-	color: inherit !important;
-	text-decoration: none !important;
-}
-
-.logo .icon {
-	width: 24px;
-	height: 24px;
-	stroke: rgb(255, 250, 156);
-}
-
-.menu a {
+.header a, .header .btn {
 	color: var(--text-color);
 	text-decoration: none;
 	margin: 0px;
@@ -51,17 +40,17 @@
 	height: fit-content;
 	text-align: center;
 	display: inline-block;
-	background-color: #3E267800;
+	background-color: transparent;
 	transition: background-color 0.3s;
 }
 
 .menu a:hover {
-	background-color: #3826785b;
+	background-color: rgba(255, 255, 255, 0.137);
 }
 
 @media (max-width: 592px) {
-	.logo {
-		padding-top: 10px;
+	.fa-circle {
+		display: none;
 	}
 	.custom-menu {
 		margin-left: 0 !important;
