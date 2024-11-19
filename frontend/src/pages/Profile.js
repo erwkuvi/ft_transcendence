@@ -11,6 +11,7 @@ const Profile = () => {
 
 	// For the fetching data fron back
     const [profile, setProfile] = useState(null);
+	const [friends, setFriends] = useState([]);
 
     const [allUsers, setAllUsers] = useState([]);
 	const [query, setQuery] = useState('');
@@ -47,9 +48,16 @@ const Profile = () => {
 			const users = await fetchUsers();
             const profile = users.find(user => user.username === profileData.username);
 			setPersonLoggedIn(profile);
-
+			
             const otherUsers = users.filter(user => user.username !== profileData.username);
             setAllUsers(otherUsers);
+
+			const friendsList = otherUsers.filter(user =>
+				profileData.friends.some(friend => friend === user.id)
+			);
+			setFriends(friendsList)
+			console.log('list of friends id', profileData.friends)
+			console.log('list of friends.username', friendsList)
 
             } catch (err) {
         // Handle any errors
@@ -129,6 +137,7 @@ const Profile = () => {
 				</div>
 				<div className='card basic'>
 					<h2>{t("List of friends")}</h2>
+					{friends.map(user => user.username)}
 					<h2>{t("Search for users")}</h2>
 					<Filter type="text" value={query} onChange={handleSearch}/>
 					<ListUsers	filterUsers={filterUsers}
