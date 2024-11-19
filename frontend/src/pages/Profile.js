@@ -25,7 +25,7 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
 				// Request from API
-            const response = await axios.get(`${BASE_URL}/users/players/me/`);
+            const response = await axios.get(`${BASE_URL}/user_management/players/me/`);
 				// Prepend BASE_URL to avatar if it's a relative URL
             const profileData = {
                 ...response.data,
@@ -90,10 +90,10 @@ const Profile = () => {
 	};
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>; 
+  if (error) return <p>Error: {error}</p>;
   if (!profile) return <p>No profile data available</p>;
 
-    
+
 
 	return (
 		<div className="page-content">

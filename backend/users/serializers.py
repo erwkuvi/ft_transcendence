@@ -1,35 +1,82 @@
 # serializers.py
-from rest_framework import serializers
+import datetime
+import pyotp
+import qrcode
+import logging
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.utils.crypto import get_random_string
+from rest_framework import serializers, exceptions
+from rest_framework_simplejwt.tokens import RefreshToken
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .models import User, PlayerProfile, Match, PlayerMatch
-from django.urls import reverse
-#from users.signals.handlers import match_created
 from .signals import match_created
+# from django.urls import reverse
+# from users.signals.handlers import match_created
+
+
+class UserCreateSerializer(BaseUserCreateSerializer):
+
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = ['id', 'username',
+                  'first_name', 'last_name',
+                  'email', 'qr_code', 'password']
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "qr_code": {"read_only": True},
+        }
+
+    def validate(self, attrs: dict):
+        email = attrs.get("email").lower().strip()
+        if User.objects.filter(email__iexact=email).exists():
+            raise serializers.ValidationError({"email": "Email already exists!"})
+        return super().validate(attrs)
+
+    def create(self, validated_data: dict):
+        otp_base32 = pyotp.random_base32()
+        email = validated_data.get("email")
+        otp_auth_url = pyotp.totp.TOTP(otp_base32).provisioning_uri(
+            name=email.lower(), issuer_name="Ft_Transcendence_DT"
+        )
+        stream = BytesIO()
+        image = qrcode.make(f"{otp_auth_url}")
+        image.save(stream)
+        user = User(
+            email=email,
+            username=validated_data.get("username"),  # Inherited from AbstractUser
+            first_name=validated_data.get("first_name"),
+            last_name=validated_data.get("last_name"),
+            otp_base32=otp_base32,
+            otpauth_url=otp_auth_url,
+            qr_code=ContentFile(stream.getvalue(), name=f"qr{get_random_string(10)}.png")
+        )
+
+        # Use set_password for proper password hashing
+        user.set_password(validated_data.get("password"))
+
+        user.save()
+
+        return user
 
 
 # for creating a new user, which information is asked
-class UserCreateSerializer(BaseUserCreateSerializer):
-    auth_url = serializers.SerializerMethodField()
-
-    class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'username', 'password',
-                  'email', 'first_name', 'last_name', 'auth_url']
-
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        callback_uri = f"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-000d79361be733aa7365ca50efc33b41b38c6e1b19d4f5b16456e9e63726df67&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fusers%2F&response_type=code"
-        representation['callback_uri'] = callback_uri
-        return representation
-
+#class UserCreateSerializer(BaseUserCreateSerializer):
+#    class Meta(BaseUserCreateSerializer.Meta):
+#        fields = ['id', 'username', 'first_name',
+#                  'last_name', 'email']
 
 # for the current user, which information is shown
 class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = User
         fields = ['id', 'username', 'first_name',
-                  'last_name', 'email']
+                  'last_name', 'email', 'qr_code', 'password']
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "qr_code": {"read_only": True},
+        }
 
 
 # Serializer for Player
@@ -91,3 +138,40 @@ class MatchSerializer(serializers.ModelSerializer):
         match_created.send_robust(self.__class__, match=instance)
         print('after signal in serializer')
         return instance
+
+
+logger = logging.getLogger(__name__)
+
+class OTPLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True)
+    otp = serializers.CharField(max_length=6, write_only=True)  # OTP length is usually 6
+    def validate(self, attrs):
+        email = attrs.get('email')
+        username = attrs.get('username')
+        password = attrs.get('password')
+        otp = attrs.get('otp')
+
+        try:
+            user = User.objects.get(email=email, username=username)
+        except User.DoesNotExist:
+            raise exceptions.AuthenticationFailed("User not found.")
+
+        if not user.check_password(password):
+            raise exceptions.AuthenticationFailed("Incorrect password.")
+
+        # Verify OTP using pyotp
+        totp = pyotp.TOTP(user.otp_base32)
+        current_time = totp.timecode(datetime.datetime.now())
+        logger.info(f"Server time: {datetime.datetime.now()}, OTP Timecode: {current_time}")
+        if not totp.verify(otp):
+            logger.warning(f"Invalid OTP for user: {user.email}, Expected: {totp.now()}")
+            raise exceptions.AuthenticationFailed("Invalid OTP code.")
+
+        # If authentication is successful, generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }

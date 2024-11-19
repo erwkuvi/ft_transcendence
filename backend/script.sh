@@ -27,6 +27,7 @@ else
     echo "Superuser not created. Missing environment variables."
 fi
 
+
 python3 manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -78,6 +79,8 @@ for user_data in users_data:
     else:
         print(f'User {user.username} already exists.')
 EOF
+
+python3 manage.py collectstatic
 
 python3 manage.py runserver 0.0.0.0:8000
 #daphne backend.asgi:application -b 0.0.0.0 -p 8000

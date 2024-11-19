@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .serializers import FriendshipSerializer, BasicUserSerializer
 from .models import Friendship, FriendshipHistory
 from users.models import User
+from users.signals import friendship_created, friendship_destroyed
 from django.conf import settings
 from django.db.models import Q
 
@@ -73,6 +74,8 @@ class ManageOtherUsers(viewsets.GenericViewSet):
              Q(sender=receiver, receiver=sender, status='pending')))
 
         friendships.update(status='accepted')
+        friendship_created.send_robust(sender=self.__class__, sender_user=sender, receiver_user=receiver)  # signal to add users to friendlist in profile
+        print("After calling signal")
         return respond_success("Friend request accepted")
         
 
@@ -185,4 +188,5 @@ class ManageOtherUsers(viewsets.GenericViewSet):
 
         are_friends_backward.delete()
         friendship.delete()
+        friendship_destroyed.send_robust(sender=self.__class__, sender_user=sender, receiver_user=receiver)
         return respond_success("You are not friends anymore.")

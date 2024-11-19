@@ -1,18 +1,18 @@
-Django==4.1.7  # Web framework
-djangorestframework  # Toolkit for building Web APIs
-django-environ==0.7.0  # Manage environment variables
-django-cors-headers==4.0.0  # Handle CORS headers
-psycopg2-binary==2.9.3  # PostgreSQL database adapter
-daphne==4.0.0  # ASGI server for HTTP, HTTP2, and WebSocket
-channels==4.0.0  # WebSockets and more for Django
-djangorestframework-simplejwt  # JWT authentication for DRF
-requests==2.31.0  # HTTP library
-httpx  # Next-gen HTTP client
-djoser  # User authentication views for DRF
-drf-nested-routers  # Nested resource routing for DRF
-Pillow  # Image processing
-gunicorn  # WSGI HTTP Server
-dj-database-url  # Database configuration from URL
-whitenoise  # Serve static files in production
-
-
+Django==4.1.7  								# Web framework
+djangorestframework  					# Toolkit for building Web APIs
+django-environ==0.7.0  				# Manage environment variables
+django-cors-headers==4.0.0  	# Handle CORS headers
+psycopg2-binary==2.9.3  			# PostgreSQL database adapter
+daphne==4.0.0  								# ASGI server for HTTP, HTTP2, and WebSocket
+channels==4.0.0  							# WebSockets and more for Django
+djangorestframework-simplejwt # JWT authentication for DRF
+requests==2.31.0  						# HTTP library
+httpx  												# Next-gen HTTP client
+djoser  											# User authentication views for DRF
+drf-nested-routers  					# Nested resource routing for DRF
+Pillow  											# Image processing for the profile photos handling
+gunicorn  										# WSGI HTTP Server
+dj-database-url  							# Database configuration from URL -- maybe not needed anymore
+whitenoise  									# Serve static files in prod- adds caching and compression to images 
+pyotp==2.8.0 									# For generating and validating one-time passwords (OTPs) for 2FA
+qrcode==7.3.1									# Generates a QR code
