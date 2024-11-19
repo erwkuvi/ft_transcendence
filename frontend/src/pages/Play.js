@@ -2,16 +2,10 @@ import React from 'react';
 
 const Play = () => {
 	return (
-		<div className="page-content">
+		<div className="page-content play">
 			<h1>play</h1>
-			<div className="text-box left">
+			<div className="tournament">
 				<p>Ready to play some Pong?</p>
-			</div>
-			<div className="text-box middle">
-				<p>Too bad, because we're not ready :(</p>
-			</div>
-			<div className="text-box left">
-				<p>Please wait until we've finished building our site!</p>
 			</div>
 		</div>
 	);

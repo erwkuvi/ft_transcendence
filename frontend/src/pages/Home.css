@@ -1,11 +1,11 @@
-.main-container {
+.home {
 	margin: 0;
 	display: flex;
 	flex-direction: column;
 	position: relative;
 }
 
-.title {
+.home .title {
 	text-align: center;
 	margin: 0;
 	position: absolute;
@@ -14,7 +14,7 @@
 	transform: translate(-50%, -50%);
 }
 
-.stuff {
+.home .stuff {
 	margin-top: 100vh;
 	margin-bottom: 10%;
 	padding: 20px;
@@ -22,7 +22,7 @@
 	line-height: 1.6;
 }
 
-.ball {
+.home .ball {
 	color: var(--text-color); 
 	font-size: 0.2em;
 	animation: bounce 1s infinite;

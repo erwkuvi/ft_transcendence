@@ -4,7 +4,7 @@ import './Home.css'
 
 const Home = () => {
 	return (
-		<div className="page-content main-container">
+		<div className="page-content home">
 			<h1 className="title">
 				minipong
 				<i class="fa-solid fa-circle ball px-1"></i>
