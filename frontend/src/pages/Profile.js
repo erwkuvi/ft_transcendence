@@ -5,6 +5,15 @@ import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
 import { useTranslation } from "react-i18next";
 
+const Filter = (props) => {
+	return (
+	  <div> search for users
+		<input  type={props.type}
+				value={props.value}
+				onChange={props.onChange}/>
+	  </div>
+	)
+}
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -13,6 +22,8 @@ const Profile = () => {
     const [profile, setProfile] = useState(null);
 
     const [allUsers, setAllUsers] = useState([]);
+	const [query, setQuery] = useState('');
+	const [filterUsers, setFilterUsers] = useState([]);
 	const [personLoggedIn, setPersonLoggedIn] = useState(null);
 
     const [loading, setLoading] = useState(true);
@@ -83,7 +94,23 @@ const Profile = () => {
 		};
 	}, []);
 
+	const handleSearch = (event) => {
+		const currFiltered = event.target.value
+		console.log(currFiltered)
+		setQuery(currFiltered)
 
+		console.log('List of users:', allUsers)
+
+		if (!currFiltered) {
+			setFilterUsers([]); // Clear the filtered users list if the query is empty or null
+		} else {
+			const filteredUsers = allUsers.filter(user =>
+				user.username.toLowerCase().includes(currFiltered.toLowerCase())
+			)
+			console.log('filtered users:',  filteredUsers)
+			setFilterUsers(filteredUsers)
+		}
+	}
 
 	const sendMessage = () => {
 		if (socket) {
@@ -115,8 +142,9 @@ const Profile = () => {
 				</div>
 				<div className='card basic'>
 					<h2>{t("List of users")}</h2>
-					<ListUsers allUsers={allUsers}
-					           setAllUsers={setAllUsers}
+					<Filter type="text" value={query} onChange={handleSearch}/>
+					<ListUsers filterUsers={filterUsers}
+					           setFilterUsers={setFilterUsers}
 							   personLoggedIn={personLoggedIn}/>
 				</div>
 				<div className='card basic notifications'>

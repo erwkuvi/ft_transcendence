@@ -3,7 +3,7 @@ import UserCard from './UserCard';
 import { fetchUsers } from '../../services/fetchUsers';
 import React, { useState } from 'react';
 
-const ListUsers = ({allUsers, setAllUsers, personLoggedIn}) => {
+const ListUsers = ({filterUsers, setFilterUsers, personLoggedIn}) => {
 	const [refreshKey, setRefreshKey] = useState(0);
 
 	const handleInvite = async (userId, senderId, option) => {
@@ -23,8 +23,11 @@ const ListUsers = ({allUsers, setAllUsers, personLoggedIn}) => {
 			  await changeFriendStatus({ userId, senderId, status, endpoint });
 
 			  const updatedUsers = await fetchUsers();
-              const listUsers = updatedUsers.filter(user => user.username !== personLoggedIn.username);
-			  setAllUsers(listUsers);
+            //   const listUsers = updatedUsers.filter(user => user.username !== personLoggedIn.username);
+			  const listfilteredUsers = updatedUsers.filter(user =>
+				filterUsers.some(filterUser => filterUser.username === user.username));
+			  console.log('What is the list I set', listfilteredUsers)
+			  setFilterUsers(listfilteredUsers);
 			  setRefreshKey(prevKey => prevKey + 1);
 			} catch (error) {
 			  console.error("Failed to update friend status:", error);
@@ -35,7 +38,7 @@ const ListUsers = ({allUsers, setAllUsers, personLoggedIn}) => {
 		};
 
 	return (
-		<p>{allUsers.map((user) => (
+		<p>{filterUsers.map((user) => (
 			<UserCard 
           		user={user}
           		personLoggedIn={personLoggedIn}
