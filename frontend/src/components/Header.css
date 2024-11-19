@@ -49,9 +49,6 @@
 }
 
 @media (max-width: 592px) {
-	.fa-circle {
-		display: none;
-	}
 	.custom-menu {
 		margin-left: 0 !important;
 		text-align: center;

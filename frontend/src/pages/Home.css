@@ -21,3 +21,24 @@
 	text-align: center;
 	line-height: 1.6;
 }
+
+.ball {
+	color: var(--text-color); 
+	font-size: 0.2em;
+	animation: bounce 1s infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes bounce {
+	0% { transform: translateY(-50px); }
+	10% { transform: translateY(-48px); }
+	20% { transform: translateY(-42px); }
+	30% { transform: translateY(-32px); }
+	40% { transform: translateY(-18px); }
+	50% { transform: translateY(0); }
+	60% { transform: translateY(-18px); }
+	70% { transform: translateY(-32px); }
+	80% { transform: translateY(-42px); }
+	90% { transform: translateY(-48px); }
+	100% { transform: translateY(-50px); }
+}

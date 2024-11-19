@@ -7,13 +7,10 @@ import NotifMenu from './NotifMenu';
 const Header = () => {
 	return (
 		<div>
-			<nav className="navbar header m-0 p-0">
+			<nav className="navbar header m-0 p-0 pl-2">
 				<div className="container-fluid p-0">
 					<nav className="menu custom-menu">
-						<Link to="/">
-							<i className="fa-regular fa-circle pr-3"/>
-							Home
-						</Link>
+						<Link to="/">Home</Link>
 						<Link to="/play">Play</Link>
 						<Link to="/profile">Profile</Link>
 						<Link to="/about">About</Link>
