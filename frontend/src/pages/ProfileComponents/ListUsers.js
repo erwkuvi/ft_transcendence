@@ -20,7 +20,6 @@ const ListUsers = ({allUsers, setAllUsers, personLoggedIn}) => {
 		  if (option in optionMapping) {
 			const { endpoint, status } = optionMapping[option];
 			try {
-			  // Change friend status on the server
 			  await changeFriendStatus({ userId, senderId, status, endpoint });
 
 			  const updatedUsers = await fetchUsers();

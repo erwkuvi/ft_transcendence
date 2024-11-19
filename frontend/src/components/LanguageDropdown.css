@@ -1,0 +1,31 @@
+.language-dropdown {
+	width: auto; /* Automatically adjust to content size */
+	margin-left: 20px; /* Add space above the dropdown menu */
+  }
+  
+  .language-select {
+	padding: 5px; /* Increased padding for a larger click area */
+	font-size: 16px; /* Slightly larger text */
+	color: #fff; /* White text for contrast on dark background */
+	background-color: #2d2c2f; /* Dark background */
+	width: 100%;
+	border-radius: 4px;
+	border: 1px solid #2d2c2f; /* Subtle border for a polished look */
+	appearance: none; /* Remove default styling in some browsers */
+	cursor: pointer;
+  }
+  
+  .language-select option {
+	padding-left: 30px; /* Make room for the flag icon */
+	background-repeat: no-repeat;
+	background-position: left center;
+	height: 50px; /* Increased height for bigger options */
+	font-size: 16px; /* Consistent with the dropdown text size */
+	color: #000; /* Black text for visibility on light background */
+	background-color: #fff; /* Light background for dropdown options */
+  }
+  
+  .language-select option:empty {
+	background: none; /* Hide background if no flag */
+  }
+  
