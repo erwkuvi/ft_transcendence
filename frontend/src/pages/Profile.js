@@ -3,17 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
+import Filter from './ProfileComponents/Filter';
 import { useTranslation } from "react-i18next";
-
-const Filter = (props) => {
-	return (
-	  <div>
-		<input  type={props.type}
-				value={props.value}
-				onChange={props.onChange}/>
-	  </div>
-	)
-}
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -96,10 +87,7 @@ const Profile = () => {
 
 	const handleSearch = (event) => {
 		const currFiltered = event.target.value
-		console.log(currFiltered)
 		setQuery(currFiltered)
-
-		console.log('List of users:', allUsers) //not updated
 
 		if (!currFiltered) {
 			setFilterUsers([]);
@@ -107,7 +95,6 @@ const Profile = () => {
 			const filteredUsers = allUsers.filter(user =>
 				user.username.toLowerCase().includes(currFiltered.toLowerCase())
 			)
-			console.log('filtered users:',  filteredUsers)
 			setFilterUsers(filteredUsers)
 		}
 	}

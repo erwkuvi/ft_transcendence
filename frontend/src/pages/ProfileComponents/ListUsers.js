@@ -23,14 +23,15 @@ const ListUsers = ({filterUsers, setAllUsers, setFilterUsers, personLoggedIn}) =
 			  await changeFriendStatus({ userId, senderId, status, endpoint });
 
 			  const updatedUsers = await fetchUsers();
-			  console.log('What do I featch', updatedUsers)
               const listUsers = updatedUsers.filter(user => user.username !== personLoggedIn.username);
 			  setAllUsers(listUsers)
+
 			  const listfilteredUsers = updatedUsers.filter(user =>
 				filterUsers.some(filterUser => filterUser.username === user.username));
-			  console.log('What is the list I set', listfilteredUsers)
 			  setFilterUsers(listfilteredUsers);
+
 			  setRefreshKey(prevKey => prevKey + 1);
+
 			} catch (error) {
 			  console.error("Failed to update friend status:", error);
 			}
