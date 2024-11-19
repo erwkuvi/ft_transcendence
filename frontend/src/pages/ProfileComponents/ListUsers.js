@@ -3,7 +3,7 @@ import UserCard from './UserCard';
 import { fetchUsers } from '../../services/fetchUsers';
 import React, { useState } from 'react';
 
-const ListUsers = ({filterUsers, setFilterUsers, personLoggedIn}) => {
+const ListUsers = ({filterUsers, setAllUsers, setFilterUsers, personLoggedIn}) => {
 	const [refreshKey, setRefreshKey] = useState(0);
 
 	const handleInvite = async (userId, senderId, option) => {
@@ -23,7 +23,9 @@ const ListUsers = ({filterUsers, setFilterUsers, personLoggedIn}) => {
 			  await changeFriendStatus({ userId, senderId, status, endpoint });
 
 			  const updatedUsers = await fetchUsers();
-            //   const listUsers = updatedUsers.filter(user => user.username !== personLoggedIn.username);
+			  console.log('What do I featch', updatedUsers)
+              const listUsers = updatedUsers.filter(user => user.username !== personLoggedIn.username);
+			  setAllUsers(listUsers)
 			  const listfilteredUsers = updatedUsers.filter(user =>
 				filterUsers.some(filterUser => filterUser.username === user.username));
 			  console.log('What is the list I set', listfilteredUsers)

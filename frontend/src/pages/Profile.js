@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 const Filter = (props) => {
 	return (
-	  <div> search for users
+	  <div>
 		<input  type={props.type}
 				value={props.value}
 				onChange={props.onChange}/>
@@ -99,10 +99,10 @@ const Profile = () => {
 		console.log(currFiltered)
 		setQuery(currFiltered)
 
-		console.log('List of users:', allUsers)
+		console.log('List of users:', allUsers) //not updated
 
 		if (!currFiltered) {
-			setFilterUsers([]); // Clear the filtered users list if the query is empty or null
+			setFilterUsers([]);
 		} else {
 			const filteredUsers = allUsers.filter(user =>
 				user.username.toLowerCase().includes(currFiltered.toLowerCase())
@@ -138,14 +138,16 @@ const Profile = () => {
 				<div className='card basic'>
 					<h2>{t("Stats")}</h2>
 					<p>{t("Games played:")} <span>{profile.matches_id.join(', ')}</span></p>
-					<p>{t("Wins:")} <span>{profile.wins}</span></p>
+					<p>{t("Wins")} <span>{profile.wins}</span></p>
 				</div>
 				<div className='card basic'>
-					<h2>{t("List of users")}</h2>
+					<h2>{t("List of friends")}</h2>
+					<h2>{t("Search for users")}</h2>
 					<Filter type="text" value={query} onChange={handleSearch}/>
-					<ListUsers filterUsers={filterUsers}
-					           setFilterUsers={setFilterUsers}
-							   personLoggedIn={personLoggedIn}/>
+					<ListUsers	filterUsers={filterUsers}
+								setAllUsers={setAllUsers}
+								setFilterUsers={setFilterUsers}
+								personLoggedIn={personLoggedIn}/>
 				</div>
 				<div className='card basic notifications'>
 					<h2>{t("Friends list")}</h2>
