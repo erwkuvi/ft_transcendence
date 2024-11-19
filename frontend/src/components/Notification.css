@@ -3,12 +3,12 @@
 	align-items: center;
 	justify-content: space-between;
 	padding: 10px 15px;
-	color: black;
-	border: 1px solid #807c83;
-	border-radius: 5px;
+	color: var(--text-color);
+	border: 1px solid var(--text-color);
 	margin-bottom: 10px;
-	background-color: #aca8b0;
 	transition: background-color 0.3s ease;
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
 }
 
 .notification-text {
@@ -24,7 +24,6 @@
 .notification-description {
 	margin: 5px 0 0 0;
 	font-size: 11px;
-	color: #444444;
 }
 
 .notification-buttons {
@@ -39,7 +38,7 @@
 	font-size: 18px;
 	margin: 0;
 	padding: 6px;
-	transition: transform 0.3s ease, color 0.1s ease;
+	transition: transform 0.3s ease;
 }
 
 .notification .btn:focus {
@@ -52,39 +51,37 @@
 }
 
 .confirm-btn {
-	color: rgb(78, 101, 78);
 	transform: scale(1);
 }
 
 .confirm-btn:hover {
-	color: rgb(90, 136, 90);
 	transform: scale(1.4);
 }
 
 .reject-btn {
-	color: rgb(100, 44, 44);
 	transform: scale(1);
 }
 
 .reject-btn:hover {
-	color: rgb(141, 46, 46);
 	transform: scale(1.4);
 }
 
-.unread {
-	background-color: #d3d3d3;
-	border: 1px solid #a9a9a9;
+.unread{
+	background-color: var(--fill-color2);
 }
 
-.unread .notification-title {
+.read{
+	background-color: var(--fill-color);
+}
+
+.unread .notification-title, .unread .notification-description{
 	font-weight: bold;
 }
 
 .read {
-	background-color: #bcbcbc;
 	border: 1px solid #8f8f8f;
 }
 
-.read .notification-title {
+.read {
 	font-weight: normal;
 }

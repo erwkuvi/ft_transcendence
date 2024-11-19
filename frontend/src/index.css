@@ -32,12 +32,16 @@ body {
 
 [data-bs-theme="dark"] {
 	--text-color: white;
-	--card-color: var(--color-4);
+	--fill-color: #ffffff0e;
+	--fill-color2: #ffffff1a;
+	--background: var(--color-5);
 }
 
 [data-bs-theme="light"] {
 	--text-color: black;
-	--card-color: var(--color-2);
+	--fill-color: #0000000e;
+	--fill-color2: #0000001a;
+	--background: var(--color-3);
 }
 
 [data-bs-theme="dark"] body {

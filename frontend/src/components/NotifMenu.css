@@ -44,6 +44,7 @@
 	border-radius: 2px;
 	max-height: 240px;
 	overflow-y: auto;
+	background-color: var(--background);
 }
 
 .dropdown-content::-webkit-scrollbar {
@@ -52,6 +53,7 @@
 }
 
 .dropdown-content {
+	border: 1px solid var(--text-color);
 	scrollbar-width: none;
 }
 
@@ -61,8 +63,7 @@
 
 .no-notifications {
 	padding: 12px 16px;
-	background-color: rgb(180, 178, 190);
-	color: #000000;
+	color: var(--text-color);
 	margin: 0px;
 	height: 100%;
 }
