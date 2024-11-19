@@ -3,13 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
-
+import Filter from './ProfileComponents/Filter';
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+	const {t} = useTranslation();
+
 	// For the fetching data fron back
     const [profile, setProfile] = useState(null);
 
     const [allUsers, setAllUsers] = useState([]);
+	const [query, setQuery] = useState('');
+	const [filterUsers, setFilterUsers] = useState([]);
 	const [personLoggedIn, setPersonLoggedIn] = useState(null);
 
     const [loading, setLoading] = useState(true);
@@ -80,7 +85,19 @@ const Profile = () => {
 		};
 	}, []);
 
+	const handleSearch = (event) => {
+		const currFiltered = event.target.value
+		setQuery(currFiltered)
 
+		if (!currFiltered) {
+			setFilterUsers([]);
+		} else {
+			const filteredUsers = allUsers.filter(user =>
+				user.username.toLowerCase().includes(currFiltered.toLowerCase())
+			)
+			setFilterUsers(filteredUsers)
+		}
+	}
 
 	const sendMessage = () => {
 		if (socket) {
@@ -97,34 +114,37 @@ const Profile = () => {
 
 	return (
 		<div className="page-content">
-			<h1>PROFILE</h1>
+			<h1>{t("PROFILE")}</h1>
 			<div className='container-fluid cards mt-4'>
 				<div className='card basic'>
-					<h2>Basic Information</h2>
+					<h2>{t("Basic Information")}</h2>
 					<img src={profile.avatar} className='profilepic m-2' width='200' height='200' alt={`${profile.display_name}'s avatar`}/>
-					<p>Username: <span>{profile.username}</span></p>
-					<p>Email: <span>{profile.email}</span></p>
+					<p>{t("Username:")} <span>{profile.username}</span></p>
+					<p>{t("Email:")} <span>{profile.email}</span></p>
 				</div>
 				<div className='card basic'>
-					<h2>Stats</h2>
-					<p>Games played: <span>{profile.matches_id.join(', ')}</span></p>
-					<p>Wins: <span>{profile.wins}</span></p>
+					<h2>{t("Stats")}</h2>
+					<p>{t("Games played:")} <span>{profile.matches_id.join(', ')}</span></p>
+					<p>{t("Wins")} <span>{profile.wins}</span></p>
 				</div>
 				<div className='card basic'>
-					<h2>List of users</h2>
-					<ListUsers allUsers={allUsers}
-					           setAllUsers={setAllUsers}
-							   personLoggedIn={personLoggedIn}/>
+					<h2>{t("List of friends")}</h2>
+					<h2>{t("Search for users")}</h2>
+					<Filter type="text" value={query} onChange={handleSearch}/>
+					<ListUsers	filterUsers={filterUsers}
+								setAllUsers={setAllUsers}
+								setFilterUsers={setFilterUsers}
+								personLoggedIn={personLoggedIn}/>
 				</div>
 				<div className='card basic notifications'>
-					<h2>Friends list</h2>
+					<h2>{t("Friends list")}</h2>
 					<input type="text"
 						id="messageInput"
-						placeholder="Enter a message"
+						placeholder={t("message placeholder")}
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
 					/>
-					//<button id="sendButton" onClick={sendMessage}>Send Message</button>
+					//<button id="sendButton" onClick={sendMessage}>{t("Send Message")}</button>
 				</div>
 			</div>
 		</div>

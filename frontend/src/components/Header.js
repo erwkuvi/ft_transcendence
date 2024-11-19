@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 import './Header.css';
 import './NotifMenu'
 import NotifMenu from './NotifMenu';
+import './LanguageDropdown'
+import LanguageDropdown from './LanguageDropdown'
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
+	const {t} = useTranslation();
+
 	return (
 		<nav className="navbar navbar-expand-lg header m-0 p-0 pl-3">
 			<div className="container-fluid menu_bar p-0">
@@ -13,14 +18,15 @@ const Header = () => {
 					viewBox= "0 0 24 24" clipRule="evenodd" className="icon mr-2 p-0" stroke="currentColor">
 						<path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z"/>
 					</svg>
-					miniPong
+					{t("miniPong")}
 				</Link>
+				<LanguageDropdown/>
 				<nav className="ml-auto menu custom-menu">
-					<Link to="/">Home</Link>
-					<Link to="/play">Play</Link>
-					<Link to="/profile">Profile</Link>
-					<Link to="/about">About</Link>
-					<Link to="/login">Log in</Link>
+					<Link to="/">{t("Home")}</Link>
+					<Link to="/play">{t("Play")}</Link>
+					<Link to="/profile">{t("Profile")}</Link>
+					<Link to="/about">{t("About")}</Link>
+					<Link to="/login">{t("Log in")}</Link>
 				</nav>
 			</div>
 			<div className="notif">

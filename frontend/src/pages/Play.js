@@ -1,18 +1,21 @@
 import React from 'react';
 import './TextBox.css';
+import { useTranslation } from "react-i18next";
 
 const Play = () => {
+	const {t} = useTranslation();
+
 	return (
 		<div className="page-content">
-			<h1>PLAY</h1>
+			<h1>{t("PLAY")}</h1>
 			<div className="text-box left">
-				<p>Ready to play some Pong?</p>
+				<p>{t("Ready to play some Pong?")}</p>
 			</div>
 			<div className="text-box middle">
-				<p>Too bad, because we're not ready :(</p>
+				<p>{t("Too bad, because we're not ready :(")}</p>
 			</div>
 			<div className="text-box left">
-				<p>Please wait until we've finished building our site!</p>
+				<p>{t("Please wait until we've finished building our site!")}</p>
 			</div>
 		</div>
 	);
