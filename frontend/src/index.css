@@ -1,0 +1,64 @@
+* {
+	box-sizing: border-box;
+	scrollbar-width: auto;
+}
+
+html, body {
+	color: var(--text-color);
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+body {
+	overflow: auto;
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 250;
+	font-style: normal;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+:root {
+	--text-color: black;
+}
+
+[data-bs-theme="dark"] {
+	--text-color: white;
+	--card-color: rgb(91, 84, 135);
+}
+
+[data-bs-theme="light"] {
+	--text-color: black;
+	--card-color: rgb(131, 124, 174);
+}
+
+[data-bs-theme="dark"] body {
+	background-color: #2d2c2f;
+}
+
+[data-bs-theme="light"] body {
+	background-color: #d6d4da;
+}
+
+.page-content {
+	font-size: 36px;
+	margin: 16px;
+	padding: 16px;
+	margin-bottom: 200px;
+	flex: 1;
+}
+
+.page-content h1 {
+	font-size: 2em;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+	.page-content h1 {
+		font-size: calc(2.5vw + 1.5em);
+	}
+}
