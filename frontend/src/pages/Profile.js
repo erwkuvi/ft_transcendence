@@ -4,6 +4,7 @@ import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
 import Filter from './ProfileComponents/Filter';
+import ListFriends from './ProfileComponents/ListFriends';
 import { useTranslation } from "react-i18next";
 
 const Profile = () => {
@@ -56,8 +57,7 @@ const Profile = () => {
 				profileData.friends.some(friend => friend === user.id)
 			);
 			setFriends(friendsList)
-			console.log('list of friends id', profileData.friends)
-			console.log('list of friends.username', friendsList)
+
 
             } catch (err) {
         // Handle any errors
@@ -137,12 +137,13 @@ const Profile = () => {
 				</div>
 				<div className='card basic'>
 					<h2>{t("List of friends")}</h2>
-					{friends.map(user => user.username)}
+					<ListFriends friends={friends}/>
 					<h2>{t("Search for users")}</h2>
 					<Filter type="text" value={query} onChange={handleSearch}/>
 					<ListUsers	filterUsers={filterUsers}
 								setAllUsers={setAllUsers}
 								setFilterUsers={setFilterUsers}
+								setFriends={setFriends}
 								personLoggedIn={personLoggedIn}/>
 				</div>
 				<div className='card basic notifications'>
