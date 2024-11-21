@@ -52,5 +52,10 @@ if settings.DEBUG:
 # /auth/users/reset_username/
 # /auth/users/reset_username_confirm/
 
-# /auth/42/login/ url to 42api auth
-# /auth/42/callback/ 
+# /auth/42/login/ 
+# /auth/42/callback/
+# /auth/otp-login/
+
+# user_management/players/
+# user_management/players/{user_id} or me/
+# user_management/matches/
