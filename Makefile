@@ -1,6 +1,10 @@
+#only for development
 up:
 	@chmod +x backend/script.sh
-	docker-compose up --build
+	docker-compose -f docker-compose.dev.yml up --build
+#up:
+#	@chmod +x backend/script.sh
+#	docker-compose up --build
 
 front:
 	docker-compose -f frontend/docker-compose.yml up --build

@@ -38,7 +38,7 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # AVAILABLE ENDPOINTS FOR DJOSER(JWT)
-# /auth/jwt/create/ (JWT create a new user)
+# /auth/jwt/create/ (JWT getting a token and refresh)
 # /auth/jwt/refresh/ (JWT )
 # /auth/jwt/verify/ (JSON Web Token Authentication)
 # /auth/users/
