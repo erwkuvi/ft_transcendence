@@ -20,7 +20,7 @@ class PlayerProfile(models.Model):
     display_name = models.CharField(max_length=50, unique=True)
     avatar = models.ImageField(
         upload_to="avatars/",
-        default='avatars/avatar.png',
+        default='avatars\/avatar.png',
         null=True, blank=True,
         validators=[validate_file_size]
     )
