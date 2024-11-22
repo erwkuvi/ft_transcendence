@@ -4,7 +4,6 @@ import './Header.css';
 import './NotifMenu'
 import NotifMenu from './NotifMenu';
 import './LanguageDropdown'
-import LanguageDropdown from './LanguageDropdown'
 import { useTranslation } from "react-i18next";
 
 const Header = () => {
@@ -12,14 +11,13 @@ const Header = () => {
 
 	return (
 		<div>
-			<nav className="navbar header m-0 p-0 pl-2">
+			<nav className="navbar header m-0 p-0">
 				<div className="container-fluid p-0">
 					<nav className="menu custom-menu">
 						<Link to="/">{t("HeaderHome")}</Link>
 						<Link to="/play">{t("HeaderPlay")}</Link>
 						<Link to="/profile">{t("HeaderProfile")}</Link>
 						<Link to="/about">{t("HeaderAbout")}</Link>
-						<LanguageDropdown/>
 					</nav>
 					<nav className="menu right-menu">
 						<div className="notif">

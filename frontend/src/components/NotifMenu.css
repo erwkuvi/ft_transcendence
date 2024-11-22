@@ -30,7 +30,7 @@
 
 .dropbtn:focus-visible {
 	background-color: inherit;
-	outline: 2px solid #0078d4;
+	outline: 2px solid var(--text-color);
 }
 
 .dropdown-content {

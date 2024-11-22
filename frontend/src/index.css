@@ -35,6 +35,7 @@ body {
 	--fill-color: #ffffff0e;
 	--fill-color2: #ffffff1a;
 	--background: var(--color-5);
+	--opposite: var(--color-3);
 }
 
 [data-bs-theme="light"] {
@@ -42,6 +43,7 @@ body {
 	--fill-color: #0000000e;
 	--fill-color2: #0000001a;
 	--background: var(--color-3);
+	--opposite: var(--color-5);
 }
 
 [data-bs-theme="dark"] body {

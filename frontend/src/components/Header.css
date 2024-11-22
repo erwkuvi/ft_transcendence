@@ -22,7 +22,7 @@
 }
 
 .right-menu .login {
-	width: 102px;
+	width: fit-content;
 }
 
 .notif {

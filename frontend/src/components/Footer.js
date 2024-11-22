@@ -1,6 +1,7 @@
 import React from 'react';
 import './Footer.css';
 import DarkModeToggle from './DarkModeToggle';
+import LanguageDropdown from './LanguageDropdown'
 import { useTranslation } from "react-i18next";
 
 const Footer = () => {
@@ -17,6 +18,7 @@ const Footer = () => {
 						target="_blank" rel="noopener noreferrer">{t("About 42")}</a>
 					</div>
 					<div className="col d-flex justify-content-end">
+						<LanguageDropdown/>
 						<DarkModeToggle />
 					</div>
 				</div>

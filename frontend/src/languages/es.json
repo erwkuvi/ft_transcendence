@@ -13,9 +13,9 @@
 	"LogInButton": "INICIAR SESIÓN CON 42",
 	
 	"AboutTitle": "acerca de",
-	"AboutT1": "This website is the final task of the common core of 42 school, ft_transcendence.",
+	"AboutT1": "This website is the result of the final project in the common core at 42 school, ft_transcendence. ",
 	"AboutT2": "It is built using HTML/CSS, Bootstrap, React, Django, and PostgreSQL.",
-	"AboutT3": "The source code for this website is available on&nbsp;",
+	"AboutT3": "The source code for this website is available on ;",
 
 	"PlayTitle": "play",
 	"PlaySH1": "Singleplayer",

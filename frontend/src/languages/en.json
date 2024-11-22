@@ -15,13 +15,9 @@
 	"LogInButton": "LOG IN WITH 42",
 
 	"AboutTitle": "about",
-	"AboutT1": "This website is the final task of the common core of 42 school, ft_transcendence.",
+	"AboutT1": "This website is the result of the final project in the common core at 42 school, ft_transcendence. ",
 	"AboutT2": "It is built using HTML/CSS, Bootstrap, React, Django, and PostgreSQL.",
-	"AboutT3": "The source code for this website is available on&nbsp;",
-
-	"This website was built for the final project in our 42 core, ft_transcendence.": "This website was built for the final project in our 42 core, ft_transcendence.",
-	"Our team consists of: Barry, Garry, Harry, Larry, and Shaniqua.": "Our team consists of: Barry, Garry, Harry, Larry, and Shaniqua.",
-	"The source code for this website is available on": "The source code for this website is available on",
+	"AboutT3": "The source code for this website is available on ",
 	
 	"PlayTitle": "play",
 	"PlaySH1": "Singleplayer",
