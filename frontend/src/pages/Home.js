@@ -1,8 +1,12 @@
 import React from 'react';
 import PlayButton from '../components/PlayButton';
 import './Home.css'
+import { useTranslation } from "react-i18next";
+
 
 const Home = () => {
+	const { t } = useTranslation();
+
 	return (
 		<div className="page-content home">
 			<h1 className="title">
@@ -11,6 +15,7 @@ const Home = () => {
 			</h1>
 			<div className="stuff">
 				<p>Available to play vs CPU, Local Versus and Online</p>
+				<p>{t("HomeText")}</p>
 				<PlayButton/>
 			</div>
 		</div>

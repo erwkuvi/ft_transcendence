@@ -3,7 +3,7 @@ services:
     container_name: frontend
     build:
       context: ./frontend/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "8081:80"
     networks:
@@ -22,7 +22,7 @@ services:
     container_name: backend
     build:
       context: ./backend/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     command: ./script.sh
     ports:
       - "8000:8000"

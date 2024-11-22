@@ -1,15 +1,19 @@
 import React from 'react';
+import { useTranslation } from "react-i18next";
 
 const About = () => {
+	const {t} = useTranslation();
+
 	return (
 		<div className="page-content">
 			<h1>about</h1>
 			<div>
 				<p>
-					This website is the final task of the common core of 42 school, ft_transcendence.
-					It is built using HTML/CSS, Bootstrap, React, Django, and PostgreSQL.
+					{t("AboutT1")}
+					{t("AboutT2")}
 				</p>
-				<p>The source code for this website is available on&nbsp;
+				<p>
+					{t("AboutT3")}
 					<a href="https://github.com/LukasKava/ft_transcendence" className="footer-link"
 					target="_blank" rel="noopener noreferrer">Github</a>.
 				</p>

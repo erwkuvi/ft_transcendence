@@ -1,12 +1,14 @@
 import React from 'react';
 import LogInButton from '../components/LogInButton';
+import { useTranslation } from "react-i18next";
 
 const LogIn = () => {
+	const {t} = useTranslation();
 	return (
 		<div className="page-content">
-			<h1>log in</h1>
+			<h1>{t("LogInTitle")}</h1>
 			<p>
-				You will be redirected to login with 42.
+				{t("LogInText")}
 			</p>
 			<div className="col d-flex justify-content-center align-items-center">
 				<LogInButton />

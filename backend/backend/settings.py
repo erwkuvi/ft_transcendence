@@ -24,15 +24,15 @@ environ.Env.read_env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-MEDIA_URL = '/avatars/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'avatars')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql'
-# SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
+# SECRET_KEY = os.environ['SECRET_KEY', 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM']
 HOST_IP = 'localhost'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -72,6 +72,7 @@ CHANNEL_LAYERS = {
 MIDDLEWARE = [
 	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
@@ -100,14 +101,16 @@ REST_FRAMEWORK = {
     ),
 }
 
+#'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # This is for development
-    #'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-}
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM'
+    }
 
 
 ROOT_URLCONF = 'backend.urls'
@@ -169,7 +172,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 USE_I18N = True
 USE_TZ = True
 USE_L10N = True
@@ -179,6 +182,10 @@ USE_L10N = True
 STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Enable gzip compression and caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -191,6 +198,23 @@ DJOSER = {
         'current_user': 'users.serializers.UserSerializer',
     }
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
 
 # ----------------- OAUTH 2.0 - 42 INTRA SETTINGS -----------------:
 # 42 Intra auth URL

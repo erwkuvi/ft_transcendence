@@ -1,22 +1,102 @@
 import requests
+import pyotp
 import secrets
 import string
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
 from django.shortcuts import redirect
 from django.conf import settings
+from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, action
-from rest_framework import generics, viewsets, status, views
+from rest_framework import generics, viewsets, status, views, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
-from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer
+from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer
 from .models import User, PlayerProfile, Match
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
 
+
+class CreateUserView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserCreateSerializer
+
+    def post(self, request, format=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+                {"success": True, "message": "Registration Successful!"}, 
+                status=status.HTTP_200_OK
+                )
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
+    queryset = PlayerProfile.objects.all()
+    serializer_class = PlayerProfileSerializer
+    #permission_classes = [IsAuthenticated]
+
+
+
+    #def get_permissions(self): #This permission setting allows any user to only see a PlayerProfiles: /users/players/1/
+    #    if self.action == 'list' and self.request.user.is_authenticated:
+    #        return [IsAuthenticated()]
+    #    elif self.action == 'retrieve':
+    #        return [AllowAny()]
+    #    return [IsAuthenticated()]
+
+    def list(self, request, *args, **kwargs):
+        queryset = PlayerProfile.objects.all()
+        serializer = PlayerProfileSerializer(queryset, many=True, context=self.get_serializer_context())
+        return Response(serializer.data)
+      #  if request.user.is_authenticated:
+      #      return redirect('player-profile-me')
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    @action(detail=False, methods=['GET', 'PUT'])
+    def me(self, request):  # This method is called an custom action
+        player_profile = PlayerProfile.objects.get(
+            user_id=request.user.id)
+        if request.method == 'GET':
+            serializer = PlayerProfileSerializer(player_profile, context=self.get_serializer_context())
+            data = serializer.data
+            data['username'] = request.user.username
+            return Response(data)
+        elif request.method == 'PUT':
+            serializer = PlayerProfileSerializer(
+                player_profile, data=request.data, context=self.get_serializer_context())
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+
+
+class MatchViewSet(viewsets.ModelViewSet):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
+#    def get_queryset(self):
+#        if self.request.user.is_staff:
+#            return Match.objects.all()
+#
+#        (id, created) = Match.objects.only('id').get_or_create(id=self.request.user.id)
+#        return Match.objects.filter(id=id)
+#return Match.objects.filter(id=self.request.user.id)
+
+
+
+# ---------------OAuth 42 API------------------------------------------------------------------------------------
 
 class OAuth42LoginView(views.APIView):
     permission_classes = [AllowAny]  # Allow any user to access this view
@@ -136,81 +216,45 @@ class OAuth42CallbackView(views.APIView):
                 'message': str(e)
             }, status=400)
 
+# ---------------End of OAuth 42 API------------------------------------------------------------------------------------
 
-class UserList(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# ---------------OTPLOGIN ---------------------------------------------------------------------------------------------
 
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-def authorize_view(request):
-    return redirect('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-000d79361be733aa7365ca50efc33b41b38c6e1b19d4f5b16456e9e63726df67&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fusers%2Fplayers%2Fme&response_type=code')
-
-@api_view()
-def say_hello(request):
-
-    return Response('Hello from Erwin')
-
-
-class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
-    queryset = PlayerProfile.objects.all()
-    serializer_class = PlayerProfileSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_permissions(self): #This permission setting allows any user to only see a PlayerProfiles: /users/players/1/
-        if self.action == 'list' and self.request.user.is_authenticated:
-            return [IsAuthenticated()]
-        elif self.action == 'retrieve':
-            return [AllowAny()]
-        return [IsAuthenticated()]
-
-    def list(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('player-profile-me')
-        return Response(
-            {"detail": "Please sign in into your profile."},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
-    def get_serializer_context(self):
-        return {'request': self.request}
-
-    @action(detail=False, methods=['GET', 'PUT'])
-    def me(self, request):  # This method is called an custom action
-        player_profile = PlayerProfile.objects.get(
-            user_id=request.user.id)
-        if request.method == 'GET':
-            serializer = PlayerProfileSerializer(player_profile, context=self.get_serializer_context())
-            data = serializer.data
-            data['username'] = request.user.username
-            return Response(data)
-#        if request.method == 'GET':
-#            serializer = PlayerProfileSerializer(player_profile, context=self.get_serializer_context())
-#            return Response(serializer.data)
-# try for the automation for profile if auth_mehod is 42api then do not createa  profile
-        elif request.method == 'PUT':
-            serializer = PlayerProfileSerializer(
-                player_profile, data=request.data, context=self.get_serializer_context())
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data)
-
-
-class MatchViewSet(viewsets.ModelViewSet):
-    queryset = Match.objects.all()
-    serializer_class = MatchSerializer
-    #permission_classes = [AllowAny]
-    permission_classes = [IsAuthenticated]
-
-#    def get_queryset(self):
-#        if self.request.user.is_staff:
-#            return Match.objects.all()
+#class OTPLoginView(generics.GenericAPIView):
+#    serializer_class = OTPLoginSerializer
 #
-#        (id, created) = Match.objects.only('id').get_or_create(id=self.request.user.id)
-#        return Match.objects.filter(id=id)
-#return Match.objects.filter(id=self.request.user.id)
+#    def post(self, request, *args, **kwargs):
+#        serializer = self.get_serializer(data=request.data)
+#        serializer.is_valid(raise_exception=True)
+#
+#        email = serializer.validated_data.get('email')
+#        otp = serializer.validated_data.get('otp')
+#
+#        try:
+#            user = User.objects.get(email=email)
+#        except User.DoesNotExist:
+#            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+#
+#        # Verify the OTP
+#        totp = pyotp.TOTP(user.otp_base32)
+#        if not totp.verify(otp):
+#            return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
+#
+#        # Generate JWT tokens
+#        refresh = RefreshToken.for_user(user)
+#        return Response({
+#            'refresh': str(refresh),
+#            'access': str(refresh.access_token),
+#            }, status=status.HTTP_200_OK)
 
+
+class OTPLoginView(generics.GenericAPIView):
+    serializer_class = OTPLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # If validation passes, JWT tokens are returned from serializer's `validate` method
+        tokens = serializer.validated_data
+        return Response(tokens, status=status.HTTP_200_OK)
