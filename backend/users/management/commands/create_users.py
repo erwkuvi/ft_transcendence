@@ -1,8 +1,11 @@
+import environ
 import os
 from django.core.management.base import BaseCommand
 from users.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 
+environ.Env.read_env()
+env = environ.Env()
 User = get_user_model()
 
 class Command(BaseCommand):
@@ -52,9 +55,9 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.ERROR(f"Failed to create {users_data['username']}: {serializer.errors}"))
 
-        superuser_username = os.getenv('DJANGO_SUPERUSER_NAME')
-        superuser_email = os.getenv('DJANGO_SUPERUSER_EMAIL')
-        superuser_password = os.getenv('DJANGO_SUPERUSER_PASSWORD')
+        superuser_username = os.environ['DJANGO_SUPERUSER_USERNAME']
+        superuser_email = os.environ['DJANGO_SUPERUSER_EMAIL']
+        superuser_password = os.environ['DJANGO_SUPERUSER_PASSWORD']
 
         if superuser_username and superuser_email and superuser_password:
             if not User.objects.filter(username=superuser_username).exists():
