@@ -15,11 +15,11 @@ echo "DJANGO_SUPERUSER_PASSWORD: $DJANGO_SUPERUSER_PASSWORD"
 echo "DJANGO_SUPERUSER_EMAIL: $DJANGO_SUPERUSER_EMAIL"
 
 python3 manage.py makemigrations
-python3 manage.py migrate --noinput
+python3 manage.py migrate --noinput --run-syncdb
 
 python3 manage.py create_users
 
-python3 manage.py collectstatic
+python3 manage.py collectstatic --noinput
 
 python3 manage.py runserver 0.0.0.0:8000
 #daphne backend.asgi:application -b 0.0.0.0 -p 8000
