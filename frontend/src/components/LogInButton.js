@@ -12,9 +12,11 @@ const LogInButton = () => {
 	}
 
 	return (
-		<button className="btn button login-button py-2 px-5 mt-5"onClick={handleClick}>
-			{t("LogInButton")}
-		</button>
+		<a href="https://www.google.co.uk" target="_blank">
+			<button className="btn button login-button py-2 px-5 mt-5">
+				{t("LogInButton")}
+			</button>
+		</a>
 	);
 };
 
