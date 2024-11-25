@@ -1,17 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './LogInButton.css';
 import { useTranslation } from "react-i18next";
 
 const LogInButton = () => {
 	const {t} = useTranslation();
 
+	const handleClick = () => {
+		window.open("https://www.google.co.uk/");
+	}
+
 	return (
-		// target blank opens link in new tab
-		<a href="https://www.google.co.uk" target="_blank">
-			<button className="btn button login-button py-2 px-5 mt-5">
-				{t("LogInButton")}
-			</button>
-		</a>
+		<button className="btn button login-button py-2 px-5 mt-5" onClick={handleClick}>
+			{t("LogInButton")}
+		</button>
 	);
 };
 
