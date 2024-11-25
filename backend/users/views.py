@@ -258,3 +258,17 @@ class OTPLoginView(generics.GenericAPIView):
         # If validation passes, JWT tokens are returned from serializer's `validate` method
         tokens = serializer.validated_data
         return Response(tokens, status=status.HTTP_200_OK)
+
+
+# logout view
+class LogoutView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"success": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
