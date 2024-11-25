@@ -16,9 +16,6 @@ back:
 down:
 	docker-compose down --remove-orphans
 
-prod:
-	DOCKERFILE=Dockerfile.prod docker-compose up --build
-
 re: down prune
 	docker-compose build --no-cache
 	docker-compose up
