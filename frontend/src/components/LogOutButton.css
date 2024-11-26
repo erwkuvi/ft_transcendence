@@ -1,0 +1,12 @@
+@import './Button.css';
+
+.logout-button:hover {
+	transform: translateY(-2px) scale(1.01);
+	background-color: #00ffee3d;
+	box-shadow: 2px 8px 8px rgba(0, 0, 0, 0.4);
+}
+
+.logout-button:active {
+	transform: translateY(0px);
+	background-color: #00ffee3d;
+}

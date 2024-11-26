@@ -37,8 +37,8 @@ axiosInstance.interceptors.response.use(
                 });
                 const { access } = response.data;
                 localStorage.setItem('access_token', access);
-                axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${access}`;
-                originalRequest.headers['Authorization'] = `Bearer ${access}`;
+                axiosInstance.defaults.headers.common['Authorization'] = `JWT ${access}`;
+                originalRequest.headers['Authorization'] = `JWT ${access}`;
                 return axiosInstance(originalRequest);
             } catch (err) {
                 console.error('Refresh token is expired', err);

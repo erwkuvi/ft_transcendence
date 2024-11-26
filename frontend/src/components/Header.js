@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import './Header.css';
 import './NotifMenu'
 import NotifMenu from './NotifMenu';
+import LogoutButton from './LogOutButton'; 
 import './LanguageDropdown'
 import { useTranslation } from "react-i18next";
 
 const Header = () => {
 	const {t} = useTranslation();
+	const isLoggedIn = !!localStorage.getItem('access_token');
+
 
 	return (
 		<div>
@@ -23,7 +26,13 @@ const Header = () => {
 						<div className="notif">
 							<NotifMenu/>
 						</div>
-						<Link to="/login" className="login">{t("HeaderLogIn")}</Link>
+						{isLoggedIn ? (
+                            <LogoutButton />
+                        ) : (
+                            <Link to="/login" className="login">
+                                {t("HeaderLogIn")}
+                            </Link>
+                        )}
 					</nav>
 				</div>
 			</nav>

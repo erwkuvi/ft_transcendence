@@ -202,9 +202,8 @@ class OAuth42CallbackView(views.APIView):
         refresh = RefreshToken.for_user(user)
         tokens = {
             'access': str(refresh.access_token),
-            'refresh': str(refresh),
+            'refresh': str(refresh)
         }
-    
         frontend_url = f"http://localhost:8081/login/callback?{urlencode(tokens)}"
         return redirect(frontend_url)
 
@@ -258,9 +257,18 @@ class LogoutView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            refresh_token = request.data["refresh"]
+            refresh_token = request.data.get("refresh_token")
+            if not refresh_token:
+                return Response(
+                    {"error": "Refresh token required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({"success": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
+            return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+            print("Logout error:", str(e))
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
