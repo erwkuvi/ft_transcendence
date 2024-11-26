@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-// add interceptors to refresh the access token if it's expired
+// add interceptors to response to refresh the access token if it's expired
 axiosInstance.interceptors.response.use(
     (response) => {
         return response;
@@ -42,7 +42,9 @@ axiosInstance.interceptors.response.use(
                 return axiosInstance(originalRequest);
             } catch (err) {
                 console.error('Refresh token is expired', err);
-                // Handle token refresh failure (e.g., redirect to login)
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                window.location.href = '/login'; 
             }
         }
         return Promise.reject(error);

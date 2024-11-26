@@ -23,6 +23,7 @@ function App() {
 						<Route path="/profile" exact component={Profile} />
 						<Route path="/about" exact component={About} />
 						<Route path="/login" exact component={LogIn} />
+						<Route path="/login/callback" exact component={LoginCallback} />
 					</Switch>
 				</ScrollReset>
 			</Main>
