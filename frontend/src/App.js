@@ -8,6 +8,7 @@ import Play from './pages/Play';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import LogIn from './pages/LogIn';
+import LoginCallback from './components/LoginCallback';
 import './App.css';
 import ScrollReset from './components/ScrollReset';
 

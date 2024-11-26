@@ -2,6 +2,7 @@ import requests
 import pyotp
 import secrets
 import string
+from urllib.parse import urlencode 
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
 from django.shortcuts import redirect
@@ -42,7 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 
@@ -200,14 +201,10 @@ class OAuth42CallbackView(views.APIView):
 #Generate JWT token
         refresh = RefreshToken.for_user(user)
         tokens = {
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'username': user.username,
-                'email': user.email,
-                'auth_provider': user.auth_provider,
-                'displayname': player_profile.display_name,
-            }
-
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+        }
+    
         frontend_url = f"http://localhost:8081/login/callback?{urlencode(tokens)}"
         return redirect(frontend_url)
 

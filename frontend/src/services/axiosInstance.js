@@ -7,12 +7,12 @@ const axiosInstance = axios.create({
     },
 });
 
-// Add interceptors to add the access token to every requests
+// Add interceptors to add the access token to every request
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('access_token');
         if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers.Authorization = `JWT ${token}`;
         }
         return config;
     },
