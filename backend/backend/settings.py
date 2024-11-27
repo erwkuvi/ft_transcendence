@@ -222,7 +222,7 @@ API_42_AUTH_URL = 'https://api.intra.42.fr/oauth/authorize'
 # 42 Intra access token endpoint
 API_42_ACCESS_TOKEN_ENDPOINT = 'https://api.intra.42.fr/oauth/token'
 # 42 Intra redirect URI
-API_42_REDIRECT_URI = f'http://{HOST_IP}:8000/auth/42/callback/'
+API_42_REDIRECT_URI = f'http://{HOST_IP}:8000/42-callback/'
 #API_42_REDIRECT_URI = 'http://localhost:8000/auth/42/callback/'
 # 42 Intra entrypoint URL
 API_42_INTRA_ENTRYPOINT_URL = 'https://api.intra.42.fr/v2/me'
