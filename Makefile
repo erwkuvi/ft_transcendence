@@ -2,9 +2,10 @@
 up:
 	@chmod +x backend/script.sh
 	docker-compose -f docker-compose.dev.yml up --build
-#up:
-#	@chmod +x backend/script.sh
-#	docker-compose up --build
+
+prod:
+	@chmod +x backend/script.sh
+	docker-compose up --build
 
 front:
 	docker-compose -f frontend/docker-compose.yml up --build
@@ -14,9 +15,6 @@ back:
 
 down:
 	docker-compose down --remove-orphans
-
-prod:
-	DOCKERFILE=Dockerfile.prod docker-compose up --build
 
 re: down prune
 	docker-compose build --no-cache
