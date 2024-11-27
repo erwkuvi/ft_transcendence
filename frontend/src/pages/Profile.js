@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../services/axiosInstance';
 import React, { useEffect, useState } from 'react';
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
@@ -32,8 +32,8 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
 				// Request from API
-            const response = await axios.get(`${BASE_URL}/user_management/players/me/`);
-				// Prepend BASE_URL to avatar if it's a relative URL
+			const response = await axiosInstance.get('/user_management/players/me/');
+			// Prepend BASE_URL to avatar if it's a relative URL
             const profileData = {
                 ...response.data,
             avatar: response.data.avatar.startsWith('/')

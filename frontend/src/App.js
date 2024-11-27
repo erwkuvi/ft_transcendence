@@ -1,5 +1,6 @@
 //import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { AuthGuard } from './guards/authGuard';
 import Header from './components/Header';
 import Footer from './components/Footer'
 import Main from './components/Main';
@@ -14,6 +15,7 @@ import ScrollReset from './components/ScrollReset';
 function App() {
 	return (
 		<div className="App">
+			<AuthGuard />
 			<Header />
 			<Main>
 				<ScrollReset>
