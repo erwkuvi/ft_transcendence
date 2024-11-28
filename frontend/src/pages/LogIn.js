@@ -14,11 +14,11 @@ const LogIn = () => {
 	}
 
 	return (
-		<div className="page-content container login mt-5">
+		<div className="page-content login mt-5">
 			<h1 className="login-title">
 				{t("LogInTitle")}
 			</h1>
-			<div className="login-box container p-4">
+			<div className="container login-box p-4">
 				<div className="login-toggle">
 					<input
 						id="status"
@@ -50,12 +50,14 @@ const LogIn = () => {
 						{t("LogInText4")}
 						<input className="text-field form-control" type="password"/>
 					</p>
-					{isSignUp && (
-						<p className="field-name">
-							{t("LogInText5")}
-							<input className="text-field form-control" type="password"/>
-						</p>
-					)}
+					{
+						isSignUp && (
+							<p className="field-name">
+								{t("LogInText5")}
+								<input className="text-field form-control" type="password"/>
+							</p>
+							)
+					}
 					<div className="login-buttons">
 						<div className="button login-button m-3 px-3 py-1">
 							{
