@@ -20,12 +20,19 @@ urlpatterns = [
     path('api/users/', UserListView.as_view(), name='user-list'),
     path('api/admin/', admin.site.urls),
     path('api/test/', include('notifications.api.urls')),
+    path('api/token/',
+         TokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('api/token/refresh/',
+         TokenRefreshView.as_view(),
+         name='token_refresh'),
     path('', lambda request: redirect('/api/admin/')),
     path('user_management/', include('users.urls')),
     path('auth/', include('djoser.urls')),
     path('42-login/', OAuth42LoginView.as_view(), name='42-login'),
     path('42-callback/', OAuth42CallbackView.as_view(), name='42-callback'),
     path('otp-login/', OTPLoginView.as_view(), name='otp-login'),
+    path('api/test/', include('notifications.urls')),
 ]
 
 if settings.DEBUG:
