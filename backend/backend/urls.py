@@ -19,7 +19,6 @@ urlpatterns = [
     path('friends/', include('friends.urls')),
     path('api/users/', UserListView.as_view(), name='user-list'),
     path('api/admin/', admin.site.urls),
-    path('api/test/', include('notifications.api.urls')),
     path('api/token/',
          TokenObtainPairView.as_view(),
          name='token_obtain_pair'),
