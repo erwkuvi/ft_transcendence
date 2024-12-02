@@ -8,7 +8,7 @@ const LogoutButton = () => {
     const handleLogout = async () => {
         try {
             const refresh = localStorage.getItem('refresh_token');
-            await axiosInstance.post('user_management/logout/', {
+            await axiosInstance.post('/logout/', {
                 refresh_token: refresh
             });
             localStorage.clear();
