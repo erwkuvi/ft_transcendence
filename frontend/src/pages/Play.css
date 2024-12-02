@@ -17,7 +17,9 @@
 	border: 1px solid var(--text-color);
 	background-color: var(--fill-color);
 	height: 380px;
-	width: 320px;
+	min-width: 320px;
+	max-width: 400px;
+	width: 20%;
 	margin: 16px;
 	padding: 24px;
 	display: flex;
@@ -41,18 +43,20 @@
 	align-self: center;
 }
 
-@media (min-width: 1200px) and (max-width: 1585px) {
+@media (min-width: 1126px) and (max-width: 1366px) {
 	.play .mode {
-		width: 240px;
+		min-width: 400px;
 	}
 }
 
-@media (min-width: 1586px) {
-	.play .modes {
-		flex-wrap: nowrap;
-		justify-content: space-around;
-	}
+@media (min-width: 1367px){
 	.play .mode {
-		flex: 0 0 22%;
+		min-width: 440px;
+	}
+}
+
+@media (min-width: 1486px){
+	.play .mode {
+		min-width: 320px;
 	}
 }
