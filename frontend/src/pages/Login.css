@@ -115,6 +115,13 @@ input[type="checkbox"]:checked + .status-label .status-switch .unchecked {
 
 .form-control {
 	border-radius: 1px;
+	color: black;
+	background-color: white;
+}
+
+.form-control:focus {
+	color: black;
+	background-color: white;
 }
 
 @media (min-width: 1280px) {
