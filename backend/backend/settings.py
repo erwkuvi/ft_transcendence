@@ -45,6 +45,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',# WebSockets and more for Django
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -54,9 +55,8 @@ INSTALLED_APPS = [
 	'rest_framework',# Toolkit for building Web APIs
     'djoser',# JWT authentication for DRF
     'corsheaders',# Handle CORS headers
-	'channels',# WebSockets and more for Django
+    'notifications',
 	'game',
-	'notifications',
 	'users',
 	'friends',
 ]
