@@ -1,0 +1,58 @@
+.play {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+}
+
+.play .modes {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	width: 100%
+}
+
+.play .mode {
+	border: 1px solid var(--text-color);
+	background-color: var(--fill-color);
+	height: 380px;
+	width: 320px;
+	margin: 16px;
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.play .mode h3 {
+	margin-top: 8px;
+	height: 60px;
+}
+
+.play .mode p {
+	font-size: 18px;
+}
+
+.play .mode .button {
+	font-size: 22px;
+	margin-top: auto;
+	align-self: center;
+}
+
+@media (min-width: 1200px) and (max-width: 1585px) {
+	.play .mode {
+		width: 240px;
+	}
+}
+
+@media (min-width: 1586px) {
+	.play .modes {
+		flex-wrap: nowrap;
+		justify-content: space-around;
+	}
+	.play .mode {
+		flex: 0 0 22%;
+	}
+}

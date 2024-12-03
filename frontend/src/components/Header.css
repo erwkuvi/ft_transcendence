@@ -1,0 +1,56 @@
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	z-index: 3;
+	width: 100%;
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+}
+
+.menu, .right-menu {
+	display: flex;
+}
+
+.right-menu {
+	margin-left: auto;
+	align-items: center;
+	padding: 0;
+	margin: 0;
+}
+
+.right-menu .login {
+	width: fit-content;
+}
+
+.notif {
+	right: 2px;
+	z-index: 3;
+}
+
+.header a, .header .btn {
+	color: var(--text-color);
+	text-decoration: none;
+	margin: 0px;
+	font-size: 18px;
+	padding: 10px 18px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	display: inline-block;
+	background-color: transparent;
+	transition: background-color 0.3s;
+}
+
+.menu a:hover {
+	background-color: rgba(255, 255, 255, 0.137);
+}
+
+@media (max-width: 592px) {
+	.custom-menu {
+		margin-left: 0 !important;
+		text-align: center;
+	}
+}

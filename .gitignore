@@ -1,0 +1,5 @@
+.env
+staticfiles/
+frontend/node_modules/
+migrations/
+media/

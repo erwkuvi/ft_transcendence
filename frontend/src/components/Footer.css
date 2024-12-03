@@ -1,0 +1,54 @@
+.footer {
+	flex-shrink: 0;
+}
+
+.footer .container {
+	max-width: 100%;
+}
+
+.footer .row {
+	padding: 4px 0;
+	text-decoration: none;
+	justify-content: flex-start;
+}
+
+.footer .col {
+	display: flex;
+}
+
+.footer a {
+	color: var(--text-color);
+}
+
+.dark-icon {
+	color: var(--text-color);
+}
+
+.dark-mode-toggle {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 24px;
+	transition: transform 0.2s ease;
+	box-shadow: none;
+	outline: none;
+}
+
+.dark-mode-toggle:hover {
+	transform: scale(1.1);
+	box-shadow: none;
+	outline: none;
+}
+
+.dark-mode-toggle:focus {
+	box-shadow: none;
+	outline: none;
+}
+
+.dark-mode-toggle:focus-visible {
+	outline: 2px solid var(--text-color);
+}
+
+.invert-colors {
+	filter: invert(1) hue-rotate(180deg);
+}

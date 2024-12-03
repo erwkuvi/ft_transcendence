@@ -1,0 +1,75 @@
+* {
+	box-sizing: border-box;
+	scrollbar-width: auto;
+}
+
+html, body {
+	color: var(--text-color);
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+body {
+	overflow: auto;
+	font-family: "Poppins";
+	font-optical-sizing: auto;
+	font-weight: 250;
+	font-style: normal;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+:root {
+	--text-color: black;
+	--color-1: #E6E5E7;
+	--color-2: #B7B7D5;
+	--color-3: #E9E3F1;
+	--color-4: #757179;
+	--color-5: #0E0F23;
+}
+
+[data-bs-theme="dark"] {
+	--text-color: white;
+	--fill-color: #ffffff0e;
+	--fill-color2: #ffffff1a;
+	--background: var(--color-5);
+	--opposite: var(--color-3);
+}
+
+[data-bs-theme="light"] {
+	--text-color: black;
+	--fill-color: #0000000e;
+	--fill-color2: #0000001a;
+	--background: var(--color-3);
+	--opposite: var(--color-5);
+}
+
+[data-bs-theme="dark"] body {
+	background-color: var(--color-5);
+}
+
+[data-bs-theme="light"] body {
+	background-color: var(--color-3);
+}
+
+.page-content {
+	font-size: 36px;
+	margin: 16px;
+	padding: 16px;
+	margin-bottom: 200px;
+	flex: 1;
+}
+
+.page-content h1 {
+	font-size: 2em;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+	.page-content h1 {
+		font-size: calc(2.5vw + 1.5em);
+	}
+}

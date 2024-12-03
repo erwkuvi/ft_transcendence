@@ -1,0 +1,5 @@
+@import './Button.css';
+
+.play-button {
+	font-size: 36px;
+}
