@@ -18,6 +18,19 @@ const NotifMenu = () => {
 		setNotifications(updatedNotifications);
 	};
 
+	// -------------------------- Channels test -------------------------- //
+	
+//		let url = 'ws://${window.location.host}/ws/socket-server/'
+//	 const notifSocket = new Websocket(url)
+//	 notifSocket.onmessage = function(e){
+//	 	let data = JSON.parse(e.data)
+//	 	console.log('Data:', data)
+//	 };
+
+
+
+	// -------------------------- Channels test -------------------------- //
+
 	const addTestNotification = () => {
 		const newNotification = {
 			title: 'Test notification',
