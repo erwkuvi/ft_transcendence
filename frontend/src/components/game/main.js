@@ -1,13 +1,10 @@
 import './style.css';
 import * as THREE from 'three';
-import {scene, renderer, camera} from './startThreeJsandLights.js';
 import * as FIELD from './playingField.js'
 import {player1, movePlayer, constrainPlayer, computerPlay, COMPUTER_HEIGHT, COM, resetComputer, PLAYER1, computer, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER2, MAX_SCORE_COUNT, MAX_SET_COUNT} from './player.js';
 import {ball, BALL, BALL_RADIUS, resetBall} from './ball.js';
 console.log('startThreeJsandLights.js loaded');
 
-
-FIELD.constructPlayingField(scene); //Construct the playing field
 
 let RUNNING_GAME = true;
 
@@ -15,7 +12,7 @@ let RUNNING_GAME = true;
 const cube1Geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
 const cube1Material = new THREE.MeshBasicMaterial({color: 0xFFFFF});
 const cube1 = new THREE.Mesh(cube1Geometry, cube1Material);
-scene.add(cube1);
+// scene.add(cube1);
 
 
 
@@ -134,7 +131,7 @@ function increaseSetIndicator(player) {
 	}
 }
 
-function	delayWallCollorChange() {
+function delayWallCollorChange() {
 	let count = 3;
 	const timer = setInterval(function() {
 		count--;
@@ -165,7 +162,7 @@ function announceWinnerOfTheGame(player) {
 	RUNNING_GAME = false;
 }
 
-function update() {
+export function update(scene, ball, player1, computer) {
 	if (RUNNING_GAME === false ) {
 		return ;
 	}
@@ -256,29 +253,34 @@ function update() {
 		}
 }
 
-function animate() {
+export function animate(renderer, scene, camera, gameObjects) {
+	if (!RUNNING_GAME) {
+	 	renderer.setAnimationLoop(null);
+		return;
+	}
+	
+	const { ball, player1, computer } = gameObjects;
+	update(scene, ball, player1, computer);
 	renderer.render(scene, camera);
-	renderer.setAnimationLoop(animate);
-
-	update();
-	// constrainPlayer();
-	// rotateSets();
-	// if (GlobalVar.gameStart === false) {
-	// 	startBallMovement();
-	// }
-	// paddleLogic();
-	// ballMovement();
-	// ballMove();
 }
 
-export {animate};
+export function startGame(renderer, scene, camera, gameObjects) {
+	RUNNING_GAME = true;
+	renderer.setAnimationLoop(() => animate(renderer, scene, camera, gameObjects));
+}
 
-window.addEventListener('resize', function() {
-  const aspect = window.innerWidth / window.innerHeight;
-  camera.left = -d * aspect;
-  camera.right = d * aspect;
-  camera.top = d;
-  camera.bottom = -d;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+export function stopGame() {
+	RUNNING_GAME = false;
+}
+
+export function initializeResizeHandler(camera, renderer, d) {
+	window.addEventListener('resize', function() {
+		const aspect = window.innerWidth / window.innerHeight;
+		camera.left = -d * aspect;
+		camera.right = d * aspect;
+		camera.top = d;
+		camera.bottom = -d;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	});
+}

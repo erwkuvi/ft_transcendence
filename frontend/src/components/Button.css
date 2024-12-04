@@ -20,6 +20,11 @@
 	box-shadow: 2px 8px 8px rgba(0, 0, 0, 0.4);
 }
 
+.button:focus-visible {
+	border: 1px solid var(--text-color);
+	outline: 3px solid var(--text-color);
+}
+
 .button:active {
 	color: inherit;
 	transform: translateY(0px);

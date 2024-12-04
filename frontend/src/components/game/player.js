@@ -2,9 +2,34 @@ import * as THREE from 'three';
 
 //My import
 import { FIELD_LENGTH, FIELD_WIDTH} from "./playingField.js";
-import {scene, renderer, camera} from './startThreeJsandLights.js';
 
+export function initializePlayers(scene) {
+	const player1 = createPlayer(scene);
+	const computer = createComputer(scene);
 
+	return { player1, computer };
+}
+
+function createPlayer(scene) {
+	const geometry = new THREE.BoxGeometry(PLAYER_WIDTH, PLAYER_HEIGHT, 1);
+	const material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+	const player = new THREE.Mesh(geometry, material);
+	scene.add(player);
+	return player;
+}
+
+function createComputer(scene) {
+	const geometry = new THREE.BoxGeometry(COMPUTER_WIDTH, COMPUTER_HEIGHT, 1);
+	const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+	const computer = new THREE.Mesh(geometry, material);
+		
+	computer.position.z = -FIELD_LENGTH/2 + 1.5;
+	computer.position.y = 1.6;
+	computer.position.x = 0;
+		
+	scene.add(computer);
+	return computer;
+}
 
 export	const	PLAYER_WIDTH = 4;
 export	const	PLAYER_HEIGHT = 1;
@@ -65,8 +90,6 @@ player1.castShadow = true;
 player1.position.z = FIELD_LENGTH/2 -1.5;
 player1.position.y = 1.6;
 
-scene.add(player1);
-
 
 //COMPUTER 
 const	computerGeometry = new THREE.BoxGeometry(PLAYER_WIDTH, PLAYER_HEIGHT, 1);
@@ -76,8 +99,6 @@ export const	computer = new THREE.Mesh(computerGeometry, computerMaterial);
 computer.castShadow = true;
 computer.position.z = -FIELD_LENGTH/2 + 1.5;
 computer.position.y = 1.6;
-
-scene.add(computer);
 
 
 export function	computerPlay(ball) {

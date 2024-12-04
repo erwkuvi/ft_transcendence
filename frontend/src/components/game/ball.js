@@ -1,8 +1,5 @@
 import * as THREE from 'three';
 
-//My import
-import {scene, renderer, camera} from './startThreeJsandLights.js';
-
 export const	BALL_RADIUS = 0.8;
 
 // Create the ball Object
@@ -17,6 +14,17 @@ export	const BALL = {
 }
 
 
+export function initializeBall(scene) {
+	const ballGeometry = new THREE.SphereGeometry(BALL_RADIUS, 20, 20);
+	const ballMaterial = new THREE.MeshStandardMaterial({ color: BALL.color });
+	const ball = new THREE.Mesh(ballGeometry, ballMaterial);
+	
+	ball.castShadow = true;
+	ball.position.set(0, 1.6, 0);
+	
+	scene.add(ball);
+	return ball;
+}
 
 const ballGeometry = new THREE.SphereGeometry(BALL_RADIUS, 20, 20);
 const ballMaterial = new THREE.MeshStandardMaterial({ color: BALL.color });
@@ -25,19 +33,13 @@ ball.castShadow = true;
 ball.position.x = 0;
 ball.position.z = 0;
 ball.position.y = 1.6;
-scene.add(ball);
 
 const ballBoundingSphere = new THREE.Sphere(ball.position, BALL_RADIUS);
 
-// Reset Ball
-export function resetBall(){
-	BALL.x = 0;
-	BALL.y = 0;
+export function resetBall(ball) {
 	BALL.velocityZ = -0.1;
 	BALL.velocityX = 0.1;
 	BALL.speed = 0.02;
-
-	ball.position.x = 0;
-	ball.position.z = 0;
-	ball.position.y = 1.6;
+	
+	ball.position.set(0, 1.6, 0);
 }
