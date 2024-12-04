@@ -14,7 +14,6 @@ const Home = () => {
 				<i class="fa-solid fa-circle ball px-1"></i>
 			</h1>
 			<div className="stuff">
-				<p>Available to play vs CPU, Local Versus and Online</p>
 				<p>{t("HomeText")}</p>
 				<PlayButton/>
 			</div>

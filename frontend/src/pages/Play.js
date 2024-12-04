@@ -10,7 +10,7 @@ const Play = () => {
 			<h1 className="title mt-5">
 				{t("PlayTitle")}
 			</h1>
-			<div className="container modes mt-4">
+			<div className="modes mt-4">
 				<div className="row justify-content-center">
 					<div className="mode">
 						<h3>{t("PlaySH1")}</h3>

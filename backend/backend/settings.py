@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	'rest_framework',# Toolkit for building Web APIs
     'djoser',# JWT authentication for DRF
+	'rest_framework_simplejwt.token_blacklist', # Blacklist JWT tokens
     'corsheaders',# Handle CORS headers
 	'channels',# WebSockets and more for Django
 	'game',
@@ -104,7 +105,7 @@ REST_FRAMEWORK = {
 #'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # This is for development
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10), # This is for development
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,

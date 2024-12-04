@@ -2,6 +2,7 @@ import requests
 import pyotp
 import secrets
 import string
+from urllib.parse import urlencode 
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
 from django.shortcuts import redirect
@@ -42,7 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 
@@ -199,22 +200,12 @@ class OAuth42CallbackView(views.APIView):
 
 #Generate JWT token
         refresh = RefreshToken.for_user(user)
-        try:
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'username': user.username,
-                'email': user.email,
-                'auth_provider': user.auth_provider,
-                'displayname': player_profile.display_name,
-                #'avatar': player_profile.avatar,  # Added avatar property
-            })
-        except UnicodeDecodeError as e:
-            # Handle the decoding error
-            return Response({
-                'error': 'Unicode decoding error',
-                'message': str(e)
-            }, status=400)
+        tokens = {
+            'access': str(refresh.access_token),
+            'refresh': str(refresh)
+        }
+        frontend_url = f"http://localhost:8081/login/callback?{urlencode(tokens)}"
+        return redirect(frontend_url)
 
 # ---------------End of OAuth 42 API------------------------------------------------------------------------------------
 
@@ -258,3 +249,26 @@ class OTPLoginView(generics.GenericAPIView):
         # If validation passes, JWT tokens are returned from serializer's `validate` method
         tokens = serializer.validated_data
         return Response(tokens, status=status.HTTP_200_OK)
+
+
+# logout view
+class LogoutView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            refresh_token = request.data.get("refresh_token")
+            if not refresh_token:
+                return Response(
+                    {"error": "Refresh token required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            print("Logout error:", str(e))
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )

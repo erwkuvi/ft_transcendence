@@ -6,12 +6,18 @@
 	"HeaderProfile": "Profile",
 	"HeaderAbout": "About",
 	"HeaderLogIn": "Log in",
+	"HeaderLogOut": "Log out",
 
 	"HomeText": "Available to play vs CPU, Local Versus and Online",
 	"HomeButton": "PLAY NOW",
 
 	"LogInTitle": "Log In",
-	"LogInText": "You will be redirected to login with 42.",
+	"LogInText": "Log in",
+	"LogInText2": "Sign up",
+	"LogInText3": "Username",
+	"LogInText4": "Password",
+	"LogInText5": "Confirm Password",
+	"LogInText6": "Email",
 	"LogInButton": "LOG IN WITH 42",
 
 	"AboutTitle": "about",
