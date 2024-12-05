@@ -5,7 +5,18 @@ from .models import Notification
 from .serializers import NotificationSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.http import JsonResponse
+from django.conf import settings
 # Create your views here.
+
+User = settings.AUTH_USER_MODEL
+
+
+def send_friend_request_view(request):
+   user = request.user  # Assuming the user is authenticated
+   message = request.GET.get('message', 'You have a new friend request')
+   send_friend_request_notification(user, message)
+   return JsonResponse({'status': 'Notification sent'})
 
 def send_friend_request_notification(user, message):
     channel_layer = get_channel_layer()
@@ -17,13 +28,32 @@ def send_friend_request_notification(user, message):
         }
     )
 
+
 class NotificationViewSet(viewsets.ModelViewSet):
-    queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        return Notification.objects.filter(receiver=self.request.user)
+
+    def perform_create(self, serializer):
+        receiver_id = self.request.data.get('receiver_id')
+        receiver = User.objects.get(id=receiver_id)
+        notification = serializer.save(user=self.request.user, receiver=receiver)
+
+        print(f'Notification created: {notification.body}')
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+                f'notifications_{receiver.id}',
+                {
+                    'type': 'send_notification',
+                    'message': notification.body
+                    }
+                )
+        print(f'notifications_{self.request.user.id}')
+#    def get_queryset(self):
+#        return self.queryset.filter(user=self.request.user)
 
 
 def lobby(request):

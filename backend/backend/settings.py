@@ -71,7 +71,7 @@ CHANNEL_LAYERS = {
     #     },
     # },
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+        'BACKEND': 'channels.layers.InMemoryChannelLayer' # for dev
     }
 }
 
