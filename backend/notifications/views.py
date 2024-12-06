@@ -6,10 +6,10 @@ from .serializers import NotificationSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.http import JsonResponse
-from django.conf import settings
+from django.contrib.auth import get_user_model
 # Create your views here.
 
-User = settings.AUTH_USER_MODEL
+User = get_user_model()
 
 
 def send_friend_request_view(request):
@@ -38,7 +38,11 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         receiver_id = self.request.data.get('receiver_id')
-        receiver = User.objects.get(id=receiver_id)
+        print(f'Receiver ID: {receiver_id}')
+        try:
+            receiver = User.objects.get(id=receiver_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User matching query does not exist.'}, status=400)
         notification = serializer.save(user=self.request.user, receiver=receiver)
 
         print(f'Notification created: {notification.body}')

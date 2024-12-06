@@ -17,9 +17,9 @@
 
 	<script type="text/javascript">
 
-		//let url = `ws://${window.location.host}/ws/socket-server/`;
+		//let userId = {{ request.user.id }};
 		let url = `ws://${window.location.host}/ws/notifications/`;
-
+		//let url = `ws://${window.location.host}/ws/notifications/${userId}/`;
 		const chatSocket = new WebSocket(url);
 
 		chatSocket.onmessage = function(e) {
