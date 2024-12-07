@@ -37,13 +37,14 @@ class NotificationViewSet(viewsets.ModelViewSet):
         return Notification.objects.filter(receiver=self.request.user)
 
     def perform_create(self, serializer):
-        receiver_id = self.request.data.get('receiver_id')
+        print(f'Request data: {self.request.data}')
+        receiver_id = self.request.data.get('receiver')
         print(f'Receiver ID: {receiver_id}')
         try:
             receiver = User.objects.get(id=receiver_id)
         except User.DoesNotExist:
             return JsonResponse({'error': 'User matching query does not exist.'}, status=400)
-        notification = serializer.save(user=self.request.user, receiver=receiver)
+        notification = serializer.save(sender=self.request.user, receiver=receiver)
 
         print(f'Notification created: {notification.body}')
 
@@ -55,7 +56,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
                     'message': notification.body
                     }
                 )
-        print(f'notifications_{self.request.user.id}')
+        print(f'notifications_{receiver.id}')
 #    def get_queryset(self):
 #        return self.queryset.filter(user=self.request.user)
 
