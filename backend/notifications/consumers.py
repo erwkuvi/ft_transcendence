@@ -5,52 +5,72 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from asgiref.sync import async_to_sync
 
 
 # Consumers are the equivalent of Django views but for handling WebSocket connections.
 # They are responsible for managing the lifecycle of a WebSocket connection,
 # Handling messages sent and received over the connection.
 
+    # self.user = await self.get_user_from_token()
+        # print('At consumer, user id:', self.user)
+        # if self.user is not None:
+        #     self.group_name = f'notifications_{self.user.id}'
+        #     print('At consumer, group\'s name:', self.group_name)
+        #     await self.channel_layer.group_add(
+        #         self.group_name,
+        #         self.channel_name
+        #     )
+        #     await self.accept()
+        # else:
+        #     await self.close()
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.user = await self.get_user_from_token()
-        if self.user is not None:
-            self.group_name = f'notifications_{self.user.id}'
-            await self.channel_layer.group_add(
+        self.group_name = f'notifications_3'# for now hardcoded to 3 (Erwin's user_id) 
+        await self.channel_layer.group_add(
                 self.group_name,
                 self.channel_name
-            )
-            await self.accept()
-        else:
-            await self.close()
+        )
+        self.send(text_data=json.dumps ({
+            'type': 'connection_established',
+            'message': 'You are now connected!'
+        }))
+        await self.accept()
 
     async def disconnect(self, close_code):
-        if self.user is not None:
-            await self.channel_layer.group_discard(
-                self.group_name,
-                self.channel_name
-            )
+        pass
+        #if self.user is not None:
+        #    await self.channel_layer.group_discard(
+        #        self.group_name,
+        #        self.channel_name
+        #)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+        body = data['body']
         message = data['message']
+
+        print('message:', message)
 
         await self.channel_layer.group_send(
             self.group_name,
             {
                 'type': 'send_notification',
-                'message': message
+                'message': message,
+                'body': body
             }
         )
 
     async def send_notification(self, event):
+        body = event['body']
         message = event['message']
 
         await self.send(text_data=json.dumps({
-            'type': 'send_notification',
-            'message': message
+            'type': 'notification',
+            'message': message,
+            'body': body
         }))
 
     @database_sync_to_async

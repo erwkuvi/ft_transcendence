@@ -42,8 +42,8 @@ const NotifMenu = () => {
 
 	useEffect(() => {
 		// Add a test notification when the component mounts
-		addTestNotification();
-		addTestNotification();
+ 		addTestNotification();
+// 		addTestNotification();
 
 	}, []);
 
