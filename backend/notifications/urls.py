@@ -10,5 +10,6 @@ router.register('notifications', views.NotificationViewSet, basename='notificati
 urlpatterns = [
         path('', include(router.urls)),
         path('lobby/', views.lobby),
+        path('user_id/', views.UserIDView.as_view(), name='user_id'),
         # path('send/', views.send_friend_request_view),
 ]

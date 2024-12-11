@@ -1,8 +1,10 @@
-from channels.generic.websocket import WebsocketConsumer
+import json
+import httpx
+from django.conf import settings
+#from channels.generic.websocket import WebsocketConsumer
 from channels.db import database_sync_to_async
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from channels.generic.websocket import AsyncWebsocketConsumer
-import json
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from asgiref.sync import async_to_sync
@@ -27,17 +29,44 @@ from asgiref.sync import async_to_sync
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):
+    async def get_user_id_from_endpoint(self):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f'http://{settings.HOST_IP}/api/test/user_id/', headers={
+                'Authorization': f'Bearer {self.scope["query_string"].decode().split("=")[1]}'
+            })
+            if response.status_code == 200:
+                return response.json().get('user_id')
+            return None
+
     async def connect(self):
-        self.group_name = f'notifications_3'# for now hardcoded to 3 (Erwin's user_id) 
-        await self.channel_layer.group_add(
+        user_id = await self.get_user_id_from_endpoint()
+        print(f'user_id: {user_id}')
+        if user_id is not None:
+            self.group_name = f'notifications_{user_id}'
+            print(f'Attempting to connect to group: {self.group_name}')
+            await self.channel_layer.group_add(
                 self.group_name,
                 self.channel_name
-        )
-        self.send(text_data=json.dumps ({
-            'type': 'connection_established',
-            'message': 'You are now connected!'
-        }))
-        await self.accept()
+            )
+            await self.accept()
+            await self.send(text_data=json.dumps({
+                'type': 'connection_established',
+                'message': 'You are now connected!'
+            }))
+        else:
+            await self.close()
+    #async def connect(self):
+
+    #    self.group_name = f'notifications_2'# for now hardcoded to 2 (Adams user_id) 
+    #    await self.channel_layer.group_add(
+    #            self.group_name,
+    #            self.channel_name
+    #    )
+    #    self.send(text_data=json.dumps ({
+    #        'type': 'connection_established',
+    #        'message': 'You are now connected!'
+    #    }))
+    #    await self.accept()
 
     async def disconnect(self, close_code):
         pass

@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Notification
 from .serializers import NotificationSerializer
@@ -27,6 +29,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
         print(f'Sender ID: {sender_id}')
         try:
             receiver = User.objects.get(id=receiver_id)
+            sender = User.objects.get(id=sender_id)
         except User.DoesNotExist:
             return JsonResponse({'error': 'User does not exist.'}, status=400)
         notification = serializer.save(sender=self.request.user, receiver=receiver)
@@ -35,17 +38,30 @@ class NotificationViewSet(viewsets.ModelViewSet):
         print(f'Notification attributes: {notification.__dict__}')
 
         channel_layer = get_channel_layer()
+        if notification.notification_type == 'friendship_invite':
+            body_content = f'{sender.username} wants to be your friend'
+        else:
+            body_content = f'{sender.username} dares you to step into the arena and face him in an epic duel!'
+
         async_to_sync(channel_layer.group_send)(
-                f'notifications_{self.request.user.id}',
+                f'notifications_{receiver_id}',
                 {
                     'type': 'send_notification',
                     'message': notification.notification_type,
-                    'body': notification.body,
+                    'body': body_content,
+                    #'sender': sender.username,
                     }
                 )
-        print(f'Group\'s name is notifications_{self.request.user.id}')
+        print(f'Group\'s name is notifications_{receiver_id}')
 #    def get_queryset(self):
 #        return self.queryset.filter(user=self.request.user)
+
+
+class UserIDView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({'user_id': request.user.id})
 
 
 def lobby(request):
