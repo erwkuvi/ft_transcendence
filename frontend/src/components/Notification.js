@@ -11,7 +11,9 @@ const Notification = ({ onConfirm, onReject }) => {
 		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 			console.log('Data:', data);
-			setNotification(data);
+			if (data.type === 'notification') {
+				setNotification(data);
+			}
 		};
 
 		ws.onerror = (error) => {

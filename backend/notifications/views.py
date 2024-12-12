@@ -40,16 +40,17 @@ class NotificationViewSet(viewsets.ModelViewSet):
         channel_layer = get_channel_layer()
         if notification.notification_type == 'friendship_invite':
             body_content = f'{sender.username} wants to be your friend'
+            message = 'Friendship Request'
         else:
             body_content = f'{sender.username} dares you to step into the arena and face him in an epic duel!'
+            message = 'Ultimate Faceoff'
 
         async_to_sync(channel_layer.group_send)(
                 f'notifications_{receiver_id}',
                 {
                     'type': 'send_notification',
-                    'message': notification.notification_type,
+                    'message': message,
                     'body': body_content,
-                    #'sender': sender.username,
                     }
                 )
         print(f'Group\'s name is notifications_{receiver_id}')
