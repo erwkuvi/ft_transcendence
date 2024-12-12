@@ -11,4 +11,5 @@ router.register('matches', views.MatchViewSet, basename='matches')
 urlpatterns = [
         path('', include(router.urls)),
         #path('login/', views.OAuth42LoginView.as_view(), name='42-login'),
+        path('logout/', views.LogoutView.as_view(), name='logout'),
     ]
