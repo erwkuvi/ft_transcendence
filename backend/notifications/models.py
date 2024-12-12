@@ -8,8 +8,8 @@ class Notification(models.Model):
             ('friendship_invite', 'Friendship Invite'),
             ('match_request', 'Match Request'),
     )
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_notifications')
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_notifications')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender_user')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver_user')
     notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
     body = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)

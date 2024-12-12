@@ -15,5 +15,6 @@ dj-database-url  							# Database configuration from URL -- maybe not needed an
 whitenoise  									# Serve static files in prod- adds caching and compression to images 
 pyotp==2.8.0 									# For generating and validating one-time passwords (OTPs) for 2FA
 qrcode==7.3.1									# Generates a QR code
-channels==3.0.5  							# WebSockets and more for Django
+channels==4.0.0  							# WebSockets and more for Django
 channels_redis==4.0.0         # for channels_redis
+django-channels-jwt==0.0.3
