@@ -24,26 +24,22 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print(f'Request data: {self.request.data}')
         receiver_id = self.request.data.get('receiver')
+        sender = self.request.user
+        notification_type = self.request.data.get('notification_type')
         print(f'Receiver ID: {receiver_id}')
-        sender_id = self.request.data.get('sender')
-        print(f'Sender ID: {sender_id}')
+
         try:
             receiver = User.objects.get(id=receiver_id)
-            sender = User.objects.get(id=sender_id)
         except User.DoesNotExist:
             return JsonResponse({'error': 'User does not exist.'}, status=400)
-        notification = serializer.save(sender=self.request.user, receiver=receiver)
+
+        message, body_content = self.get_predefined_message(notification_type, sender.username)
+        notification = serializer.save(receiver=receiver, body=body_content)
 
         print(f'Notification created: {notification.body}')
         print(f'Notification attributes: {notification.__dict__}')
 
         channel_layer = get_channel_layer()
-        if notification.notification_type == 'friendship_invite':
-            body_content = f'{sender.username} wants to be your friend'
-            message = 'Friendship Request'
-        else:
-            body_content = f'{sender.username} dares you to step into the arena and face him in an epic duel!'
-            message = 'Ultimate Faceoff'
 
         async_to_sync(channel_layer.group_send)(
                 f'notifications_{receiver_id}',
@@ -54,6 +50,13 @@ class NotificationViewSet(viewsets.ModelViewSet):
                     }
                 )
         print(f'Group\'s name is notifications_{receiver_id}')
+
+    def get_predefined_message(self, notification_type, sender):
+        if notification_type == 'friendship_invite':
+            return 'Friendship Request', f'{sender} wants to be your friend'
+        else:
+            return 'Ultimate Faceoff', f'{sender} dares you to step into the arena and face him in an epic duel!'
+
 #    def get_queryset(self):
 #        return self.queryset.filter(user=self.request.user)
 

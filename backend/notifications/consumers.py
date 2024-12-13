@@ -1,13 +1,21 @@
 import json
 import httpx
 from django.conf import settings
-#from channels.generic.websocket import WebsocketConsumer
+from django.core.handlers.asgi import ASGIRequest, ASGIHandler
 from channels.db import database_sync_to_async
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from channels.generic.websocket import AsyncWebsocketConsumer
-from rest_framework_simplejwt.tokens import UntypedToken
-from rest_framework_simplejwt.authentication import JWTAuthentication
+#from rest_framework_simplejwt.tokens import UntypedToken
+#from rest_framework.simplejwt.authentication import JWTAuthentication
 from asgiref.sync import async_to_sync
+from django.http import HttpResponse
+
+def ws_message(message):
+    # ASGI WebSocket packet-received and send-packet message types
+    # both have a "text" key for their textual data.
+    message.reply_channel.send({
+        "text": message.content['text'],
+    })
 
 
 # Consumers are the equivalent of Django views but for handling WebSocket connections.
@@ -33,45 +41,56 @@ from asgiref.sync import async_to_sync
 #            await self.close()
 
 class NotificationConsumer(AsyncWebsocketConsumer):
-    def get_authorization_header(self):
-        headers = dict(self.scope['headers'])
-        auth_header = headers.get(b'authorization')
-        if auth_header:
-            return auth_header.decode()
-        return ''
-
-    async def get_user_id_from_endpoint(self):
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
-                f'http://{settings.HOST_IP}/api/test/user_id/',
-                headers={
-                    'Authorization': self.get_authorization_header()
-                }
-            )
-        if response.status_code == 200:
-            user_data = response.json()
-            return user_data.get('user_id')
-        return None
+#    def get_authorization_header(self):
+#        headers = dict(self.scope['headers'])
+#        auth_header = headers.get(b'authorization')
+#        if auth_header:
+#            return auth_header.decode()
+#        return ''
+#
+#    async def get_user_id_from_endpoint(self):
+#        async with httpx.AsyncClient() as client:
+#            response = await client.get(
+#                f'http://{settings.HOST_IP}/api/test/user_id/',
+#                headers={
+#                    'Authorization': self.get_authorization_header()
+#                }
+#            )
+#        if response.status_code == 200:
+#            user_data = response.json()
+#            return user_data.get('user_id')
+#        return None
 
     async def connect(self):
+        self.group_name = 'notifications_1'  # Example group name
+
+        # Add the connection to the group
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
+
         await self.accept()
         print(self.scope)
-        user_id = await self.get_user_id_from_endpoint()
-        if user_id is not None:
-            self.group_name = f'notifications_{user_id}'
-            print(f'Attempting to connect to group: {self.group_name}')
-            print(f'Extracted user_id: {user_id}')  # Print to terminal
-            await self.channel_layer.group_add(
-                self.group_name,
-                self.channel_name
-            )
-            await self.send(text_data=json.dumps({
-                'type': 'connection_established',
-                'message': 'You are now connected!!!',
-                'user_id': user_id  # Send user_id to web console
-            }))
-        else:
-            await self.close()
+        await self.send(text_data=json.dumps({
+            'type': 'connection_established',
+            'message': 'You are now connected!!!',
+        }))
+        #if user_id is not None:
+        #    self.group_name = f'notifications_{user_id}'
+        #    print(f'Attempting to connect to group: {self.group_name}')
+        #    print(f'Extracted user_id: {user_id}')  # Print to terminal
+        #    await self.channel_layer.group_add(
+        #        self.group_name,
+        #        self.channel_name
+        #    )
+        #    await self.send(text_data=json.dumps({
+        #        'type': 'connection_established',
+        #        'message': 'You are now connected!!!',
+        #        'user_id': user_id  # Send user_id to web console
+        #    }))
+        #else:
+        #    await self.close()
 
     async def disconnect(self, close_code):
         pass
@@ -107,16 +126,16 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'body': body
         }))
 
-    @database_sync_to_async
-    def get_user_from_token(self):
-        try:
-            token = self.scope['query_string'].decode().split('=')[1]
-            validated_token = UntypedToken(token)
-            jwt_auth = JWTAuthentication()
-            user = jwt_auth.get_user(validated_token)
-            return user
-        except (InvalidToken, TokenError, IndexError):
-            return None
+    #@database_sync_to_async
+    #def get_user_from_token(self):
+    #    try:
+    #        token = self.scope['query_string'].decode().split('=')[1]
+    #        validated_token = UntypedToken(token)
+    #        jwt_auth = JWTAuthentication()
+    #        user = jwt_auth.get_user(validated_token)
+    #        return user
+    #    except (InvalidToken, TokenError, IndexError):
+    #        return None
 
 #class NotificationConsumer(AsyncWebsocketConsumer):
 #    async def connect(self):
@@ -253,3 +272,5 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 #            'type': 'match_invite',
 #            'message': message
 #        }))
+
+

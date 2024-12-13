@@ -45,6 +45,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'channels',# WebSockets and more for Django
 	'django.contrib.admin',
 	'django.contrib.auth',
@@ -71,7 +72,7 @@ CHANNEL_LAYERS = {
      #    },
      #},
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'# for dev
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # for dev
     }
 }
 
@@ -102,8 +103,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',  # This is for development
-        #'rest_framework.permissions.IsAuthenticated',  # by default
+        #'rest_framework.permissions.AllowAny',  # This is for development
+        'rest_framework.permissions.IsAuthenticated',  # by default
     ),
 }
 

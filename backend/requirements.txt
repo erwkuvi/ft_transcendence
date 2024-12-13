@@ -1,9 +1,8 @@
-Django==4.1.7  								# Web framework
+Django==4.2  								# Web framework
 djangorestframework  					# Toolkit for building Web APIs
 django-environ==0.7.0  				# Manage environment variables
 django-cors-headers==4.0.0  	# Handle CORS headers
 psycopg2-binary==2.9.3  			# PostgreSQL database adapter
-daphne==3.0.2  								# ASGI server for HTTP, HTTP2, and WebSocket
 djangorestframework-simplejwt # JWT authentication for DRF
 requests==2.31.0  						# HTTP library
 httpx  												# Next-gen HTTP client
@@ -15,6 +14,7 @@ dj-database-url  							# Database configuration from URL -- maybe not needed an
 whitenoise  									# Serve static files in prod- adds caching and compression to images 
 pyotp==2.8.0 									# For generating and validating one-time passwords (OTPs) for 2FA
 qrcode==7.3.1									# Generates a QR code
-channels==4.0.0  							# WebSockets and more for Django
-channels_redis==4.0.0         # for channels_redis
-django-channels-jwt==0.0.3
+channels==4.1.0 #for channels
+channels_redis==4.2.0 #for channels
+daphne==4.1.2 #for channels
+#django-channels-jwt==0.0.3
