@@ -5,32 +5,11 @@ import {player1, movePlayer, constrainPlayer, computerPlay, COMPUTER_HEIGHT, COM
 import {ball, BALL, BALL_RADIUS, resetBall} from './ball.js';
 console.log('startThreeJsandLights.js loaded');
 
-
 let RUNNING_GAME = true;
-
 
 const cube1Geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
 const cube1Material = new THREE.MeshBasicMaterial({color: 0xFFFFF});
 const cube1 = new THREE.Mesh(cube1Geometry, cube1Material);
-// scene.add(cube1);
-
-
-
-// // //PLAYER1
-// // const	player1Geometry = new THREE.BoxGeometry(4, 10, 1);
-// // const	player1Material = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
-// // const	player1 = new THREE.Mesh(player1Geometry, player1Material);
-
-// // player1.castShadow = true;
-// // player1.position.z = 0;
-// // player1.position.y = 0;
-
-
-// const boxHelper = new THREE.BoxHelper(player1, 0xffff00);
-// scene.add(boxHelper);
-
-// scene.add(player1);
-
 
 function ballBounceSideWall() {
 	if (ball.position.x >= (FIELD.FIELD_WIDTH / 2) - BALL_RADIUS) {
@@ -59,23 +38,6 @@ function ballBounceSideWall() {
 		}, 300);
 	}
 }
-
-// Collision Detection ( b = ball , p = player)
-// function collision(b,p){
-// 	let	ballXmax = b.position.z + BALL_RADIUS;
-// 	let	ballXmin = b.position.z - BALL_RADIUS;
-// 	let	ballYmax = b.position.x - BALL_RADIUS;
-// 	let	ballYmin = b.position.x + BALL_RADIUS;
-
-// 	// console.log("BallFront: " + ballFront + " BallBack: " + ballBack + " BallLeft: " + ballLeft + " BallRight" + ballRight);
-// 	let	playerXmax = p.position.z + PLAYER_HEIGHT/2;
-// 	let	playerXmin = p.position.z - PLAYER_HEIGHT/2;
-// 	let	playerYmax = p.position.x - PLAYER_WIDTH/2;
-// 	let	playerYmin = p.position.x  + PLAYER_WIDTH/2;
-
-// 	return playerXmin <= ballXmax && playerXmax >= ballXmin && playerYmin <= ballYmax && playerYmax >= ballYmin;
-// }
-
 
 function collision(b, p) {
     let ballXmax = b.position.x + BALL_RADIUS;

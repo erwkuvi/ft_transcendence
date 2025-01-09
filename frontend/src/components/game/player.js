@@ -195,48 +195,6 @@ export function constrainPlayer() {
   }
 }
 
-// function playerTwo() {
-// 	if (keysPressed['j']) {
-// 		if (player2.position.x - PLAYER_WIDTH / 2 >= (-FIELD_WIDTH / 2) + 0.5 ) {
-// 			Player2.paddleDirX = -1;
-// 		} else {
-// 			Player2.paddleDirX = 0;
-// 		}
-// 	}
-
-// 	if ( keysPressed['l']) {
-// 		if (player2.position.x + PLAYER_WIDTH / 2 <= (FIELD_WIDTH / 2)  - 0.5 ) {
-// 			Player2.paddleDirX = 1;
-// 		} else {
-// 			Player2.paddleDirX = 0;
-// 		}
-// 	}
-
-
-// 	player2.position.x += Player2.paddleDirX;
-// 	player2BBoxHelper.update();         // Update the wireframe position
-// }
-
-
-//Colision detection from the player
-
-
-// function collision(b,p){
-// 	b.top = b.y - b.radius;
-// 	b.bottom = b.y + b.radius;
-// 	b.left = b.x - b.radius;
-// 	b.right = b.x + b.radius;
-
-// 	p.top = p.y;
-// 	p.bottom = p.y + p.height;
-// 	p.left = p.x;
-// 	p.right = p.x + p.width;
-
-// 	return b.right > p.left && b.bottom > p.top && b.left < p.right && b.top < p.bottom;
-// }
-
-
-
 function movePlayer() {
 	playerOne();
 	// playerTwo();

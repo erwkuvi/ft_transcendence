@@ -69,36 +69,4 @@ const Pong = ({ mode }) => {
 	return <div id="pong-container" style={{ width: '100%', height: '100vh' }} />;
   };
 
-// const Pong = ({ mode }) => {
-// 	useEffect(() => {
-// 		const scene = new THREE.Scene();
-// 		const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// 		const renderer = new THREE.WebGLRenderer();
-// 		renderer.setSize(window.innerWidth, window.innerHeight);
-		
-// 		const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.2);
-// 		scene.add(ambientLight);
-	
-// 		FIELD.constructPlayingField(scene);
-// 		const { player1, computer } = initializePlayers(scene);
-// 		const ball = initializeBall(scene);
-	
-// 		document.getElementById('pong-container').appendChild(renderer.domElement);
-	
-// 		const animate = () => {
-// 			renderer.render(scene, camera);
-// 			renderer.setAnimationLoop(animate);
-// 		};
-	
-// 		animate();
-	
-// 		return () => {
-// 			renderer.dispose();
-// 			document.getElementById('pong-container').removeChild(renderer.domElement);
-// 		};
-// 	}, [mode]);
-	
-// 	return <div id="pong-container" />;
-// };
-
 export default Pong;
