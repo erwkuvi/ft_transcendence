@@ -16,7 +16,7 @@ const gui = new dat.GUI();
 //STARTING THREEJS
 const scene = new THREE.Scene();
 
-const aspect = window.innerWidth / window.innerHeight;
+const aspect = .innerWidth / window.innerHeight;
 
 const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
 camera.position.set(20, 20, 20);

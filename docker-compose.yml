@@ -10,13 +10,12 @@ services:
       - transcend
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      - react_node_modules:/app/node_modules
     depends_on:
       - postgresql
       - django
     environment:
       - CHOKIDAR_USEPOLLING=TRUE
-      - PORT=80
     
   django:
     container_name: backend
@@ -64,6 +63,10 @@ services:
         #    networks:
         #      - "transcend"
         #    restart: unless-stopped
+
+
+volumes:
+  react_node_modules:
 
 networks:
   transcend:
