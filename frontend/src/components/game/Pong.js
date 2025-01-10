@@ -6,25 +6,27 @@ import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
 import { useEffect } from 'react';
 
 const FIELD_WIDTH = 26;
+const FIELD_HALF_WIDHT = FIELD_WIDTH / 2;
 const FIELD_LEN = 32;
 const PLAYER_SPEED = 0.5;
+const PLAYER_WIDTH = 4;
+const PLAYER_LEN = 1;
+const PLAYER_HALF_WIDTH = PLAYER_WIDTH /2;
+const PLAYER_HALF_LEN = PLAYER_LEN / 2;
 let	BALL_SPEED = 0.12;
 
 let MAX_SCORE_COUNT = 5;
 let MAX_SET_COUNT = 3;
 
 function Ball({player1Ref, player2Ref, handleScore}) {
-	// Reference to the ball mesh
+	//Reference to the ball mesh
 	const meshRef = useRef();
 
-	// Refs to store position and velocity without causing re-renders
-	const velocity = useRef([0.1, 0, 0.1]); // Initial velocity [x, y, z]
-	const position = useRef([0, 1, 0]); // Initial position
+	//Refs to store position and velocity without causing re-renders
+	const velocity = useRef([0.1, 0, 0.1]); //Initial velocity [x, y, z]
+	const position = useRef([0, 1, 0]); //Initial position
 
 	const hasCollided = useRef(false);
-
-  	const FIELD_WIDTH = 26; // Field boundaries
-	const FIELD_LEN = 32;
 
 	// Helper function to calculate collision angle and update velocity
 	const calculateReflection = (ball, player) => {
@@ -57,22 +59,20 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 
 		const playerPos = playerRef.current.position;
 
-		// Bounding box collision detection
+		//Bounding box collision detection
 		const ballX = position.current[0];
 		const ballZ = position.current[2];
 
-		const playerWidth = 4; // Match player geometry width
-		const playerDepth = 1; // Match player geometry depth
-		const ballRadius = 0.7 + 0.1; // Match ball geometry radius + plus I have added a small safety area
+		const ballRadius = 0.7 + 0.1; //Match ball geometry radius + plus I have added a small safety area
 
-		// Check if the ball is within the player's boundaries
+		//Check if the ball is within the player's boundaries
 		//Axis-Aligned Bounding Box (AABB) Collision Detection
 		//Used for the plane of x z 
 		return (
-			ballX >= playerPos.x - (playerWidth / 2) - ballRadius &&
-			ballX <= playerPos.x + (playerWidth / 2) + ballRadius &&
-			ballZ >= playerPos.z - (playerDepth / 2) - ballRadius &&
-			ballZ <= playerPos.z + (playerDepth / 2) + ballRadius
+			ballX >= playerPos.x - PLAYER_HALF_WIDTH - ballRadius &&
+			ballX <= playerPos.x + PLAYER_HALF_WIDTH + ballRadius &&
+			ballZ >= playerPos.z - PLAYER_HALF_LEN - ballRadius &&
+			ballZ <= playerPos.z + PLAYER_HALF_LEN + ballRadius
 		);
 	};
 
