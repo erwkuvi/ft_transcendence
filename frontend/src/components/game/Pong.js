@@ -1,22 +1,22 @@
 
-import { createRoot } from 'react-dom/client';
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
 import { useEffect } from 'react';
 
-const FIELD_WIDTH = 26;
-const FIELD_HALF_WIDHT = FIELD_WIDTH / 2;
-const FIELD_LEN = 32;
-const PLAYER_SPEED = 0.5;
-const PLAYER_WIDTH = 4;
-const PLAYER_LEN = 1;
-const PLAYER_HALF_WIDTH = PLAYER_WIDTH /2;
-const PLAYER_HALF_LEN = PLAYER_LEN / 2;
-let	BALL_SPEED = 0.12;
+const	FIELD_WIDTH = 26;
+const	FIELD_LEN = 32;
+const	FIELD_HALF_WIDHT = FIELD_WIDTH / 2;
+const	FIELD_HALF_LEN =  FIELD_LEN / 2;
+const	PLAYER_SPEED = 0.5;
+const	PLAYER_WIDTH = 4;
+const	PLAYER_LEN = 1;
+const	PLAYER_HALF_WIDTH = PLAYER_WIDTH /2;
+const	PLAYER_HALF_LEN = PLAYER_LEN / 2;
+let		BALL_SPEED = 0.12;
 
-let MAX_SCORE_COUNT = 5;
-let MAX_SET_COUNT = 3;
+let 	MAX_SCORE_COUNT = 5;
+let		MAX_SET_COUNT = 3;
 
 function Ball({player1Ref, player2Ref, handleScore}) {
 	//Reference to the ball mesh
@@ -28,32 +28,31 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 
 	const hasCollided = useRef(false);
 
-	// Helper function to calculate collision angle and update velocity
+	//Reflection angle and updates velocity :)
 	const calculateReflection = (ball, player) => {
 		const ballPos = ball.position.x;
 		const playerPos = player.position.x;
 
-		// Compute the collision point
-		let collidePoint = ballPos - playerPos;
+		let collisionPoint = ballPos - playerPos;
 
-		// Normalize to range [-1, 1]
-		collidePoint = collidePoint / (4 / 2);
+		//Normalize to range [-1, 1]
+		collisionPoint = collisionPoint / 2;
 
-		// Calculate the angle of reflection
-		const angleRad = (Math.PI / 4) * collidePoint;
+		//Calculate the angle of reflection
+		const angleRad = (Math.PI / 4) * collisionPoint;
 
-		// Determine direction based on ball position (top or bottom of the field)
+		//Determine direction based on ball position (top or bottom of the field)
 		const direction = ball.position.z > 0 ? 1 : -1;
 
-		// Update ball velocity (Z for forward/backward, X for side movement)
-		velocity.current[2] = -direction * BALL_SPEED * Math.cos(angleRad); // Forward/backward velocity
-		velocity.current[0] = BALL_SPEED * Math.sin(angleRad); // Sideways velocity
+		//Update ball velocity (Z for forward/backward, X for side movement)
+		velocity.current[2] = -direction * BALL_SPEED * Math.cos(angleRad); //Forward/backward velocity
+		velocity.current[0] = BALL_SPEED * Math.sin(angleRad); //Sideways velocity
 		BALL_SPEED += 0.01;
 	};
 
 
 
-	// Helper function to check collision
+	//Helper function to check collision
 	const checkCollision = (playerRef) => {
 		if (!playerRef.current) return false;
 
@@ -76,60 +75,55 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 		);
 	};
 
-// Frame-based animation loop
 	useFrame(() => {
     	if (!meshRef.current) return;
 
-    	// Calculate the new position
+    	//Calculate the new position
     	const [vx, vy, vz] = velocity.current;
     	const [px, py, pz] = position.current;
     	const newPosition = [px + vx, py + vy, pz + vz];
 
-    	// Handle collisions with the field boundaries
     	const halfWidth = (FIELD_WIDTH - 2 - 0.7) / 2;
     	const halfLength = (FIELD_LEN - 1) / 2;
 
     	if (newPosition[0] > halfWidth || newPosition[0] < -halfWidth) {
-    	  velocity.current[0] = -vx; // Reverse X velocity
+    	  velocity.current[0] = -vx; //Reverses it
     	}
     	if (newPosition[2] > halfLength || newPosition[2] < -halfLength) {
-    	  velocity.current[2] = -vz; // Reverse Z velocity
+    	  velocity.current[2] = -vz;
     	}
 
-		//If the ball makes a goal
+		//GOAL
 		if (newPosition[2] > halfLength) {
-
+		
 			handleScore(2);
 			position.current = [0, 1, 0];
 			velocity.current = [0.1, 0, 0.1];
 			return;
-		}
+		} else if (newPosition[2] < -halfLength) {
 
-		if (newPosition[2] < -halfLength) {
-		
 			handleScore(1);
 			position.current = [0, 1, 0];
 			velocity.current = [0.1, 0, -0.1];
 			return;
 		}
 
-		// Player collision detection with buffering
 		const collidedWithPlayer1 = checkCollision(player1Ref);
 		const collidedWithPlayer2 = checkCollision(player2Ref);
 
-		// Player collision detection
+		//Player collision detection
 		if ((collidedWithPlayer1 || collidedWithPlayer2) && !hasCollided.current) {
 			const playerRef = collidedWithPlayer1 ? player1Ref : player2Ref;
-			calculateReflection(meshRef.current, playerRef.current); // Reflect the ball
+			calculateReflection(meshRef.current, playerRef.current); //Reflect the ball
 			hasCollided.current = true;
 		} else if (!collidedWithPlayer1 && !collidedWithPlayer2) {
 			hasCollided.current = false;
 		}
 
-		// Update the position ref
+		//Update the position
 		position.current = newPosition;
 			
-		// Apply the position to the mesh
+		//Apply the position to the mesh
 		meshRef.current.position.set(...newPosition);
 	});
 
@@ -147,38 +141,36 @@ const Player = React.forwardRef(({ position, color, controls }, ref, player) => 
 	const keysPressed = useRef({});
   
 	useEffect(() => {
-	  const handleKeyDown = (e) => {
-		keysPressed.current[e.key] = true;
-	  };
+		const handleKeyDown = (e) => {
+			keysPressed.current[e.key] = true;
+	  	};
   
-	  const handleKeyUp = (e) => {
-		keysPressed.current[e.key] = false;
-	  };
+		const handleKeyUp = (e) => {
+			keysPressed.current[e.key] = false;
+		};
   
-	  window.addEventListener('keydown', handleKeyDown);
-	  window.addEventListener('keyup', handleKeyUp);
+		window.addEventListener('keydown', handleKeyDown);
+		window.addEventListener('keyup', handleKeyUp);
   
-	  return () => {
-		window.removeEventListener('keydown', handleKeyDown);
-		window.removeEventListener('keyup', handleKeyUp);
-	  };
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+			window.removeEventListener('keyup', handleKeyUp);
+	  	};
 	}, []);
   
 	useFrame(() => {
-	  const moveSpeed = PLAYER_SPEED;
   
-	  // Directly update the meshRef position
-	  if (meshRef.current) {
-		if (meshRef.current.position.x - 2 > -FIELD_WIDTH/2 + 1) {
-			if (keysPressed.current[controls.left]) meshRef.current.position.x -= moveSpeed; // Move left
-		}
-		if(meshRef.current.position.x + 2 < FIELD_WIDTH/2 - 1) {
-			if (keysPressed.current[controls.right]) meshRef.current.position.x += moveSpeed; // Move right
-		}
-	  }
-  
-	  // Ensure ref passed to Ball has the updated position
-	  if (ref) ref.current = meshRef.current;
+		//Updating the meshRef position
+		if (meshRef.current) {
+			if (meshRef.current.position.x - 2 > -FIELD_HALF_WIDHT + 1) {
+				if (keysPressed.current[controls.left]) meshRef.current.position.x -= PLAYER_SPEED; //Move left
+			}
+			if(meshRef.current.position.x + 2 < FIELD_HALF_WIDHT - 1) {
+				if (keysPressed.current[controls.right]) meshRef.current.position.x += PLAYER_SPEED; //Move right
+			}
+	  	}
+
+		if (ref) ref.current = meshRef.current;
 	});
 	return (	
 		<mesh ref={meshRef} position={position}>
@@ -192,9 +184,8 @@ const Player = React.forwardRef(({ position, color, controls }, ref, player) => 
   
 
 
-function Field({dimensions, position, color, borderColor}) {
-	const meshRef = useRef();
-	const wallThickness = 0.1; // The thickness of the border walls
+function Field({dimensions, borderColor}) {
+	const wallThickness = 0.1;
 
 	return (
 		<>
@@ -282,31 +273,29 @@ function Pong() {
         	Player 1: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | Player 2: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
       	</div>
 		<Canvas style={{width: '100%', height: '100%'}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
-			{/* Add your other elements */}
-			<axesHelper args={[15]} /> {/*axes len 5*/}
+			<axesHelper args={[15]} />
 			<OrbitControls
 				enableZoom={true}
 				enablePan={true}
-				maxPolarAngle={Math.PI / 2} // Restrict vertical rotation (e.g., stop below horizon)
-				minDistance={5} // Minimum zoom distance
-				maxDistance={30} // Maximum zoom distance
+				maxPolarAngle={Math.PI / 2}
+				minDistance={5}
+				maxDistance={30}
 			/>
 			<ambientLight intensity={Math.PI / 2} />
 			<spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
 			<pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-			{/*The field walls */}
-			<Field dimensions={{width: FIELD_WIDTH - 2, height: 0.1, length: FIELD_LEN - 2}} position={[0, 0, 0]} color={0x0E0F22} borderColor="white"/>
+			<Field dimensions={{width: FIELD_WIDTH - 2, height: 0.1, length: FIELD_LEN - 2}} position={[0, 0, 0]} color="#0E0F22" borderColor="white"/>
 
 			<Ball player1Ref={player1Ref} player2Ref={player2Ref} handleScore={handleScore}/>
 			<Player
 				position={[0, 1, FIELD_LEN / 2 - 1.5]}
-				color={0xFFFFFF}
+				color="#FFFFFF"
 				controls={{ left: 'a', right: 'd' }}
 				ref={player1Ref}
 			/>
 			<Player
 				position={[0, 1, -FIELD_LEN / 2 + 1.5]}
-				color={0x60616D}
+				color="#60616D"
 				controls={{ left: 'ArrowLeft', right: 'ArrowRight' }}
 				ref={player2Ref}
 			/>
