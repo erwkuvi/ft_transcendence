@@ -6,7 +6,7 @@ const LogInButton = () => {
     const { t } = useTranslation();
 
     const handleClick = () => {
-        window.location.href = 'http://localhost:8000/auth/42/login/';
+        window.location.href = 'http://localhost:8000/42-login/';
     };
 
 	return (
