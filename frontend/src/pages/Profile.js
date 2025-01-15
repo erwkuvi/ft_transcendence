@@ -5,7 +5,7 @@ import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
 import Filter from './ProfileComponents/Filter';
 import ListFriends from './ProfileComponents/ListFriends';
-import { useTranslation } from "react-i18next";
+
 
 const Profile = () => {
 	const {t} = useTranslation();

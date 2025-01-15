@@ -1,11 +1,39 @@
+import React, { useEffect, useState } from 'react';
+
 import './Notification.css'
 
-const Notification = ({ title, description, onConfirm, onReject, read }) => {
+const Notification = ({ onConfirm, onReject }) => {
+	const [notification, setNotification] = useState(null);
+
+	useEffect(() => {
+		const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
+
+		ws.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			console.log('Data:', data);
+			if (data.type === 'notification') {
+				setNotification(data);
+			}
+		};
+
+		ws.onerror = (error) => {
+			console.error('WebSocket error:', error);
+		};
+
+		return () => {
+			ws.close();
+		};
+	}, []);
+
+	if (!notification) {
+		return <div>No new notifications</div>;
+	}
+
 	return (
-		<div className={`notification m-0 p-3 ${read ? 'read' : 'unread'}`} onMouseEnter={onConfirm}>
+		<div className={`notification m-0 p-3 ${notification.read ? 'read' : 'unread'}`} onMouseEnter={onConfirm}>
 			<div className="notification-text">
-				<h4 className="notification-title">{title}</h4>
-				<p className="notification-description">{description}</p>
+				<h4 className="notification-title">{notification.message}</h4>
+				<p className="notification-description">{notification.body}</p>
 			</div>
 			<div className="notification-buttons">
 				<button className="btn confirm-btn" onClick={onConfirm}>

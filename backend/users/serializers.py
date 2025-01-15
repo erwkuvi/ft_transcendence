@@ -46,8 +46,8 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         user = User(
             email=email,
             username=validated_data.get("username"),  # Inherited from AbstractUser
-            first_name=validated_data.get("first_name"),
-            last_name=validated_data.get("last_name"),
+           # first_name=validated_data.get("first_name"),
+           # last_name=validated_data.get("last_name"),
             otp_base32=otp_base32,
             otpauth_url=otp_auth_url,
             qr_code=ContentFile(stream.getvalue(), name=f"qr{get_random_string(10)}.png")

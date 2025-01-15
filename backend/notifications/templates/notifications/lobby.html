@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv="X-UA-Compatible' content="IE=edg
+<title>Bester Titel</title>
+<meta name="viewport' content="width=device-width,
+</head>
+<body>
+	<h1>Notifications test</h1>
+
+	<form id="form">
+		<input type="text" name="message"/>
+	</form>
+
+	<div id="messages"></div>
+
+	<script type="text/javascript">
+
+		//let userId = {{ request.user.id }};
+		let url = `ws://${window.location.host}/ws/notifications/`;
+		//let url = `ws://${window.location.host}/ws/notifications/${userId}/`;
+		const chatSocket = new WebSocket(url);
+
+		chatSocket.onmessage = function(e) {
+			let data = JSON.parse(e.data);
+			console.log('Data:', data);
+
+			if (data.type === 'notification') {
+				let messages = document.getElementById('messages');
+
+				messages.insertAdjacentHTML('beforeend', `
+								<div>
+										<p>${data.message}</p>
+								</div>
+						`);
+			}
+		};
+
+    let form = document.getElementById('form');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let message = e.target.message.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        form.reset();
+		});
+	</script>
+</body>
+</html>
+
+
+
