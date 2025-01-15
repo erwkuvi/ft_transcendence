@@ -45,8 +45,8 @@ if settings.DEBUG:
 # /auth/users/reset_username/
 # /auth/users/reset_username_confirm/
 
-# /auth/42/login/ 
-# /auth/42/callback/
+# /auth/42-login/
+# /auth/42-callback/
 # /auth/otp-login/
 
 # user_management/players/
