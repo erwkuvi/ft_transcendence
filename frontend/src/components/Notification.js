@@ -7,6 +7,7 @@ const Notification = ({ onConfirm, onReject }) => {
 
 	useEffect(() => {
 		const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
+		ws.onopen = () => console.log('WebSocket for game connection established');
 
 		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data);
