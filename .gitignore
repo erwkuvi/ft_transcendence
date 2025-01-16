@@ -2,5 +2,5 @@
 .idea/
 staticfiles/
 frontend/node_modules/
-#migrations/
+migrations/
 media/
