@@ -17,8 +17,8 @@ const Play = () => {
 				<div>
 				<h2>{t("PlayTitle")}</h2>
 				<Pong mode={selectedMode} />
-				<button className="btn button mt-4" onClick={() => setSelectedMode(null)}>
-					Back to Mode Selection
+				<button className="back btn button mt-4" onClick={() => setSelectedMode(null)}>
+					Back to Mode Select
 				</button>
 				</div>
 			) : (

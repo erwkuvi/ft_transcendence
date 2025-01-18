@@ -11,7 +11,9 @@ html, body {
 }
 
 body {
-	overflow: auto;
+	scrollbar-gutter: stable;
+	overflow-x: hidden;
+	overflow-y: scroll;
 	font-family: "Poppins";
 	font-optical-sizing: auto;
 	font-weight: 250;

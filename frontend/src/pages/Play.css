@@ -37,6 +37,10 @@
 	font-size: 18px;
 }
 
+.play .back {
+	margin-left: 10px;
+}
+
 .play .mode .button {
 	font-size: 22px;
 	margin-top: auto;
