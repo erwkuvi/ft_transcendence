@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "
-    Script for backend
+    Script for backendhttps://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dft_transcendence%26type%3Drepositories%26s%3Dstars%26o%3Ddesc%26p%3D5
 "
 
 # Load environment variables from .env file
@@ -14,9 +14,10 @@ echo "DJANGO_SUPERUSER_USERNAME: $DJANGO_SUPERUSER_USERNAME"
 echo "DJANGO_SUPERUSER_PASSWORD: $DJANGO_SUPERUSER_PASSWORD"
 echo "DJANGO_SUPERUSER_EMAIL: $DJANGO_SUPERUSER_EMAIL"
 
-python3 manage.py migrate
+python3 manage.py makemigrations
 python3 manage.py makemigrations users
-python3 manage.py makemigrations game
+python3 manage.py makemigrations friends
+python3 manage.py makemigrations games
 python3 manage.py migrate auth
 python3 manage.py migrate --noinput --run-syncdb
 python3 manage.py createsuperuser
@@ -25,5 +26,5 @@ python3 manage.py create_users
 
 python3 manage.py collectstatic --noinput
 
-python3 manage.py runserver 0.0.0.0:8000
-#daphne backend.asgi:application -b 0.0.0.0 -p 8000
+# python3 manage.py runserver 0.0.0.0:8000
+daphne backend.asgi:application -b 0.0.0.0 -p 8000

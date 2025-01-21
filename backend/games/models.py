@@ -1,26 +1,26 @@
-from django.db import models
+# from django.db import models
 
-class Game(models.Model):
-    game_id = models.AutoField(primary_key=True)
-    player1_id = models.CharField(max_length=50)
-    player2_id = models.CharField(max_length=50)
+# class Game(models.Model):
+#     game_id = models.AutoField(primary_key=True)
+#     player1_id = models.CharField(max_length=50)
+#     player2_id = models.CharField(max_length=50)
 
-    ball_position = models.JSONField(default=dict)  # To store position as a JSON object (e.g., {"x": 0, "y": 0, "z": 0})
-    ball_velocity = models.JSONField(default=dict)  # To store velocity as a JSON object (e.g., {"x": 1, "y": 1, "z": 0})
-    ball_direction = models.JSONField(default=dict)  # To store velocity as a JSON object (e.g., {"x": 1, "y": 1, "z": 0})
+#     ball_position = models.JSONField(default=dict)  # To store position as a JSON object (e.g., {"x": 0, "y": 0, "z": 0})
+#     ball_velocity = models.JSONField(default=dict)  # To store velocity as a JSON object (e.g., {"x": 1, "y": 1, "z": 0})
+#     ball_direction = models.JSONField(default=dict)  # To store velocity as a JSON object (e.g., {"x": 1, "y": 1, "z": 0})
 
-    player1_paddle = models.FloatField(default=0.0)
-    player2_paddle = models.FloatField(default=0.0)
+#     player1_paddle = models.FloatField(default=0.0)
+#     player2_paddle = models.FloatField(default=0.0)
 
-    player1_score = models.IntegerField(default=0)
-    player2_score = models.IntegerField(default=0)
+#     player1_score = models.IntegerField(default=0)
+#     player2_score = models.IntegerField(default=0)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_running = models.BooleanField(default=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     is_running = models.BooleanField(default=True)
 
-    def __str__(self):
-        return f"Game {self.game_id} between: {self.player1_id} and {self.player2_id}"
+#     def __str__(self):
+#         return f"Game {self.game_id} between: {self.player1_id} and {self.player2_id}"
 
 
 # updating the ball state:

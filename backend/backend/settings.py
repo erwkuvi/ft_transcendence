@@ -45,6 +45,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+	'channels',# WebSockets and more for Django
+    'djoser',# JWT authentication for DRF
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -52,21 +54,19 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',# Toolkit for building Web APIs
-    'djoser',# JWT authentication for DRF
 	'rest_framework_simplejwt.token_blacklist', # Blacklist JWT tokens
     'corsheaders',# Handle CORS headers
-	'channels',# WebSockets and more for Django
-	'game',
-	'notifications',
 	'users',
 	'friends',
+	'games',
+	'notifications',
 ]
 
 ASGI_APPLICATION = 'backend.asgi.application'
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
 

@@ -22,38 +22,38 @@
 //     });
 // });
 
-import React, { useEffect } from 'react';
+// import React, { useEffect } from 'react';
 
-const Notifications = () => {
-    useEffect(() => {
-        const socket = new WebSocket('ws://localhost:3000/ws/notifications/');
+// const Notifications = () => {
+//     useEffect(() => {
+//         const socket = new WebSocket('ws://localhost:3000/ws/notifications/');
 
-        socket.onopen = () => {
-            console.log('WebSocket connection established');
-        };
+//         socket.onopen = () => {
+//             console.log('WebSocket connection established');
+//         };
 
-        socket.onmessage = (event) => {
-            console.log('Message from server:', event.data);
-        };
+//         socket.onmessage = (event) => {
+//             console.log('Message from server:', event.data);
+//         };
 
-        socket.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
+//         socket.onclose = () => {
+//             console.log('WebSocket connection closed');
+//         };
 
-        socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+//         socket.onerror = (error) => {
+//             console.error('WebSocket error:', error);
+//         };
 
-        return () => {
-            socket.close();
-        };
-    }, []);
+//         return () => {
+//             socket.close();
+//         };
+//     }, []);
 
-    return (
-        <div>
-            <h1>Notifications</h1>
-        </div>
-    );
-};
+//     return (
+//         <div>
+//             <h1>Notifications</h1>
+//         </div>
+//     );
+// };
 
-export default Notifications;
+// export default Notifications;
