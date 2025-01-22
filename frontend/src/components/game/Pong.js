@@ -404,15 +404,15 @@ function Ball({player1Ref, player2Ref, socketRef, setScores}) {
             meshRef.current.position.set(...data.ball_position);
           }
         }
-		// console.log('Scores rn are: ', data.scores)
-		if (data.type === 'update_game_state') {
-			setScores(data.scores);
+		if (data.scores) {
+			setScores(data.scores)
+			
 		} else if (data.type === 'game_over') {
 			alert(`Player ${data.winner} wins the game!`);
 		}
       };
     }
-  }, [socketRef]);
+  }, [setScores, socketRef]);
 
   const checkCollision = (playerRef) => {
     if (!playerRef.current) return false;
@@ -580,14 +580,6 @@ function Pong() {
 		const ws = new WebSocket('ws://localhost:8000/ws/game-endpoint/');
 		socketRef.current = ws;
 		console.log("WebSocket initialized");
-		// ws.onmessage = (event) => {
-		// const data = JSON.parse(event.data);
-		// if (data.type === 'update_game_state') {
-		// 	setScores(data.scores);
-		// } else if (data.type === 'game_over') {
-		// 	alert(`Player ${data.winner} wins the game!`);
-		// }
-		// };
 
 		return () => {
             if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
