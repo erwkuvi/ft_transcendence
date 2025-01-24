@@ -25,9 +25,9 @@
 import React, { useEffect } from 'react';
 
 const Notifications = () => {
-    useEffect(() => {
-        const socket = new WebSocket('ws://localhost:3000/ws/notifications/');
+	const socket = new WebSocket('ws://localhost:3000/ws/notifications/');
 
+    useEffect(() => {
         socket.onopen = () => {
             console.log('WebSocket connection established');
         };

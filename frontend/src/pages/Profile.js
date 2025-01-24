@@ -68,29 +68,29 @@ const Profile = () => {
             }
 	    }
 
-		const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
-		setSocket(ws);
+		//const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
+		//setSocket(ws);
 
-		ws.onopen = () => console.log('WebSocket connection established');
+		//ws.onopen = () => console.log('WebSocket connection established');
 
-		ws.onmessage = (event) => {
-			const data = JSON.parse(event.data);
-			console.log('Message from server:', data.message);
-		};
+		//ws.onmessage = (event) => {
+		//	const data = JSON.parse(event.data);
+		//	console.log('Message from server:', data.message);
+		//};
 
-		ws.onclose = () => {
-			console.log('WebSocket connection closed');
-		};
+		//ws.onclose = () => {
+		//	console.log('WebSocket connection closed');
+		//};
 
-		ws.onerror = (error) => {
-			console.error('WebSocket error:', error);
-		};
+		//ws.onerror = (error) => {
+		//	console.error('WebSocket error:', error);
+		//};
 
 		fetchProfile();
 
-		return () => {
-			ws.close();
-		};
+		//return () => {
+		//	ws.close();
+		//};
 	}, []);
 
 	const handleSearch = (event) => {

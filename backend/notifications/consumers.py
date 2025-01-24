@@ -71,7 +71,9 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+        print("Scope's Beginning --------------------------")
         print(self.scope)
+        print("Scope's End -----------------")
         await self.send(text_data=json.dumps({
             'type': 'connection_established',
             'message': 'You are now connected!!!',

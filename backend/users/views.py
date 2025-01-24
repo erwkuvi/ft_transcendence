@@ -129,6 +129,7 @@ def save_avatar_locally(avatar_url, player_profile, user):
         player_profile.avatar.save(f"{user.username}_avatar.jpg", File(img_temp), save=True)
 
 class OAuth42CallbackView(views.APIView):
+
     permission_classes = [AllowAny]  # Allow any user to access this view
 
     def get(self, request):
@@ -198,33 +199,41 @@ class OAuth42CallbackView(views.APIView):
         if avatar_url:
             save_avatar_locally(avatar_url, player_profile, user)
 
-##Generate JWT token
-#        refresh = RefreshToken.for_user(user)
-#        tokens = {
-#            'access': str(refresh.access_token),
-#            'refresh': str(refresh)
-#        }
-#        frontend_url = f"http://localhost:8081/login/callback?{urlencode(tokens)}"
-#        return redirect(frontend_url)
-
 #Generate JWT token
         refresh = RefreshToken.for_user(user)
-        try:
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'username': user.username,
-                'email': user.email,
-                'auth_provider': user.auth_provider,
-                'displayname': player_profile.display_name,
-                #'avatar': player_profile.avatar,  # Added avatar property
-            })
-        except UnicodeDecodeError as e:
-            # Handle the decoding error
-            return Response({
-                'error': 'Unicode decoding error',
-                'message': str(e)
-            }, status=400)
+        tokens = {
+            'access': str(refresh.access_token),
+            'refresh': str(refresh)
+        }
+        frontend_url = (
+                f"http://localhost:8081/login/callback?"
+                f"access={tokens['access']}&"
+                f"refresh={tokens['refresh']}"
+        )
+        return redirect(frontend_url)
+
+##Generate JWT token
+#        refresh = RefreshToken.for_user(user)
+#        try:
+#            response = Response({
+#                'status': 'success',
+#                'refresh': str(refresh),
+#                'access': str(refresh.access_token),
+#                'username': user.username,
+#                'email': user.email,
+#                'auth_provider': user.auth_provider,
+#                'displayname': player_profile.display_name,
+#                'redirect_to': '/profile'
+#                #'avatar': player_profile.avatar,  # Added avatar property
+#            })
+#
+#            return response
+#        except UnicodeDecodeError as e:
+#            # Handle the decoding error
+#            return Response({
+#                'error': 'Unicode decoding error',
+#                'message': str(e)
+#            }, status=400)
 
 # ---------------End of OAuth 42 API------------------------------------------------------------------------------------
 
