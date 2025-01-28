@@ -1,7 +1,7 @@
-import React from 'react';
+//import React from 'react';
 import './LogInButton.css';
 import { useTranslation } from "react-i18next";
-import { generateOAuthState } from '../utils/authUtils';
+//import { generateOAuthState } from '../utils/authUtils';
 
 
 const LogInButton = () => {

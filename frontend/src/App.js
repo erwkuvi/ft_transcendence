@@ -1,4 +1,5 @@
 //import React from 'react';
+import axiosInstance from './services/axiosInstance';
 import { Switch, Route } from 'react-router-dom';
 import { AuthGuard } from './guards/authGuard';
 import Header from './components/Header';

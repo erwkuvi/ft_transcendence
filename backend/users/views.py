@@ -132,6 +132,85 @@ class OAuth42CallbackView(views.APIView):
 
     permission_classes = [AllowAny]  # Allow any user to access this view
 
+    def post(self, request):
+        try:
+            # 1. Get authorization code from request
+            code = request.data.get('code')
+            if not code:
+                raise ValueError("No authorization code provided")
+
+            # 2. Exchange code for access token
+            token_response = requests.post(
+                'https://api.intra.42.fr/oauth/token',
+                data={
+                    'grant_type': 'authorization_code',
+                    'client_id': settings.INTRA_UID_42,
+                    'client_secret': settings.INTRA_SECRET_42,
+                    'code': code,
+                    'redirect_uri': settings.API_42_REDIRECT_URI
+                }
+            )
+            
+            if token_response.status_code != 200:
+                raise ValueError("Failed to exchange code for token")
+            
+            token_data = token_response.json()
+            access_token = token_data['access_token']
+
+            # 3. Fetch user information
+            user_info_response = requests.get(
+                'https://api.intra.42.fr/v2/me',
+                headers={'Authorization': f'Bearer {access_token}'}
+            )
+            
+            if user_info_response.status_code != 200:
+                raise ValueError("Failed to retrieve user information")
+            
+            user_info = user_info_response.json()
+
+            avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
+            # 4. Create or get user
+            user, created = User.objects.get_or_create(
+                email=user_info.get('email'),
+                defaults={
+                    'username': user_info.get('login'),
+                    'first_name': user_info.get("first_name"),
+                    'last_name': user_info.get("last_name"),
+                    'displayname': user_info.get("displayname"),
+                    'provider': "42api"
+                },
+            )
+
+            player_profile, profile_created = PlayerProfile.objects.get_or_create(
+                user=user,
+                display_name=user_info.get("displayname"),
+            )
+            # function for downloading the image from 42api and storing it in the avatar dir.
+            if avatar_url:
+                save_avatar_locally(avatar_url, player_profile, user)
+
+            # 5. Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            tokens = {
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh),
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'auth_provider': user.auth_provider,
+                    'displayname': player_profile.display_name,
+                }
+            }
+
+            return Response(tokens, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
     def get(self, request):
         code = request.query_params.get('code')
         state = request.query_params.get('state')
@@ -199,41 +278,40 @@ class OAuth42CallbackView(views.APIView):
         if avatar_url:
             save_avatar_locally(avatar_url, player_profile, user)
 
-#Generate JWT token
-        refresh = RefreshToken.for_user(user)
-        tokens = {
-            'access': str(refresh.access_token),
-            'refresh': str(refresh)
-        }
-        frontend_url = (
-                f"http://localhost:8081/login/callback?"
-                f"access={tokens['access']}&"
-                f"refresh={tokens['refresh']}"
-        )
-        return redirect(frontend_url)
-
 ##Generate JWT token
 #        refresh = RefreshToken.for_user(user)
-#        try:
-#            response = Response({
-#                'status': 'success',
-#                'refresh': str(refresh),
-#                'access': str(refresh.access_token),
-#                'username': user.username,
-#                'email': user.email,
-#                'auth_provider': user.auth_provider,
-#                'displayname': player_profile.display_name,
-#                'redirect_to': '/profile'
-#                #'avatar': player_profile.avatar,  # Added avatar property
-#            })
-#
-#            return response
-#        except UnicodeDecodeError as e:
-#            # Handle the decoding error
-#            return Response({
-#                'error': 'Unicode decoding error',
-#                'message': str(e)
-#            }, status=400)
+#        tokens = {
+#            'access': str(refresh.access_token),
+#            'refresh': str(refresh)
+#        }
+#        frontend_url = (
+#                f"http://localhost:8081/login/callback?"
+#                f"access={tokens['access']}&"
+#                f"refresh={tokens['refresh']}"
+#        )
+#        return redirect(frontend_url)
+
+#Generate JWT token
+        refresh = RefreshToken.for_user(user)
+        try:
+            response = Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'status': 'success',
+                'username': user.username,
+                'email': user.email,
+                'auth_provider': user.auth_provider,
+                'displayname': player_profile.display_name,
+                #'avatar': player_profile.avatar,  # Added avatar property
+            })
+
+            return response
+        except UnicodeDecodeError as e:
+            # Handle the decoding error
+            return Response({
+                'error': 'Unicode decoding error',
+                'message': str(e)
+            }, status=400)
 
 # ---------------End of OAuth 42 API------------------------------------------------------------------------------------
 
