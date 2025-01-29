@@ -18,6 +18,7 @@
 
 .footer a {
 	color: var(--text-color);
+	margin-right: 5px;
 }
 
 .dark-icon {
