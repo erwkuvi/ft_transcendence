@@ -1,8 +1,4 @@
 import axios from 'axios';
-// src/services/axiosInstance.js
-import setupAxiosInterceptors from './axiosInterceptors';
-
-
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8000', // Adjust the base URL as needed
@@ -11,7 +7,6 @@ const axiosInstance = axios.create({
     },
 });
 
-setupAxiosInterceptors(axiosInstance);
 // Add interceptors to add the access token to every request
 axiosInstance.interceptors.request.use(
     (config) => {
