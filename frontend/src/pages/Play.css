@@ -1,3 +1,6 @@
+@import '../components/Button.css';
+@import '../components/Dropdown.css';
+
 .play {
 	display: flex;
 	flex-direction: column;
@@ -5,7 +8,40 @@
 	height: 100%;
 }
 
-.play .modes {
+.play .match-info {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	margin: 64px;
+	width: 100%;
+	height: 256px;
+	padding: 16px;
+	border: 1px solid var(--text-color);
+	background-color: var(--fill-color);
+}
+
+.play .mode-select {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.play .player {
+	display: flex;
+	flex: 1;
+	align-items: center;
+}
+
+.play .player2 {
+	justify-content: flex-end;
+}
+
+
+/* .play .modes {
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: center;
@@ -63,4 +99,4 @@
 	.play .mode {
 		min-width: 320px;
 	}
-}
+} */

@@ -5,7 +5,8 @@ import Pong from '../components/game/Pong';
 
 const Play = () => {
 	const {t} = useTranslation();
-	const [selectedMode, setSelectedMode] = useState(null);
+	const [playing, setPlaying] = useState(false);
+	const [selectedMode, setSelectedMode] = useState("ai");
 
 	const handleModeSelect = (mode) => {
 		setSelectedMode(mode);
@@ -13,12 +14,12 @@ const Play = () => {
 
 	return (
 		<div className="page-content play">
-			{selectedMode ? (
+			{playing ? (
 				<div>
-				<h2>{t("PlayTitle")}</h2>
+				{/* <h2>{t("PlayTitle")}</h2> */}
 				<Pong mode={selectedMode} />
-				<button className="back btn button mt-4" onClick={() => setSelectedMode(null)}>
-					Back to Mode Select
+				<button className="back btn button mt-4" onClick={() => setPlaying(false)}>
+					Quit
 				</button>
 				</div>
 			) : (
@@ -26,7 +27,33 @@ const Play = () => {
 					<h1 className="title mt-5">
 						{t("PlayTitle")}
 					</h1>
-					<div className="modes mt-4">
+					<div className="match-info container mt-4">
+						<div className="player player1">
+							<div className="name">
+								Player 1
+							</div>
+						</div>
+						<div className="mode-select">
+							<p>vs</p>
+							<select className="mode-dropdown customdropdown"
+								id="mode-dropdown"
+								onChange={(e) => handleModeSelect(e.target.value)}
+							>
+								<option value="ai">AI</option>
+								<option value="local">Local guest</option>
+								<option value="online">Online</option>
+							</select>
+							<button className="button start-button m-3" onClick={() => {setPlaying(true); console.log(selectedMode)}}>
+								Start
+							</button>
+						</div>
+						<div className="player player2">
+							<div className="name">
+								Player 2
+							</div>
+						</div>
+					</div>
+					{/* <div className="modes mt-4">
 						<div className="row justify-content-center">
 							<div className="mode">
 								<h3>{t("PlaySH1")}</h3>
@@ -57,7 +84,7 @@ const Play = () => {
 								</button>
 							</div>
 						</div>
-					</div>
+					</div> */}
 				</>
 			)}
 		</div>
