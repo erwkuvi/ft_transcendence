@@ -59,7 +59,15 @@ const LogIn = () => {
 					username,
 					password,
 				});
-				console.log('Log in successful:', response.data);
+							// Store tokens in localStorage
+
+				const { access, refresh } = response.data;
+				localStorage.setItem('access_token', access);
+				localStorage.setItem('refresh_token', refresh);
+				console.log('Log in successful:', localStorage);
+			
+				console.log('Tokens stored in localStorage');
+
 			} catch (error) {
 				console.error('Error logging in:', error);
 			}
@@ -138,7 +146,6 @@ const LogIn = () => {
 							<button type="submit" className="button login-button m-3 px-3 py-1" onClick={() => console.log('Submit button clicked')}>
 								{isSignUp ? t("LogInText2") : t("LogInText")}
 							</button>
-							<p>TEstttttttt</p>
 							<LogInButton/>
 						</div>
 					</div>
