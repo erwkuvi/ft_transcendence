@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
 import './Login.css';
+import React, {useState} from 'react';
 import axiosInstance from '../services/axiosInstance';
 import '../components/Button.css'
 import LogInButton from '../components/LogInButton';
 import { useTranslation } from "react-i18next";
+import { useHistory } from 'react-router-dom';
 
 const baseUrl = `http://localhost:8000/`;
 
 const LogIn = () => {
 	const {t} = useTranslation();
+	const history = useHistory();
 
 	const [isSignUp, setIsSignUp] = useState(false);
 
@@ -24,10 +26,11 @@ const LogIn = () => {
 	}
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		console.log('handleSubmit called');
-		const signup_url = baseUrl + 'auth/users/'
-		const login_url = baseUrl + 'api/token/'
 
+		const signup_url = baseUrl + 'auth/users/' //api for new user registration
+		const login_url = baseUrl + 'api/token/' //api for user login
+
+		//debugging purposes begin
 		console.log('Form submitted with values:');
 		console.log('Username:', username);
 		console.log('Password:', password);
@@ -37,6 +40,7 @@ const LogIn = () => {
 			console.log('Last Name:', lastName);
 			console.log('Confirm Password:', confirmPassword);
 		}
+		//debugging purposes end
 
 		if (isSignUp) {
 			// Sign up
@@ -49,6 +53,7 @@ const LogIn = () => {
 					password,
 				});
 				console.log('Sign up successful:', response.data);
+				setIsSignUp(false);
 			} catch (error) {
 				console.error('Error signing up:', error);
 			}
@@ -59,15 +64,13 @@ const LogIn = () => {
 					username,
 					password,
 				});
-							// Store tokens in localStorage
-
+			  // Store tokens in localStorage
 				const { access, refresh } = response.data;
 				localStorage.setItem('access_token', access);
 				localStorage.setItem('refresh_token', refresh);
 				console.log('Log in successful:', localStorage);
+				history.push('/profile');
 			
-				console.log('Tokens stored in localStorage');
-
 			} catch (error) {
 				console.error('Error logging in:', error);
 			}

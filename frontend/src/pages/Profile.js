@@ -1,5 +1,5 @@
 import axiosInstance from '../services/axiosInstance';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
@@ -7,9 +7,10 @@ import Filter from './ProfileComponents/Filter';
 import ListFriends from './ProfileComponents/ListFriends';
 import { useTranslation } from 'react-i18next';
 
-
 const Profile = () => {
 	const {t} = useTranslation();
+	// Reference to hidden file input
+	const fileInputRef = useRef(null);
 
 	// For the fetching data fron back
     const [profile, setProfile] = useState(null);
@@ -22,6 +23,9 @@ const Profile = () => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+	// State for managing display name editing
+	const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
+	const [newDisplayName, setNewDisplayName] = useState('');
 	// end
 
 	const [message, setMessage] = useState('');
@@ -46,6 +50,8 @@ const Profile = () => {
 				console.log('profileData:', profileData);
         // Set the fetched profile data in the state
             setProfile(response.data);
+			// Initialize the newDisplayName state with current display name
+			setNewDisplayName(response.data.display_name);
 
 			const users = await fetchUsers();
             const profile = users.find(user => user.username === profileData.username);
@@ -108,6 +114,102 @@ const Profile = () => {
 		}
 	}
 
+	// Handler to enable display name editing mode
+	const handleEditDisplayName = () => {
+		setIsEditingDisplayName(true);
+	};
+
+	// Handler to save the new display name
+	const handleSaveDisplayName = async () => {
+		try {
+			// Send PUT request to update display name on the server
+			const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'JWT ' + localStorage.getItem('access_token')
+				},
+				body: JSON.stringify({ display_name: newDisplayName })
+			});
+			const data = await response.json();
+
+			// Update local state with new display name
+			setProfile(prev => ({
+				...prev,
+				display_name: data.display_name
+			}));
+			// Exit editing mode
+			setIsEditingDisplayName(false);
+		} catch (err) {
+			console.error('Error updating display name:', err);
+		}
+	};
+
+	// Handler to cancel display name editing
+	const handleCancelEdit = () => {
+		// Reset the new display name to the current one
+		setNewDisplayName(profile.display_name);
+		// Exit editing mode
+		setIsEditingDisplayName(false);
+	};
+
+	// Handler to trigger file input click
+	const handleEditAvatar = () => {
+		fileInputRef.current.click();
+	};
+
+	// Handler for avatar file change
+	const handleAvatarChange = async (event) => {
+		const file = event.target.files[0];
+		if (!file) return;
+
+		// Validate file type
+		if (!file || !file.type.startsWith('image/')) {
+			alert('Please select an image file');
+			return;
+		}
+
+		try {
+			// Create form data for file upload
+			const formData = new FormData();
+			formData.append('avatar', file);
+
+				// Send PUT request to update avatar
+				const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
+					method: 'PUT',
+					headers: {
+						Authorization: 'JWT ' + localStorage.getItem('access_token')
+					},
+					body: formData
+				});
+
+				if (!response.ok) {
+					const errorData = await response.json();
+					console.error('Error response from server:', errorData);
+					alert(`Failed to update avatar: ${JSON.stringify(errorData)}`);
+					throw new Error('Failed to update avatar');
+				}
+
+				const data = await response.json();
+
+				// Check if the avatar property exists in the response
+				if (!data.avatar) {
+					throw new Error('Avatar property is missing in the response');
+				}
+
+				// Update local state with new avatar URL
+				setProfile(prev => ({
+					...prev,
+					avatar: data.avatar.startsWith('/')
+						? `${BASE_URL}${data.avatar}`
+						: data.avatar
+				}));
+		} catch (err) {
+			console.error('Error updating avatar:', err);
+			alert('Failed to update avatar');
+		}
+	};
+
 	const sendMessage = () => {
 		if (socket) {
 			socket.send(JSON.stringify({ message }));
@@ -119,16 +221,84 @@ const Profile = () => {
   if (error) return <p>Error: {error}</p>;
   if (!profile) return <p>No profile data available</p>;
 
-
-
 	return (
 		<div className="page-content">
 			<h1>{t("PROFILE")}</h1>
 			<div className='container-fluid cards mt-4'>
 				<div className='card basic'>
 					<h2>{t("Basic Information")}</h2>
-					<img src={profile.avatar} className='profilepic m-2' width='200' height='200' alt={`${profile.display_name}'s avatar`}/>
+					{/* Avatar section with edit functionality */}
+					<div className="relative inline-block">
+						<img 
+							src={profile.avatar} 
+							className='profilepic m-2' 
+							width='200' 
+							height='200' 
+							alt={`${profile.display_name}'s avatar`}
+						/>
+						{/* Hidden file input - Fixed visibility */}
+						<input
+							type="file"
+							ref={fileInputRef}
+							onChange={handleAvatarChange}
+							accept="image/*"
+							className="sr-only"
+							style={{ display: 'none' }}
+						/>
+						{/* Edit avatar button */}
+						<button
+							onClick={handleEditAvatar}
+							className="absolute bottom-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100"
+							title="Edit avatar"
+						>
+							<span className="text-gray-600">📷</span>
+						</button>
+					</div>
 					<p>{t("Username:")} <span>{profile.username}</span></p>
+					{/* Display name section with edit functionality */}
+					<p className="flex items-center gap-2">
+						{t("Display Name: ")} 
+						{isEditingDisplayName ? (
+							<>
+								{/* Input field for editing display name */}
+								<input
+									type="text"
+									value={newDisplayName}
+									onChange={(e) => setNewDisplayName(e.target.value)}
+									className="border rounded px-2 py-1"
+								/>
+								{/* Save button with check symbol */}
+								<button
+									onClick={handleSaveDisplayName}
+									className="p-1 hover:bg-green-100 rounded"
+									title="Save"
+								>
+									<span className="text-green-600">✓</span>
+								</button>
+								{/* Cancel button with X symbol */}
+								<button
+									onClick={handleCancelEdit}
+									className="p-1 hover:bg-red-100 rounded"
+									title="Cancel"
+								>
+									<span className="text-red-600">✕</span>
+								</button>
+							</>
+						) : (
+							<>
+								{/* Display current display name */}
+								<span>{profile.display_name + ' '}</span>
+								{/* Edit button with pencil symbol */}
+								<button
+									onClick={handleEditDisplayName}
+									className="p-1 hover:bg-gray-100 rounded"
+									title="Edit display name"
+								>
+									<span className="text-gray-600">✎</span>
+								</button>
+							</>
+						)}
+					</p>
 					<p>{t("Email:")} <span>{profile.email}</span></p>
 				</div>
 				<div className='card basic'>
