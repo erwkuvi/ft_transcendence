@@ -45,7 +45,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
     permission_classes = [IsAuthenticated]
-    #parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
+    parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
 
 

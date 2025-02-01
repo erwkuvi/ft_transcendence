@@ -89,13 +89,12 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     friends = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     matches_id = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='matches')
     email = serializers.SerializerMethodField()
-    #avatar = serializers.ImageField(required=False)  # Make avatar writable and optional
+    avatar = serializers.ImageField(required=False)  # Make avatar writable and optional
 
 
     class Meta:
         model = PlayerProfile
-        fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email'] # 'online_status'
+        fields = '__all__'
         
     def get_email(self, obj):
         return obj.user.email

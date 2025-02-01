@@ -34,46 +34,53 @@ const Profile = () => {
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
   // Fetch data on component mount
 	useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-				// Request from API
+		const fetchProfile = async () => {
+			try {
+			// Request from API
 			const response = await axiosInstance.get('/user_management/players/me/');
 			// Prepend BASE_URL to avatar if it's a relative URL
-            const profileData = {
-                ...response.data,
-            avatar: response.data.avatar.startsWith('/')
-                ? `${BASE_URL}${response.data.avatar}`
-                : response.data.avatar,
-            };
-				console.log('Avatar URL:', profileData.avatar);
+			const profileData = {
+				...response.data,
+				avatar: response.data.avatar.startsWith('/')
+					? `${BASE_URL}${response.data.avatar}`
+					: response.data.avatar,
+			};
+			console.log('Avatar URL:', profileData.avatar);
 
-				console.log('profileData:', profileData);
-        // Set the fetched profile data in the state
-            setProfile(response.data);
-			// Initialize the newDisplayName state with current display name
-			setNewDisplayName(response.data.display_name);
+			console.log('profileData:', profileData);
+			
+			localStorage.setItem('user_id', profileData.user_id);
+			console.log('user_id stored locally: ', profileData.user_id);
+			// const userId = localStorage.getItem('userId'); // Retrieve user ID 
+
+			// Set the fetched profile data in the state
+      setProfile(response.data);
+      // Initialize the newDisplayName state with current display name
+      setNewDisplayName(response.data.display_name);
 
 			const users = await fetchUsers();
-            const profile = users.find(user => user.username === profileData.username);
+			const profile = users.find(user => user.username === profileData.username);
 			setPersonLoggedIn(profile);
-			
-            const otherUsers = users.filter(user => user.username !== profileData.username);
-            setAllUsers(otherUsers);
+
+			const otherUsers = users.filter(user => user.username !== profileData.username);
+			setAllUsers(otherUsers);
 
 			const friendsList = otherUsers.filter(user =>
 				profileData.friends.some(friend => friend === user.id)
 			);
-			setFriends(friendsList)
+			setFriends(friendsList);
 
-
-            } catch (err) {
-        // Handle any errors
-            setError(err.message || 'An error occurred');
-            } finally {
-        // Stop the loading indicator
-            setLoading(false);
-            }
-	    }
+		} catch (err) {
+  	// Handle any errors
+			setError(err.message || 'An error occurred');
+		} finally {
+		// Stop the loading indicator
+			setLoading(false);
+			}
+		};
+            
+		fetchProfile();
+	}, []);
 
 		//const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
 		//setSocket(ws);
@@ -93,12 +100,11 @@ const Profile = () => {
 		//	console.error('WebSocket error:', error);
 		//};
 
-		fetchProfile();
 
 		//return () => {
 		//	ws.close();
 		//};
-	}, []);
+	//}, []);
 
 	const handleSearch = (event) => {
 		const currFiltered = event.target.value
