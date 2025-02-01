@@ -41,43 +41,65 @@ def ws_message(message):
 #            await self.close()
 
 class NotificationConsumer(AsyncWebsocketConsumer):
-#    def get_authorization_header(self):
-#        headers = dict(self.scope['headers'])
-#        auth_header = headers.get(b'authorization')
-#        if auth_header:
-#            return auth_header.decode()
-#        return ''
-#
-#    async def get_user_id_from_endpoint(self):
-#        async with httpx.AsyncClient() as client:
-#            response = await client.get(
-#                f'http://{settings.HOST_IP}/api/test/user_id/',
-#                headers={
-#                    'Authorization': self.get_authorization_header()
-#                }
-#            )
-#        if response.status_code == 200:
-#            user_data = response.json()
-#            return user_data.get('user_id')
-#        return None
+    def get_user_id(self):
+        query_string = self.scope.get('query_string', b'').decode()
+        query_params = dict(param.split('=') for param in query_string.split('&') if '=' in param)
+        user_id = query_params.get('user_id')
+        if user_id:
+            print(f'USER_ID= {user_id}')
+            return user_id
+        return ''
+
+    #async def get_user_id_from_endpoint(self):
+    #    async with httpx.AsyncClient() as client:
+    #        response = await client.get(
+    #            f'http://{settings.HOST_IP}/api/test/user_id/',
+    #            headers={
+	#				'Content-Type': 'application/json',
+    #                'Authorization': self.get_authorization_header()
+    #            }
+    #        )
+    #    if response.status_code == 200:
+    #        user_data = response.json()
+    #        return user_data.get('user_id')
+    #    return None
 
     async def connect(self):
-        self.group_name = 'notifications_1'  # Example group name
-
-        # Add the connection to the group
-        await self.channel_layer.group_add(
-            self.group_name,
-            self.channel_name
-        )
-
-        await self.accept()
-        print("Scope's Beginning --------------------------")
+#        self.group_name = 'notifications_1'  # Example group name
+#
+#        # Add the connection to the group
+#        await self.channel_layer.group_add(
+#            self.group_name,
+#            self.channel_name
+#        )
+#
+        #await self.accept()
         print(self.scope)
-        print("Scope's End -----------------")
-        await self.send(text_data=json.dumps({
-            'type': 'connection_established',
-            'message': 'You are now connected!!!',
-        }))
+        user_id = self.get_user_id()
+        if not user_id:
+            print('----------------------------- no user_id ------------------------')
+        else:
+            print(f'user id: {user_id}')
+        print(f'user_id: {user_id}')
+        if user_id is not None:
+            self.group_name = f'notifications_{user_id}'
+            print(f'Attempting to connect to group: {self.group_name}')
+            print(f'Extracted user_id: {user_id}')  # Print to terminal
+            await self.channel_layer.group_add(
+                self.group_name,
+                self.channel_name
+            )
+            await self.accept()
+            print("Scope's Beginning --------------------------")
+            print(self.scope)
+            print("Scope's End -----------------")
+            await self.send(text_data=json.dumps({
+                'type': 'connection_established',
+                'message': 'You are now connected!!!',
+                'user_id': user_id  # Send user_id to web console
+            }))
+        else:
+            await self.close()
         #if user_id is not None:
         #    self.group_name = f'notifications_{user_id}'
         #    print(f'Attempting to connect to group: {self.group_name}')

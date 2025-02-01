@@ -9,8 +9,12 @@ const Notification = ({ onConfirm, onReject }) => {
 	
 	useEffect(() => {
 
-		const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
+		const user_id = localStorage.getItem('user_id'); // Get the token from localStorage
+		console.log('user_id found: ', user_id);
+		//const ws = new WebSocket('ws://localhost:8000/ws/notifications/?token=${token}');
+		const ws = new WebSocket(`ws://localhost:8000/ws/notifications/?user_id=${user_id}`);
 		ws.onopen = () => console.log('WebSocket for game connection established');
+
 		setSocket(ws);
 
 		ws.onmessage = (event) => {
