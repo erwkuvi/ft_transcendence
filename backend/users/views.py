@@ -8,6 +8,7 @@ from django.core.files import File
 from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib.auth import authenticate
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view, action
 from rest_framework import generics, viewsets, status, views, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -44,6 +45,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
     permission_classes = [IsAuthenticated]
+    #parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
 
 
@@ -64,7 +66,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
     def get_serializer_context(self):
         return {'request': self.request}
 
-    @action(detail=False, methods=['GET', 'PUT'])
+    @action(detail=False, methods=['GET', 'PUT', 'PATCH'])
     def me(self, request):  # This method is called an custom action
         player_profile = PlayerProfile.objects.get(
             user_id=request.user.id)
@@ -73,7 +75,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
             data = serializer.data
             data['username'] = request.user.username
             return Response(data)
-        elif request.method == 'PUT':
+        elif request.method in ['PUT', 'PATCH']:
             serializer = PlayerProfileSerializer(
                 player_profile, data=request.data, context=self.get_serializer_context())
             serializer.is_valid(raise_exception=True)

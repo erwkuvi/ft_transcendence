@@ -112,8 +112,8 @@ REST_FRAMEWORK = {
 #'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    #'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10), 
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # This is for development
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2), 
+    #'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # This is for development
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,

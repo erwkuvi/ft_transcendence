@@ -124,7 +124,7 @@ const Profile = () => {
 		try {
 			// Send PUT request to update display name on the server
 			const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
-				method: 'PUT',
+				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: 'JWT ' + localStorage.getItem('access_token')
@@ -176,7 +176,7 @@ const Profile = () => {
 
 				// Send PUT request to update avatar
 				const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
-					method: 'PUT',
+					method: 'PATCH',
 					headers: {
 						Authorization: 'JWT ' + localStorage.getItem('access_token')
 					},
