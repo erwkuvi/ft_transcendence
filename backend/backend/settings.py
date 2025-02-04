@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'corsheaders',# Handle CORS headers
 	'users',
 	'friends',
-	'games',
+	'game',
 	'notifications',
 ]
 

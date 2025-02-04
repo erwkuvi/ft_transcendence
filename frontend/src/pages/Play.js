@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import './Play.css';
 import { useTranslation } from "react-i18next";
 import Pong from '../components/game/Pong';
@@ -6,8 +6,14 @@ import Pong from '../components/game/Pong';
 const Play = () => {
 	const {t} = useTranslation();
 	const [selectedMode, setSelectedMode] = useState(null);
+	const socketRef = useRef(null);
 
 	const handleModeSelect = (mode) => {
+		if (socketRef.current) {
+			console.log("Closing previous WebSocket before switching mode.");
+			socketRef.current.close();
+			socketRef.current = null;
+		}
 		setSelectedMode(mode);
 	};
 
@@ -16,7 +22,7 @@ const Play = () => {
 			{selectedMode ? (
 				<div>
 				<h2>{t("PlayTitle")}</h2>
-				<Pong mode={selectedMode} />
+				<Pong socketRef={socketRef} mode={selectedMode} />
 				<button className="btn button mt-4" onClick={() => setSelectedMode(null)}>
 					Back to Mode Selection
 				</button>

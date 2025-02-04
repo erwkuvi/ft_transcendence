@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 export const changeFriendStatus = async ({ userId, senderId, status, endpoint }) => {
     try {
         const response = await axiosInstance.post(
-            `/${endpoint}/`, 
+            `/friends/users/${endpoint}/`, 
             {
                 sender: senderId,
                 receiver: userId,

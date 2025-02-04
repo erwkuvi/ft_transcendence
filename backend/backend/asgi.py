@@ -12,13 +12,13 @@ from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from notifications.routing import websocket_urlpatterns as notification_urlpatterns
-from games.routing import websocket_urlpatterns as games_urlpatterns
+from game.routing import websocket_urlpatterns as game_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
 application = ProtocolTypeRouter({
 	"http": get_asgi_application(),
 	"websocket": AuthMiddlewareStack(
-		URLRouter(games_urlpatterns + notification_urlpatterns)
+		URLRouter(game_urlpatterns + notification_urlpatterns)
 	),
 })

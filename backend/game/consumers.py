@@ -1,93 +1,3 @@
-# import json
-# from channels.generic.websocket import AsyncWebsocketConsumer
-
-# # Initial game state
-# game_state = {
-#     'p1_score': 0,
-#     'p2_score': 0,
-#     'ball_position': [0, 0, 0],  # x, y, z
-#     'ball_velocity': [0.1, 0, 0.1],  # velocity in x, y, z
-#     'max_score': 5,
-#     'max_sets': 3,
-#     'p1_wins': 0,
-#     'p2_wins': 0,
-# }
-
-# class GameConsumer(AsyncWebsocketConsumer):
-#     async def connect(self):
-#         # Accept the WebSocket connection
-#         await self.accept()
-
-#     async def disconnect(self, close_code):
-#         # Handle WebSocket disconnection
-#         pass
-
-#     async def receive(self, text_data=None, bytes_data=None, **kwargs):
-#         # Parse the incoming WebSocket message
-#         message = json.loads(text_data)
-#         action_type = message.get('type')
-
-#         if action_type == 'move_player':
-#             await self.move_player(message)
-#         elif action_type == 'score_update':
-#             await self.update_score(message)
-#         elif action_type == 'PING':
-#             await self.send(json.dumps({'message': 'PONG'}))
-
-#     async def move_player(self, message):
-#         player = message.get('player')
-#         direction = message.get('direction')
-        
-#         # Handle player movement logic here
-#         # Update the player position in the game state
-        
-#         # Simulate player move
-#         if player == 1:
-#             # Player 1 moves left or right
-#             if direction == 'left':
-#                 # Update player 1's position (you can adjust the logic)
-#                 pass
-#             elif direction == 'right':
-#                 pass
-#         elif player == 2:
-#             # Update player 2's position similarly
-#             pass
-
-#         # Send updated game state back to the frontend
-#         await self.send_game_state()
-
-#     async def update_score(self, message):
-#         player = message.get('player')
-        
-#         if player == 1:
-#             game_state['p1_score'] += 1
-#         elif player == 2:
-#             game_state['p2_score'] += 1
-
-#         # Check if a player won a set or the game
-#         if game_state['p1_score'] >= game_state['max_score']:
-#             game_state['p1_wins'] += 1
-#             game_state['p1_score'] = 0
-#             game_state['p2_score'] = 0
-#             if game_state['p1_wins'] >= game_state['max_sets']:
-#                 await self.send(json.dumps({'type': 'game_over', 'winner': 1}))
-        
-#         elif game_state['p2_score'] >= game_state['max_score']:
-#             game_state['p2_wins'] += 1
-#             game_state['p1_score'] = 0
-#             game_state['p2_score'] = 0
-#             if game_state['p2_wins'] >= game_state['max_sets']:
-#                 await self.send(json.dumps({'type': 'game_over', 'winner': 2}))
-
-#         # Send updated score back to frontend
-#         await self.send_game_state()
-
-#     async def send_game_state(self):
-#         # Send the updated game state to all connected clients
-#         await self.send(text_data=json.dumps({
-#             'type': 'game_state',
-#             'game_state': game_state
-#         }))
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 import math
@@ -285,3 +195,53 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'type': 'game_over',
                 'winner': winner
             }))
+            
+    # async def restart_game(self):
+    #     # Reset game state
+    #     self.scores = {
+    #         'p1_f_score': 0,
+    #         'p2_f_score': 0,
+    #         'p1_in_set_score': 0,
+    #         'p2_in_set_score': 0,
+    #         'p1_won_set_count': 0,
+    #         'p2_won_set_count': 0,
+    #     }
+        
+    #     self.ball_position = [0, 1, 0]
+    #     self.BALL_SPEED = 0.12
+    #     self.ball_velocity = [0.1, 0, 0.1]
+
+    #     self.player_positions = {
+    #         'player1': [0, 1, self.FIELD_LEN / 2 - 1.5],
+    #         'player2': [0, 1, -self.FIELD_LEN / 2 + 1.5]
+    #     }
+
+    #     # Notify players about the game restart
+    #     await self.channel_layer.group_send(
+    #         self.game_name,
+    #         {
+    #             'type': 'update_game_state',
+    #             'ball_position': self.ball_position,
+    #             'ball_velocity': self.ball_velocity,
+    #             'scores': self.scores,
+    #             'player_positions': self.player_positions
+    #         }
+    #     )
+
+    # async def receive(self, text_data):
+    #     data = json.loads(text_data)
+    #     action = data.get('action')
+
+    #     if action == 'update_player_position':
+    #         player = data.get('player')
+    #         position = data.get('position')
+    #         await self.update_player_position(player, position)
+    #     elif action == 'ball_collision':
+    #         player = data.get('player')
+    #         ball_pos = data.get('ballPosition')
+    #         player_pos = data.get('playerPosition')
+    #         ball_position = [ball_pos['x'], ball_pos['y'], ball_pos['z']]
+    #         player_position = [player_pos['x'], player_pos['y'], player_pos['z']]
+    #         await self.handle_ball_collision(player, ball_position, player_position)
+    #     elif action == 'restart_game':
+    #         await self.restart_game()
