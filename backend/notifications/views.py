@@ -49,7 +49,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
                     'body': body_content,
                     }
                 )
-        print(f'Group\'s name is notifications_{receiver_id}')
+        print(f'Group\'s name is notifications_{receiver_id}, message: {message}, body_content: {body_content}')
 
     def get_predefined_message(self, notification_type, sender):
         if notification_type == 'friendship_invite':

@@ -8,5 +8,5 @@ User = settings.AUTH_USER_MODEL
 class NotificationSerializer(ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['notification_type', 'receiver', 'body', 'timestamp']
+        fields = ['notification_type', 'receiver', 'body', 'timestamp', 'is_read']
         read_only_fields = ('timestamp', 'body')

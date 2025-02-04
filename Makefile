@@ -21,6 +21,6 @@ re: down prune
 	docker-compose up
 
 prune:
-	docker system prune -af
+	docker-compose down --rmi local --remove-orphans # Stops containers, removes local images and orphans related to its docker-compose
 
 .PHONY: up down prod re prune front backend

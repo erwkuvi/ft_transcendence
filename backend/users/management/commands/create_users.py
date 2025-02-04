@@ -5,7 +5,7 @@ from users.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 
 #environ.Env.read_env()
-environ.Env.read_env(os.path.join(os.path.dirname(__file__), '../../../../.env'))
+environ.Env.read_env(os.path.join(os.path.dirname(__file__), '.env'))
 User = get_user_model()
 
 class Command(BaseCommand):
