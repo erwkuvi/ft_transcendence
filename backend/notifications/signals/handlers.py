@@ -9,6 +9,35 @@ from django.conf import settings
 
 #User = settings.AUTH_USER_MODEL
 
+
+
+@receiver(friendship_request_created)
+def friendship_request_to_notifications(sender, sender_user_id, receiver_user_id, **kwargs):
+
+    sender_user = User.objects.get(id=sender_user_id)
+    receiver_user = User.objects.get(id=receiver_user_id)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+            f'notifications_{receiver_user_id}',
+            {
+                'type': 'send_notification',
+                'message': 'Friendship Request',
+                'body': f'{sender_user.username} wants to be your friend',
+                }
+            )
+    print(f'Inside notif handler -- Group\'s name is notifications_{receiver_user_id}')
+    # Create a new Notification instance
+    notification = Notification.objects.create(
+        receiver=receiver_user,
+        notification_type='friendship_invite',
+        body=f'{sender_user.username} wants to be your friend'
+    )
+    
+    print('Notification created:', notification)
+    print('Notif sender:', sender_user)
+    print('Notif receiver:', receiver_user)
+
+
 #@receiver(match_request_created)
 #def match_request_to_notifications(sender, sender_user, receiver_user, **kwargs):
 #    #match = kwargs['match']
@@ -32,30 +61,3 @@ from django.conf import settings
     #    PlayerMatch.objects.create(player=player2, match=match, date=match.date)
 
     #    print('ok')
-
-
-@receiver(friendship_request_created)
-def friendship_request_to_notifications(sender, sender_user_id, receiver_user_id, **kwargs):
-
-    sender_user = User.objects.get(id=sender_user_id)
-    receiver_user = User.objects.get(id=receiver_user_id)
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-            f'notifications_{receiver_user_id}',
-            {
-                'type': 'send_notification',
-                'message': 'Friendship Request',
-                'body': f'{sender_user.username} wants to be your friend',
-                }
-            )
-    #print(f'Group\'s name is notifications_{receiver_user_id}')
-    # Create a new Notification instance
-    notification = Notification.objects.create(
-        receiver=receiver_user,
-        notification_type='friendship_invite',
-        body=f'{sender_user.username} wants to be your friend'
-    )
-    
-    print('Notification created:', notification)
-    print('Notif sender:', sender_user)
-    print('Notif receiver:', receiver_user)

@@ -61,9 +61,9 @@ class ManageOtherUsers(viewsets.GenericViewSet):
 
         Friendship.objects.create(sender=sender, receiver=receiver, status='pending')
         Friendship.objects.create(sender=receiver, receiver=sender, status='invited')
-        #print(f'Sending signal: friendship_request_created with sender={sender}, receiver={receiver}')
+        print(f'Sending signal: friendship_request_created with sender={sender}, receiver={receiver}')
         friendship_request_created.send_robust(sender=ManageOtherUsers, sender_user_id=sender.id, receiver_user_id=receiver.id) # signal to create the notification to receiver
-        #print(f'Signal sent: friendship_request_created')
+        print(f'Signal sent: friendship_request_created')
         return respond_success("You invited the user.")
             
     @action(detail=False, methods=['POST'], url_path='accept_invite')
