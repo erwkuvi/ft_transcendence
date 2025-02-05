@@ -14,6 +14,7 @@ echo "DJANGO_SUPERUSER_USERNAME: $DJANGO_SUPERUSER_USERNAME"
 echo "DJANGO_SUPERUSER_PASSWORD: $DJANGO_SUPERUSER_PASSWORD"
 echo "DJANGO_SUPERUSER_EMAIL: $DJANGO_SUPERUSER_EMAIL"
 
+python3 manage.py makemigrations users
 python3 manage.py makemigrations
 python3 manage.py migrate --noinput --run-syncdb
 
