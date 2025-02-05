@@ -6,6 +6,7 @@ import ListUsers from './ProfileComponents/ListUsers';
 import Filter from './ProfileComponents/Filter';
 import ListFriends from './ProfileComponents/ListFriends';
 import { useTranslation } from 'react-i18next';
+import Notification from '../components/Notification';
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -29,6 +30,7 @@ const Profile = () => {
 	// end
 
 	const [message, setMessage] = useState('');
+	const [userIdChanged, setUserIdChanged] = useState(false);
 	const [socket, setSocket] = useState(null);
 
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
@@ -50,7 +52,7 @@ const Profile = () => {
 			console.log('profileData:', profileData);
 			
 			localStorage.setItem('user_id', profileData.user_id);
-			console.log('user_id stored locally: ', profileData.user_id);
+			setUserIdChanged(true);
 			// const userId = localStorage.getItem('userId'); // Retrieve user ID 
 
 			// Set the fetched profile data in the state
@@ -323,6 +325,7 @@ const Profile = () => {
 								setFriends={setFriends}
 								personLoggedIn={personLoggedIn}/>
 				</div>
+				// <Notification userIdChanged={userIdChanged} />
 				<div className='card basic notifications'>
 					<h2>{t("Friends list")}</h2>
 					<input type="text"

@@ -2,37 +2,48 @@ import React, { useEffect, useState } from 'react';
 
 import './Notification.css'
 
-const Notification = ({ onConfirm, onReject }) => {
+const Notification = ({ userIdChanged, onConfirm, onReject }) => {
 	const [notification, setNotification] = useState(null);
-
 	const [socket, setSocket] = useState(null);
-	
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
 	useEffect(() => {
-
-		const user_id = localStorage.getItem('user_id'); // Get the token from localStorage
+const user_id = localStorage.getItem('user_id'); // Get the user_id from localStorage
 		console.log('user_id found: ', user_id);
-		//const ws = new WebSocket('ws://localhost:8000/ws/notifications/?token=${token}');
-		const ws = new WebSocket(`ws://localhost:8000/ws/notifications/?user_id=${user_id}`);
-		ws.onopen = () => console.log('WebSocket for game connection established');
+		
+		// Check if the user is authenticated
+		if (user_id) {
+			setIsAuthenticated(true);
+		} else {
+			setIsAuthenticated(false);
+		}
+	}, [userIdChanged]);
 
-		setSocket(ws);
+	useEffect(() => {
+		if (isAuthenticated) {
+			const user_id = localStorage.getItem('user_id');
+			const ws = new WebSocket(`ws://localhost:8000/ws/notifications/?user_id=${user_id}`);
+			ws.onopen = () => console.log('WebSocket for game connection established');
 
-		ws.onmessage = (event) => {
-			const data = JSON.parse(event.data);
-			console.log('Data:', data);
-			if (data.type === 'notification') {
-				setNotification(data);
-			}
-		};
+			setSocket(ws);
 
-		ws.onerror = (error) => {
-			console.error('WebSocket error:', error);
-		};
+			ws.onmessage = (event) => {
+				const data = JSON.parse(event.data);
+				console.log('Data:', data);
+				if (data.type === 'notification') {
+					setNotification(data);
+				}
+			};
 
-		return () => {
-			ws.close();
-		};
-	}, []);
+			ws.onerror = (error) => {
+				console.error('WebSocket error:', error);
+			};
+
+			return () => {
+				ws.close();
+			};
+		}
+	}, [isAuthenticated]);
 
 	if (!notification) {
 		return <div>No new notifications</div>;
