@@ -46,8 +46,8 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         user = User(
             email=email,
             username=validated_data.get("username"),  # Inherited from AbstractUser
-            first_name=validated_data.get("first_name"),
-            last_name=validated_data.get("last_name"),
+           # first_name=validated_data.get("first_name"),
+           # last_name=validated_data.get("last_name"),
             otp_base32=otp_base32,
             otpauth_url=otp_auth_url,
             qr_code=ContentFile(stream.getvalue(), name=f"qr{get_random_string(10)}.png")
@@ -87,14 +87,24 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     wins = serializers.IntegerField(read_only=True)
     losses = serializers.IntegerField(read_only=True)
     friends = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    matches_id = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='matches')
+    matches_id = serializers.PrimaryKeyRelatedField(many=True, queryset=Match.objects.all(), required=False, source='matches')
     email = serializers.SerializerMethodField()
-
+    avatar = serializers.ImageField(required=False)  # Make avatar writable and optional
+    display_name = serializers.CharField(required=False)
+    #user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
                   'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email'] # 'online_status'
+        read_only_fields = ['user_id', 'username', 'profile_id', 'email']
+
+    def update(self, instance, validated_data):
+        matches = validated_data.pop('matches', None)
+        if matches:
+            for match in matches:
+                instance.matches.add(match)
+        return super().update(instance, validated_data)
         
     def get_email(self, obj):
         return obj.user.email

@@ -1,4 +1,5 @@
 //import React from 'react';
+import axiosInstance from './services/axiosInstance';
 import { Switch, Route } from 'react-router-dom';
 import { AuthGuard } from './guards/authGuard';
 import Header from './components/Header';
@@ -34,6 +35,8 @@ function App() {
 }
 
 export default App;
+// <Route path="*" exact component={<NotFound} />Consider defining a not found site
+//  <Route path="/404" exact component={<NotFound} /> Consider defining a not found site
 
 
 //import { Switch, Route } from 'react-router-dom';

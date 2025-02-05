@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client';
+import axiosInstance from '../../services/axiosInstance';
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
@@ -32,6 +33,8 @@ function Ball({player1Ref, player2Ref, socketRef, setScores, setGameOver}) {
 			console.log(`Player ${data.winner} wins the game!`);
 			setGameOver(data.winner);
 			return;
+		} else if (data.type === 'player_disconnected') {
+			alert(`Player ${data.player} has disconnected. Game ended.`);
 		}
       };
     }
@@ -98,45 +101,60 @@ function Ball({player1Ref, player2Ref, socketRef, setScores, setGameOver}) {
   );
 }
 
-const Player = React.forwardRef(({ position, color, controls }, ref, player) => {
+const Player = React.forwardRef(({ position, color, socketRef, playerId }, ref) => {
 	const meshRef = useRef();
   
 	const keysPressed = useRef({});
   
 	useEffect(() => {
-	  const handleKeyDown = (e) => {
-		keysPressed.current[e.key] = true;
-	  };
-  
-	  const handleKeyUp = (e) => {
-		keysPressed.current[e.key] = false;
-	  };
-  
-	  window.addEventListener('keydown', handleKeyDown);
-	  window.addEventListener('keyup', handleKeyUp);
-  
-	  return () => {
-		window.removeEventListener('keydown', handleKeyDown);
-		window.removeEventListener('keyup', handleKeyUp);
-	  };
-	}, []);
+		const handleKeyDown = (e) => {
+		  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+			keysPressed.current[e.key] = true;
+		  }
+		};
+	
+		const handleKeyUp = (e) => {
+		  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+			keysPressed.current[e.key] = false;
+		  }
+		};
+	
+		window.addEventListener('keydown', handleKeyDown);
+		window.addEventListener('keyup', handleKeyUp);
+	
+		return () => {
+		  window.removeEventListener('keydown', handleKeyDown);
+		  window.removeEventListener('keyup', handleKeyUp);
+		};
+	  }, []);
   
 	useFrame(() => {
-	  const moveSpeed = SPEED;
-  
-	  // Directly update the meshRef position
-	  if (meshRef.current) {
-		if (meshRef.current.position.x - 2 > -FIELD_WIDTH/2 + 1) {
-			if (keysPressed.current[controls.left]) meshRef.current.position.x -= moveSpeed; // Move left
+		const moveSpeed = SPEED;
+	
+		if (meshRef.current) {
+		  let newX = meshRef.current.position.x;
+		  
+		  if (meshRef.current.position.x - 2 > -FIELD_WIDTH/2 + 1) {
+			if (keysPressed.current['ArrowLeft']) newX -= moveSpeed;
+		  }
+		  if(meshRef.current.position.x + 2 < FIELD_WIDTH/2 - 1) {
+			if (keysPressed.current['ArrowRight']) newX += moveSpeed;
+		  }
+	
+		  meshRef.current.position.x = newX;
+	
+		  if (socketRef.current) {
+			socketRef.current.send(JSON.stringify({
+			  action: 'update_player_position',
+			  player: playerId,
+			  position: [newX, meshRef.current.position.y, meshRef.current.position.z]
+			}));
+		  }
 		}
-		if(meshRef.current.position.x + 2 < FIELD_WIDTH/2 - 1) {
-			if (keysPressed.current[controls.right]) meshRef.current.position.x += moveSpeed; // Move right
-		}
-	  }
-  
-	  // Ensure ref passed to Ball has the updated position
-	  if (ref) ref.current = meshRef.current;
-	});
+	
+		if (ref) ref.current = meshRef.current;
+	  });
+
 	return (	
 		<mesh ref={meshRef} position={position}>
 			<RoundedBox args={[4, 1, 1]} radius={0.2} smoothness={4}>
@@ -189,6 +207,10 @@ function Pong( { socketRef }) {
   const player1Ref = useRef();
   const player2Ref = useRef();
   const [gameOver, setGameOver] = useState(null);
+  const [playerInfo, setPlayerInfo] = useState(null);
+  const [playerNumber, setPlayerNumber] = useState(null);
+  const [opponentInfo, setOpponentInfo] = useState(null);
+  const [gameStarted, setGameStarted] = useState(false);
   const [scores, setScores] = useState({
     p1_f_score: 0,
     p2_f_score: 0,
@@ -199,19 +221,88 @@ function Pong( { socketRef }) {
   });
 
   useEffect(() => {
-	if (!socketRef.current) {
-		const ws = new WebSocket('ws://localhost:8000/ws/game-endpoint/');
-		socketRef.current = ws;
-		console.log("WebSocket initialized");
+    const fetchPlayerInfo = async () => {
+      try {
+		const response = await axiosInstance.get('/user_management/players/me/');
+        setPlayerInfo(response.data);
 
-		return () => {
-            if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-                console.log("Cleaning up WebSocket");
-                socketRef.current.close();
-                socketRef.current = null;
+        if (socketRef.current) {
+          socketRef.current.send(
+            JSON.stringify({
+              action: "player_info",
+              user_id: response.data.user_id,
+              display_name: response.data.display_name
+            })
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching player info:", error);
+      }
+    };
+
+    if (!playerInfo) {
+      fetchPlayerInfo();
+    }
+
+    if (!socketRef.current) {
+      const ws = new WebSocket('ws://localhost:8000/ws/game/');
+      socketRef.current = ws;
+
+      ws.onopen = () => {
+        console.log("WebSocket connected");
+        ws.send(JSON.stringify({ join: true }));
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("Received message:", data);
+
+        switch (data.type) {
+          case 'player_assignment':
+            console.log("Assigned player number:", data.player_number);
+            setPlayerNumber(data.player_number);
+            break;
+
+          case 'game_start':
+            console.log("Game starting!");
+            setGameStarted(true);
+            break;
+
+          case 'player_disconnected':
+            alert('Opponent disconnected. Game ended.');
+            setGameStarted(false);
+            break;
+
+          case 'game_state':
+            if (data.scores) {
+              setScores(prevScores => ({
+                ...prevScores,
+                ...data.scores
+              }));
             }
-        };
-	}
+            break;
+
+          case 'game_over':
+            setGameOver(data.winner);
+            break;
+
+          default:
+            break;
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      return () => {
+        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+          console.log("Cleaning up WebSocket");
+          socketRef.current.close();
+          socketRef.current = null;
+        }
+      };
+    }
   }, []);
 
 //   const handleRestart = () => {
@@ -229,6 +320,23 @@ function Pong( { socketRef }) {
 // 		socketRef.current.send(JSON.stringify({ action: 'restart_game' }));
 // 	}
 //   };
+
+if (!playerNumber) {
+    return (
+      <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>
+        <h2>Connecting to game...</h2>
+      </div>
+    );
+  }
+
+  if (!gameStarted) {
+    return (
+      <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>
+        <h2>Waiting for opponent...</h2>
+        <p>You are Player {playerNumber}</p>
+      </div>
+    );
+  }
 
   return (
 	<>
@@ -271,7 +379,7 @@ function Pong( { socketRef }) {
 			<Player
 			  position={[0, 1, FIELD_LEN / 2 - 1.5]}
 			  color={0xFFFFFF}
-			  controls={{ left: 'a', right: 'd' }}
+			  controls={{ left: 'ArrowLeft', right: 'ArrowRight' }}
 			  ref={player1Ref}
 			  socketRef={socketRef}
 			  playerId={1}

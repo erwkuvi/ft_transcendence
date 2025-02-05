@@ -3,6 +3,8 @@ import './Play.css';
 import { useTranslation } from "react-i18next";
 import Pong from '../components/game/Pong';
 
+const baseUrl = `http://localhost:8000/`;
+
 const Play = () => {
 	const {t} = useTranslation();
 	const [selectedMode, setSelectedMode] = useState(null);
