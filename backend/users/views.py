@@ -47,8 +47,6 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
-
-
     #def get_permissions(self): #This permission setting allows any user to only see a PlayerProfiles: /users/players/1/
     #    if self.action == 'list' and self.request.user.is_authenticated:
     #        return [IsAuthenticated()]
