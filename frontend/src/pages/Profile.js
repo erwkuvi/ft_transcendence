@@ -128,7 +128,8 @@ const Profile = () => {
 			<div className='container-fluid cards mt-4'>
 				<div className='card basic'>
 					<h2>{t("Basic Information")}</h2>
-					<img src={profile.avatar} className='profilepic m-2' width='200' height='200' alt={`${profile.display_name}'s avatar`}/>
+					{/* changed  alt text for accessibility module*/}
+					<img src={profile.avatar} className='profilepic m-2' width='200' height='200' alt={`Profile picture of ${profile.display_name}`}/> 
 					<p>{t("Username:")} <span>{profile.username}</span></p>
 					<p>{t("Email:")} <span>{profile.email}</span></p>
 				</div>

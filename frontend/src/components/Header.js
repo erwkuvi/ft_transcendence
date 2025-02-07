@@ -5,6 +5,8 @@ import './NotifMenu'
 import NotifMenu from './NotifMenu';
 import LogoutButton from './LogOutButton'; 
 import './LanguageDropdown'
+import TextSizeControls from "./TextSizeControls";
+
 import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from "../AccessibilityContext";
 
@@ -26,6 +28,7 @@ const Header = () => {
 						<Link style={{ fontSize: `${fontSize}px` }} to="/about">{t("HeaderAbout")}</Link>
 					</nav>
 					<nav className="menu right-menu">
+						<TextSizeControls/>
 						<div className="notif" >
 							<NotifMenu/>
 						</div>

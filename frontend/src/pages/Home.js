@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import PlayButton from '../components/PlayButton';
 import './Home.css'
 import { useTranslation } from "react-i18next";
