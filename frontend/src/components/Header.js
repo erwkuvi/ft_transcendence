@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import './NotifMenu'
@@ -6,9 +6,12 @@ import NotifMenu from './NotifMenu';
 import LogoutButton from './LogOutButton'; 
 import './LanguageDropdown'
 import { useTranslation } from "react-i18next";
+import { AccessibilityContext } from "../AccessibilityContext";
 
 const Header = () => {
 	const {t} = useTranslation();
+	const { fontSize } = useContext(AccessibilityContext); 
+	
 	const isLoggedIn = !!localStorage.getItem('access_token');
 
 
@@ -16,20 +19,20 @@ const Header = () => {
 		<div>
 			<nav className="navbar header m-0 p-0">
 				<div className="container-fluid p-0">
-					<nav className="menu custom-menu">
-						<Link to="/">{t("HeaderHome")}</Link>
-						<Link to="/play">{t("HeaderPlay")}</Link>
-						<Link to="/profile">{t("HeaderProfile")}</Link>
-						<Link to="/about">{t("HeaderAbout")}</Link>
+					<nav className="menu custom-menu" >
+						<Link style={{ fontSize: `${fontSize}px` }} to="/">{t("HeaderHome")}</Link>
+						<Link style={{ fontSize: `${fontSize}px` }} to="/play">{t("HeaderPlay")}</Link>
+						<Link style={{ fontSize: `${fontSize}px` }} to="/profile">{t("HeaderProfile")}</Link>
+						<Link style={{ fontSize: `${fontSize}px` }} to="/about">{t("HeaderAbout")}</Link>
 					</nav>
 					<nav className="menu right-menu">
-						<div className="notif">
+						<div className="notif" >
 							<NotifMenu/>
 						</div>
 						{isLoggedIn ? (
                             <LogoutButton />
                         ) : (
-                            <Link to="/login" className="login">
+                            <Link to="/login" className="login" style={{ fontSize: `${fontSize}px` }}>
                                 {t("HeaderLogIn")}
                             </Link>
                         )}

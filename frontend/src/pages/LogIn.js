@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import './Login.css';
 import '../components/Button.css'
 import LogInButton from '../components/LogInButton';
 import { useTranslation } from "react-i18next";
+import { AccessibilityContext } from '../AccessibilityContext';
 
 const LogIn = () => {
 	const {t} = useTranslation();
+	const { fontSize } = useContext(AccessibilityContext); 
 
 	const [isSignUp, setIsSignUp] = useState(false);
 
@@ -14,7 +16,7 @@ const LogIn = () => {
 	}
 
 	return (
-		<div className="page-content login mt-5">
+		<div className="page-content login mt-5" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="login-title">
 				{t("LogInTitle")}
 			</h1>

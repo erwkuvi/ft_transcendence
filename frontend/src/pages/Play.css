@@ -16,7 +16,6 @@
 .play .mode {
 	border: 1px solid var(--text-color);
 	background-color: var(--fill-color);
-	height: 380px;
 	min-width: 320px;
 	max-width: 400px;
 	width: 20%;
@@ -24,13 +23,18 @@
 	padding: 24px;
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-end;
+	justify-content: space-between; /* Ensures button stays at the bottom */
 	align-items: center;
+	min-height: 380px; /* Prevents shrinking */
+	height: auto; /* Allows it to grow with text */
 }
+
 
 .play .mode h3 {
 	margin-top: 8px;
-	height: 60px;
+	min-height: 60px; /* Ensures a base height */
+	height: auto; /* Allows it to grow */
+	text-align: center;
 }
 
 .play .mode p {

@@ -1,14 +1,16 @@
 import axiosInstance from '../services/axiosInstance';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
 import Filter from './ProfileComponents/Filter';
 import ListFriends from './ProfileComponents/ListFriends';
 import { useTranslation } from "react-i18next";
+import { AccessibilityContext } from '../AccessibilityContext';
 
 const Profile = () => {
 	const {t} = useTranslation();
+	const { fontSize } = useContext(AccessibilityContext); 
 
 	// For the fetching data fron back
     const [profile, setProfile] = useState(null);
@@ -121,7 +123,7 @@ const Profile = () => {
 
 
 	return (
-		<div className="page-content">
+		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
 			<h1>{t("PROFILE")}</h1>
 			<div className='container-fluid cards mt-4'>
 				<div className='card basic'>

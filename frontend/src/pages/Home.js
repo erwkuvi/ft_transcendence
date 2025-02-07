@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PlayButton from '../components/PlayButton';
 import './Home.css'
 import { useTranslation } from "react-i18next";
+import { AccessibilityContext } from '../AccessibilityContext';
 
 
 const Home = () => {
 	const { t } = useTranslation();
+	const { fontSize } = useContext(AccessibilityContext); 
 
 	return (
-		<div className="page-content home">
+		<div className="page-content home" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="title">
 				minipong
 				<i class="fa-solid fa-circle ball px-1"></i>
 			</h1>
 			<div className="stuff">
-				<p>{t("HomeText")}</p>
+				<p >{t("HomeText")}</p>
 				<PlayButton/>
 			</div>
 		</div>
