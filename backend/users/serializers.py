@@ -31,10 +31,42 @@ class OTPCreateSerializer(serializers.Serializer):
         image.save(stream)
         qr_code = ContentFile(stream.getvalue(), name=f"{username}_qr{get_random_string(5)}.png")
 
+        user.otp_base32 = otp_base32
+        user.otpauth_url = otp_auth_url
+        user.qr_code = qr_code
+        user.save()
+
         return {
-            "otp_base32": otp_base32,
-            "otpauth_url": otp_auth_url,
-            "qr_code": qr_code
+            "otp_base32": user.otp_base32,
+            "otpauth_url": user.otpauth_url,
+            "qr_code": user.qr_code
+        }
+
+class OTPActivateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        user_id = attrs.get('user_id')
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found.")
+        if user.otp_base32:
+            raise serializers.ValidationError("OTP is already activated for this user.")
+        return attrs
+
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        user = User.objects.get(id=user_id)
+
+        otp_serializer = OTPCreateSerializer(data={
+            "email": user.email,
+            "username": user.username
+        })
+        otp_serializer.is_valid(raise_exception=True)
+        otp_data = otp_serializer.save()
+
+        return otp_data
         }
 
 class UserCreateSerializer(BaseUserCreateSerializer):
@@ -55,33 +87,18 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             raise serializers.ValidationError({"email": "Email already exists!"})
         return super().validate(attrs)
 
-    otp_serializer = OTPCreateSerializer(data={
-        "email": email,
-        "username": username
-        })
-    otp_serializer.is_valid(raise_exception=True)
-        otp_data = otp_serializer.save()
-
-        otp_base32 = otp_data["otp_base32"]
-        otp_auth_url = otp_data["otpauth_url"]
-        qr_code = otp_data["qr_code"]
     def create(self, validated_data: dict):
         email = validated_data.get("email")
         username = validated_data.get("username")
-
         user = User(
             email=email,
             username=username,  # Inherited from AbstractUser
-           # first_name=validated_data.get("first_name"),
-           # last_name=validated_data.get("last_name"),
-            otp_base32=otp_base32,
-            otpauth_url=otp_auth_url,
-            qr_code=qr_code
         )
         # Use set_password for proper password hashing
         user.set_password(validated_data.get("password"))
         user.save()
         return user
+
 
 # for creating a new user, which information is asked
 #class UserCreateSerializer(BaseUserCreateSerializer):
