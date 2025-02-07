@@ -24,10 +24,16 @@ const LanguageDropdown = () => {
 
 	return (
 		<div className="language-dropdown" style={{ fontSize: `${fontSize}px` }}>
+			<label id="language-label" htmlFor="language-select">
+        		{t("Select Language")}
+      		</label>
 			<select
+				id="language-select"
 				value={language}
 				onChange={handleChange}
 				className="language-select"
+				aria-labelledby="language-label"
+        		aria-live="polite"
 			>
 				{languages.map((lang) => (
 					<option key={lang.code} value={lang.code}>
@@ -35,8 +41,11 @@ const LanguageDropdown = () => {
 					</option>
 				))}
 			</select>
+			<div aria-live="polite" style={{ position: "absolute", left: "-9999px" }}>
+        		{t("Language changed to")}: {languages.find((l) => l.code === language)?.name}
+      		</div>
 		</div>
 	);
 };
 
-export default LanguageDropdown
+export default LanguageDropdown;

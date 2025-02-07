@@ -1,5 +1,5 @@
 //import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { AuthGuard } from './guards/authGuard';
 import Header from './components/Header';
 import Footer from './components/Footer'
@@ -22,13 +22,13 @@ function App() {
 				<Header />
 				<Main>
 					<ScrollReset>
-						<Switch>
-							<Route path="/" exact component={Home} />
-							<Route path="/play" exact component={Play} />
-							<Route path="/profile" exact component={Profile} />
-							<Route path="/about" exact component={About} />
-							<Route path="/login" exact component={LogIn} />
-						</Switch>
+						<Routes>
+							<Route path="/" element={<Home />} />
+							<Route path="/play" element={<Play />} />
+							<Route path="/profile" element={<Profile />} />
+							<Route path="/about" element={<About />} />
+							<Route path="/login" element={<LogIn />} />
+						</Routes>
 					</ScrollReset>
 				</Main>
 				<Footer />

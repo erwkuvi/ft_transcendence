@@ -13,7 +13,7 @@ const Home = () => {
 		<div className="page-content home" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="title">
 				minipong
-				<i class="fa-solid fa-circle ball px-1"></i>
+				<i className="fa-solid fa-circle ball px-1"></i>
 			</h1>
 			<div className="stuff">
 				<p >{t("HomeText")}</p>

@@ -1,16 +1,16 @@
 import React, {useContext} from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './PlayButton.css';
 import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from '../AccessibilityContext';
 
 const PlayButton = () => {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 
 	const handleClick = () => {
-		history.push('/play');
+		navigate('/play');
 	}
 
 	return (

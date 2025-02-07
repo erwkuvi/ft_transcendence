@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { handleOAuthCallback } from '../services/authService';
 
 export const AuthGuard = () => {
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (location.pathname === '/login/callback') {
             handleOAuthCallback()
-                .then(() => history.replace('/profile'))
-                .catch(() => history.replace('/login'));
+                .then(() => navigate('/profile'))
+                .catch(() => navigate('/login'));
         }
-    }, [location, history]);
+    }, [location, navigate]);
 
     return null;
 };
