@@ -47,8 +47,6 @@ const LogIn = () => {
 			try {
 				const response = await axiosInstance.post(signup_url, {
 					username,
-					first_name: firstName,
-					last_name: lastName,
 					email,
 					password,
 				});

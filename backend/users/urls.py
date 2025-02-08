@@ -7,6 +7,9 @@ router = routers.DefaultRouter()
 router.register('players', views.PlayerProfileViewSet, basename='player-profile')
 router.register('matches', views.MatchViewSet, basename='matches')
 router.register('user_custom', views.UserViewSet, basename='user_custom')
+router.register('otp-activate', views.OTPActivateViewSet, basename='otp-activate')
+router.register('otp-active-to-true', views.OTPActiveToTrueViewSet, basename='otp-activate-to-true')
+router.register('otp-active-to-false', views.OTPDeactivateViewSet, basename='otp-activate-to-false')
 
 
 urlpatterns = [

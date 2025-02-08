@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
-from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer
+from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer
 from .models import User, PlayerProfile, Match
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
@@ -47,19 +47,10 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
-    #def get_permissions(self): #This permission setting allows any user to only see a PlayerProfiles: /users/players/1/
-    #    if self.action == 'list' and self.request.user.is_authenticated:
-    #        return [IsAuthenticated()]
-    #    elif self.action == 'retrieve':
-    #        return [AllowAny()]
-    #    return [IsAuthenticated()]
-
     def list(self, request, *args, **kwargs):
         queryset = PlayerProfile.objects.all()
         serializer = PlayerProfileSerializer(queryset, many=True, context=self.get_serializer_context())
         return Response(serializer.data)
-      #  if request.user.is_authenticated:
-      #      return redirect('player-profile-me')
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -174,8 +165,6 @@ class OAuth42CallbackView(views.APIView):
                 email=user_info.get('email'),
                 defaults={
                     'username': user_info.get('login'),
-                    'first_name': user_info.get("first_name"),
-                    'last_name': user_info.get("last_name"),
                     'displayname': user_info.get("displayname"),
                     'provider': "42api"
                 },
@@ -253,8 +242,6 @@ class OAuth42CallbackView(views.APIView):
 #get user's data
         email = user_info.get("email")
         username = user_info.get("login")
-        first_name = user_info.get("first_name")
-        last_name = user_info.get("last_name")
         #avatar = user_info.get("image", {}).get("link")
         avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
         displayname = user_info.get("displayname")
@@ -264,8 +251,6 @@ class OAuth42CallbackView(views.APIView):
         user, created = User.objects.get_or_create(
                 email=email,
                 username=username,
-                first_name=first_name,
-                last_name=last_name,
                 auth_provider=provider,)
         
 #create the player profile and store corresponding info from 42 profile.
@@ -344,6 +329,35 @@ class OAuth42CallbackView(views.APIView):
 #            'access': str(refresh.access_token),
 #            }, status=status.HTTP_200_OK)
 
+class OTPActivateViewSet(viewsets.GenericViewSet):
+    serializer_class = OTPActivateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        otp_data = serializer.save()
+        return Response(otp_data, status=status.HTTP_200_OK)
+
+class OTPActiveToTrueViewSet(viewsets.GenericViewSet):
+    serializer_class = OTPActiveToTrueSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        otp_data = serializer.save()
+        return Response(otp_data, status=status.HTTP_200_OK)
+
+class OTPDeactivateViewSet(viewsets.GenericViewSet):
+    serializer_class = OTPDeactivateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        otp_data = serializer.save()
+        return Response(otp_data, status=status.HTTP_200_OK)
 
 class OTPLoginView(generics.GenericAPIView):
     serializer_class = OTPLoginSerializer
@@ -355,6 +369,8 @@ class OTPLoginView(generics.GenericAPIView):
         # If validation passes, JWT tokens are returned from serializer's `validate` method
         tokens = serializer.validated_data
         return Response(tokens, status=status.HTTP_200_OK)
+
+
 
 
 # logout view

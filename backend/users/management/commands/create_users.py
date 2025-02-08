@@ -17,29 +17,21 @@ class Command(BaseCommand):
                     'username': 'Lukas',
                     'email': 'user1@example.com',
                     'password': '123',
-                    'first_name': 'Lukas1',
-                    'last_name': 'Lukas2',
                     },
                 {
                     'username': 'Adam',
                     'email': 'user2@example.com',
                     'password': '123',
-                    'first_name': 'Adam1',
-                    'last_name': 'Adam2',
                     },
                 {
                     'username': 'Erwin',
                     'email': 'user3@example.com',
                     'password': '123',
-                    'first_name': 'Erwin1',
-                    'last_name': 'Erwin2',
                     },
                 {
                     'username': 'Yison',
                     'email': 'user4@example.com',
                     'password': '123',
-                    'first_name': 'Yison1',
-                    'last_name': 'Yison2',
                     },
         ]
 

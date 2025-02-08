@@ -12,69 +12,13 @@ from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .models import User, PlayerProfile, Match, PlayerMatch
 from .signals import match_created
-# from django.urls import reverse
-# from users.signals.handlers import match_created
 
-class OTPCreateSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    username = serializers.CharField(max_length=150)
-
-    def create(self, validated_data: dict):
-        otp_base32 = pyotp.random_base32()
-        email = validated_data.get("email")
-        username = validated_data.get("username")
-        otp_auth_url = pyotp.totp.TOTP(otp_base32).provisioning_uri(
-            name=email.lower(), issuer_name="Ft_Transcendence_DT"
-        )
-        stream = BytesIO()
-        image = qrcode.make(f"{otp_auth_url}")
-        image.save(stream)
-        qr_code = ContentFile(stream.getvalue(), name=f"{username}_qr{get_random_string(5)}.png")
-
-        user.otp_base32 = otp_base32
-        user.otpauth_url = otp_auth_url
-        user.qr_code = qr_code
-        user.save()
-
-        return {
-            "otp_base32": user.otp_base32,
-            "otpauth_url": user.otpauth_url,
-            "qr_code": user.qr_code
-        }
-
-class OTPActivateSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
-
-    def validate(self, attrs):
-        user_id = attrs.get('user_id')
-        try:
-            user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            raise serializers.ValidationError("User not found.")
-        if user.otp_base32:
-            raise serializers.ValidationError("OTP is already activated for this user.")
-        return attrs
-
-    def create(self, validated_data):
-        user_id = validated_data.get('user_id')
-        user = User.objects.get(id=user_id)
-
-        otp_serializer = OTPCreateSerializer(data={
-            "email": user.email,
-            "username": user.username
-        })
-        otp_serializer.is_valid(raise_exception=True)
-        otp_data = otp_serializer.save()
-
-        return otp_data
-        }
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = ['id', 'username',
-                  'first_name', 'last_name',
                   'email', 'qr_code', 'password']
         extra_kwargs = {
             "password": {"write_only": True},
@@ -99,24 +43,16 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         user.save()
         return user
 
-
-# for creating a new user, which information is asked
-#class UserCreateSerializer(BaseUserCreateSerializer):
-#    class Meta(BaseUserCreateSerializer.Meta):
-#        fields = ['id', 'username', 'first_name',
-#                  'last_name', 'email']
-
 # for the current user, which information is shown
 class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = User
-        fields = ['id', 'username', 'first_name',
-                  'last_name', 'email', 'qr_code', 'password']
+        fields = ['id', 'username',
+                  'email', 'qr_code', 'password', 'otp_active']
         extra_kwargs = {
             "password": {"write_only": True},
             "qr_code": {"read_only": False},
         }
-
 
 # Serializer for Player
 class PlayerProfileSerializer(serializers.ModelSerializer):
@@ -190,6 +126,128 @@ class MatchSerializer(serializers.ModelSerializer):
 
 
 logger = logging.getLogger(__name__)
+
+
+# OTP Serialization section --------------------------------------------
+
+class OTPActiveToTrueSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    otp_code = serializers.CharField(max_length=6, write_only=True)
+
+    def validate(self, attrs):
+        user_id = attrs.get('user_id')
+        otp = attrs.get('otp_code')
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found.")
+
+        if user.otp_active:
+            raise serializers.ValidationError("OTP is already activated for this user.")
+
+        # Verify OTP using pyotp
+        totp = pyotp.TOTP(user.otp_base32)
+        current_time = totp.timecode(datetime.datetime.now())
+        logger.info(f"Server time: {datetime.datetime.now()}, OTP Timecode: {current_time}")
+        if not totp.verify(otp):
+            logger.warning(f"Invalid OTP for user: {user.email}, Expected: {totp.now()}")
+            raise serializers.ValidationError("Invalid OTP code.")
+
+
+        return attrs
+
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        user = User.objects.get(id=user_id)
+
+        user.otp_active = True
+        user.save()
+
+        return {"otp_active": user.otp_active}
+
+class OTPActivateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        user_id = attrs.get('user_id')
+        password = attrs.get('password')
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found.")
+        if user.otp_base32:
+            raise serializers.ValidationError("OTP is already activated for this user.")
+        if not user.check_password(password):
+            raise serializers.ValidationError("Incorrect password.")
+        return attrs
+
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        user = User.objects.get(id=user_id)
+
+        otp_data = OTPCreateSerializer().create(validated_data={
+            "email": user.email,
+            "username": user.username
+        }, user=user)
+        #otp_serializer.is_valid(raise_exception=True)
+        #otp_data = otp_serializer.save(user=user)
+
+        return otp_data
+
+class OTPDeactivateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        user_id = attrs.get('user_id')
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found.")
+        if not user.otp_active:
+            raise serializers.ValidationError("OTP is already deactivated for this user.")
+        return attrs
+
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        user = User.objects.get(id=user_id)
+
+        user.otp_active = False
+        user.otp_base32 = ""
+        user.otpauth_url = ""
+        user.qr_code.delete(save=False)
+        user.save()
+
+        return {"otp_active": user.otp_active}
+
+
+class OTPCreateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=150)
+
+    def create(self, validated_data: dict, user=None):
+        otp_base32 = pyotp.random_base32()
+        email = validated_data.get("email")
+        username = validated_data.get("username")
+        otp_auth_url = pyotp.totp.TOTP(otp_base32).provisioning_uri(
+            name=email.lower(), issuer_name="Ft_Transcendence_DT"
+        )
+        stream = BytesIO()
+        image = qrcode.make(f"{otp_auth_url}")
+        image.save(stream)
+        qr_code = ContentFile(stream.getvalue(), name=f"{username}_qr_{get_random_string(5)}.png")
+
+        user.otp_base32 = otp_base32
+        user.otpauth_url = otp_auth_url
+        user.qr_code = qr_code
+        user.save()
+
+        return {
+            "otp_base32": user.otp_base32, #secret, not needed to be shared
+            #"otpauth_url": user.otpauth_url,
+            "qr_code_url": user.qr_code.url if user.qr_code else None #URL that encodes the information needed to set up a OTP
+        }
 
 class OTPLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
