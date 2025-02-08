@@ -1,20 +1,84 @@
 import React, {useState, useContext} from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../services/axiosInstance';
 import './Login.css';
 import '../components/Button.css'
 import LogInButton from '../components/LogInButton';
 import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from '../AccessibilityContext';
 
+const baseUrl = `http://localhost:8000/`;
+
 const LogIn = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 
+	const navigate = useNavigate();
+
 	const [isSignUp, setIsSignUp] = useState(false);
 
-	const handleCheckboxChange =() => {
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const [email, setEmail] = useState('');
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+
+	const handleCheckboxChange = () => {
 		setIsSignUp(prevState => !prevState);
 	}
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 
+		const signup_url = baseUrl + 'auth/users/' //api for new user registration
+		const login_url = baseUrl + 'api/token/' //api for user login
+
+		//debugging purposes begin
+		console.log('Form submitted with values:');
+		console.log('Username:', username);
+		console.log('Password:', password);
+		if (isSignUp) {
+			console.log('Email:', email);
+			console.log('First Name:', firstName);
+			console.log('Last Name:', lastName);
+			console.log('Confirm Password:', confirmPassword);
+		}
+		//debugging purposes end
+
+		if (isSignUp) {
+			// Sign up
+			try {
+				const response = await axiosInstance.post(signup_url, {
+					username,
+					first_name: firstName,
+					last_name: lastName,
+					email,
+					password,
+				});
+				console.log('Sign up successful:', response.data);
+				setIsSignUp(false);
+			} catch (error) {
+				console.error('Error signing up:', error);
+			}
+		} else {
+			// Log in
+			try {
+				const response = await axiosInstance.post(login_url, {
+					username,
+					password,
+				});
+			  // Store tokens in localStorage
+				const { access, refresh } = response.data;
+				localStorage.setItem('access_token', access);
+				localStorage.setItem('refresh_token', refresh);
+				console.log('Log in successful:', localStorage);
+				navigate('/profile');
+			
+			} catch (error) {
+				console.error('Error logging in:', error);
+			}
+		}
+	};
 	return (
 		<div className="page-content login mt-5" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="login-title">
@@ -37,45 +101,65 @@ const LogIn = () => {
 						</div>
 					</label>
 				</div>
-				<div className="login-field">
-					<p className="field-name">
-						{t("LogInText3")}
-						<input className="text-field form-control"/>
-					</p>
-					{isSignUp && (
+				<form onSubmit={handleSubmit}>
+					<div className="login-field">
 						<p className="field-name">
-							{t("LogInText6")}
-							<input className="text-field form-control" type="email"/>
+							{t("LogInText3")}
+							<input
+								className="text-field form-control"
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								required
+							/>
 						</p>
-					)}
-					<p className="field-name">
-						{t("LogInText4")}
-						<input className="text-field form-control" type="password"/>
-					</p>
-					{
-						isSignUp && (
+						{isSignUp && (
 							<p className="field-name">
-								{t("LogInText5")}
-								<input className="text-field form-control" type="password"/>
+								{t("LogInText6")}
+								<input
+									className="text-field form-control"
+									type="email"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
+									required
+								/>
 							</p>
-							)
-					}
-					<div className="login-buttons">
-						<div className="button login-button m-3 px-3 py-1">
-							{
-								isSignUp ? (
-									<div>{t("LogInText2")}</div>
-								) : (
-									<div>{t("LogInText")}</div>
+						)}
+						<p className="field-name">
+							{t("LogInText4")}
+							<input
+								className="text-field form-control"
+								type="password"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								required
+							/>
+						</p>
+						{
+							isSignUp && (
+								<p className="field-name">
+									{t("LogInText5")}
+									<input
+										className="text-field form-control"
+										type="password"
+										value={confirmPassword}
+										onChange={(e) => setConfirmPassword(e.target.value)}
+										required
+									/>
+								</p>
 								)
-							}
+						}
+						<div className="login-buttons">
+							<button type="submit" className="button login-button m-3 px-3 py-1" onClick={() => console.log('Submit button clicked')}>
+								{isSignUp ? t("LogInText2") : t("LogInText")}
+							</button>
+							<LogInButton/>
 						</div>
-						<LogInButton/>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	);
 };
 
 export default LogIn;
+

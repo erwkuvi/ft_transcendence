@@ -1,5 +1,4 @@
 # handlers.py
-
 from django.db.models.signals import post_save
 from users.models import User, PlayerProfile, Match, PlayerMatch
 from django.dispatch import receiver

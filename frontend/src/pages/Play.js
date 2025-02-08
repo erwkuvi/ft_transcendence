@@ -4,13 +4,37 @@ import { useTranslation } from "react-i18next";
 import Pong from '../components/game/Pong';
 import { AccessibilityContext } from '../AccessibilityContext';
 
+const baseUrl = `http://localhost:8000/`;
+
 const Play = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	
 	const [selectedMode, setSelectedMode] = useState(null);
 
-	const handleModeSelect = (mode) => {
+	const [apiData, setApiData] = useState(null);
+
+//	useEffect(() => {
+//		const fetchData = async () => {
+//			try {
+//				const url = baseUrl + 'your-endpoint';
+//				const response = await fetch(url, {
+//					headers: {
+//						'Content-Type': 'application/json',
+//						Authorization: 'JWT ' + localStorage.getItem('access_token')
+//					}
+//				});
+//				const data = await response.json();
+//				setApiData(data);
+//			} catch (error) {
+//				console.error('Error fetching data:', error);
+//			}
+//		};
+//
+//		fetchData();
+//	}, []);
+		
+			const handleModeSelect = (mode) => {
 		setSelectedMode(mode);
 	};
 

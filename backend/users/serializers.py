@@ -15,6 +15,59 @@ from .signals import match_created
 # from django.urls import reverse
 # from users.signals.handlers import match_created
 
+class OTPCreateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=150)
+
+    def create(self, validated_data: dict):
+        otp_base32 = pyotp.random_base32()
+        email = validated_data.get("email")
+        username = validated_data.get("username")
+        otp_auth_url = pyotp.totp.TOTP(otp_base32).provisioning_uri(
+            name=email.lower(), issuer_name="Ft_Transcendence_DT"
+        )
+        stream = BytesIO()
+        image = qrcode.make(f"{otp_auth_url}")
+        image.save(stream)
+        qr_code = ContentFile(stream.getvalue(), name=f"{username}_qr{get_random_string(5)}.png")
+
+        user.otp_base32 = otp_base32
+        user.otpauth_url = otp_auth_url
+        user.qr_code = qr_code
+        user.save()
+
+        return {
+            "otp_base32": user.otp_base32,
+            "otpauth_url": user.otpauth_url,
+            "qr_code": user.qr_code
+        }
+
+class OTPActivateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        user_id = attrs.get('user_id')
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found.")
+        if user.otp_base32:
+            raise serializers.ValidationError("OTP is already activated for this user.")
+        return attrs
+
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        user = User.objects.get(id=user_id)
+
+        otp_serializer = OTPCreateSerializer(data={
+            "email": user.email,
+            "username": user.username
+        })
+        otp_serializer.is_valid(raise_exception=True)
+        otp_data = otp_serializer.save()
+
+        return otp_data
+        
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 
@@ -35,29 +88,15 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data: dict):
-        otp_base32 = pyotp.random_base32()
         email = validated_data.get("email")
-        otp_auth_url = pyotp.totp.TOTP(otp_base32).provisioning_uri(
-            name=email.lower(), issuer_name="Ft_Transcendence_DT"
-        )
-        stream = BytesIO()
-        image = qrcode.make(f"{otp_auth_url}")
-        image.save(stream)
+        username = validated_data.get("username")
         user = User(
             email=email,
-            username=validated_data.get("username"),  # Inherited from AbstractUser
-            first_name=validated_data.get("first_name"),
-            last_name=validated_data.get("last_name"),
-            otp_base32=otp_base32,
-            otpauth_url=otp_auth_url,
-            qr_code=ContentFile(stream.getvalue(), name=f"qr{get_random_string(10)}.png")
+            username=username,  # Inherited from AbstractUser
         )
-
         # Use set_password for proper password hashing
         user.set_password(validated_data.get("password"))
-
         user.save()
-
         return user
 
 
@@ -75,7 +114,7 @@ class UserSerializer(BaseUserSerializer):
                   'last_name', 'email', 'qr_code', 'password']
         extra_kwargs = {
             "password": {"write_only": True},
-            "qr_code": {"read_only": True},
+            "qr_code": {"read_only": False},
         }
 
 
@@ -87,14 +126,24 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     wins = serializers.IntegerField(read_only=True)
     losses = serializers.IntegerField(read_only=True)
     friends = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    matches_id = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='matches')
+    matches_id = serializers.PrimaryKeyRelatedField(many=True, queryset=Match.objects.all(), required=False, source='matches')
     email = serializers.SerializerMethodField()
-
+    avatar = serializers.ImageField(required=False)  # Make avatar writable and optional
+    display_name = serializers.CharField(required=False)
+    #user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
                   'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email'] # 'online_status'
+        read_only_fields = ['user_id', 'username', 'profile_id', 'email']
+
+    def update(self, instance, validated_data):
+        matches = validated_data.pop('matches', None)
+        if matches:
+            for match in matches:
+                instance.matches.add(match)
+        return super().update(instance, validated_data)
         
     def get_email(self, obj):
         return obj.user.email

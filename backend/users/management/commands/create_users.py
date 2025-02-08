@@ -4,8 +4,8 @@ from django.core.management.base import BaseCommand
 from users.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 
-environ.Env.read_env()
-env = environ.Env()
+#environ.Env.read_env()
+environ.Env.read_env(os.path.join(os.path.dirname(__file__), '.env'))
 User = get_user_model()
 
 class Command(BaseCommand):

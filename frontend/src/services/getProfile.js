@@ -12,4 +12,4 @@ export const getUserProfile = async () => {
     }
 };
 
-export default { getUserProfile };
+export default { getUserProfile }

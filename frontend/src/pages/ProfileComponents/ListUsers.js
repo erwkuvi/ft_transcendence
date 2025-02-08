@@ -49,14 +49,17 @@ const ListUsers = ({filterUsers, setAllUsers, setFilterUsers, setFriends, person
 		};
 
 	return (
-		<p>{filterUsers.map((user) => (
-			<UserCard 
-          		user={user}
-          		personLoggedIn={personLoggedIn}
-          		handleInvite={handleInvite}
-				refreshKey={refreshKey}
-          		/>
-		))}</p>
+		<div>
+			{filterUsers.map((user) => (
+				<UserCard 
+					key={user.id || user.username} 
+					user={user}
+					personLoggedIn={personLoggedIn}
+					handleInvite={handleInvite}
+					refreshKey={refreshKey}
+    			/>
+  			))}
+		</div>
 	)
 }
 
