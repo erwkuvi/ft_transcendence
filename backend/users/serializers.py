@@ -66,12 +66,14 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     avatar = serializers.ImageField(required=False)  # Make avatar writable and optional
     display_name = serializers.CharField(required=False)
+    otp_active = serializers.SerializerMethodField()
+
     #user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email']
 
     def update(self, instance, validated_data):
@@ -81,6 +83,9 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
                 instance.matches.add(match)
         return super().update(instance, validated_data)
         
+    def get_otp_active(self, obj):
+        return obj.user.otp_active
+
     def get_email(self, obj):
         return obj.user.email
 

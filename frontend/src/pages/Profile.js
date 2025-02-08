@@ -7,6 +7,7 @@ import Filter from './ProfileComponents/Filter';
 import ListFriends from './ProfileComponents/ListFriends';
 import { useTranslation } from 'react-i18next';
 import Notification from '../components/Notification';
+import PasswordModal from '../components/PasswordModal';
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -32,7 +33,10 @@ const Profile = () => {
 	const [message, setMessage] = useState('');
 	const [userIdChanged, setUserIdChanged] = useState(false);
 	const [socket, setSocket] = useState(null);
-
+	// State to track if 2FA status is being saved
+	const [isSaving2FA, setIsSaving2FA] = useState(false);
+	// State for password confirmation modal
+	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
   // Fetch data on component mount
 	useEffect(() => {
@@ -47,14 +51,11 @@ const Profile = () => {
 					? `${BASE_URL}${response.data.avatar}`
 					: response.data.avatar,
 			};
-			console.log('Avatar URL:', profileData.avatar);
-
+			//console.log('Avatar URL:', profileData.avatar);
 			console.log('profileData:', profileData);
 			
 			localStorage.setItem('user_id', profileData.user_id);
 			setUserIdChanged(true);
-			// const userId = localStorage.getItem('userId'); // Retrieve user ID 
-
 			// Set the fetched profile data in the state
       setProfile(response.data);
       // Initialize the newDisplayName state with current display name
@@ -84,30 +85,6 @@ const Profile = () => {
 		fetchProfile();
 	}, []);
 
-		//const ws = new WebSocket('ws://localhost:8000/ws/notifications/');
-		//setSocket(ws);
-
-		//ws.onopen = () => console.log('WebSocket connection established');
-
-		//ws.onmessage = (event) => {
-		//	const data = JSON.parse(event.data);
-		//	console.log('Message from server:', data.message);
-		//};
-
-		//ws.onclose = () => {
-		//	console.log('WebSocket connection closed');
-		//};
-
-		//ws.onerror = (error) => {
-		//	console.error('WebSocket error:', error);
-		//};
-
-
-		//return () => {
-		//	ws.close();
-		//};
-	//}, []);
-
 	const handleSearch = (event) => {
 		const currFiltered = event.target.value
 		setQuery(currFiltered)
@@ -121,7 +98,6 @@ const Profile = () => {
 			setFilterUsers(filteredUsers)
 		}
 	}
-
 	// Handler to enable display name editing mode
 	const handleEditDisplayName = () => {
 		setIsEditingDisplayName(true);
@@ -140,7 +116,6 @@ const Profile = () => {
 				body: JSON.stringify({ display_name: newDisplayName })
 			});
 			const data = await response.json();
-
 			// Update local state with new display name
 			setProfile(prev => ({
 				...prev,
@@ -215,6 +190,49 @@ const Profile = () => {
 		} catch (err) {
 			console.error('Error updating avatar:', err);
 			alert('Failed to update avatar');
+		}
+	};
+
+	// Handler for initiating 2FA toggle
+	// Opens password confirmation modal instead of immediately toggling
+	const handleInitiateToggle2FA = () => {
+		setPasswordModalOpen(true);
+	};
+
+	// Handler for toggling 2FA status after password confirmation
+	// Makes a PATCH request to update the otp_active status
+	// Updates local state to reflect the change
+	const handleToggle2FA = async (password) => {
+		setIsSaving2FA(true);
+		try {
+			// First verify the password
+			const verifyResponse = await axiosInstance.post('/auth/verify-password/', {
+				password
+			});
+
+			if (verifyResponse.data.valid) {
+				// Send PATCH request to update 2FA status
+				const response = await axiosInstance.patch('/user_management/players/me/', {
+					otp_active: !profile.otp_active
+				});
+				
+				// Update local state with new 2FA status
+				setProfile(prev => ({
+					...prev,
+					otp_active: !prev.otp_active
+				}));
+				
+				// Close the modal after successful update
+				setPasswordModalOpen(false);
+			} else {
+				alert('Invalid password. Please try again.');
+			}
+		} catch (err) {
+			console.error('Error updating 2FA status:', err);
+			alert('Failed to update 2FA status. Please try again.');
+		} finally {
+			// Reset saving state regardless of outcome
+			setIsSaving2FA(false);
 		}
 	};
 
@@ -308,6 +326,40 @@ const Profile = () => {
 						)}
 					</p>
 					<p>{t("Email:")} <span>{profile.email}</span></p>
+			{/* 2FA Authentication section */}
+					{/* Contains the 2FA status indicator and toggle button */}
+					<div className="mt-4">
+						{/* Section title */}
+						<p className="mb-2">{t("2FA Authentication:")}</p>
+						{/* Container for status indicator and toggle button */}
+						<div className="flex items-center gap-3">
+							{/* Status indicator with icon */}
+							<span className="flex items-center gap-2">
+								{/* Dynamic icon that shows ✓ or ✗ based on 2FA status */}
+								<span className={profile.otp_active ? "text-green-500" : "text-red-500"}>
+									{profile.otp_active ? "✓" : "✗"}
+								</span>
+								{/* Status text that shows "Enabled" or "Disabled" */}
+								{profile.otp_active ? t("Enabled") : t("Disabled")}
+							</span>
+							{/* Toggle button that changes 2FA status */}
+							{/* Disabled while saving to prevent multiple requests */}
+							<button
+								onClick={handleInitiateToggle2FA}
+								disabled={isSaving2FA}
+								className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+							>
+								{isSaving2FA ? t("Saving...") : t("Toggle 2FA")}
+							</button>
+						</div>
+					</div>
+
+					{/* Password confirmation modal */}
+					<PasswordModal
+						isOpen={isPasswordModalOpen}
+						onClose={() => setPasswordModalOpen(false)}
+						onSubmit={handleToggle2FA}
+					/>
 				</div>
 				<div className='card basic'>
 					<h2>{t("Stats")}</h2>
@@ -325,7 +377,7 @@ const Profile = () => {
 								setFriends={setFriends}
 								personLoggedIn={personLoggedIn}/>
 				</div>
-				// <Notification userIdChanged={userIdChanged} />
+				{false && <Notification userIdChanged={userIdChanged} />}
 				<div className='card basic notifications'>
 					<h2>{t("Friends list")}</h2>
 					<input type="text"
