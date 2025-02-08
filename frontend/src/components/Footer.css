@@ -2,6 +2,10 @@
 	flex-shrink: 0;
 }
 
+.footer-link {
+    margin-right: 8px;
+}
+
 .footer .container {
 	max-width: 100%;
 }
