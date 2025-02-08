@@ -361,6 +361,7 @@ class OTPDeactivateViewSet(viewsets.GenericViewSet):
 
 class OTPLoginView(generics.GenericAPIView):
     serializer_class = OTPLoginSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

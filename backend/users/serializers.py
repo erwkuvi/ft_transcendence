@@ -250,30 +250,32 @@ class OTPCreateSerializer(serializers.Serializer):
         }
 
 class OTPLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
     username = serializers.CharField(max_length=150)
     password = serializers.CharField(write_only=True)
-    otp = serializers.CharField(max_length=6, write_only=True)  # OTP length is usually 6
+    otp = serializers.CharField(max_length=6, write_only=True, required=False)  # OTP length is usually 6
     def validate(self, attrs):
-        email = attrs.get('email')
         username = attrs.get('username')
         password = attrs.get('password')
-        otp = attrs.get('otp')
+        otp = attrs.get('otp', None)
 
         try:
-            user = User.objects.get(email=email, username=username)
+            user = User.objects.get(username=username)
         except User.DoesNotExist:
             raise exceptions.AuthenticationFailed("User not found.")
 
         if not user.check_password(password):
             raise exceptions.AuthenticationFailed("Incorrect password.")
 
+        if user.otp_active:
+            if not otp:
+                raise exceptions.AuthenticationFailed("OTP code is required.")
+
         # Verify OTP using pyotp
         totp = pyotp.TOTP(user.otp_base32)
         current_time = totp.timecode(datetime.datetime.now())
         logger.info(f"Server time: {datetime.datetime.now()}, OTP Timecode: {current_time}")
         if not totp.verify(otp):
-            logger.warning(f"Invalid OTP for user: {user.email}, Expected: {totp.now()}")
+            logger.warning(f"Invalid OTP for user: {user.username}, Expected: {totp.now()}")
             raise exceptions.AuthenticationFailed("Invalid OTP code.")
 
         # If authentication is successful, generate JWT tokens
