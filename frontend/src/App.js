@@ -10,6 +10,7 @@ import Play from './pages/Play';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import LogIn from './pages/LogIn';
+import Otp from './pages/Otp';
 import './App.css';
 import ScrollReset from './components/ScrollReset';
 
@@ -26,6 +27,7 @@ function App() {
 						<Route path="/profile" exact component={Profile} />
 						<Route path="/about" exact component={About} />
 						<Route path="/login" exact component={LogIn} />
+						<Route path="/otp" exact component={Otp} />
 					</Switch>
 				</ScrollReset>
 			</Main>

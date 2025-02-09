@@ -168,6 +168,10 @@ class OTPActiveToTrueSerializer(serializers.Serializer):
 
         user.otp_active = True
         user.save()
+        # Delete the qr_code image
+        if user.qr_code:
+            user.qr_code.delete(save=False)
+            user.qr_code = None
 
         return {"otp_active": user.otp_active}
 
@@ -221,7 +225,10 @@ class OTPDeactivateSerializer(serializers.Serializer):
         user.otp_active = False
         user.otp_base32 = ""
         user.otpauth_url = ""
-        user.qr_code.delete(save=False)
+        # Delete the qr_code image
+        if user.qr_code:
+            user.qr_code.delete(save=False)
+            user.qr_code = None
         user.save()
 
         return {"otp_active": user.otp_active}
@@ -249,7 +256,7 @@ class OTPCreateSerializer(serializers.Serializer):
         user.save()
 
         return {
-            "otp_base32": user.otp_base32, #secret, not needed to be shared
+            #"otp_base32": user.otp_base32, #secret, not needed to be shared
             #"otpauth_url": user.otpauth_url,
             "qr_code_url": user.qr_code.url if user.qr_code else None #URL that encodes the information needed to set up a OTP
         }
@@ -276,6 +283,9 @@ class OTPLoginSerializer(serializers.Serializer):
                 raise exceptions.AuthenticationFailed("OTP code is required.")
 
         # Verify OTP using pyotp
+        if not user.otp_base32:
+            raise exceptions.AuthenticationFailed("OTP is not set up for this user.")
+        
         totp = pyotp.TOTP(user.otp_base32)
         current_time = totp.timecode(datetime.datetime.now())
         logger.info(f"Server time: {datetime.datetime.now()}, OTP Timecode: {current_time}")

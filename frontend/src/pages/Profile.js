@@ -196,45 +196,50 @@ const Profile = () => {
 	// Handler for initiating 2FA toggle
 	// Opens password confirmation modal instead of immediately toggling
 	const handleInitiateToggle2FA = () => {
-		setPasswordModalOpen(true);
+		if (!profile.otp_active) {
+			setPasswordModalOpen(true);
+		} else {
+			handleToggle2FA();
+		}
 	};
 
 	// Handler for toggling 2FA status after password confirmation
 	// Makes a PATCH request to update the otp_active status
 	// Updates local state to reflect the change
-	const handleToggle2FA = async (password) => {
-		setIsSaving2FA(true);
-		try {
-			// First verify the password
-			const verifyResponse = await axiosInstance.post('/auth/verify-password/', {
-				password
-			});
+const handleToggle2FA = async (password = null) => {
+	setIsSaving2FA(true);
+	const userId = localStorage.getItem('user_id');
+	const token = localStorage.getItem('token');
 
-			if (verifyResponse.data.valid) {
-				// Send PATCH request to update 2FA status
-				const response = await axiosInstance.patch('/user_management/players/me/', {
-					otp_active: !profile.otp_active
-				});
-				
-				// Update local state with new 2FA status
-				setProfile(prev => ({
-					...prev,
-					otp_active: !prev.otp_active
-				}));
-				
-				// Close the modal after successful update
-				setPasswordModalOpen(false);
-			} else {
-				alert('Invalid password. Please try again.');
+	try {
+		const response = await axiosInstance.post(
+			`${BASE_URL}/user_management/otp-active-to-false/`,
+			{
+				user_id: userId
+			},
+			{
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `JWT ${token}`
+				}
 			}
-		} catch (err) {
-			console.error('Error updating 2FA status:', err);
-			alert('Failed to update 2FA status. Please try again.');
-		} finally {
-			// Reset saving state regardless of outcome
-			setIsSaving2FA(false);
-		}
-	};
+		);
+		console.log('Response:', response.data);
+		alert('2FA successfully deactivated')
+
+		// Update local state with new 2FA status
+		setProfile(prev => ({
+			...prev,
+			otp_active: !prev.otp_active
+		}));
+			
+	} catch (err) {
+		console.error('Error updating 2FA status:', err);
+		alert('Failed to update 2FA status. Please try again.');
+	} finally {
+		setIsSaving2FA(false);
+	}
+};
 
 	const sendMessage = () => {
 		if (socket) {
@@ -327,31 +332,16 @@ const Profile = () => {
 					</p>
 					<p>{t("Email:")} <span>{profile.email}</span></p>
 			{/* 2FA Authentication section */}
-					{/* Contains the 2FA status indicator and toggle button */}
 					<div className="mt-4">
-						{/* Section title */}
-						<p className="mb-2">{t("2FA Authentication:")}</p>
-						{/* Container for status indicator and toggle button */}
-						<div className="flex items-center gap-3">
-							{/* Status indicator with icon */}
-							<span className="flex items-center gap-2">
-								{/* Dynamic icon that shows ✓ or ✗ based on 2FA status */}
-								<span className={profile.otp_active ? "text-green-500" : "text-red-500"}>
-									{profile.otp_active ? "✓" : "✗"}
-								</span>
-								{/* Status text that shows "Enabled" or "Disabled" */}
-								{profile.otp_active ? t("Enabled") : t("Disabled")}
-							</span>
-							{/* Toggle button that changes 2FA status */}
-							{/* Disabled while saving to prevent multiple requests */}
-							<button
-								onClick={handleInitiateToggle2FA}
-								disabled={isSaving2FA}
-								className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-							>
-								{isSaving2FA ? t("Saving...") : t("Toggle 2FA")}
-							</button>
-						</div>
+						{/* Toggle button that changes 2FA status */}
+						{/* Disabled while saving to prevent multiple requests */}
+						<button
+							onClick={handleInitiateToggle2FA}
+							disabled={isSaving2FA}
+							className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+						>
+							{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
+						</button>
 					</div>
 
 					{/* Password confirmation modal */}
