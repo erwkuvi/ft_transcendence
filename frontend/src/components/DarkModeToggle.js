@@ -1,28 +1,39 @@
-import React, {useEffect} from "react";
-import './Footer.css'
+import React, { useState, useEffect } from "react";
+import "./Footer.css";
 
 const DarkModeToggle = () => {
+	const [isDarkMode, setIsDarkMode] = useState(() => {
+		return document.getElementById("htmlPage")?.getAttribute("data-bs-theme") === "dark";
+	});
+
 	useEffect(() => {
 		const html = document.getElementById("htmlPage");
-		const toggle = document.getElementById("darkModeToggleButton");
-		
-		const handleToggle = () => {
-			const isDarkMode = html.getAttribute("data-bs-theme") === "dark";
-			html.setAttribute("data-bs-theme", isDarkMode ? "light" : "dark");
-		};
-		
-		toggle.addEventListener("click", handleToggle);
+		html.setAttribute("data-bs-theme", isDarkMode ? "dark" : "light");
+	}, [isDarkMode]);
 
-		return () => {
-			toggle.removeEventListener("click", handleToggle);
-		};
-	}, []);
+	const toggleDarkMode = () => {
+		setIsDarkMode((prevMode) => !prevMode);
+	};
 
 	return (
-		<button id="darkModeToggleButton" className="dark-mode-toggle">
-			<i className="fas fa-circle-half-stroke dark-icon" />
-		</button>
+		<div>
+			<button
+				id="darkModeToggleButton"
+				className="dark-mode-toggle"
+				aria-label="Toggle dark mode"
+				onClick={toggleDarkMode}
+			>
+				<i className="fas fa-circle-half-stroke dark-icon" />
+			</button>
+			<div 
+				id="darkModeStatus" 
+				aria-live="assertive" 
+				style={{ position: "absolute", left: "-9999px" }}
+			>
+				{isDarkMode ? "Dark mode enabled" : "Dark mode disabled"}
+			</div>
+		</div>
 	);
-}
+};
 
 export default DarkModeToggle;

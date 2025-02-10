@@ -33,7 +33,18 @@ class SimpleLoginSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        return {"message": "Authentication successful"}
+        user_id = validated_data.get('user_id')
+        user = User.objects.get(id=user_id)
+
+        otp_serializer = OTPCreateSerializer(data={
+            "email": user.email,
+            "username": user.username
+        })
+        otp_serializer.is_valid(raise_exception=True)
+        otp_data = otp_serializer.save()
+
+        return otp_data
+        
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 

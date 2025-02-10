@@ -1,5 +1,5 @@
 import axiosInstance from '../services/axiosInstance';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
@@ -11,7 +11,7 @@ import PasswordModal from '../components/PasswordModal';
 
 const Profile = () => {
 	const {t} = useTranslation();
-	// Reference to hidden file input
+	const { fontSize } = useContext(AccessibilityContext); 
 	const fileInputRef = useRef(null);
 
 	// For the fetching data fron back
@@ -253,7 +253,7 @@ const handleToggle2FA = async (password = null) => {
   if (!profile) return <p>No profile data available</p>;
 
 	return (
-		<div className="page-content">
+		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
 			<h1>{t("PROFILE")}</h1>
 			<div className='container-fluid cards mt-4'>
 				<div className='card basic'>
@@ -285,10 +285,10 @@ const handleToggle2FA = async (password = null) => {
 							<span className="text-gray-600">📷</span>
 						</button>
 					</div>
-					<p>{t("Username:")} <span>{profile.username}</span></p>
+					<p > {t("Username")} <span>{profile.username}</span></p>
 					{/* Display name section with edit functionality */}
 					<p className="flex items-center gap-2">
-						{t("Display Name: ")} 
+						{t("Display Name")} 
 						{isEditingDisplayName ? (
 							<>
 								{/* Input field for editing display name */}

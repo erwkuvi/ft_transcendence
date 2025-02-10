@@ -1,6 +1,7 @@
-import './Login.css';
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../services/axiosInstance';
+import './Login.css';
 import '../components/Button.css'
 import LogInButton from '../components/LogInButton';
 import { useTranslation } from "react-i18next";
@@ -11,7 +12,9 @@ const baseUrl = `http://localhost:8000/`;
 
 const LogIn = () => {
 	const {t} = useTranslation();
-	const history = useHistory();
+	const { fontSize } = useContext(AccessibilityContext); 
+
+	const navigate = useNavigate();
 
 	const [isSignUp, setIsSignUp] = useState(false);
   // State to control the visibility of the OTP modal for two-factor authentication
@@ -117,7 +120,7 @@ const LogIn = () => {
 		}
 	};
 	return (
-		<div className="page-content login mt-5">
+		<div className="page-content login mt-5" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="login-title">
 				{t("LogInTitle")}
 			</h1>

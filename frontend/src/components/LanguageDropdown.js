@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './LanguageDropdown.css'
 import { useTranslation } from "react-i18next";
+import { AccessibilityContext } from "../AccessibilityContext";
 
 const LanguageDropdown = () => {
 	const { i18n, t } = useTranslation();
+	const { fontSize } = useContext(AccessibilityContext); 
+	
 	const [language, setLanguage] = useState('en');
 
 	const handleChange = (event) => {
@@ -20,11 +23,17 @@ const LanguageDropdown = () => {
 	];
 
 	return (
-		<div className="language-dropdown">
+		<div className="language-dropdown" style={{ fontSize: `${fontSize}px` }}>
+			<label id="language-label" htmlFor="language-select" className="sr-only">
+				{t("Select language")} (currently {languages.find((l) => l.code === language)?.name})
+			</label>
 			<select
+        		aria-live="polite"
+				id="language-select"
 				value={language}
 				onChange={handleChange}
 				className="language-select"
+				aria-labelledby="language-label"
 			>
 				{languages.map((lang) => (
 					<option key={lang.code} value={lang.code}>
@@ -32,8 +41,11 @@ const LanguageDropdown = () => {
 					</option>
 				))}
 			</select>
+			<div aria-live="assertive" style={{ position: "absolute", left: "-9999px" }}>
+        		{t("Language changed to")}: {languages.find((l) => l.code === language)?.name}
+      		</div>
 		</div>
 	);
 };
 
-export default LanguageDropdown
+export default LanguageDropdown;

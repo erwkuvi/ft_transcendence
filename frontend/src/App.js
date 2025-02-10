@@ -1,6 +1,6 @@
 //import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import axiosInstance from './services/axiosInstance';
-import { Switch, Route } from 'react-router-dom';
 import { AuthGuard } from './guards/authGuard';
 import Header from './components/Header';
 import Footer from './components/Footer'
@@ -13,26 +13,29 @@ import LogIn from './pages/LogIn';
 import Otp from './pages/Otp';
 import './App.css';
 import ScrollReset from './components/ScrollReset';
+import { AccessibilityProvider } from "./AccessibilityContext";
+
 
 function App() {
 	return (
-		<div className="App">
-			<AuthGuard />
-			<Header />
-			<Main>
-				<ScrollReset>
-					<Switch>
-						<Route path="/" exact component={Home} />
-						<Route path="/play" exact component={Play} />
-						<Route path="/profile" exact component={Profile} />
-						<Route path="/about" exact component={About} />
-						<Route path="/login" exact component={LogIn} />
-						<Route path="/otp" exact component={Otp} />
-					</Switch>
-				</ScrollReset>
-			</Main>
-			<Footer />
-		</div>
+		<AccessibilityProvider>
+			<div className="App">
+				<AuthGuard />
+				<Header />
+				<Main>
+					<ScrollReset>
+						<Routes>
+							<Route path="/" element={<Home />} />
+							<Route path="/play" element={<Play />} />
+							<Route path="/profile" element={<Profile />} />
+							<Route path="/about" element={<About />} />
+							<Route path="/login" element={<LogIn />} />
+						</Routes>
+					</ScrollReset>
+				</Main>
+				<Footer />
+			</div>
+		</AccessibilityProvider>
 	);
 }
 

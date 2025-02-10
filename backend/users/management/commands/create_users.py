@@ -47,9 +47,9 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.ERROR(f"Failed to create {users_data['username']}: {serializer.errors}"))
 
-        superuser_username = os.environ['DJANGO_USER_SUPERUSER_USERNAME']
-        superuser_email = os.environ['DJANGO_USER_SUPERUSER_EMAIL']
-        superuser_password = os.environ['DJANGO_USER_SUPERUSER_PASSWORD']
+        superuser_username = os.environ['DJANGO_SUPERUSER_USERNAME']
+        superuser_email = os.environ['DJANGO_SUPERUSER_EMAIL']
+        superuser_password = os.environ['DJANGO_SUPERUSER_PASSWORD']
 
         if superuser_username and superuser_email and superuser_password:
             if not User.objects.filter(username=superuser_username).exists():
