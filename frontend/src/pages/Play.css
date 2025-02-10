@@ -64,3 +64,40 @@
 		min-width: 320px;
 	}
 }
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+}
+  
+.auth-form input {
+	width: 50%;
+	padding: 5px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-top: 5px;
+}
+  
+.auth-form button {
+	width: 40%;
+	padding: 5px;
+	font-size: 16px;
+	color: white;
+	border: 1px solid #ccc;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+  
+.auth-form button:hover {
+	background-color: #0E0F23;
+	border: 1px solid #ccc;
+}
+
+.pong-container:focus {
+	outline: 2px solid #fff;
+}

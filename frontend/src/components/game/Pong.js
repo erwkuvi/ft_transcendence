@@ -223,7 +223,7 @@ function Field({dimensions, borderColor}) {
   	);
 }
 
-function Pong({mode, className}) {
+function Pong({className}) {
 	// Declare refs inside the Canvas component
 	const player1Ref = useRef();
 	const player2Ref = useRef();
@@ -274,10 +274,22 @@ function Pong({mode, className}) {
 		}
 	}, []);
 
-
+	const handleClick = (e) => {
+		e.preventDefault();
+		if (gameContainerRef.current) {
+			gameContainerRef.current.focus();
+		}
+	};
 
 	return (
-	<div id="pong-container" ref={gameContainerRef} className={`pong-container ${className}`} tabIndex="0" style={{ outline: 'none', width: '100vw', height: '100vh', marginTop: '50px' }}  >
+	<div id="pong-container" 
+		ref={gameContainerRef} 
+		className={`pong-container ${className}`} 
+		tabIndex="0" 
+		style={{ outline: 'none', width: '100vw', height: '100vh', marginTop: '50px' }} 
+		onClick={handleClick} 
+		onMouseDown={(e) => e.preventDefault()} 
+		>
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
         	Player 1: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | Player 2: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
       	</div>
