@@ -30,6 +30,7 @@ function App() {
 							<Route path="/profile" element={<Profile />} />
 							<Route path="/about" element={<About />} />
 							<Route path="/login" element={<LogIn />} />
+							<Route path="/otp" element={<Otp />} />
 						</Routes>
 					</ScrollReset>
 				</Main>

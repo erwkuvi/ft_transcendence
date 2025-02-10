@@ -5,8 +5,8 @@ import './Login.css';
 import '../components/Button.css'
 import LogInButton from '../components/LogInButton';
 import { useTranslation } from "react-i18next";
-import { useHistory } from 'react-router-dom';
 import OTPModal from '../components/OTPModal';
+import { AccessibilityContext } from '../AccessibilityContext';
 
 const baseUrl = `http://localhost:8000/`;
 
@@ -51,7 +51,7 @@ const LogIn = () => {
       // Close the OTP modal since verification is complete
       setShowOTPModal(false);
       // Redirect to the profile page after successful authentication
-      history.push('/profile');
+			navigate('/profile');
     } catch (error) {
       console.error('Error verifying OTP:', error);
       alert('Invalid OTP code. Please try again.');
@@ -101,7 +101,7 @@ const LogIn = () => {
         localStorage.setItem('access_token', access);
         localStorage.setItem('refresh_token', refresh);
         console.log('Log in successful:', localStorage);
-        history.push('/profile');
+				navigate('/profile');
       } catch (error) {
         // Check if the error is specifically requesting an OTP code
         if (error.response && 

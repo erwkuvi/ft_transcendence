@@ -1,12 +1,12 @@
 import axiosInstance from '../services/axiosInstance';
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
 const Otp = () => {
 	const {t} = useTranslation();
-	const history = useHistory();
+	const navigate = useNavigate();
 	const qr_code_url = localStorage.getItem('qr_code_url');
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
 	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; // Construct the image URL
@@ -37,7 +37,7 @@ const Otp = () => {
 			// Remove qr_code_url from local storage
 			localStorage.removeItem('qr_code_url');
 			alert('2FA successfully activated');
-			history.push('/profile');
+			navigate('/profile');
 		} catch (error) {
 			console.error('Error:', error);
 			// Handle error response

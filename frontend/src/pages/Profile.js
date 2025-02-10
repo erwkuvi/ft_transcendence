@@ -8,6 +8,7 @@ import ListFriends from './ProfileComponents/ListFriends';
 import { useTranslation } from 'react-i18next';
 import Notification from '../components/Notification';
 import PasswordModal from '../components/PasswordModal';
+import { AccessibilityContext } from '../AccessibilityContext';
 
 const Profile = () => {
 	const {t} = useTranslation();

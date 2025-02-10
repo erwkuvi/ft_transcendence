@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // Password confirmation modal component
 // Used when toggling 2FA to ensure user authentication
 const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
-  const history = useHistory(); // Get the history instance
+  const navigate = useNavigate(); // Get the history instance
 
 // State for password input
   // State for password input
@@ -38,7 +38,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
       console.log('Success:', data);
       localStorage.setItem('qr_code_url', data.qr_code_url); // Replace 'propertyName' with the actual property name
       onSubmit(password);
-			history.push('/otp'); //redirect to the /otp
+			navigate('/otp'); //redirect to the /otp
     } catch (error) {
       console.error('Error:', error);
     }
