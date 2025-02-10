@@ -51,19 +51,6 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
 
-        #  pgadmin:
-        #    image: dpage/pgadmin4
-        #    container_name: pgadmin
-        #    environment:
-        #      PGADMIN_DEFAULT_EMAIL: admin1@admin.com
-        #      PGADMIN_DEFAULT_PASSWORD: admin
-        #    ports:
-        #      - "8084:80"
-        #    depends_on:
-        #      - "postgresql"
-        #    networks:
-        #      - "transcend"
-        #    restart: unless-stopped
 
 networks:
   transcend:
