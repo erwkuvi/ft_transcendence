@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import './Play.css';
 import { useTranslation } from "react-i18next";
 import Pong from '../components/game/Pong';
@@ -12,29 +12,7 @@ const Play = () => {
 	
 	const [selectedMode, setSelectedMode] = useState(null);
 
-	const [apiData, setApiData] = useState(null);
-
-//	useEffect(() => {
-//		const fetchData = async () => {
-//			try {
-//				const url = baseUrl + 'your-endpoint';
-//				const response = await fetch(url, {
-//					headers: {
-//						'Content-Type': 'application/json',
-//						Authorization: 'JWT ' + localStorage.getItem('access_token')
-//					}
-//				});
-//				const data = await response.json();
-//				setApiData(data);
-//			} catch (error) {
-//				console.error('Error fetching data:', error);
-//			}
-//		};
-//
-//		fetchData();
-//	}, []);
-		
-			const handleModeSelect = (mode) => {
+	const handleModeSelect = (mode) => {
 		setSelectedMode(mode);
 	};
 
@@ -44,20 +22,19 @@ const Play = () => {
 	};
 	
 	return (
-		<div className="page-content play" style={scaleStyle}>
+		<div className="page-content play">
 			{selectedMode ? (
 				<div>
-				<h2 style={scaleStyle}>{t("PlayTitle")}</h2>
-				<Pong mode={selectedMode} />
+				<Pong mode={selectedMode} className="focus-pong"/>
 				<button className="btn button mt-4" style={scaleStyle} onClick={() => setSelectedMode(null)}>
 					Back to Mode Selection
 				</button>
 				</div>
 			) : (
 				<>
-					{/* <h1 className="title mt-5">
+					<h1 className="title mt-5">
 						{t("PlayTitle")}
-					</h1> */}
+					</h1>
 					<div className="modes mt-4">
 						<div className="row justify-content-center" >
 							<div className="mode" >
