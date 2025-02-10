@@ -14,6 +14,27 @@ from .models import User, PlayerProfile, Match, PlayerMatch
 from .signals import match_created
 
 
+class SimpleLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise exceptions.AuthenticationFailed("User not found.")
+
+        if not user.check_password(password):
+            raise exceptions.AuthenticationFailed("Incorrect password.")
+
+        return attrs
+
+    def create(self, validated_data):
+        return {"message": "Authentication successful"}
+
 class UserCreateSerializer(BaseUserCreateSerializer):
 
     class Meta(BaseUserCreateSerializer.Meta):
@@ -281,17 +302,16 @@ class OTPLoginSerializer(serializers.Serializer):
         if user.otp_active:
             if not otp:
                 raise exceptions.AuthenticationFailed("OTP code is required.")
-
         # Verify OTP using pyotp
-        if not user.otp_base32:
-            raise exceptions.AuthenticationFailed("OTP is not set up for this user.")
+            if not user.otp_base32:
+                raise exceptions.AuthenticationFailed("OTP is not set up for this user.")
         
-        totp = pyotp.TOTP(user.otp_base32)
-        current_time = totp.timecode(datetime.datetime.now())
-        logger.info(f"Server time: {datetime.datetime.now()}, OTP Timecode: {current_time}")
-        if not totp.verify(otp):
-            logger.warning(f"Invalid OTP for user: {user.username}, Expected: {totp.now()}")
-            raise exceptions.AuthenticationFailed("Invalid OTP code.")
+            totp = pyotp.TOTP(user.otp_base32)
+            current_time = totp.timecode(datetime.datetime.now())
+            logger.info(f"Server time: {datetime.datetime.now()}, OTP Timecode: {current_time}")
+            if not totp.verify(otp):
+                logger.warning(f"Invalid OTP for user: {user.username}, Expected: {totp.now()}")
+                raise exceptions.AuthenticationFailed("Invalid OTP code.")
 
         # If authentication is successful, generate JWT tokens
         refresh = RefreshToken.for_user(user)
