@@ -22,7 +22,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `JWT ${localStorage.getItem('token')}` // Assuming the token is stored in local storage
+          'Authorization': 'JWT ' + localStorage.getItem('access_token') 
         },
         body: JSON.stringify({
           user_id: userId,

@@ -47,8 +47,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 INSTALLED_APPS = [
     'daphne',
     'channels',# WebSockets and more for Django
-	'django.contrib.admin',
-	'django.contrib.auth',
+	'django.contrib.admin', 'django.contrib.auth',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.messages',

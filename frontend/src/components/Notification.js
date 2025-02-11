@@ -3,17 +3,17 @@ import React, { useEffect, useState } from 'react';
 import './Notification.css'
 
 const Notification = ({ userIdChanged, onConfirm, onReject }) => {
-	const [notification, setNotification] = useState(null);
-	const [socket, setSocket] = useState(null);
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+const [notification, setNotification] = useState(null);
+const [socket, setSocket] = useState(null);
+const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 	useEffect(() => {
-const user_id = localStorage.getItem('user_id'); // Get the user_id from localStorage
-		console.log('user_id found: ', user_id);
+		const user_id = localStorage.getItem('user_id'); // Get the user_id from localStorage
 		
 		// Check if the user is authenticated
 		if (user_id) {
 			setIsAuthenticated(true);
+			console.log('user_id found: ', user_id);
 		} else {
 			setIsAuthenticated(false);
 		}

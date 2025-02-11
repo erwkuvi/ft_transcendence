@@ -107,15 +107,26 @@ const Profile = () => {
 	// Handler to save the new display name
 	const handleSaveDisplayName = async () => {
 		try {
-			// Send PUT request to update display name on the server
+			// Create form data for the request
+			const formData = new FormData();
+			formData.append('display_name', newDisplayName);
+
+			// Send PATCH request to update display name on the server
 			const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
 				method: 'PATCH',
 				headers: {
-					'Content-Type': 'application/json',
 					Authorization: 'JWT ' + localStorage.getItem('access_token')
 				},
-				body: JSON.stringify({ display_name: newDisplayName })
+				body: formData
 			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				console.error('Error response from server:', errorData);
+				alert(`Failed to update display name: ${JSON.stringify(errorData)}`);
+				throw new Error('Failed to update display name');
+			}
+
 			const data = await response.json();
 			// Update local state with new display name
 			setProfile(prev => ({
@@ -126,6 +137,7 @@ const Profile = () => {
 			setIsEditingDisplayName(false);
 		} catch (err) {
 			console.error('Error updating display name:', err);
+			alert('Failed to update display name');
 		}
 	};
 
@@ -210,7 +222,7 @@ const Profile = () => {
 const handleToggle2FA = async (password = null) => {
 	setIsSaving2FA(true);
 	const userId = localStorage.getItem('user_id');
-	const token = localStorage.getItem('token');
+	const token = localStorage.getItem('access_token');
 
 	try {
 		const response = await axiosInstance.post(
@@ -236,7 +248,6 @@ const handleToggle2FA = async (password = null) => {
 			
 	} catch (err) {
 		console.error('Error updating 2FA status:', err);
-		alert('Failed to update 2FA status. Please try again.');
 	} finally {
 		setIsSaving2FA(false);
 	}
