@@ -30,6 +30,9 @@ class SimpleLoginSerializer(serializers.Serializer):
         if not user.check_password(password):
             raise exceptions.AuthenticationFailed("Incorrect password.")
 
+        # Add user_id to validated data
+        attrs['user_id'] = user.id
+
         return attrs
 
     def create(self, validated_data):
@@ -43,7 +46,10 @@ class SimpleLoginSerializer(serializers.Serializer):
         otp_serializer.is_valid(raise_exception=True)
         otp_data = otp_serializer.save()
 
-        return otp_data
+        return {
+            "user_id": user_id,
+            **otp_data
+        }
         
 
 class UserCreateSerializer(BaseUserCreateSerializer):
