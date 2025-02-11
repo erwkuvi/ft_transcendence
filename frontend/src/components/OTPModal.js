@@ -8,7 +8,7 @@ import './OTPModal.css';
 const OTPModal = ({ onSubmit, onClose }) => {
   // State to store the OTP input value
   const [otp, setOtp] = useState('');
-	console.log('I am in otpmodal')
+	//console.log('I am in otpmodal')
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();

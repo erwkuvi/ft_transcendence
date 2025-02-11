@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../services/axiosInstance';
 import './Login.css';
@@ -19,6 +19,21 @@ const LogIn = () => {
 	const [isSignUp, setIsSignUp] = useState(false);
   // State to control the visibility of the OTP modal for two-factor authentication
   const [showOTPModal, setShowOTPModal] = useState(false);
+const [otpSubmitted, setOtpSubmitted] = useState(true);
+
+  useEffect(() => {
+    // Show the OTPModal immediately on page load for testing purposes
+		if (!otpSubmitted) {
+			setShowOTPModal(true);
+		}
+  }, [otpSubmitted]);
+
+  useEffect(() => {
+    // Keep the OTPModal open until the OTP is successfully submitted
+    if (otpSubmitted) {
+      setShowOTPModal(false);
+    }
+  }, [otpSubmitted]);
   // State to temporarily store login credentials while waiting for OTP verification
   // This prevents the user from having to re-enter their credentials when submitting the OTP
   const [loginCredentials, setLoginCredentials] = useState(null);
@@ -37,10 +52,16 @@ const LogIn = () => {
   // This function is called when the user submits the OTP code in the modal
   const handleOTPSubmit = async (otp) => {
     try {
+      console.log('Sending OTP verification request with the following data:');
+      console.log('Username:', loginCredentials.username);
+      console.log('Password:', loginCredentials.password);
+      console.log('OTP:', otp);
+
       // Send a new request with both the original credentials and the OTP code
       const response = await axiosInstance.post(baseUrl + 'otp-login/', {
-        ...loginCredentials, // Include the stored username and password
-        otp_code: otp // Add the OTP code provided by the user
+        username: loginCredentials.username, // Include the stored username
+        password: loginCredentials.password, // Include the stored password
+        otp: otp // Add the OTP code provided by the user
       });
 
       // If OTP verification is successful, store the authentication tokens
@@ -48,13 +69,13 @@ const LogIn = () => {
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
       console.log('Log in successful:', localStorage);
-      // Close the OTP modal since verification is complete
-      setShowOTPModal(false);
+      // Mark OTP as successfully submitted
+      setOtpSubmitted(true);
       // Redirect to the profile page after successful authentication
-			navigate('/profile');
+			//navigate('/profile');
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      alert('Invalid OTP code. Please try again.');
+      //alert('Invalid OTP code. Please try again.');
     }
   };
 
@@ -101,7 +122,7 @@ const LogIn = () => {
         localStorage.setItem('access_token', access);
         localStorage.setItem('refresh_token', refresh);
         console.log('Log in successful:', localStorage);
-				navigate('/profile');
+				//navigate('/profile');
       } catch (error) {
         // Check if the error is specifically requesting an OTP code
         if (error.response && 
