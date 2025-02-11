@@ -21,19 +21,19 @@ const LogIn = () => {
   const [showOTPModal, setShowOTPModal] = useState(false);
 const [otpSubmitted, setOtpSubmitted] = useState(true);
 
-  useEffect(() => {
-    // Show the OTPModal immediately on page load for testing purposes
-		if (!otpSubmitted) {
-			setShowOTPModal(true);
-		}
-  }, [otpSubmitted]);
+  //useEffect(() => {
+  //  // Show the OTPModal immediately on page load for testing purposes
+	//	if (!otpSubmitted) {
+	//		setShowOTPModal(true);
+	//	}
+  //}, [otpSubmitted]);
 
-  useEffect(() => {
-    // Keep the OTPModal open until the OTP is successfully submitted
-    if (otpSubmitted) {
-      setShowOTPModal(false);
-    }
-  }, [otpSubmitted]);
+  //useEffect(() => {
+  //  // Keep the OTPModal open until the OTP is successfully submitted
+  //  if (otpSubmitted) {
+  //    setShowOTPModal(false);
+  //  }
+  //}, [otpSubmitted]);
   // State to temporarily store login credentials while waiting for OTP verification
   // This prevents the user from having to re-enter their credentials when submitting the OTP
   const [loginCredentials, setLoginCredentials] = useState(null);
@@ -70,9 +70,9 @@ const [otpSubmitted, setOtpSubmitted] = useState(true);
       localStorage.setItem('refresh_token', refresh);
       console.log('Log in successful:', localStorage);
       // Mark OTP as successfully submitted
-      setOtpSubmitted(true);
+      setShowOTPModal(false);
       // Redirect to the profile page after successful authentication
-			//navigate('/profile');
+			navigate('/profile');
     } catch (error) {
       console.error('Error verifying OTP:', error);
       //alert('Invalid OTP code. Please try again.');
@@ -122,7 +122,7 @@ const [otpSubmitted, setOtpSubmitted] = useState(true);
         localStorage.setItem('access_token', access);
         localStorage.setItem('refresh_token', refresh);
         console.log('Log in successful:', localStorage);
-				//navigate('/profile');
+				navigate('/profile');
       } catch (error) {
         // Check if the error is specifically requesting an OTP code
         if (error.response && 
