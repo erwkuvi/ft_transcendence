@@ -10,8 +10,8 @@ const OTPModal = ({ onSubmit, onClose }) => {
   const [otp, setOtp] = useState('');
 	//console.log('I am in otpmodal')
   // Handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     onSubmit(otp);
   };
 

@@ -17,7 +17,7 @@ const setupAxiosInterceptors = (axiosInstance) => {
                     originalRequest.headers['Authorization'] = `JWT ${newAccessToken}`;
                     return axiosInstance(originalRequest);
                 } catch (refreshError) {
-                    window.location.href = '/login';
+                    console.error('(axiosInterceptor) Token refresh failed:', refreshError);
                     return Promise.reject(refreshError);
                 }
             }

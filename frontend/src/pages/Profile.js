@@ -1,5 +1,6 @@
 import axiosInstance from '../services/axiosInstance';
 import React, { useEffect, useState, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from './ProfileComponents/ListUsers';
@@ -14,18 +15,19 @@ const Profile = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	const fileInputRef = useRef(null);
+	const navigate = useNavigate(); // Use useNavigate hook for navigation
 
 	// For the fetching data fron back
-    const [profile, setProfile] = useState(null);
+	const [profile, setProfile] = useState(null);
 	const [friends, setFriends] = useState([]);
 
-    const [allUsers, setAllUsers] = useState([]);
+	const [allUsers, setAllUsers] = useState([]);
 	const [query, setQuery] = useState('');
 	const [filterUsers, setFilterUsers] = useState([]);
 	const [personLoggedIn, setPersonLoggedIn] = useState(null);
 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 	// State for managing display name editing
 	const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
 	const [newDisplayName, setNewDisplayName] = useState('');
@@ -39,6 +41,13 @@ const Profile = () => {
 	// State for password confirmation modal
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
+
+	useEffect(() => {
+		const token = localStorage.getItem('access_token');
+		if (!token) {
+			navigate('/login'); // Redirect to login page
+		}
+	}, [navigate]);
   // Fetch data on component mount
 	useEffect(() => {
 		const fetchProfile = async () => {
@@ -344,17 +353,19 @@ const handleToggle2FA = async (password = null) => {
 					</p>
 					<p>{t("Email:")} <span>{profile.email}</span></p>
 			{/* 2FA Authentication section */}
+			{profile.auth_provider !== "42api" && (
 					<div className="mt-4">
-						{/* Toggle button that changes 2FA status */}
-						{/* Disabled while saving to prevent multiple requests */}
-						<button
-							onClick={handleInitiateToggle2FA}
-							disabled={isSaving2FA}
-							className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-						>
-							{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
-						</button>
+							{/* Toggle button that changes 2FA status */}
+							{/* Disabled while saving to prevent multiple requests */}
+							<button
+									onClick={handleInitiateToggle2FA}
+									disabled={isSaving2FA}
+									className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+							>
+									{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
+							</button>
 					</div>
+			)}
 
 					{/* Password confirmation modal */}
 					<PasswordModal
@@ -388,7 +399,7 @@ const handleToggle2FA = async (password = null) => {
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
 					/>
-					//<button id="sendButton" onClick={sendMessage}>{t("Send Message")}</button>
+					<button id="sendButton" onClick={sendMessage} style={{ marginTop: '10px' }}>{t("Send Message")}</button>
 				</div>
 			</div>
 		</div>

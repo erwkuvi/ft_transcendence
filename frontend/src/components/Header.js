@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import './NotifMenu'
@@ -14,7 +14,20 @@ const Header = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	
-	const isLoggedIn = !!localStorage.getItem('access_token');
+	const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('user_id'));
+
+	// Effect to listen for changes in localStorage
+	useEffect(() => {
+		const handleStorageChange = () => {
+			setIsLoggedIn(!!localStorage.getItem('user_id'));
+		};
+
+		window.addEventListener('storage', handleStorageChange);
+
+		return () => {
+			window.removeEventListener('storage', handleStorageChange);
+		};
+	}, []);
 
 
 	return (
@@ -30,7 +43,7 @@ const Header = () => {
 					<nav className="menu right-menu">
 						<TextSizeControls/>
 						<div className="notif" >
-							<NotifMenu/>
+		{/*/<NotifMenu/>/*/}
 						</div>
 						{isLoggedIn ? (
                             <LogoutButton />

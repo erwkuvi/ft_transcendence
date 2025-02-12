@@ -86,7 +86,7 @@ class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = User
         fields = ['id', 'username',
-                  'email', 'qr_code', 'password', 'otp_active']
+                  'email', 'qr_code', 'password', 'otp_active', 'auth_provider']
         extra_kwargs = {
             "password": {"write_only": True},
             "qr_code": {"read_only": False},
@@ -105,14 +105,15 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(required=False)  # Make avatar writable and optional
     display_name = serializers.CharField(required=False)
     otp_active = serializers.SerializerMethodField()
+    auth_provider= serializers.SerializerMethodField()
 
     #user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active'] # 'online_status'
-        read_only_fields = ['user_id', 'username', 'profile_id', 'email']
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider'] # 'online_status'
+        read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
         matches = validated_data.pop('matches', None)
@@ -126,6 +127,11 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email
+
+    def get_auth_provider(self, obj):
+        auth_provider = obj.user.auth_provider
+        print(f"Auth Provider for {obj.user.username}: {auth_provider}")  # Debugging line
+        return auth_provider
 
     def get_username(self, obj):
         return obj.user.username
