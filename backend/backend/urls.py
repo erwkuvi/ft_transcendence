@@ -30,7 +30,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('42-login/', OAuth42LoginView.as_view(), name='42-login'),
     path('42-callback/', OAuth42CallbackView.as_view(), name='42-callback'),
-    path('otp-login/', OTPLoginView.as_view(), name='otp-login'),
+    path('mfa/', OTPLoginView.as_view(), name='mfa'),
     path('api/test/', include('notifications.urls')),
 ]
 
