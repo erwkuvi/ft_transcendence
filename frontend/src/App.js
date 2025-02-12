@@ -1,5 +1,7 @@
 //import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+// import { AuthProvider } from './context/AuthContext';
+import { GameProvider } from "./context/GameContext"; 
 import axiosInstance from './services/axiosInstance';
 import { AuthGuard } from './guards/authGuard';
 import Header from './components/Header';
@@ -18,25 +20,34 @@ import { AccessibilityProvider } from "./AccessibilityContext";
 
 function App() {
 	return (
-		<AccessibilityProvider>
-			<div className="App">
-				<AuthGuard />
-				<Header />
-				<Main>
-					<ScrollReset>
-						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/play" element={<Play />} />
-							<Route path="/profile" element={<Profile />} />
-							<Route path="/about" element={<About />} />
-							<Route path="/login" element={<LogIn />} />
-							<Route path="/otp" element={<Otp />} />
-						</Routes>
-					</ScrollReset>
-				</Main>
-				<Footer />
-			</div>
-		</AccessibilityProvider>
+		// <AuthProvider>
+			<AccessibilityProvider>
+				<div className="App">
+					<AuthGuard />
+					<Header />
+					<Main>
+						<ScrollReset>
+							<Routes>
+								<Route path="/" element={<Home />} />
+								<Route 
+									path="/play" 
+									element={
+										<GameProvider>
+											<Play />
+										</GameProvider>
+									} 
+								/>
+								<Route path="/profile" element={<Profile />} />
+								<Route path="/about" element={<About />} />
+								<Route path="/login" element={<LogIn />} />
+								<Route path="/otp" element={<Otp />} />
+							</Routes>
+						</ScrollReset>
+					</Main>
+					<Footer />
+				</div>
+			</AccessibilityProvider>
+		// </AuthProvider>
 	);
 }
 

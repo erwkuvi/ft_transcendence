@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { GameContext } from "../../context/GameContext";
 
-const AuthUserForm = ({ isOpponentAuthenticated, setIsOpponentAuthenticated }) => {
+const AuthUserForm = () => {
+	const { isOpponentAuthenticated, setIsOpponentAuthenticated } = useContext(GameContext); 
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
-
+	const {opponentsId, setOpponentsId} = useContext(GameContext);
     const handleAuthentication = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -15,9 +17,12 @@ const AuthUserForm = ({ isOpponentAuthenticated, setIsOpponentAuthenticated }) =
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(credentials),
             });
-
-            if (response.ok) {
+			const data = await response.json();
+			console.log("response: ", data);
+			
+            if (response.ok && typeof data.user_id === 'number') {
                 setIsOpponentAuthenticated(true);
+				setOpponentsId(data.user_id);
                 setError('');
             } else {
                 setError('Invalid credentials');

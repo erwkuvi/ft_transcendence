@@ -1,7 +1,8 @@
 
-import React, { use, useRef, useState } from 'react';
+import React, { useRef, useState, useContext} from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
+import { GameContext } from "../../context/GameContext";
 import { useEffect } from 'react';
 
 const	FIELD_WIDTH = 26;
@@ -225,6 +226,8 @@ function Field({dimensions, borderColor}) {
 
 function Pong({className}) {
 	// Declare refs inside the Canvas component
+	const {opponentsId, setOpponentsId} = useContext(GameContext);
+	// const { personLoggedIn } = useContext(GameContext);
 	const player1Ref = useRef();
 	const player2Ref = useRef();
 	const gameContainerRef = useRef();
@@ -237,7 +240,9 @@ function Pong({className}) {
 		p1_won_set_count: 0,
 		p2_won_set_count: 0,
 	});
-
+	console.log("opponents id is:", opponentsId);
+	const personLoggedIn = localStorage.getItem('user_id');
+	console.log("person logged in is: ", personLoggedIn);
 	  // Function to handle score updates
 	const handleScore = (player) => {
 		setScores((prev) => {
@@ -250,6 +255,7 @@ function Pong({className}) {
 				updatedScores.p1_won_set_count++;
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
 					alert('Player 1 has won the game!');
+
 				}
 			}
 		  } else if (player === 2) {

@@ -1,6 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import { GameContext } from "../../context/GameContext";
 
-const BackButton = ({ setIsReadyToPlay, setIsOpponentAuthenticated, setIsSubmitting, scaleStyle }) => {
+const BackButton = ({ scaleStyle }) => {
+	const { isOpponentAuthenticated, setIsOpponentAuthenticated } = useContext(GameContext); 
+	const { isReadyToPlay, setIsReadyToPlay } = useContext(GameContext); 
+
     return (
         <button
             className="btn button mt-4"

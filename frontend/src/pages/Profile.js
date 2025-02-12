@@ -1,5 +1,6 @@
 import axiosInstance from '../services/axiosInstance';
 import React, { useEffect, useState, useContext, useRef } from 'react';
+import { AuthContext } from "../context/AuthContext";
 import { fetchUsers } from '../services/fetchUsers';
 import './Profile.css';
 import ListUsers from '../components/ProfileComponents/ListUsers';
