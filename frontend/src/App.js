@@ -16,11 +16,12 @@ import Otp from './pages/Otp';
 import './App.css';
 import ScrollReset from './components/ScrollReset';
 import { AccessibilityProvider } from "./AccessibilityContext";
+import { AuthProvider } from './context/AuthContext';
 
 
 function App() {
 	return (
-		// <AuthProvider>
+		<AuthProvider>
 			<AccessibilityProvider>
 				<div className="App">
 					<AuthGuard />
@@ -47,7 +48,7 @@ function App() {
 					<Footer />
 				</div>
 			</AccessibilityProvider>
-		// </AuthProvider>
+		</AuthProvider>
 	);
 }
 

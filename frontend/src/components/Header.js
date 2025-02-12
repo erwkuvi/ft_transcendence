@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import './NotifMenu'
@@ -8,27 +8,13 @@ import './LanguageDropdown'
 import TextSizeControls from "./TextSizeControls";
 
 import { useTranslation } from "react-i18next";
+import { AuthContext } from '../context/AuthContext';
 import { AccessibilityContext } from "../AccessibilityContext";
 
 const Header = () => {
-	const {t} = useTranslation();
+	const { t } = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
-	
-	const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('user_id'));
-
-	// Effect to listen for changes in localStorage
-	useEffect(() => {
-		const handleStorageChange = () => {
-			setIsLoggedIn(!!localStorage.getItem('user_id'));
-		};
-
-		window.addEventListener('storage', handleStorageChange);
-
-		return () => {
-			window.removeEventListener('storage', handleStorageChange);
-		};
-	}, []);
-
+	const { isLoggedIn } = useContext(AuthContext);
 
 	return (
 		<div>
