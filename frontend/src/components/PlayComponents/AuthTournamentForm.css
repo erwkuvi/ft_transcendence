@@ -1,0 +1,87 @@
+.auth-form {
+    background-color: var(--fill-color);
+    border: 1px solid var(--text-color);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form h4 {
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.auth-form p {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid var(--text-color);
+    border-radius: 8px;
+    background-color: var(--fill-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0px 0px 5px var(--accent-color);
+}
+
+.auth-form .button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-dark));
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.1s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-form .button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent-color));
+}
+
+.auth-form .button:active {
+    transform: scale(0.98);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.auth-form .button:disabled {
+    background: gray;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+/* Error message */
+.text-red-500 {
+    color: red;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* Players list styling */
+.authenticated-players {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}

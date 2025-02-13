@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
 import { GameContext } from "../../context/GameContext";
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const	FIELD_WIDTH = 26;
 const	FIELD_LEN = 32;
@@ -226,11 +227,17 @@ function Field({dimensions, borderColor}) {
 
 function Pong({className}) {
 	// Declare refs inside the Canvas component
-	const {opponentsId, setOpponentsId} = useContext(GameContext);
+	const { opponentsId } = useContext(GameContext);
+	const { setIsSubmitting } = useContext(GameContext);
+	const { setIsOpponentAuthenticated } = useContext(GameContext); 
+	const { setIsReadyToPlay } = useContext(GameContext); 
 	// const { personLoggedIn } = useContext(GameContext);
 	const player1Ref = useRef();
 	const player2Ref = useRef();
 	const gameContainerRef = useRef();
+	const navigate = useNavigate(); 
+	
+	
 
 	const [scores, setScores] = useState({
 		p1_f_score: 0,
@@ -240,9 +247,41 @@ function Pong({className}) {
 		p1_won_set_count: 0,
 		p2_won_set_count: 0,
 	});
-	console.log("opponents id is:", opponentsId);
-	const personLoggedIn = localStorage.getItem('user_id');
-	console.log("person logged in is: ", personLoggedIn);
+
+	const personsLoggedInId = localStorage.getItem('user_id');
+
+	const postMatchResults = async (winnerId, scores) => {
+		const matchData = {
+			player1: personsLoggedInId, 
+			player2: opponentsId,    
+			winner: winnerId,       
+			score_player1: scores.p1_f_score,
+			score_player2: scores.p2_f_score
+		};
+	
+		try {
+			const response = await fetch('http://localhost:8000/user_management/matches/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'JWT ' + localStorage.getItem('access_token') 
+				},
+				body: JSON.stringify(matchData)
+			});
+	
+			if (!response.ok) {
+				const errorData = await response.json();
+				console.error("Failed to post match results:", errorData);
+			} else {
+				console.log("Match results successfully saved.");
+			}
+		} catch (error) {
+			console.error("Error posting match results:", error);
+		}
+	};
+	
+	
+
 	  // Function to handle score updates
 	const handleScore = (player) => {
 		setScores((prev) => {
@@ -254,8 +293,10 @@ function Pong({className}) {
 				updatedScores.p1_in_set_score = 0; // Reset score for next set
 				updatedScores.p1_won_set_count++;
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
-					alert('Player 1 has won the game!');
-
+					postMatchResults(personsLoggedInId, updatedScores);
+					// setIsReadyToPlay(null);
+                	// setIsOpponentAuthenticated(false);
+					// setIsSubmitting(false);
 				}
 			}
 		  } else if (player === 2) {
@@ -265,8 +306,10 @@ function Pong({className}) {
 				updatedScores.p2_in_set_score = 0; // Reset score for next set
 				updatedScores.p2_won_set_count++;
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
-					alert('Player 2 has won the game!');
-					//Bring another page to stop the game and send the data
+					postMatchResults(opponentsId, updatedScores);
+					// setIsReadyToPlay(null);
+                	// setIsOpponentAuthenticated(false);
+					// setIsSubmitting(false);
 				}
 			}
 		  }
@@ -297,7 +340,7 @@ function Pong({className}) {
 		onMouseDown={(e) => e.preventDefault()} 
 		>
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
-        	Player 1: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | Player 2: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
+        	Player 1 ({personsLoggedInId}): {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | Player 2 ({opponentsId}): {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
       	</div>
 		<Canvas style={{width: '100%', height: '100%'}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
 			<axesHelper args={[15]} />

@@ -10,6 +10,7 @@
 	flex-wrap: nowrap;
 	justify-content: center;
 	align-items: center;
+
 	width: 100%
 }
 
@@ -17,7 +18,7 @@
 	border: 1px solid var(--text-color);
 	background-color: var(--fill-color);
 	min-width: 320px;
-	max-width: 400px;
+	max-width: 800px;
 	width: 20%;
 	margin: 16px;
 	padding: 24px;
@@ -50,6 +51,9 @@
 @media (min-width: 1126px) and (max-width: 1366px) {
 	.play .mode {
 		min-width: 400px;
+		/* height: 672px; */
+    	transform: translate(104px, -42px);
+    	/* width: 398px; */
 	}
 }
 
@@ -61,7 +65,7 @@
 
 @media (min-width: 1486px){
 	.play .mode {
-		min-width: 320px;
+		min-width: 440px;
 	}
 }
 
@@ -100,4 +104,14 @@
 
 .pong-container:focus {
 	outline: 2px solid #fff;
+}
+
+.play-modes-wrapper {
+    display: flex;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+	justify-content: center;
+	align-items: baseline;
+    padding: 20px;
 }
