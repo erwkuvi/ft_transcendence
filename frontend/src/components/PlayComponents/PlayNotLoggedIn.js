@@ -22,7 +22,6 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
                                 className="btn button" 
                                 style={scaleStyle} 
                                 onClick={() => setIsReadyToPlay("tournament")}
-								disabled={!isOpponentAuthenticated}
                             >
                                 {t("PlayNotLoggedIn")}
                             </button>
