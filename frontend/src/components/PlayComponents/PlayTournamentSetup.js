@@ -6,7 +6,7 @@ import "./PlayTournamentSetup.css";
 
 const PlayTournamentSetup = ({ scaleStyle }) => {
     const { t } = useTranslation();
-	const { isTournamentReady, setIsReadyToPlay } = useContext(GameContext);
+	const { isTournamentReady, setStartTheTournament } = useContext(GameContext);
 
     return (
         <>
@@ -17,7 +17,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
                         <AuthTournamentForm scaleStyle={scaleStyle}/>
                         <button className="btn button" 
 							style={scaleStyle} 
-							onClick={() => setIsReadyToPlay("tournament")} 
+							onClick={() => setStartTheTournament(true)} 
 							disabled={!isTournamentReady}
 						>
                             {t("PlayTournament")}

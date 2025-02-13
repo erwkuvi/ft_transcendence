@@ -8,6 +8,7 @@ export const GameProvider = ({ children }) => {
     const [isReadyToPlay, setIsReadyToPlay] = useState(null);
     const [isOpponentAuthenticated, setIsOpponentAuthenticated] = useState(false);
 	const [ isTournamentReady, setIsTournamentReady ] = useState(false);
+	const [ startTheTournament, setStartTheTournament ] = useState(false);
 	const [opponentsId, setOpponentsId] = useState('');
 	const [tournamentPlayers, setTournamentPlayers] = useState([]);
 
@@ -23,7 +24,9 @@ export const GameProvider = ({ children }) => {
 										tournamentPlayers,
 										setTournamentPlayers,
 										isTournamentReady,
-										setIsTournamentReady }}>
+										setIsTournamentReady,
+										startTheTournament,
+										setStartTheTournament }}>
             {children}
         </GameContext.Provider>
     );

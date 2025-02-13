@@ -21,7 +21,7 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
                             <button 
                                 className="btn button" 
                                 style={scaleStyle} 
-                                onClick={() => setIsReadyToPlay("tournament")}
+                                onClick={() => setIsReadyToPlay("playNotLoggedIn")}
                             >
                                 {t("PlayNotLoggedIn")}
                             </button>
