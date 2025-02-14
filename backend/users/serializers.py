@@ -1,4 +1,5 @@
 # serializers.py
+import random
 import datetime
 import pyotp
 import qrcode
@@ -112,7 +113,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
@@ -164,7 +165,7 @@ class MatchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Match
-        fields = ['id', 'date', 'player1', 'player2',
+        fields = ['id', 'date', 'mode', 'player1', 'player2',
                   'winner', 'score_player1', 'score_player2', 'stats']
 
     def save(self, **kwargs):
@@ -342,3 +343,74 @@ class OTPLoginSerializer(serializers.Serializer):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
+
+
+## Tournament creation
+
+class TournamentSerializer(serializers.Serializer):
+    player_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        min_length=4,
+        max_length=4
+    )
+
+    def validate_player_ids(self, value):
+        if len(set(value)) != 4:
+            raise serializers.ValidationError("Four unique player IDs are required.")
+    
+        players = PlayerProfile.objects.filter(user_id__in=value)
+        if players.count() != 4:
+            raise serializers.ValidationError("Some player IDs do not exist.")
+    
+        # Check if any player is already in a tournament
+        for player in players:
+            if player.in_tournament:
+                raise serializers.ValidationError(f"Player {player.user.username} is already in a tournament.")
+
+        return value
+
+    def create(self, validated_data):
+        player_ids = validated_data['player_ids']
+        random.shuffle(player_ids)
+
+        match1 = Match.objects.create(
+            player1_id=player_ids[0],
+            player2_id=player_ids[1],
+            mode='tournament'
+        )
+        match2 = Match.objects.create(
+            player1_id=player_ids[2],
+            player2_id=player_ids[3],
+            mode='tournament'
+        )
+
+        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=True)
+
+        return [match1, match2]
+
+
+class ExitTournamentSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        user_id = attrs.get('user_id')
+
+        try:
+            player = PlayerProfile.objects.get(user_id=user_id)
+        except PlayerProfile.DoesNotExist:
+            raise serializers.ValidationError("Player profile not found.")
+
+        if not player.in_tournament:
+            raise serializers.ValidationError("Player is not currently in a tournament.")
+
+        return attrs
+
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        player = PlayerProfile.objects.get(user_id=user_id)
+
+        player.in_tournament = False
+        player.save()
+
+        return {"user_id": user_id, "in_tournament": player.in_tournament}
+

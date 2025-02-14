@@ -11,6 +11,8 @@ router.register('otp-activate', views.OTPActivateViewSet, basename='otp-activate
 router.register('otp-active-to-true', views.OTPActiveToTrueViewSet, basename='otp-activate-to-true')
 router.register('otp-active-to-false', views.OTPDeactivateViewSet, basename='otp-activate-to-false')
 router.register('simple-auth', views.SimpleLoginViewSet, basename='simple-auth')
+router.register('tournament-create', views.TournamentViewSet, basename='tournament-create')
+router.register('exit-tournament', views.ExitTournamentViewSet, basename='exit-tournament')
 
 
 urlpatterns = [
