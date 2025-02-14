@@ -1,15 +1,16 @@
-import axiosInstance from '../services/axiosInstance';
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import './Profile.css';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { fetchUsers } from '../services/fetchUsers';
-import './Profile.css';
+import { useTranslation } from 'react-i18next';
+import axiosInstance from '../services/axiosInstance';
+import { AccessibilityContext } from '../AccessibilityContext';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import ListUsers from '../components/ProfileComponents/ListUsers';
 import Filter from '../components/ProfileComponents/Filter';
 import ListFriends from '../components/ProfileComponents/ListFriends';
-import { useTranslation } from 'react-i18next';
 import Notification from '../components/Notification';
 import PasswordModal from '../components/PasswordModal';
-import { AccessibilityContext } from '../AccessibilityContext';
+import Otp from '../components/OTPActivationModal';
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -17,7 +18,6 @@ const Profile = () => {
 	const fileInputRef = useRef(null);
 	const navigate = useNavigate(); // Use useNavigate hook for navigation
 
-	// For the fetching data fron back
 	const [profile, setProfile] = useState(null);
 	const [friends, setFriends] = useState([]);
 
@@ -32,14 +32,17 @@ const Profile = () => {
 	const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
 	const [newDisplayName, setNewDisplayName] = useState('');
 	// end
-
+  //this one is not being used
 	const [message, setMessage] = useState('');
 	const [userIdChanged, setUserIdChanged] = useState(false);
 	const [socket, setSocket] = useState(null);
+  //this one is not being used end
+	//
 	// State to track if 2FA status is being saved
 	const [isSaving2FA, setIsSaving2FA] = useState(false);
 	// State for password confirmation modal
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
+	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
 
 	useEffect(() => {
@@ -215,6 +218,18 @@ const Profile = () => {
 		}
 	};
 
+	// Function to handle successful password authentication
+	const handlePasswordSuccess = () => {
+
+			console.log('Password successfully authenticated (handlePasswordSuccess)');
+
+			setPasswordModalOpen(false);
+			setOtpActive(true); 
+			console.log('after closing the passwordmodal.');
+
+			// Optionally, you can call handleToggle2FA here if needed
+			//handleToggle2FA();
+	};
 	// Handler for initiating 2FA toggle
 	// Opens password confirmation modal instead of immediately toggling
 	const handleInitiateToggle2FA = () => {
@@ -229,6 +244,7 @@ const Profile = () => {
 	// Makes a PATCH request to update the otp_active status
 	// Updates local state to reflect the change
 const handleToggle2FA = async (password = null) => {
+	console.log('in active to false.');
 	setIsSaving2FA(true);
 	const userId = localStorage.getItem('user_id');
 	const token = localStorage.getItem('access_token');
@@ -284,8 +300,6 @@ const handleToggle2FA = async (password = null) => {
 						<img 
 							src={profile.avatar} 
 							className='profilepic m-2' 
-							width='200' 
-							height='200' 
 							alt={`${profile.display_name}'s avatar`}
 						/>
 						{/* Hidden file input - Fixed visibility */}
@@ -371,8 +385,10 @@ const handleToggle2FA = async (password = null) => {
 					<PasswordModal
 						isOpen={isPasswordModalOpen}
 						onClose={() => setPasswordModalOpen(false)}
-						onSubmit={handleToggle2FA}
+						onSubmit={handlePasswordSuccess}
+						onPasswordSuccess={handlePasswordSuccess} // Pass the callback
 					/>
+					{isOtpActive && <Otp onSuccess={() => setOtpActive(false)} />}
 				</div>
 				<div className='card basic'>
 					<h2>{t("Stats")}</h2>

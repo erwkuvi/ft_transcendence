@@ -21,6 +21,7 @@ re: down prune
 	docker-compose up
 
 prune:
-	docker system prune -af
+	@./backend/clean_migrations.sh
+	docker-compose down --rmi all --volumes --remove-orphans
 
 .PHONY: up down prod re prune front backend

@@ -14,3 +14,10 @@
 	color: var(--text-color);
 	background-color: var(--card-color);
 }
+
+.profilepic {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%; /* Optional: Makes the image circular */
+}
