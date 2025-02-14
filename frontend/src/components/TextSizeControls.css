@@ -15,20 +15,19 @@
     border: 1px solid var(--text-color);
     width: 65px;
 	height: 36px;
-    appearance: none; /* Remove any default button styling */
-    outline: none; /* Remove default outline */
-    box-shadow: none; /* Remove any box shadow */
+    appearance: none; 
+    outline: none; 
+    box-shadow: none;
     cursor: pointer;
 	text-align: center;
 }
 
-/* Focus state - outline for accessibility */
 .accessibility-btn:focus {
-    outline: none; /* No default outline */
-    box-shadow: none; /* No default box shadow */
+    outline: none; 
+    box-shadow: none; 
 }
 
 .accessibility-btn:focus-visible {
-    outline: 2px solid var(--text-color); /* Custom focus outline */
+    outline: 2px solid var(--text-color);
 }
 

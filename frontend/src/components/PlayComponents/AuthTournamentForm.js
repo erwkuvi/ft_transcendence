@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { GameContext } from "../../context/GameContext";
 import { useTranslation } from "react-i18next";
 import './AuthTournamentForm.css'
@@ -10,6 +10,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [isBeingSubmitted, setIsBeingSubmitted] = useState(false);
     const [error, setError] = useState('');
+	const usernameInputRef = useRef(null);
 
     const currentPlayerNumber = tournamentPlayers.length + 1;
 
@@ -31,11 +32,14 @@ const AuthTournamentForm = ({scaleStyle}) => {
                     username: credentials.username
                 }]);
                 setCredentials({ username: '', password: '' });
+				setError('');
 				if (currentPlayerNumber == 3)
 				{
 					setIsTournamentReady(true);
 				}
-                setError('');
+				if (usernameInputRef.current) {
+                    usernameInputRef.current.focus();
+                }
             } else {
                 setError('Invalid credentials');
             }
@@ -77,6 +81,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
             <p style={scaleStyle}>
                 {t("Username")}
                 <input 
+					ref={usernameInputRef}
                     value={credentials.username}
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}

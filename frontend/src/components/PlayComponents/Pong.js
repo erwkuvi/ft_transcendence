@@ -294,9 +294,6 @@ function Pong({className}) {
 				updatedScores.p1_won_set_count++;
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
 					postMatchResults(personsLoggedInId, updatedScores);
-					// setIsReadyToPlay(null);
-                	// setIsOpponentAuthenticated(false);
-					// setIsSubmitting(false);
 				}
 			}
 		  } else if (player === 2) {
@@ -307,9 +304,6 @@ function Pong({className}) {
 				updatedScores.p2_won_set_count++;
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
 					postMatchResults(opponentsId, updatedScores);
-					// setIsReadyToPlay(null);
-                	// setIsOpponentAuthenticated(false);
-					// setIsSubmitting(false);
 				}
 			}
 		  }

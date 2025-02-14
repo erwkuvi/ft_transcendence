@@ -1,6 +1,5 @@
 //import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-// import { AuthProvider } from './context/AuthContext';
 import { GameProvider } from "./context/GameContext"; 
 import axiosInstance from './services/axiosInstance';
 import { AuthGuard } from './guards/authGuard';

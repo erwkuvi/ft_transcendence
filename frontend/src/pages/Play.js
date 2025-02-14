@@ -23,19 +23,8 @@ const Play = () => {
     const personLoggedIn = localStorage.getItem('user_id');
     console.log("person logged in is: ", personLoggedIn);
 
-	// if (isTournamentReady) {
-    //     return (
-    //         <div className="page-content play">
-    //             <div className="tournament-mode">
-    //                 <div className="title-container">
-    //                     <h1 className="title" style={scaleStyle}>{t("TournamentMode")}</h1>
-    //                     <p className="subtitle" style={scaleStyle}>{t("BattleForChampion")}</p>
-    //                 </div>
-    //                 <TournamentScreen scaleStyle={scaleStyle} />
-    //             </div>
-    //         </div>
-    //     );
-    // }
+	//some check if the tournament is over 
+	// (if not the only thing user can see on /play is the tournamnet screen)
 
     return (
         <div className="page-content play">
