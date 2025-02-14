@@ -3,4 +3,4 @@
 staticfiles/
 frontend/node_modules/
 migrations/
-media/
+backend/media/qrcode/
