@@ -40,10 +40,16 @@ class PlayerProfile(models.Model):
     def __str__(self):
         return self.user.email  # This will display the email in the profile
 
+class Tournament(models.Model):
+    name = models.CharField(max_length=50, blank=True),
+    description = models.CharField(max_length=50, blank=True)
+
 
 class Match(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     mode = models.CharField(max_length=50, default=MATCH_MODE.get("standard"))
+    finished = models.BooleanField(default=False)
+    tournament_id = models.ForeignKey(Tournament, related_name='tournament_match', on_delete=models.CASCADE)
     player1 = models.ForeignKey(
         PlayerProfile, related_name='player1_matches',
         on_delete=models.CASCADE)

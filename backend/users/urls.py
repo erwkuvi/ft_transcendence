@@ -20,3 +20,4 @@ urlpatterns = [
         #path('login/', views.OAuth42LoginView.as_view(), name='42-login'),
         path('logout/', views.LogoutView.as_view(), name='logout'),
     ]
+
