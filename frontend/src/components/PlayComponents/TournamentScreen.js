@@ -43,7 +43,7 @@ const TournamentScreen = ({ scaleStyle }) => {
                         <div className="players">
                             <div className="player">{tournamentPlayers[2]?.username || "Player 3"}</div>
                             <div className="vs">VS</div>
-                            <div className="player">{localStorage.getItem("user_id")}</div>
+                            <div className="player">{localStorage.getItem("user_id") || "Player 4"} "</div>
                         </div>
                         <button className="btn button" style={scaleStyle} disabled>
                             {t("StartMatch")}

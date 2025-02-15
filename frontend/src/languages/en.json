@@ -1,14 +1,17 @@
 {
 	"": "",
 	"miniPong": "miniPong",
+
 	"HeaderHome": "Home",
 	"HeaderPlay": "Play",
 	"HeaderProfile": "Profile",
 	"HeaderAbout": "About",
 	"HeaderLogIn": "Log in",
+
 	"HeaderLogOut": "Log out",
 
 	"HomeText": "Available to play vs CPU, Local Versus and Online",
+
 	"HomeButton": "PLAY NOW",
 
 	"LogInTitle": "Log In",
@@ -18,6 +21,7 @@
 	"LogInText4": "Password",
 	"LogInText5": "Confirm Password",
 	"LogInText6": "Email",
+
 	"LogInButton": "LOG IN WITH 42",
 
 	"AboutTitle": "about",
@@ -37,25 +41,48 @@
 	"AdditionalTextMultiplayer": "You can check your stats on your profile.",
 
 	"PlayTitleTournament": "Tournament",
-	"PlayDescriptionTournament": "Create a tournament with up to X players and battle it out to find the ultimate champion.",
+	"PlayDescriptionTournament": "Create a tournament with total of 4 players and battle it out to find the ultimate champion.",
 	"PlayTournament": "Start a tournament",
 	"AdditionalTextTournament": "Find 3 people and find out who is the best in pong.",
 
-	"Opponents Username": "Opponent's Username:",
-	"Opponents Password": "Opponent's Password:",
+	"StartTheTournament": "Start the tournament",
+	"Password": "Password:",
+	"Player": "Player",
+	"of": "of",
+	"alias name": "Alias name:",
+	"Add a player": "Add a player",
 	"Ready": "Ready",
 	"Submit": "Submit",
 
+	"Cancel": "Cancel",
+	"Yes, Leave": "Yes, Leave",
+
+	"TournamentBracket": "Tournament Bracket",
+	"Match": "Match",
+	"StartMatch": "Start Match",
+	"FinalMatch": "Final Match",
+	"leave the tournament": "leave the tournament",
+
+	"Are you sure you want to leave?" : "Are you sure you want to leave?",
+	"This means you will officially lose the tournament match and you can't come back to this tournament.":
+		"This means you will officially lose the tournament match and you can't come back to this tournament.",
+	"Leave": "Leave",
 	"Back to Mode Selection": "Back to Mode Selection",
 
 	"About 42": "About 42",
+
 	"PROFILE": "PROFILE",
 	"Basic Information": "Basic Information",
 	"Username": "Username: ",
 	"Display Name": "Display Name: ",
+
+	"Saving..." : "Saving...",
+	"Disable 2FA": "Disable 2FA",
+	"Enable 2FA": "Enable 2FA",
+
 	"email": "Email: ",
 	"Stats": "Stats",
-	"Games played:": "Games played:",
+	"Games played": "Games played:",
 	"Wins": "Wins:",
 	"List of friends": "List of friends",
 	"List of users": "List of users",
@@ -63,18 +90,38 @@
 	"Friends list": "Friends list",
 	"Send Message": "Send Message",
 	"message placeholder": "Enter a message",
+
 	"Invite": "Invite",
 	"Accept": "Accept",
 	"Reject": "Reject",
 	"Unfriend": "Unfriend",
 	"Block": "Block",
 	"Unblock": "Unblock",
+
 	"CurrentStatus": "Current status:",
 	"blockedMessage": "You have been blocked",
 	"SelectOption": "Select an option",
+
 	"pending": "pending",
 	"invited": "invited",
     "accepted": "accepted",
 	"unblocked": "unblocked",
-	"unblock": "unblock"
+	"unblock": "unblock",
+
+	"Select language": "Select language",
+	"currently": "currently",
+	"Language changed to": "Language changed to",
+
+	"2FA Activation": "2FA Activation",
+	"You need to set up Mobile Authenticator to activate your account.":
+		"You need to set up Mobile Authenticator to activate your account.",
+	"Install one of the following applications on your mobile:":
+		"Install one of the following applications on your mobile:",
+	"FreeOTP": "FreeOTP",
+	"Google Authenticator": "Google Authenticator",
+	"Microsoft Authenticator": "Microsoft Authenticator",
+	"Open the application and scan the barcode:" : "Open the application and scan the barcode:",
+	"Enter the one-time code provided by the application and click Submit to finish the setup.":
+		"Enter the one-time code provided by the application and click Submit to finish the setup.",
+	"Enter OTP Code:" : "Enter OTP Code:"
 }

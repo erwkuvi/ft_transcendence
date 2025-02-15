@@ -11,6 +11,7 @@ import ListFriends from '../components/ProfileComponents/ListFriends';
 import Notification from '../components/Notification';
 import PasswordModal from '../components/PasswordModal';
 import Otp from '../components/OTPActivationModal';
+import { AuthContext } from '../context/AuthContext';
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -25,6 +26,7 @@ const Profile = () => {
 	const [query, setQuery] = useState('');
 	const [filterUsers, setFilterUsers] = useState([]);
 	const [personLoggedIn, setPersonLoggedIn] = useState(null);
+	const {setUsername} = useContext(AuthContext);
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -70,9 +72,10 @@ const Profile = () => {
 			localStorage.setItem('user_id', profileData.user_id);
 			setUserIdChanged(true);
 			// Set the fetched profile data in the state
-      setProfile(response.data);
+      		setProfile(response.data);
       // Initialize the newDisplayName state with current display name
-      setNewDisplayName(response.data.display_name);
+      		setNewDisplayName(response.data.display_name);
+			setUsername(response.data.username);
 
 			const users = await fetchUsers();
 			const profile = users.find(user => user.username === profileData.username);
@@ -365,7 +368,7 @@ const handleToggle2FA = async (password = null) => {
 							</>
 						)}
 					</p>
-					<p>{t("Email:")} <span>{profile.email}</span></p>
+					<p>{t("email")} <span>{profile.email}</span></p>
 			{/* 2FA Authentication section */}
 			{profile.auth_provider !== "42api" && (
 					<div className="mt-4">
@@ -392,7 +395,7 @@ const handleToggle2FA = async (password = null) => {
 				</div>
 				<div className='card basic'>
 					<h2>{t("Stats")}</h2>
-					<p>{t("Games played:")} <span>{profile.matches_id.join(', ')}</span></p>
+					<p>{t("Games played")} <span>{profile.matches_id.join(', ')}</span></p>
 					<p>{t("Wins")} <span>{profile.wins}</span></p>
 				</div>
 				<div className='card basic'>

@@ -103,8 +103,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        #'rest_framework.permissions.AllowAny',  # This is for development
-        'rest_framework.permissions.IsAuthenticated',  # by default
+        'rest_framework.permissions.AllowAny',  # This is for development
+        # 'rest_framework.permissions.IsAuthenticated',  # by default
     ),
 }
 

@@ -25,7 +25,7 @@ const LanguageDropdown = () => {
 	return (
 		<div className="language-dropdown" style={{ fontSize: `${fontSize}px` }}>
 			<label id="language-label" htmlFor="language-select" className="sr-only">
-				{t("Select language")} (currently {languages.find((l) => l.code === language)?.name})
+				{t("Select language")} ({t("currently")} {languages.find((l) => l.code === language)?.name})
 			</label>
 			<select
         		aria-live="polite"

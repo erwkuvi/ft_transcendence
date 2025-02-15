@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
-from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer
+from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer
 from .models import User, PlayerProfile, Match
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
@@ -57,7 +57,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny] # for development
     parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
     def list(self, request, *args, **kwargs):
@@ -88,8 +89,8 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
 class MatchViewSet(viewsets.ModelViewSet):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
-    permission_classes = [AllowAny]
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny] # for development
+    #permission_classes = [IsAuthenticated]
 
 #    def get_queryset(self):
 #        if self.request.user.is_staff:
@@ -289,58 +290,10 @@ class OAuth42CallbackView(views.APIView):
         )
         return redirect(frontend_url)
 
-##Generate JWT token
-#        refresh = RefreshToken.for_user(user)
-#        try:
-#            response = Response({
-#                'refresh': str(refresh),
-#                'access': str(refresh.access_token),
-#                'status': 'success',
-#                'username': user.username,
-#                'email': user.email,
-#                'auth_provider': user.auth_provider,
-#                'displayname': player_profile.display_name,
-#                #'avatar': player_profile.avatar,  # Added avatar property
-#            })
-#
-#            return response
-#        except UnicodeDecodeError as e:
-#            # Handle the decoding error
-#            return Response({
-#                'error': 'Unicode decoding error',
-#                'message': str(e)
-#            }, status=400)
 
 # ---------------End of OAuth 42 API------------------------------------------------------------------------------------
 
 # ---------------OTPLOGIN ---------------------------------------------------------------------------------------------
-
-#class OTPLoginView(generics.GenericAPIView):
-#    serializer_class = OTPLoginSerializer
-#
-#    def post(self, request, *args, **kwargs):
-#        serializer = self.get_serializer(data=request.data)
-#        serializer.is_valid(raise_exception=True)
-#
-#        email = serializer.validated_data.get('email')
-#        otp = serializer.validated_data.get('otp')
-#
-#        try:
-#            user = User.objects.get(email=email)
-#        except User.DoesNotExist:
-#            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-#
-#        # Verify the OTP
-#        totp = pyotp.TOTP(user.otp_base32)
-#        if not totp.verify(otp):
-#            return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
-#
-#        # Generate JWT tokens
-#        refresh = RefreshToken.for_user(user)
-#        return Response({
-#            'refresh': str(refresh),
-#            'access': str(refresh.access_token),
-#            }, status=status.HTTP_200_OK)
 
 class OTPActivateViewSet(viewsets.GenericViewSet):
     serializer_class = OTPActivateSerializer
@@ -408,3 +361,44 @@ class LogoutView(generics.GenericAPIView):
                 {"error": str(e)}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+# ---------------------- Tournament Endpoints ----------------
+class TournamentViewSet(viewsets.GenericViewSet):
+    serializer_class = TournamentSerializer
+    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        matches = serializer.save()
+
+        response_data = {
+            'match1': {
+                'id': matches[0].id,
+                'player1': matches[0].player1_id,
+                'player2': matches[0].player2_id,
+            },
+            'match2': {
+                'id': matches[1].id,
+                'player1': matches[1].player1_id,
+                'player2': matches[1].player2_id,
+            }
+        }
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+
+class ExitTournamentViewSet(viewsets.GenericViewSet):
+    serializer_class = ExitTournamentSerializer
+    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = serializer.save()
+
+        return Response(result, status=status.HTTP_200_OK)

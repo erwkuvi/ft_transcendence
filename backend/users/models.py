@@ -3,6 +3,7 @@ from django.db import models
 from .validators import validate_file_size
 
 AUTH_PROVIDERS ={'email': 'email', '42api': '42api'}
+MATCH_MODE ={'standard': 'standard', 'tournament': 'tournament'}
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
@@ -28,7 +29,8 @@ class PlayerProfile(models.Model):
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     friends = models.ManyToManyField("self", blank=True)
-    online_status = models.BooleanField(default=False)
+    in_tournament = models.BooleanField(default=False)
+    #online_status = models.BooleanField(default=False)
     matches = models.ManyToManyField(
         'Match', through='PlayerMatch', related_name='stats', blank=True)
 
@@ -38,9 +40,16 @@ class PlayerProfile(models.Model):
     def __str__(self):
         return self.user.email  # This will display the email in the profile
 
+class Tournament(models.Model):
+    name = models.CharField(max_length=50, blank=True),
+    description = models.CharField(max_length=50, blank=True)
+
 
 class Match(models.Model):
     date = models.DateTimeField(auto_now_add=True)
+    mode = models.CharField(max_length=50, default=MATCH_MODE.get("standard"))
+    finished = models.BooleanField(default=False)
+    tournament_id = models.ForeignKey(Tournament, related_name='tournament_match', on_delete=models.CASCADE)
     player1 = models.ForeignKey(
         PlayerProfile, related_name='player1_matches',
         on_delete=models.CASCADE)
@@ -48,9 +57,9 @@ class Match(models.Model):
         PlayerProfile, related_name='player2_matches',
         on_delete=models.CASCADE)
     winner = models.ForeignKey(
-        PlayerProfile, related_name='won_matches', on_delete=models.CASCADE)
-    score_player1 = models.IntegerField()
-    score_player2 = models.IntegerField()
+        PlayerProfile, related_name='won_matches', on_delete=models.CASCADE, null=True, blank=True) 
+    score_player1 = models.IntegerField(default=0)
+    score_player2 = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.player1.display_name} vs {self.player2.display_name}\

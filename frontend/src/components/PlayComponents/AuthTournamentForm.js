@@ -7,7 +7,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
     const { t } = useTranslation();
     const { tournamentPlayers, setTournamentPlayers } = useContext(GameContext);
 	const { setIsTournamentReady } = useContext(GameContext);
-    const [credentials, setCredentials] = useState({ username: '', password: '' });
+    const [credentials, setCredentials] = useState({ username: '', alias_name: '', password: '' });
     const [isBeingSubmitted, setIsBeingSubmitted] = useState(false);
     const [error, setError] = useState('');
 	const usernameInputRef = useRef(null);
@@ -29,6 +29,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
             if (response.ok && typeof data.user_id === 'number') {
                 setTournamentPlayers([...tournamentPlayers, {
                     id: data.user_id,
+					alias_name: '',
                     username: credentials.username
                 }]);
                 setCredentials({ username: '', password: '' });
@@ -67,7 +68,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
     return (
         <form onSubmit={handleAuthentication} className="auth-form" style={scaleStyle}>
             <h4 style={scaleStyle}>
-                {t("player")} {currentPlayerNumber} {t("of")} 3
+                {t("Player")} {currentPlayerNumber} {t("of")} 3
             </h4>
             {tournamentPlayers.length > 0 && (
                 <div className="authenticated-players" style={scaleStyle}>
@@ -85,6 +86,15 @@ const AuthTournamentForm = ({scaleStyle}) => {
                     value={credentials.username}
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                    required
+                />
+            </p>
+			<p style={scaleStyle}>
+                {t("alias name")}
+                <input 
+                    value={credentials.alias_name}
+                    style={scaleStyle}
+                    onChange={(e) => setCredentials({ ...credentials, alias_name: e.target.value })}
                     required
                 />
             </p>
