@@ -47,24 +47,24 @@ const Otp = ({ onSuccess }) => { // Accept onSuccess prop
 			<div className="otp-modal">
         <h2 className="text-xl font-bold mb-4">{t("2FA Activation")}</h2>
 				<div className="mt-4">
-					<p>You need to set up Mobile Authenticator to activate your account.</p>
+					<p>{t("You need to set up Mobile Authenticator to activate your account.")}</p>
 					<ol>
-						<li>Install one of the following applications on your mobile:
+						<li>{t("Install one of the following applications on your mobile:")}
 							<ul>
-								<li>FreeOTP</li>
-								<li>Google Authenticator</li>
-								<li>Microsoft Authenticator</li>
+								<li>{t("FreeOTP")}</li>
+								<li>{t("Google Authenticator")}</li>
+								<li>{t("Microsoft Authenticator")}</li>
 							</ul>
 						</li>
-						<li>Open the application and scan the barcode:
+						<li>{t("Open the application and scan the barcode:")}
 						</li>
 						<img className="otp-image" src={qrCodeImageUrl} alt="QR Code"/>
-						<li>Enter the one-time code provided by the application and click Submit to finish the setup.
+						<li>{t("Enter the one-time code provided by the application and click Submit to finish the setup.")}
 						</li>
 					</ol>
 					<form onSubmit={handleCodeSubmition}>
 						<div className="form-group">
-							<label htmlFor="otpCode">Enter OTP Code:</label>
+							<label htmlFor="otpCode">{t("Enter OTP Code:")}</label>
 							<input
 								type="text"
 								id="otpCode"
@@ -74,7 +74,7 @@ const Otp = ({ onSuccess }) => { // Accept onSuccess prop
 								required
 							/>
 						</div>
-						<button type="submit" className="otp-input">Submit</button>
+						<button type="submit" className="otp-input">{t("Submit")}</button>
 					</form>
 				</div>
 			</div>

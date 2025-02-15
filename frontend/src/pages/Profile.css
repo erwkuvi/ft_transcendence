@@ -19,5 +19,44 @@
     width: 200px;
     height: 200px;
     object-fit: cover;
-    border-radius: 50%; /* Optional: Makes the image circular */
+    border-radius: 50%; 
+}
+
+.edit-avatar-button{
+	background-color: var(--button-color);
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10px 20px;
+	margin-top: 10px;
+}
+
+.edit-display-name-button{
+	background-color: var(--button-color);
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10px 20px;
+	margin-top: 10px;
+}
+
+.write-symbol{
+	display: flex;
+	transform: scaleX(-1);
+	font-size: 30px;
+}
+
+.edit-pic{
+	font-size: 50px;
+}
+
+.serach-users {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
 }
