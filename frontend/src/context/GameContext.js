@@ -4,17 +4,29 @@ export const GameContext = createContext();
 
 export const GameProvider = ({ children }) => {
 	// const { personLoggedIn } = useContext(AuthContext);
+	const [isSubmitting, setIsSubmitting] = useState(false);
     const [isReadyToPlay, setIsReadyToPlay] = useState(null);
     const [isOpponentAuthenticated, setIsOpponentAuthenticated] = useState(false);
+	const [ isTournamentReady, setIsTournamentReady ] = useState(false);
+	const [ startTheTournament, setStartTheTournament ] = useState(false);
 	const [opponentsId, setOpponentsId] = useState('');
+	const [tournamentPlayers, setTournamentPlayers] = useState([]);
 
     return (
-        <GameContext.Provider value={{	isReadyToPlay, 
+        <GameContext.Provider value={{	isSubmitting,
+										setIsSubmitting,
+										isReadyToPlay, 
 										setIsReadyToPlay, 
 										isOpponentAuthenticated, 
 										setIsOpponentAuthenticated,
 										opponentsId,
-										setOpponentsId }}>
+										setOpponentsId,
+										tournamentPlayers,
+										setTournamentPlayers,
+										isTournamentReady,
+										setIsTournamentReady,
+										startTheTournament,
+										setStartTheTournament }}>
             {children}
         </GameContext.Provider>
     );

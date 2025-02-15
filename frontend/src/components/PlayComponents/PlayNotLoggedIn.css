@@ -1,0 +1,35 @@
+.title-container {
+    width: 100%;
+    text-align: center;
+}
+
+.play-not-logged-in {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 40px;
+    width: auto;
+    max-width: 90000px;
+    margin: 0 auto;
+    padding: 2px;
+	transition: all 0.2s ease-in-out;
+}
+
+.play-not-logged-in .play-content {
+    flex: 1;
+    max-width: 50%;
+}
+
+.play-not-logged-in .extra-text {
+    flex: 1;
+    max-width: 40%;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.button {
+    padding: 10px;
+    font-size: inherit;
+}
+

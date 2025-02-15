@@ -314,11 +314,13 @@ const handleToggle2FA = async (password = null) => {
 						{/* Edit avatar button */}
 						<button
 							onClick={handleEditAvatar}
-							className="absolute bottom-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100"
+							className="edit-avatar-button"
 							title="Edit avatar"
+							aria-label="Edit avatar"
 						>
-							<span className="text-gray-600">📷</span>
+							<span className="edit-pic">📷</span>
 						</button>
+
 					</div>
 					<p > {t("Username")} <span>{profile.username}</span></p>
 					{/* Display name section with edit functionality */}
@@ -357,10 +359,10 @@ const handleToggle2FA = async (password = null) => {
 								{/* Edit button with pencil symbol */}
 								<button
 									onClick={handleEditDisplayName}
-									className="p-1 hover:bg-gray-100 rounded"
+									className="edit-display-name-button"
 									title="Edit display name"
 								>
-									<span className="text-gray-600">✎</span>
+									<span className="write-symbol">✎</span>
 								</button>
 							</>
 						)}
@@ -398,15 +400,14 @@ const handleToggle2FA = async (password = null) => {
 				<div className='card basic'>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
-					<h2>{t("Search for users")}</h2>
-					<Filter type="text" value={query} onChange={handleSearch}/>
+					<Filter className="serach-users" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
 					<ListUsers	filterUsers={filterUsers}
 								setAllUsers={setAllUsers}
 								setFilterUsers={setFilterUsers}
 								setFriends={setFriends}
 								personLoggedIn={personLoggedIn}/>
 				</div>
-				{false && <Notification userIdChanged={userIdChanged} />}
+				{/* {false && <Notification userIdChanged={userIdChanged} />}
 				<div className='card basic notifications'>
 					<h2>{t("Friends list")}</h2>
 					<input type="text"
@@ -416,7 +417,7 @@ const handleToggle2FA = async (password = null) => {
 						onChange={(e) => setMessage(e.target.value)}
 					/>
 					<button id="sendButton" onClick={sendMessage} style={{ marginTop: '10px' }}>{t("Send Message")}</button>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

@@ -198,8 +198,8 @@ const LogIn = () => {
 								</p>
 								)
 						}
-						<div className="login-buttons">
-							<button type="submit" className="button login-button m-3 px-3 py-1" onClick={() => console.log('Submit button clicked')}>
+						<div>
+							<button type="submit" className="btn button login-button py-2 px-5" onClick={() => console.log('Submit button clicked')}>
 								{isSignUp ? t("LogInText2") : t("LogInText")}
 							</button>
 							<LogInButton/>

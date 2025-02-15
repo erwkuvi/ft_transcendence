@@ -1,9 +1,12 @@
 import React, {useContext} from 'react';
+import { useTranslation } from "react-i18next";
 import { GameContext } from "../../context/GameContext";
 
 const BackButton = ({ scaleStyle }) => {
-	const { isOpponentAuthenticated, setIsOpponentAuthenticated } = useContext(GameContext); 
-	const { isReadyToPlay, setIsReadyToPlay } = useContext(GameContext); 
+	const {t} = useTranslation();
+	const { setIsSubmitting } = useContext(GameContext);
+	const { setIsOpponentAuthenticated } = useContext(GameContext); 
+	const { setIsReadyToPlay } = useContext(GameContext); 
 
     return (
         <button
@@ -15,7 +18,7 @@ const BackButton = ({ scaleStyle }) => {
 				setIsSubmitting(false);
             }}
         >
-            Back to Mode Selection
+            {t("Back to Mode Selection")}
         </button>
     );
 };

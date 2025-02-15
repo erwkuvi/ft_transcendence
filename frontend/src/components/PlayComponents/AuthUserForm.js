@@ -1,15 +1,18 @@
 import React, { useState, useContext } from 'react';
 import { GameContext } from "../../context/GameContext";
+import { useTranslation } from "react-i18next";
 
-const AuthUserForm = () => {
+const AuthUserForm = ({scaleStyle}) => {
+	const { t } = useTranslation();
 	const { isOpponentAuthenticated, setIsOpponentAuthenticated } = useContext(GameContext); 
     const [credentials, setCredentials] = useState({ username: '', password: '' });
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isBeeingSubmitted, setIsBeeingSubmitted] = useState(false);
     const [error, setError] = useState('');
-	const {opponentsId, setOpponentsId} = useContext(GameContext);
+	const { setOpponentsId } = useContext(GameContext);
+
     const handleAuthentication = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true);
+        setIsBeeingSubmitted(true);
 
         try {
             const response = await fetch('http://localhost:8000/user_management/simple-auth/', {
@@ -33,32 +36,38 @@ const AuthUserForm = () => {
             setIsOpponentAuthenticated(false);
         }
 
-        setIsSubmitting(false);
+        setIsBeeingSubmitted(false);
     };
 
     return (
-        <form onSubmit={handleAuthentication} className="auth-form">
-            <p>
-                Opponent's Username:
+        <form onSubmit={handleAuthentication} className="auth-form" style={scaleStyle}>
+			<h4 style={scaleStyle}>
+                {t("Add a player")}
+            </h4>
+            <p style={scaleStyle}>
+				{t("Opponents Username")}
                 <input 	value={credentials.username} 
+						style={scaleStyle}
 						onChange={(e) => setCredentials({ ...credentials, username: e.target.value })} 
 						required 
 				/>
             </p>
-            <p>
-                Opponent's Password:
+            <p style={scaleStyle}>
+                {t("Opponents Password")}
                 <input	type="password" 
 						value={credentials.password} 
+						style={scaleStyle}
 						onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} 
 						required 
 				/>
                 <button type="submit" 
-						className="btn button" 
-						disabled={isOpponentAuthenticated || isSubmitting}>
-                    {isOpponentAuthenticated ? "Ready" : "Submit"}
+						className="btn button"
+						style={scaleStyle}
+						disabled={isOpponentAuthenticated || isBeeingSubmitted}>
+                    {isOpponentAuthenticated ?  t("Ready")  : t("Submit")}
                 </button>
             </p>
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500" style={scaleStyle}>{error}</p>}
         </form>
     );
 };
