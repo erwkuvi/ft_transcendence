@@ -16,13 +16,9 @@
 .modal-overlay {
     position: fixed;
     background-color: var(--background);	
-	width: 1262.59px;
-    transform: translate(649.332px, 149.333px);
-    height: 696px;
-	top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+	position: fixed;
+    width: 70%;
+	height: 70%;
     justify-content: center;
     align-items: center;
     z-index: 999;
@@ -34,9 +30,7 @@
 }
 
 .modal {
-	top: 0;
-	left: 0;
-	display: flex;
+	all: unset;
 	display: block;
 	overflow: visible;
 	display: inline-block;

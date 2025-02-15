@@ -1,16 +1,9 @@
-.cards {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	margin-top: 20px;
-}
-
 .card {
 	font-size: large;
-	width: 400px;
-	height: 600px;
+	width: 600px;
+	height: 800px;
 	margin: 10px;
-	padding: 35px;
+	padding: 5px;
 	color: var(--text-color);
 	background-color: var(--card-color);
 }
@@ -50,6 +43,29 @@
 
 .edit-pic{
 	font-size: 50px;
+}
+
+.buttons-check-x{
+	display: flex;
+	justify-content: center;
+}
+
+.yes-no-button{
+
+	background-color: var(--button-color-1);
+	width: 200px;
+	padding: 10px;
+	margin-top: 5px;
+	/* btn hover:bg-red-100 border rounded */
+}
+
+.change-display-name-input{
+	width: 100%;
+    padding: 9px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
 }
 
 .serach-users {
