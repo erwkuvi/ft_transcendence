@@ -16,9 +16,9 @@
 .modal-overlay {
     position: fixed;
     background-color: var(--background);	
-	width: 1156.65px;
+	width: 1262.59px;
+    transform: translate(649.332px, 149.333px);
     height: 696px;
-    transform: translate(291.333px, 149.333px);
 	top: 0;
     left: 0;
     right: 0;
@@ -34,6 +34,8 @@
 }
 
 .modal {
+	top: 0;
+	left: 0;
 	display: flex;
 	display: block;
 	overflow: visible;
@@ -99,14 +101,14 @@
 
 /* Confirm Button (Light Theme) */
 [data-bs-theme="light"] .confirm {
-    background-color: var(--color-1); 
-    color: var(--color-5); 
+    background-color: var(--color-1);  
+    color: var(--color-5);  
 }
 
 /* Confirm Button (Dark Theme) */
 [data-bs-theme="dark"] .confirm {
-    background-color: var(--color-5); 
-    color: var(--color-1); 
+    background-color: var(--color-5);  
+    color: var(--color-1);  
 }
 
 .message{
