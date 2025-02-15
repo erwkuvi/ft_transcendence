@@ -8,7 +8,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
 	const { t } = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext);
 
-	const scaleStyle = {
+	const scalestyle = {
         fontSize: `${fontSize}px`,
         lineHeight: '1.5'
     };
@@ -57,26 +57,26 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        
-            <div className="tfa-box-overlay" scaleStyle={scaleStyle}>
-                <h2 className="tfa-title" scaleStyle={scaleStyle}>{t("Confirm Password")}</h2>
-                <p className="tfa-message" scaleStyle={scaleStyle}>
+        <div className="tfa-box" style={scalestyle}>
+            <div className="tfa-box-overlay" style={scalestyle}>
+                <h2 className="tfa-title" style={scalestyle}>{t("Confirm Password")}</h2>
+                <p className="tfa-message" style={scalestyle}>
                     {t("Please enter your password to confirm this action")}
                 </p>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="password"
                         value={password}
-						scaleStyle={scaleStyle}
+						style={scalestyle}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
                         className="tfa-input-password"
                         required
                     />
-                    <div className="tfa-buttons" scaleStyle={scaleStyle}>
+                    <div className="tfa-buttons" style={scalestyle}>
                         <button
                             type="button"
-							scaleStyle={scaleStyle}
+							style={scalestyle}
                             onClick={onClose}
                             className="tfa-button"
                         >
@@ -84,7 +84,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
                         </button>
                         <button
                             type="submit"
-							scaleStyle={scaleStyle}
+							style={scalestyle}
                             className="tfa-button"
                         >
                             {t("Confirm")}
@@ -92,6 +92,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
                     </div>
                 </form>
             </div>
+		</div>
     );
 };
 
