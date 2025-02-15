@@ -16,8 +16,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
-from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer
-from .models import User, PlayerProfile, Match
+from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, GameAliasSerializer
+from .models import User, PlayerProfile, Match, Tournament
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
 
@@ -368,27 +368,30 @@ class TournamentViewSet(viewsets.GenericViewSet):
     serializer_class = TournamentSerializer
     permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        return Tournament.objects.all()
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         matches = serializer.save()
 
-        response_data = {
-            'match1': {
-                'id': matches[0].id,
-                'player1': matches[0].player1_id,
-                'player2': matches[0].player2_id,
-            },
-            'match2': {
-                'id': matches[1].id,
-                'player1': matches[1].player1_id,
-                'player2': matches[1].player2_id,
+        response_data = []
+        
+        for match in matches:
+            match_data = {
+                'match_id': match.id,
+                'player1': match.player1_id,
+                'player2': match.player2_id,
+                'idx': match.idx,
+                'level': match.level,
+                'tournament_id': match.tournament_id,
+                'mode': match.mode
             }
-        }
-
+            response_data.append(match_data)
+        
         return Response(response_data, status=status.HTTP_201_CREATED)
-
 
 
 class ExitTournamentViewSet(viewsets.GenericViewSet):
@@ -401,4 +404,52 @@ class ExitTournamentViewSet(viewsets.GenericViewSet):
 
         result = serializer.save()
 
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class MatchTournamentViewSet(viewsets.ModelViewSet):
+    queryset = Match.objects.filter(mode='tournament')
+    serializer_class = MatchTournamentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class GameAliasViewSet(viewsets.GenericViewSet):
+    serializer_class = GameAliasSerializer
+
+    @action(detail=False, methods=['post'], url_path='update-alias')
+    def update_alias(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = serializer.save()
         return Response(result, status=status.HTTP_200_OK)

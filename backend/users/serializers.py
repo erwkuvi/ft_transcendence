@@ -1,4 +1,5 @@
 # serializers.py
+import math
 import random
 import datetime
 import pyotp
@@ -11,7 +12,7 @@ from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
-from .models import User, PlayerProfile, Match, PlayerMatch
+from .models import User, PlayerProfile, Match, PlayerMatch, Tournament
 from .signals import match_created
 
 
@@ -95,7 +96,7 @@ class UserSerializer(BaseUserSerializer):
 
 # Serializer for Player
 class PlayerProfileSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(read_only=True)
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
     username = serializers.CharField(read_only=True)
     profile_id = serializers.IntegerField(read_only=True, source='id')
     wins = serializers.IntegerField(read_only=True)
@@ -113,7 +114,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'game_alias'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
@@ -347,46 +348,139 @@ class OTPLoginSerializer(serializers.Serializer):
 
 ## Tournament creation
 
+#class TournamentSerializer(serializers.Serializer):
+#    player_ids = serializers.ListField(
+#        child=serializers.IntegerField(),
+#        min_length=4,
+#        max_length=4
+#    )
+#
+#    def validate_player_ids(self, value):
+#        if len(set(value)) != 4:
+#            raise serializers.ValidationError("Four unique player IDs are required.")
+#    
+#        players = PlayerProfile.objects.filter(user_id__in=value)
+#        if players.count() != 4:
+#            raise serializers.ValidationError("Some player IDs do not exist.")
+#    
+#        for player in players:
+#            if player.in_tournament:
+#                raise serializers.ValidationError(f"Player {player.user.username} is already in a tournament.")
+#
+#        return value
+#
+#    def create(self, validated_data):
+#        player_ids = validated_data['player_ids']
+#        random.shuffle(player_ids)
+#
+#        match1 = Match.objects.create(
+#            player1_id=player_ids[0],
+#            player2_id=player_ids[1],
+#            mode='tournament'
+#        )
+#        match2 = Match.objects.create(
+#            player1_id=player_ids[2],
+#            player2_id=player_ids[3],
+#            mode='tournament'
+#        )
+#
+#        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=True)
+#
+#        return [match1, match2]
+
+class GameAliasSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    new_game_alias = serializers.CharField(max_length=50)
+
+    def validate(self, attrs):
+        user_id = attrs.get('user_id')
+        new_game_alias = attrs.get('new_game_alias')
+
+        try:
+            player = PlayerProfile.objects.get(user_id=user_id)
+        except PlayerProfile.DoesNotExist:
+            raise serializers.ValidationError("Player profile not found.")
+
+        if PlayerProfile.objects.filter(game_alias=new_game_alias).exclude(user_id=user_id).exists():
+            raise serializers.ValidationError("This game alias is already taken.")
+
+        return attrs
+
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        new_game_alias = validated_data.get('new_game_alias')
+
+        player = PlayerProfile.objects.get(user_id=user_id)
+        player.game_alias = new_game_alias
+        player.save()
+
+        return {"user_id": user_id, "new_game_alias": player.game_alias}
+
 class TournamentSerializer(serializers.Serializer):
     player_ids = serializers.ListField(
         child=serializers.IntegerField(),
-        min_length=4,
-        max_length=4
+        min_length=2,
+        max_length=4,
     )
+    name = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    description = serializers.CharField(max_length=50, required=False, allow_blank=True)
 
     def validate_player_ids(self, value):
-        if len(set(value)) != 4:
-            raise serializers.ValidationError("Four unique player IDs are required.")
+        if len(value) < 2 or len(value) > 32 or (len(value) & (len(value) - 1)) != 0:
+            raise serializers.ValidationError("Number of players are not enough for holding a tournament.")
+    
+        if len(value) != len(set(value)):
+            raise serializers.ValidationError("Duplicate player IDs are not allowed.")
     
         players = PlayerProfile.objects.filter(user_id__in=value)
-        if players.count() != 4:
+        if players.count() != len(value):
             raise serializers.ValidationError("Some player IDs do not exist.")
     
-        # Check if any player is already in a tournament
         for player in players:
             if player.in_tournament:
                 raise serializers.ValidationError(f"Player {player.user.username} is already in a tournament.")
-
+    
         return value
+
+    def get_exponential_growth_step(self, num_players):
+        if num_players <= 0 or (num_players & (num_players - 1)) != 0:
+            raise ValueError("Number of players must be a power of 2.")
+    
+        return int(math.log2(num_players))
 
     def create(self, validated_data):
         player_ids = validated_data['player_ids']
         random.shuffle(player_ids)
-
-        match1 = Match.objects.create(
-            player1_id=player_ids[0],
-            player2_id=player_ids[1],
-            mode='tournament'
+        num_players = len(player_ids)
+        idx_matches = num_players // 2
+        exponential_growth = self.get_exponential_growth_step(num_players)
+    
+        tournament = Tournament.objects.create(
+            name=validated_data.get('name', ''),
+            description=validated_data.get('description', '')
         )
-        match2 = Match.objects.create(
-            player1_id=player_ids[2],
-            player2_id=player_ids[3],
-            mode='tournament'
-        )
-
-        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=True)
-
-        return [match1, match2]
+    
+        player_profiles = PlayerProfile.objects.filter(user_id__in=player_ids)
+        player_aliases = {profile.user_id: profile.game_alias for profile in player_profiles}
+    
+        matches = []
+        for i in range(0, len(player_ids), 2):
+            match = Match.objects.create(
+                player1_id=player_ids[i],
+                player2_id=player_ids[i+1],
+                player1_alias=player_aliases[player_ids[i]],
+                player2_alias=player_aliases[player_ids[i+1]],
+                mode='tournament',
+                idx=idx_matches,
+                level=exponential_growth,
+                tournament=tournament
+            )
+            matches.append(match)
+            idx_matches -= 1
+    
+        #PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=True)
+    
+        return matches
 
 
 class ExitTournamentSerializer(serializers.Serializer):
@@ -414,3 +508,18 @@ class ExitTournamentSerializer(serializers.Serializer):
 
         return {"user_id": user_id, "in_tournament": player.in_tournament}
 
+
+class MatchTournamentSerializer(serializers.ModelSerializer):
+    stats = PlayerMatchSerializer(source='playermatch_set', many=True, read_only=True)
+
+    class Meta:
+        model = Match
+        fields = ['id', 'date', 'mode', 'idx', 'level', 'player1', 'player2',
+                  'winner', 'score_player1', 'score_player2', 'stats']
+
+    def create(self, validated_data):
+        validated_data['mode'] = 'tournament'
+        instance = super().create(validated_data)
+        match_created.send_robust(self.__class__, match=instance)
+        print('after signal in serializer')
+        return instance

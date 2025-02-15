@@ -4,14 +4,17 @@ from users.models import User, PlayerProfile, Match, PlayerMatch
 from django.dispatch import receiver
 from users.signals import match_created, friendship_created, friendship_destroyed
 
-
 @receiver(post_save, sender=User)
 def create_profile_for_new_user(sender, **kwargs):
     if kwargs['created']:
         user = kwargs['instance']
         if user.auth_provider != '42api':
             display_name = str(user.username) + str('_') + str(user.id)
-            PlayerProfile.objects.create(user=user, display_name=display_name)
+            PlayerProfile.objects.create(user=user, display_name=display_name, game_alias=user.username)
+        else:
+            game_alias = user.username + str('_') + str(user.id)
+            PlayerProfile.objects.create(user=user, display_name=user.username, game_alias=game_alias)
+
 
 
 @receiver(match_created)
