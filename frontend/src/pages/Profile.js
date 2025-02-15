@@ -292,8 +292,8 @@ const handleToggle2FA = async (password = null) => {
 	return (
 		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
 			<h1>{t("PROFILE")}</h1>
-			<div className='container-fluid cards mt-4'>
-				<div className='card basic'>
+			<div className='container-fluid cards mt-4' style={{ fontSize: `${fontSize}px` }}>
+				<div className='card basic user-info ' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
 					{/* Avatar section with edit functionality */}
 					<div className="relative inline-block">
@@ -378,7 +378,7 @@ const handleToggle2FA = async (password = null) => {
 							<button
 									onClick={handleInitiateToggle2FA}
 									disabled={isSaving2FA}
-									className="btn button"
+									className="tfabutton btn button"
 							>
 									{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
 							</button>
@@ -394,12 +394,12 @@ const handleToggle2FA = async (password = null) => {
 					/>
 					{isOtpActive && <Otp onSuccess={() => setOtpActive(false)} />}
 				</div>
-				<div className='card basic'>
+				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Stats")}</h2>
 					<p>{t("Games played:")} <span>{profile.matches_id.join(', ')}</span></p>
 					<p>{t("Wins")} <span>{profile.wins}</span></p>
 				</div>
-				<div className='card basic'>
+				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
 					<Filter className="serach-users" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
