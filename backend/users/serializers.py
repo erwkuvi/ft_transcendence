@@ -452,7 +452,7 @@ class TournamentSerializer(serializers.Serializer):
         player_ids = validated_data['player_ids']
         random.shuffle(player_ids)
         num_players = len(player_ids)
-        idx_matches = num_players // 2
+        idx_matches = num_players // 2 - 1
         exponential_growth = self.get_exponential_growth_step(num_players)
     
         tournament = Tournament.objects.create(
@@ -523,3 +523,28 @@ class MatchTournamentSerializer(serializers.ModelSerializer):
         match_created.send_robust(self.__class__, match=instance)
         print('after signal in serializer')
         return instance
+
+#class ScoreRetrieveSerializer(serializers.ModelSerializer):
+    #    parameters to take:
+    #    - match(match_id)
+    #    - match.score_player1(updated)
+    #    - match.score_player2(updated)
+    #    - match.winner(updated)
+
+    #curr_idx=match.idx
+    #curr_tournament=match.tournament
+    #curr_level=match.level
+    #curr_mode=match.mode
+    
+    #if curr.level != 0:
+    #  search if there is an existing match with curr.tournament && (curr_level - 1) && curr_idx
+
+    #- idx
+    #- level
+
+
+#if level:
+    #create a new match with the following properties:
+    #tournament = <same as match from initial parameter>
+    #if idx is odd
+    #level -= 1 
