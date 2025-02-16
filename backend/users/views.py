@@ -381,12 +381,12 @@ class TournamentViewSet(viewsets.GenericViewSet):
         
         for match in matches:
             match_data = {
-                'match_id': match.id,
+                'id': match.id,
                 'player1': match.player1_id,
                 'player2': match.player2_id,
                 'idx': match.idx,
                 'level': match.level,
-                'tournament_id': match.tournament_id,
+                'tournament': match.tournament_id,
                 'mode': match.mode
             }
             response_data.append(match_data)
@@ -410,7 +410,8 @@ class ExitTournamentViewSet(viewsets.GenericViewSet):
 class MatchTournamentViewSet(viewsets.ModelViewSet):
     queryset = Match.objects.filter(mode='tournament')
     serializer_class = MatchTournamentSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -446,7 +447,9 @@ class MatchTournamentViewSet(viewsets.ModelViewSet):
 
 class ScoreRetrieveViewSet(viewsets.GenericViewSet):
     serializer_class = ScoreRetrieveSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

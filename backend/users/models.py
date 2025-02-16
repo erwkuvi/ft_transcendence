@@ -44,7 +44,7 @@ class PlayerProfile(models.Model):
 class Tournament(models.Model):
     champion = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    host = models.ForeignKey(User, related_name='hosted_tournaments', on_delete=models.CASCADE)
+    host = models.ForeignKey(User, related_name='tournament_host', on_delete=models.CASCADE)
 
 
 class Match(models.Model):
@@ -63,14 +63,14 @@ class Match(models.Model):
         on_delete=models.CASCADE)
     player2 = models.ForeignKey(
         PlayerProfile, related_name='player2_matches',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE, null=True, blank=True)
     winner = models.ForeignKey(
         PlayerProfile, related_name='won_matches', on_delete=models.CASCADE, null=True, blank=True) 
     score_player1 = models.IntegerField(default=0)
     score_player2 = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.player1.display_name} vs {self.player2.display_name} on {self.date}'
+        return f'{self.player1.display_name} vs {self.player2.display_name if self.player2 else "TBD"} on {self.date}'
 
 
 class PlayerMatch(models.Model):
