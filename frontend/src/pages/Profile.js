@@ -294,8 +294,8 @@ const handleToggle2FA = async (password = null) => {
 	return (
 		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
 			<h1>{t("PROFILE")}</h1>
-			<div className='container-fluid cards mt-4'>
-				<div className='card basic'>
+			<div className='container-fluid cards mt-4' style={{ fontSize: `${fontSize}px` }}>
+				<div className='card basic user-info ' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
 					{/* Avatar section with edit functionality */}
 					<div className="relative inline-block">
@@ -316,11 +316,13 @@ const handleToggle2FA = async (password = null) => {
 						{/* Edit avatar button */}
 						<button
 							onClick={handleEditAvatar}
-							className="absolute bottom-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100"
+							className="edit-avatar-button"
 							title="Edit avatar"
+							aria-label="Edit avatar"
 						>
-							<span className="text-gray-600">📷</span>
+							<span className="edit-pic">📷</span>
 						</button>
+
 					</div>
 					<p > {t("Username")} <span>{profile.username}</span></p>
 					{/* Display name section with edit functionality */}
@@ -333,24 +335,26 @@ const handleToggle2FA = async (password = null) => {
 									type="text"
 									value={newDisplayName}
 									onChange={(e) => setNewDisplayName(e.target.value)}
-									className="border rounded px-2 py-1"
+									className="change-display-name-input"
 								/>
 								{/* Save button with check symbol */}
-								<button
-									onClick={handleSaveDisplayName}
-									className="p-1 hover:bg-green-100 rounded"
-									title="Save"
-								>
-									<span className="text-green-600">✓</span>
-								</button>
-								{/* Cancel button with X symbol */}
-								<button
-									onClick={handleCancelEdit}
-									className="p-1 hover:bg-red-100 rounded"
-									title="Cancel"
-								>
-									<span className="text-red-600">✕</span>
-								</button>
+								<div className="buttons-check-x">
+									<button
+										onClick={handleSaveDisplayName}
+										className="yes-no-button"
+										title="Save"
+									>
+										<span className="text-green-600">✓</span>
+									</button>
+									{/* Cancel button with X symbol */}
+									<button
+										onClick={handleCancelEdit}
+										className="yes-no-button"
+										title="Cancel"
+									>
+										<span className="text-red-600">✕</span>
+									</button>
+								</div>
 							</>
 						) : (
 							<>
@@ -359,10 +363,10 @@ const handleToggle2FA = async (password = null) => {
 								{/* Edit button with pencil symbol */}
 								<button
 									onClick={handleEditDisplayName}
-									className="p-1 hover:bg-gray-100 rounded"
+									className="edit-display-name-button"
 									title="Edit display name"
 								>
-									<span className="text-gray-600">✎</span>
+									<span className="write-symbol">✎</span>
 								</button>
 							</>
 						)}
@@ -376,7 +380,7 @@ const handleToggle2FA = async (password = null) => {
 							<button
 									onClick={handleInitiateToggle2FA}
 									disabled={isSaving2FA}
-									className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+									className="tfabutton btn button"
 							>
 									{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
 							</button>
@@ -392,33 +396,22 @@ const handleToggle2FA = async (password = null) => {
 					/>
 					{isOtpActive && <Otp onSuccess={() => setOtpActive(false)} />}
 				</div>
-				<div className='card basic'>
+				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Stats")}</h2>
 					<p>{t("Games played")} <span>{profile.matches_id.join(', ')}</span></p>
 					<p>{t("Wins")} <span>{profile.wins}</span></p>
 				</div>
-				<div className='card basic'>
+				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
-					<h2>{t("Search for users")}</h2>
-					<Filter type="text" value={query} onChange={handleSearch}/>
+					<Filter className="serach-users" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
 					<ListUsers	filterUsers={filterUsers}
 								setAllUsers={setAllUsers}
 								setFilterUsers={setFilterUsers}
 								setFriends={setFriends}
 								personLoggedIn={personLoggedIn}/>
 				</div>
-				{false && <Notification userIdChanged={userIdChanged} />}
-				<div className='card basic notifications'>
-					<h2>{t("Friends list")}</h2>
-					<input type="text"
-						id="messageInput"
-						placeholder={t("message placeholder")}
-						value={message}
-						onChange={(e) => setMessage(e.target.value)}
-					/>
-					<button id="sendButton" onClick={sendMessage} style={{ marginTop: '10px' }}>{t("Send Message")}</button>
-				</div>
+
 			</div>
 		</div>
 	);

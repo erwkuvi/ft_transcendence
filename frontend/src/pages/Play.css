@@ -105,6 +105,12 @@
 	outline: 2px solid #fff;
 }
 
+.play-wrapper{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .play-modes-wrapper {
     display: flex;
     gap: 24px;
@@ -113,4 +119,17 @@
 	justify-content: center;
 	align-items: baseline;
     padding: 20px;
+}
+
+.title-container{
+	display: flex;
+	
+	justify-content: center;
+	align-items: center;
+}
+
+.page-content{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }

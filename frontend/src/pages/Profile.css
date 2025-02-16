@@ -1,23 +1,95 @@
-.cards {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	margin-top: 20px;
-}
-
 .card {
 	font-size: large;
-	width: 400px;
-	height: 600px;
-	margin: 10px;
-	padding: 35px;
+	width: 500px !important;
+	min-height: 800px;
+    max-height: 120vh;
+	margin: 40px !important;
+	padding: 5px;
 	color: var(--text-color);
 	background-color: var(--card-color);
+}
+
+.cards{
+	display: flex;
+	justify-content: center;
+}
+
+.user-info {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: stretch;
 }
 
 .profilepic {
     width: 200px;
     height: 200px;
     object-fit: cover;
-    border-radius: 50%; /* Optional: Makes the image circular */
+    border-radius: 50%; 
+}
+
+.edit-avatar-button{
+	background-color: var(--button-color);
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10px 20px;
+	margin-top: 10px;
+}
+
+.edit-display-name-button{
+	background-color: var(--button-color);
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10px 20px;
+	margin-top: 10px;
+}
+
+.write-symbol{
+	display: flex;
+	transform: scaleX(-1);
+	font-size: 30px;
+}
+
+.edit-pic{
+	font-size: 50px;
+}
+
+.buttons-check-x{
+	display: flex;
+	justify-content: center;
+}
+
+.yes-no-button{
+
+	background-color: var(--button-color-1);
+	width: 200px;
+	padding: 10px;
+	margin-top: 5px;
+	/* btn hover:bg-red-100 border rounded */
+}
+
+.change-display-name-input{
+	width: 100%;
+    padding: 9px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.tfabutton{
+	
+	margin-top: auto;
+}
+
+.serach-users {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
 }

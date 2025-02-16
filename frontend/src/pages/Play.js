@@ -36,13 +36,15 @@ const Play = () => {
                 <PlayNotLoggedIn scaleStyle={scaleStyle} />
             ) : (
                 <>
-                    <div className="title-container">
-                        <h1 className="title mt-5">{t("PlayTitle")}</h1>
-                    </div>
-                    <div className="play-modes-wrapper">
-                        <PlayMultiplayerMode scaleStyle={scaleStyle} />
-                        <PlayTournamentSetup scaleStyle={scaleStyle} />
-                    </div>
+					<div className="play-wrapper">
+						<div className="title-container">
+							<h1 className="title mt-5">{t("PlayTitle")}</h1>
+						</div>
+						<div className="play-modes-wrapper">
+							<PlayMultiplayerMode scaleStyle={scaleStyle} />
+							<PlayTournamentSetup scaleStyle={scaleStyle} />
+						</div>
+					</div>
                 </>
             )}
         </div>

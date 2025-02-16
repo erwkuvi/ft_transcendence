@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AccessibilityContext } from '../AccessibilityContext';
+import './PasswordModal.css';
 
 const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
     const [password, setPassword] = useState('');
+	const { t } = useTranslation();
+	const { fontSize } = useContext(AccessibilityContext);
+
+	const scalestyle = {
+        fontSize: `${fontSize}px`,
+        lineHeight: '1.5'
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -47,46 +57,42 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black flex items-center justify-center" style={{ zIndex: 9999 }}>
-            <div className="bg-[#0e0f23] border border-white rounded-lg p-6 w-96 relative" style={{ paddingLeft: '15px', paddingBottom: '10px', zIndex: 10000 }}>
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                    style={{ marginLeft: '-15px' }}
-                >
-                    ✕
-                </button>
-                <h2 className="text-xl font-semibold mb-4">Confirm Password</h2>
-                <p className="text-gray-600 mb-4">
-                    Please enter your password to confirm this action
+        <div className="tfa-box" style={scalestyle}>
+            <div className="tfa-box-overlay" style={scalestyle}>
+                <h2 className="tfa-title" style={scalestyle}>{t("Confirm Password")}</h2>
+                <p className="tfa-message" style={scalestyle}>
+                    {t("Please enter your password to confirm this action")}
                 </p>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="password"
                         value={password}
+						style={scalestyle}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
-                        className="w-full p-2 border rounded mb-4"
+                        className="tfa-input-password"
                         required
                     />
-                    <div className="flex justify-end gap-2">
+                    <div className="tfa-buttons" style={scalestyle}>
                         <button
                             type="button"
+							style={scalestyle}
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                            className="tfa-button"
                         >
-                            Cancel
+                            {t("Cancel")}
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+							style={scalestyle}
+                            className="tfa-button"
                         >
-                            Confirm
+                            {t("Confirm")}
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
+		</div>
     );
 };
 

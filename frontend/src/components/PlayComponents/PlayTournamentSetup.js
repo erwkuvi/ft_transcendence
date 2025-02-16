@@ -59,7 +59,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
     return (
         <>
             <div className="tournament-setup" style={scaleStyle}>
-                    <div className="mode">
+                    <div className="card basic mode">
                         <h3 style={scaleStyle}>{t("PlayTitleTournament")}</h3>
                         <p style={scaleStyle}>{t("PlayDescriptionTournament")}</p>
                         <AuthTournamentForm scaleStyle={scaleStyle}/>
