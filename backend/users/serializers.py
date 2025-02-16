@@ -457,7 +457,7 @@ class TournamentSerializer(serializers.Serializer):
         random.shuffle(player_ids)
         num_players = len(player_ids)
         idx_matches = num_players // 2 - 1
-        exponential_growth = self.get_exponential_growth_step(num_players)
+        exponential_growth = self.get_exponential_growth_step(num_players) - 1
 
         host_id = validated_data.get('host')
         try:
