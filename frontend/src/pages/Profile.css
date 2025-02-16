@@ -9,6 +9,11 @@
 	background-color: var(--card-color);
 }
 
+.cards{
+	display: flex;
+	justify-content: center;
+}
+
 .user-info {
 	display: flex;
 	justify-content: space-evenly;
