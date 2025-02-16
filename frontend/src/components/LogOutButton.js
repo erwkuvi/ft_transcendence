@@ -1,11 +1,9 @@
 import React, {useContext} from 'react';
 import { useTranslation } from "react-i18next";
 import axiosInstance from '../services/axiosInstance';
-import { AuthContext } from '../context/AuthContext';
 
 const LogoutButton = () => {
     const { t } = useTranslation();
-	const { setUsername } = useContext(AuthContext);
 
     const handleLogout = async () => {
         try {
@@ -14,7 +12,6 @@ const LogoutButton = () => {
                 refresh_token: refresh
             });
             localStorage.clear();
-			setUsername(null);
             window.location.href = '/login';
         } catch (error) {
             console.error('Logout failed:', error);

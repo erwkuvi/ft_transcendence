@@ -26,7 +26,6 @@ const Profile = () => {
 	const [query, setQuery] = useState('');
 	const [filterUsers, setFilterUsers] = useState([]);
 	const [personLoggedIn, setPersonLoggedIn] = useState(null);
-	const {setUsername} = useContext(AuthContext);
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -70,12 +69,12 @@ const Profile = () => {
 			console.log('profileData:', profileData);
 			
 			localStorage.setItem('user_id', profileData.user_id);
+			localStorage.setItem('username', profileData.username);
 			setUserIdChanged(true);
 			// Set the fetched profile data in the state
       		setProfile(response.data);
       // Initialize the newDisplayName state with current display name
       		setNewDisplayName(response.data.display_name);
-			setUsername(response.data.username);
 
 			const users = await fetchUsers();
 			const profile = users.find(user => user.username === profileData.username);

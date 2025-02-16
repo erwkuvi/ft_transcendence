@@ -3,7 +3,6 @@ import React, { useRef, useState, useContext} from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
 import { GameContext } from "../../context/GameContext";
-import { AuthContext} from '../../context/AuthContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
@@ -232,7 +231,6 @@ function Field({dimensions, borderColor}) {
 function Pong({className}) {
 	// Declare refs inside the Canvas component
 	const { opponentsId, setOpponentsId, opponentsUsername, setOpponentsUsername } = useContext(GameContext);
-	const { username } = useContext(AuthContext);
 	const { setIsSubmitting } = useContext(GameContext);
 	const { setIsOpponentAuthenticated } = useContext(GameContext); 
 	const { setIsReadyToPlay } = useContext(GameContext); 
@@ -254,6 +252,7 @@ function Pong({className}) {
 	});
 
 	const personsLoggedInId = localStorage.getItem('user_id');
+	const personsLoggedInUsername = localStorage.getItem('username');
 	console.log("personsLoggedInId: ", personsLoggedInId);
 	console.log("opponentsId: ", opponentsId);
 
@@ -303,8 +302,6 @@ function Pong({className}) {
 				updatedScores.p1_won_set_count++;
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
 					postMatchResults(personsLoggedInId, updatedScores);
-					// setOpponentsUsername('');
-					// setOpponentsId('');
 				}
 			}
 		  } else if (player === 2) {
@@ -315,8 +312,6 @@ function Pong({className}) {
 				updatedScores.p2_won_set_count++;
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
 					postMatchResults(opponentsId, updatedScores);
-					// setOpponentsUsername('');
-					// setOpponentsId('');
 				}
 			}
 		  }
@@ -347,7 +342,7 @@ function Pong({className}) {
 		onMouseDown={(e) => e.preventDefault()} 
 		>
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
-        	{/* Player 1*/} {username}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {/*Player 2*/} {opponentsUsername}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count} 
+        	{/* Player 1*/} {personsLoggedInUsername}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {/*Player 2*/} {opponentsUsername}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count} 
       	</div>
 		<Canvas style={{width: '100%', height: '100%'}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
 			<axesHelper args={[15]} />

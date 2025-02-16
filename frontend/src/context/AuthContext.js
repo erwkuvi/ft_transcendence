@@ -4,7 +4,6 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access_token'));
-	const [username, setUsername] = useState(null);
 
     useEffect(() => {
         const handleStorageChange = () => {
@@ -19,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, username, setUsername}}>
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
             {children}
         </AuthContext.Provider>
     );

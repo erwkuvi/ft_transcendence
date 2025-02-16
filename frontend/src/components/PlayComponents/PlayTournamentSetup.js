@@ -8,15 +8,15 @@ import "./PlayTournamentSetup.css";
 const PlayTournamentSetup = ({ scaleStyle }) => {
     const { t } = useTranslation();
 	const { isTournamentReady, setStartTheTournament, tournamentPlayers, setTournamentPlayers  } = useContext(GameContext);
-	const { username } = useContext(AuthContext);
 
 	const userLoggedInId = localStorage.getItem('user_id');
+	const userLoggedInUsername = localStorage.getItem('username');
 	console.log("print the players", tournamentPlayers);
 	console.log(tournamentPlayers.map(player => player.id));
 	
 	const handleClick = async () => {
-		 if (!userLoggedInId || !username) {
-        console.error("User ID or username is missing.");
+		 if (!userLoggedInId) {
+        console.error("User ID is missing.");
         return;
     }
 
@@ -26,7 +26,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
         return;
     }
 
-    const updatedPlayers = [...tournamentPlayers, { id: numericUserId, username }];
+    const updatedPlayers = [...tournamentPlayers, { id: numericUserId, username: userLoggedInUsername }];
 
     console.log("Updated Players:", updatedPlayers);
         setTournamentPlayers(updatedPlayers);
