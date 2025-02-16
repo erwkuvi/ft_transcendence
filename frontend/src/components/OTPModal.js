@@ -19,7 +19,7 @@ const OTPModal = ({ onSubmit, onClose }) => {
 
   return (
     <div className="otp-modal-overlay">
-      <div className="otp-modal">
+      <div className="otp-modal-version-two">
         <h2 className="text-xl font-bold mb-4">{t("Enter OTP Code")}</h2>
         <p className="text-gray-600 mb-4">
           {t("Please enter the one-time password sent to your device.")}

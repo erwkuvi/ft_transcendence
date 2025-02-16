@@ -24,6 +24,7 @@
 
 .home .ball {
 	color: var(--text-color); 
+	padding: 60px;
 	font-size: 0.2em;
 	animation: bounce 1s infinite;
 	animation-timing-function: linear;
