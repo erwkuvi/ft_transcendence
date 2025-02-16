@@ -39,21 +39,13 @@ class SimpleLoginSerializer(serializers.Serializer):
     def create(self, validated_data):
         user_id = validated_data.get('user_id')
         user = User.objects.get(id=user_id)
-
-        otp_serializer = OTPCreateSerializer(data={
-            "email": user.email,
-            "username": user.username
-        })
-        otp_serializer.is_valid(raise_exception=True)
-        otp_data = otp_serializer.save()
-
+    
         player_profile = PlayerProfile.objects.get(user_id=user_id)
         display_name = player_profile.display_name
-
+    
         return {
             "user_id": user_id,
-            "display_name": display_name,
-            **otp_data
+            "display_name": display_name
         }
         
 
