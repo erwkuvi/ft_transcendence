@@ -28,7 +28,7 @@ class PlayerProfile(models.Model):
     )
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    game_alias = models.CharField(max_length=50, null=True, blank=True)
+    #game_alias = models.CharField(max_length=50, null=True, blank=True)
     friends = models.ManyToManyField("self", blank=True)
     in_tournament = models.BooleanField(default=False)
     #online_status = models.BooleanField(default=False)
@@ -42,8 +42,9 @@ class PlayerProfile(models.Model):
     #    return self.user.email  # This will display the email in the profile
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    champion = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    host = models.ForeignKey(User, related_name='hosted_tournaments', on_delete=models.CASCADE)
 
 
 class Match(models.Model):
@@ -60,19 +61,16 @@ class Match(models.Model):
     player1 = models.ForeignKey(
         PlayerProfile, related_name='player1_matches',
         on_delete=models.CASCADE)
-    player1_alias = models.CharField(max_length=50)
     player2 = models.ForeignKey(
         PlayerProfile, related_name='player2_matches',
         on_delete=models.CASCADE)
-    player2_alias = models.CharField(max_length=50)
     winner = models.ForeignKey(
         PlayerProfile, related_name='won_matches', on_delete=models.CASCADE, null=True, blank=True) 
     score_player1 = models.IntegerField(default=0)
     score_player2 = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.player1_alias} vs {self.player2_alias}\
-                on {self.date}'
+        return f'{self.player1.display_name} vs {self.player2.display_name} on {self.date}'
 
 
 class PlayerMatch(models.Model):

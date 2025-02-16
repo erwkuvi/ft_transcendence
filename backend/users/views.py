@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
-from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, GameAliasSerializer
+from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, ScoreRetrieveSerializer
 from .models import User, PlayerProfile, Match, Tournament
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
@@ -444,12 +444,16 @@ class MatchTournamentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class GameAliasViewSet(viewsets.GenericViewSet):
-    serializer_class = GameAliasSerializer
+class ScoreRetrieveViewSet(viewsets.GenericViewSet):
+    serializer_class = ScoreRetrieveSerializer
+    permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['post'], url_path='update-alias')
-    def update_alias(self, request):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         result = serializer.save()
-        return Response(result, status=status.HTTP_200_OK)
+        
+        if isinstance(result, dict) and "message" in result:
+            return Response(result, status=status.HTTP_200_OK)
+        
+        return Response(self.get_serializer(result).data, status=status.HTTP_201_CREATED)

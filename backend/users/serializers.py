@@ -32,7 +32,6 @@ class SimpleLoginSerializer(serializers.Serializer):
         if not user.check_password(password):
             raise exceptions.AuthenticationFailed("Incorrect password.")
 
-        # Add user_id to validated data
         attrs['user_id'] = user.id
 
         return attrs
@@ -48,8 +47,12 @@ class SimpleLoginSerializer(serializers.Serializer):
         otp_serializer.is_valid(raise_exception=True)
         otp_data = otp_serializer.save()
 
+        player_profile = PlayerProfile.objects.get(user_id=user_id)
+        display_name = player_profile.display_name
+
         return {
             "user_id": user_id,
+            "display_name": display_name,
             **otp_data
         }
         
@@ -114,7 +117,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'game_alias'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
@@ -388,33 +391,33 @@ class OTPLoginSerializer(serializers.Serializer):
 #
 #        return [match1, match2]
 
-class GameAliasSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
-    new_game_alias = serializers.CharField(max_length=50)
-
-    def validate(self, attrs):
-        user_id = attrs.get('user_id')
-        new_game_alias = attrs.get('new_game_alias')
-
-        try:
-            player = PlayerProfile.objects.get(user_id=user_id)
-        except PlayerProfile.DoesNotExist:
-            raise serializers.ValidationError("Player profile not found.")
-
-        if PlayerProfile.objects.filter(game_alias=new_game_alias).exclude(user_id=user_id).exists():
-            raise serializers.ValidationError("This game alias is already taken.")
-
-        return attrs
-
-    def create(self, validated_data):
-        user_id = validated_data.get('user_id')
-        new_game_alias = validated_data.get('new_game_alias')
-
-        player = PlayerProfile.objects.get(user_id=user_id)
-        player.game_alias = new_game_alias
-        player.save()
-
-        return {"user_id": user_id, "new_game_alias": player.game_alias}
+#class GameAliasSerializer(serializers.Serializer):
+#    user_id = serializers.IntegerField()
+#    new_game_alias = serializers.CharField(max_length=50)
+#
+#    def validate(self, attrs):
+#        user_id = attrs.get('user_id')
+#        new_game_alias = attrs.get('new_game_alias')
+#
+#        try:
+#            player = PlayerProfile.objects.get(user_id=user_id)
+#        except PlayerProfile.DoesNotExist:
+#            raise serializers.ValidationError("Player profile not found.")
+#
+#        if PlayerProfile.objects.filter(game_alias=new_game_alias).exclude(user_id=user_id).exists():
+#            raise serializers.ValidationError("This game alias is already taken.")
+#
+#        return attrs
+#
+#    def create(self, validated_data):
+#        user_id = validated_data.get('user_id')
+#        new_game_alias = validated_data.get('new_game_alias')
+#
+#        player = PlayerProfile.objects.get(user_id=user_id)
+#        player.game_alias = new_game_alias
+#        player.save()
+#
+#        return {"user_id": user_id, "new_game_alias": player.game_alias}
 
 class TournamentSerializer(serializers.Serializer):
     player_ids = serializers.ListField(
@@ -461,15 +464,12 @@ class TournamentSerializer(serializers.Serializer):
         )
     
         player_profiles = PlayerProfile.objects.filter(user_id__in=player_ids)
-        player_aliases = {profile.user_id: profile.game_alias for profile in player_profiles}
     
         matches = []
         for i in range(0, len(player_ids), 2):
             match = Match.objects.create(
                 player1_id=player_ids[i],
                 player2_id=player_ids[i+1],
-                player1_alias=player_aliases[player_ids[i]],
-                player2_alias=player_aliases[player_ids[i+1]],
                 mode='tournament',
                 idx=idx_matches,
                 level=exponential_growth,
@@ -531,20 +531,114 @@ class MatchTournamentSerializer(serializers.ModelSerializer):
     #    - match.score_player2(updated)
     #    - match.winner(updated)
 
+    #curr_match=match
     #curr_idx=match.idx
     #curr_tournament=match.tournament
     #curr_level=match.level
     #curr_mode=match.mode
+    #curr_winner=match.winner
+    #curr_mode=match.mode
     
+
+    #def half_number(number):
+    #    """
+    #    This function takes an integer as input and returns:
+    #    - Half of the number plus one if the number is odd
+    #    - Half of the number if the number is even
+    #    """
+    #    if number % 2 == 1:  # Check if the number is odd
+    #        return (number // 2) + 1
+    #    else:  # The number is even
+    #        return number // 2
+
     #if curr.level != 0:
-    #  search if there is an existing match with curr.tournament && (curr_level - 1) && curr_idx
+    #   if there is an existing_match with curr.tournament && (curr_level - 1) && half_number(curr_idx)
+        #then just add match.winner to player2 property to the existing_match
+        #return existingmatch
+    #   else 
+            #create a new_match with:
+                #new_match.idx=half_num(curr_idx)
+                #new_match.level=curr_level -1 
+                #new_match.tournament=curr_tournament
+                #new_match.player1=curr_winner
+                #new_match.mode=curr_mode
+        #in_tournament set to false from the non-winner from curr_match
 
-    #- idx
-    #- level
+        #return new_match
+    #else:
+        #update curr_tournament.champion=str(curr_winner.game_alias)
+        #in_tournament set to false from the non-winner of curr_match
+        #in_tournament set to false from the winner of curr_match
+        #return a message "f'(curr_winner.game_alias) is this tournament's champion"
 
 
-#if level:
-    #create a new match with the following properties:
-    #tournament = <same as match from initial parameter>
-    #if idx is odd
-    #level -= 1 
+class ScoreRetrieveSerializer(serializers.Serializer):
+    match_id = serializers.IntegerField()
+    score_player1 = serializers.IntegerField()
+    score_player2 = serializers.IntegerField()
+    winner_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        match_id = attrs.get('match_id')
+        winner_id = attrs.get('winner_id')
+
+        try:
+            match = Match.objects.get(id=match_id)
+        except Match.DoesNotExist:
+            raise serializers.ValidationError("Match not found.")
+
+        if winner_id not in [match.player1_id, match.player2_id]:
+            raise serializers.ValidationError("Winner must be one of the match participants.")
+
+        return attrs
+#first update the match with the new scores and the winner
+    def create(self, validated_data):
+        match_id = validated_data.get('match_id')
+        score_player1 = validated_data.get('score_player1')
+        score_player2 = validated_data.get('score_player2')
+        winner_id = validated_data.get('winner_id')
+
+        match = Match.objects.get(id=match_id)
+        match.score_player1 = score_player1
+        match.score_player2 = score_player2
+        match.winner_id = winner_id
+        match.save()
+
+        curr_tournament = match.tournament
+        curr_level = match.level
+        curr_idx = match.idx
+
+        def half_number(number):
+            return (number // 2) + 1 if number % 2 == 1 else number // 2
+
+        # check if the match is a semifinal or a final through his level if 0 it is the final
+        if curr_level != 0:
+            next_idx = half_number(curr_idx)
+            next_level = curr_level - 1
+
+            # then check if there is an existing match or a new one has to be created
+            existing_match = Match.objects.filter(
+                tournament=curr_tournament,
+                level=next_level,
+                idx=next_idx
+            ).first()
+            if existing_match:
+                existing_match.player2_id = winner_id
+                existing_match.save()
+                return existing_match
+            else:
+                new_match = Match.objects.create(
+                    player1_id=winner_id,
+                    level=next_level,
+                    idx=next_idx,
+                    tournament=curr_tournament,
+                    mode=match.mode
+                )
+                PlayerProfile.objects.filter(user_id=match.player1_id if match.player2_id == winner_id else match.player2_id).update(in_tournament=False)
+                return new_match
+        # declare a champion and dont create a new match
+        else:
+            curr_tournament.champion = str(PlayerProfile.objects.get(user_id=winner_id).display_name)
+            curr_tournament.save()
+            PlayerProfile.objects.filter(user_id__in=[match.player1_id, match.player2_id]).update(in_tournament=False)
+            return {"message": f"{curr_tournament.champion} is this tournament's champion"}

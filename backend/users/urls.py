@@ -14,7 +14,7 @@ router.register('simple-auth', views.SimpleLoginViewSet, basename='simple-auth')
 router.register('tournament-create', views.TournamentViewSet, basename='tournament-create')
 router.register('exit-tournament', views.ExitTournamentViewSet, basename='exit-tournament')
 router.register('match-tournament', views.MatchTournamentViewSet, basename='match-tournament')
-router.register('update-alias', views.GameAliasViewSet, basename='update_alias')
+router.register('score-upload', views.ScoreRetrieveViewSet, basename='score-upload')
 
 
 urlpatterns = [

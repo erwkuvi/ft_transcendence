@@ -10,11 +10,7 @@ def create_profile_for_new_user(sender, **kwargs):
         user = kwargs['instance']
         if user.auth_provider != '42api':
             display_name = str(user.username) + str('_') + str(user.id)
-            PlayerProfile.objects.create(user=user, display_name=display_name, game_alias=user.username)
-        else:
-            game_alias = user.username + str('_') + str(user.id)
-            PlayerProfile.objects.create(user=user, display_name=user.username, game_alias=game_alias)
-
+            PlayerProfile.objects.create(user=user, display_name=display_name)
 
 
 @receiver(match_created)
