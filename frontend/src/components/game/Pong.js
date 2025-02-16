@@ -41,7 +41,7 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 		const ballPos = ball.position.x;
 		const playerPos = player.position.x;
 
-		let collisionPoint = ballPos - playerPos; 
+		let collisionPoint = ballPos - playerPos;
 
 		//Normalize to range [-1, 1]
 		collisionPoint = collisionPoint / 2;
