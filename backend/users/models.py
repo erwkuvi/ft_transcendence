@@ -3,7 +3,7 @@ from django.db import models
 from .validators import validate_file_size
 
 AUTH_PROVIDERS ={'email': 'email', '42api': '42api'}
-MATCH_MODE ={'standard': 'standard', 'tournament': 'tournament'}
+MATCH_MODE ={'regular': 'regular', 'tournament': 'tournament'}
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
@@ -28,6 +28,7 @@ class PlayerProfile(models.Model):
     )
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
+    #game_alias = models.CharField(max_length=50, null=True, blank=True)
     friends = models.ManyToManyField("self", blank=True)
     in_tournament = models.BooleanField(default=False)
     #online_status = models.BooleanField(default=False)
@@ -35,29 +36,41 @@ class PlayerProfile(models.Model):
         'Match', through='PlayerMatch', related_name='stats', blank=True)
 
     def __str__(self):
-        return self.display_name
+        return str(self.user.id)
 
-    def __str__(self):
-        return self.user.email  # This will display the email in the profile
+    #def __str__(self):
+    #    return self.user.email  # This will display the email in the profile
+
+class Tournament(models.Model):
+    champion = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    host = models.ForeignKey(User, related_name='tournament_host', on_delete=models.CASCADE)
 
 
 class Match(models.Model):
+    MATCH_MODE_CHOICES = [
+        ('regular', 'Regular'),
+        ('tournament', 'Tournament'),
+    ]
     date = models.DateTimeField(auto_now_add=True)
-    mode = models.CharField(max_length=50, default=MATCH_MODE.get("standard"))
+    mode = models.CharField(max_length=50, choices=MATCH_MODE_CHOICES, default='regular')
+    idx = models.IntegerField(default=0)
+    level = models.IntegerField(default=0)
+    finished = models.BooleanField(default=False)
+    tournament = models.ForeignKey(Tournament, related_name='tournament', on_delete=models.CASCADE, null=True, blank=True)
     player1 = models.ForeignKey(
         PlayerProfile, related_name='player1_matches',
         on_delete=models.CASCADE)
     player2 = models.ForeignKey(
         PlayerProfile, related_name='player2_matches',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE, null=True, blank=True)
     winner = models.ForeignKey(
         PlayerProfile, related_name='won_matches', on_delete=models.CASCADE, null=True, blank=True) 
     score_player1 = models.IntegerField(default=0)
     score_player2 = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.player1.display_name} vs {self.player2.display_name}\
-                on {self.date}'
+        return f'{self.player1.display_name} vs {self.player2.display_name if self.player2 else "TBD"} on {self.date}'
 
 
 class PlayerMatch(models.Model):

@@ -4,7 +4,6 @@ from users.models import User, PlayerProfile, Match, PlayerMatch
 from django.dispatch import receiver
 from users.signals import match_created, friendship_created, friendship_destroyed
 
-
 @receiver(post_save, sender=User)
 def create_profile_for_new_user(sender, **kwargs):
     if kwargs['created']:
