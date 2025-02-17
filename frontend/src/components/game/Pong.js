@@ -1,37 +1,37 @@
 
-import React, { useRef, useState, useEffect, forwardRef, useContext } from 'react';
+import React, { useRef, useState, useEffect, forwardRef } from 'react';
 import { Canvas, useFrame, useLoader} from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
 import { GameContext } from "../../context/GameContext";
-import '../game/controlPanel.css'
-import '../game/gameStartMenu.css'
+import { useNavigate } from 'react-router-dom';
+import './controlPanel.css'
+import './gameStartMenu.css'
 
-let 	FIELD_WIDTH         = 26;
-let 	FIELD_LEN           = 32;
-let 	FIELD_HALF_WIDHT    = FIELD_WIDTH / 2;
-let 	FIELD_HALF_LEN      =  FIELD_LEN / 2;
+let		FIELD_WIDTH = 26;
+let		FIELD_LEN = 32;
+let		FIELD_HALF_WIDHT = FIELD_WIDTH / 2;
+let		FIELD_HALF_LEN =  FIELD_LEN / 2;
 
-const	PLAYER_SPEED        = 0.5;
-const	PLAYER_WIDTH        = 4;
-const	PLAYER_LEN          = 1;
-const	PLAYER_HALF_WIDTH   = PLAYER_WIDTH / 2;
-const	PLAYER_HALF_LEN     = PLAYER_LEN / 2;
+const	PLAYER_SPEED = 0.5;
+const	PLAYER_WIDTH = 4;
+const	PLAYER_LEN = 1;
+const	PLAYER_HALF_WIDTH = PLAYER_WIDTH / 2;
+const	PLAYER_HALF_LEN = PLAYER_LEN / 2;
 
-const	PLAYER_ONE_COLOR    = "#FFFFFF";
-const	PLAYER_TWO_COLOR    = "#60616D";
+const	PLAYER_ONE_COLOR = "#FFFFFF";
+const	PLAYER_TWO_COLOR = "#60616D";
 
-const   STARTING_BALL_SPEED = 0.12;
-const	MAX_BALL_SPEED      = 22.0;
-let		BALL_SPEED          = STARTING_BALL_SPEED;
-const	BALL_RADIUS         = 0.7;
+let		BALL_SPEED = 0.12;
+const	BALL_RADIUS = 0.7;
 
-const 	MAX_SCORE_COUNT     = 3;
-const 	MAX_SET_COUNT       = 3;
+let 	MAX_SCORE_COUNT = 3;
+let		MAX_SET_COUNT = 3;
 
 
 function Ball({player1Ref, player2Ref, handleScore}) {
 	//Reference to the ball mesh
 	const meshRef = useRef();
+	console.log("BALL SPEED NORMALLY: ", BALL_SPEED)
 
 	//Refs to store position and velocity without causing re-renders
 	const velocity = useRef([0.1, 0, 0.1]); 
@@ -57,10 +57,9 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 		velocity.current[2] = -direction * BALL_SPEED * Math.cos(angleRad); //Forward/backward
 		velocity.current[0] = BALL_SPEED * Math.sin(angleRad); 				//Sideways
 
-		if (BALL_SPEED <= MAX_BALL_SPEED) {
+		if (BALL_SPEED <= 0.20) {
 			BALL_SPEED += 0.01;
 		}
-		console.log("BALL SPEED NORMALLY: ", BALL_SPEED);
 	};
 
 
@@ -91,6 +90,7 @@ function Ball({player1Ref, player2Ref, handleScore}) {
     	const [vx, vy, vz] = velocity.current;
     	const [px, py, pz] = position.current;
     	const newPosition = [px + vx, py + vy, pz + vz];
+
     	const halfWidth = (FIELD_WIDTH - 2 - BALL_RADIUS) / 2;
     	const halfLength = (FIELD_LEN - 1) / 2;
 
@@ -132,6 +132,7 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 		meshRef.current.position.set(...newPosition);													/*Apply the position to the mesh*/
 			
 	});
+
 	return (
 		<mesh ref={meshRef}>
     		<sphereGeometry args={[0.7, 32, 32]} />
@@ -305,10 +306,9 @@ function ControlPanel() {
 }
 
 function PlayerPanel({scores}) {
-	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
 	return (
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
-			{player1DisplayName}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {player2DisplayName}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
+			Player 1 ({personsLoggedInId}): {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | Player 2 ({opponentsId}): {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
 		</div>
 	);
 }
@@ -426,17 +426,16 @@ function WinningScreen({player, score1, score2}) {
 
 function Pong() {
 // Declare refs inside the Canvas component
-	const { player1Id,
-			player2Id } = useContext(GameContext);
-
+	const { opponentsId } = useContext(GameContext);
+	const { setIsSubmitting } = useContext(GameContext);
+	const { setIsOpponentAuthenticated } = useContext(GameContext); 
+	const { setIsReadyToPlay } = useContext(GameContext); 
 
 	const player1Ref = useRef();
 	const player2Ref = useRef();
 	const [gameStarted, setGameStarted] = useState(false);
 	const [gameFieldStyle, setGameStyle] = useState("normal");
 	const [winner, setWinner] = useState(null);
-	BALL_SPEED = STARTING_BALL_SPEED;
-
 
 	const [scores, setScores] = useState({
 		p1_f_score: 0,
@@ -447,21 +446,17 @@ function Pong() {
 		p2_won_set_count: 0,
 	});
 
+	const personsLoggedInId = localStorage.getItem('user_id');
 
 	const postMatchResults = async (winnerId, scores) => {
-		if (player1Id === null || player2Id === null) {
-			console.error("Invalid player IDs:", player1Id, player2Id); //handle user not logged in
-			return;
-		}
 		const matchData = {
-			mode: "regular",
-			player1: player1Id, 
-			player2: player2Id,
+			player1: personsLoggedInId, 
+			player2: opponentsId,    
 			winner: winnerId,       
 			score_player1: scores.p1_f_score,
-			score_player2: scores.p2_f_score,
+			score_player2: scores.p2_f_score
 		};
-
+	
 		try {
 			const response = await fetch('http://localhost:8000/user_management/matches/', {
 				method: 'POST',
@@ -471,8 +466,7 @@ function Pong() {
 				},
 				body: JSON.stringify(matchData)
 			});
-			const textResponse = await response.text();  // Get raw text response
-			console.log("Raw response:", textResponse);
+	
 			if (!response.ok) {
 				const errorData = await response.json();
 				console.error("Failed to post match results:", errorData);
@@ -496,7 +490,7 @@ function Pong() {
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 1 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
-					postMatchResults(player1Id, updatedScores);
+					postMatchResults(personsLoggedInId, updatedScores);
 					setWinner("Player1");
 				}
 			}
@@ -509,7 +503,7 @@ function Pong() {
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 2 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
-					postMatchResults(player2Id, updatedScores);
+					postMatchResults(opponentsId, updatedScores);
 					setWinner("Player2");
 				}
 			}
@@ -535,6 +529,7 @@ function Pong() {
 	}
 
 	if (gameStarted === false) {
+		BALL_SPEED = 0.12;
 		console.log("Start of the game ball speed: ", BALL_SPEED);
 		return (<div id="pong-container" style={{ width: '100vw', height: '100vh', marginTop: '20px'}}>
 			<GameStartMenu onStartGame={handleStartGame} gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
@@ -543,11 +538,11 @@ function Pong() {
 
 
 	return (
-	<div id="pong-container" style={{ width: '100vw', height: '100vh', marginTop: '50px', zIndex:'2000'}}  >
+	<div id="pong-container" style={{ width: '100vw', height: '100vh', marginTop: '50px' }}  >
 
 		<ControlPanel/>
 		<PlayerPanel scores={scores}/>
-		<Canvas style={{width: '99vw', height: '99vh', zIndex: 10}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
+		<Canvas style={{width: '100%', height: '100%', zIndex: 10}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
 			{/* <axesHelper args={[15]} /> */}
 			<OrbitControls
 				enableZoom={true}  

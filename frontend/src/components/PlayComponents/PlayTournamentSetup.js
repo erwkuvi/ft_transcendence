@@ -43,6 +43,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			});
 				if (!response.ok) {
 					const errorData = await response.json();
+					
 					console.error("Failed to post players: ", errorData);
 				} else {
 					console.log("Saved players to the tournament");
