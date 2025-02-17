@@ -51,7 +51,7 @@ const Play = () => {
 		)
 	}else {
 		return (
-			<div className="page-content play">
+			<div className="page-content play" id="pageContentID">
 				{isReadyToPlay ? (
 					<GameScreen scaleStyle={scaleStyle} />
 				) : !personLoggedIn ? (

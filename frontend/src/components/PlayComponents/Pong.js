@@ -21,11 +21,11 @@ const	PLAYER_ONE_COLOR    = "#FFFFFF";
 const	PLAYER_TWO_COLOR    = "#60616D";
 
 const   STARTING_BALL_SPEED = 0.12;
-const	MAX_BALL_SPEED      = 22.0;
-let		BALL_SPEED          = STARTING_BALL_SPEED;
+const	MAX_BALL_SPEED      = 0.23;
+let		BALL_SPEED          = 0.12;
 const	BALL_RADIUS         = 0.7;
 
-const 	MAX_SCORE_COUNT     = 3;
+const 	MAX_SCORE_COUNT     = 1000;
 const 	MAX_SET_COUNT       = 3;
 
 
@@ -282,13 +282,13 @@ function ControlPanel() {
 		{/* <div style={{position: 'absolute', top: '50%', right: '5rem', border: '1px solid red', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '2rem'}}> */}
 			<div id="choiseMenu" style={{ fontSize: '18px', display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '4rem', justifyContent: 'center'}}>
 			{/* <div style={{border: '1px solid green', fontSize: '18px', display: 'flex', flexDirection: 'column', gap: '1.5rem'}}> */}
-				<button id="changeStyle" class="controlPanelButton" onClick={ChangeStyle}>
+				<button id="changeStyle" className="controlPanelButton" onClick={ChangeStyle}>
 					Change Style
 				</button>
-				<button id="keyboardControls" class="controlPanelButton" style={{}} onClick={KeyboardControls}>
+				<button id="keyboardControls" className="controlPanelButton" style={{}} onClick={KeyboardControls}>
 					Keyboard Controls
 				</button>
-				<button id="leaveGame" class="controlPanelButton" style={{}} onClick={LeaveGame}>
+				<button id="leaveGame" className="controlPanelButton" style={{}} onClick={LeaveGame}>
 					Leave Game
 				</button>
 			</div>
@@ -340,7 +340,7 @@ function GameStartMapMenu() {
     return (
         <div id="menu">
             {options.map((option) => (
-                <div class="menuChoiceElement"
+                <div className="menuChoiceElement"
                     key={option}
                     className={`option ${selectedOption === option ? "selected" : ""}`}
                     onClick={() => setSelectedOption(option)}
@@ -361,7 +361,7 @@ function GameStartStylesMenu({gameFieldStyle, setGameStyle}) {
     return (
         <div id="menu">
             {options.map((option) => (
-                <div class="menuChoiceElement"
+                <div className="menuChoiceElement"
                     key={option}
                     className={`option ${gameFieldStyle === option ? "selected" : ""}`}
                     onClick={() => setGameStyle(option)}
@@ -381,36 +381,36 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 			<div id="gameMenuArea1">
 				<div id="gameMenuElementWrapper">
 					<div id="choiceArea">
-						<h2 class="gameStartMenuH2">Choices</h2>
-						<div class="choiceAreaSections">
+						<h2 className="gameStartMenuH2">Choices</h2>
+						<div className="choiceAreaSections">
 							<div>
-								<h3 class="gameStartMenuH3">Map</h3>
+								<h3 className="gameStartMenuH3">Map</h3>
 								<GameStartMapMenu/>
 							</div>
 							<div>
-								<h3 class="gameStartMenuH3">Styles</h3>
+								<h3 className="gameStartMenuH3">Styles</h3>
 								<GameStartStylesMenu gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 							</div>
 						</div>
 					</div>
 					<div id="controlsArea">
-						<h2 class="gameStartMenuH2">Keyboard Controls</h2>
+						<h2 className="gameStartMenuH2">Keyboard Controls</h2>
 						<div id="p1Controls">
-							<h3 class="gameStartMenuH3">P1</h3>
-							<div class="pControlsWrapper">
-								<div class="p1Keys">A</div><div class="p1Keys"></div><div class="p1Keys">D</div>
+							<h3 className="gameStartMenuH3">P1</h3>
+							<div className="pControlsWrapper">
+								<div className="p1Keys">A</div><div className="p1Keys"></div><div className="p1Keys">D</div>
 							</div>
 						</div>
 						<div id="p2Controls">
-							<h3 class="gameStartMenuH3">P2</h3>
-							<div class="pControlsWrapper">
-								<div class="p2Keys">&lt;</div><div class="p2Keys"></div><div class="p2Keys">&gt;</div>
+							<h3 className="gameStartMenuH3">P2</h3>
+							<div className="pControlsWrapper">
+								<div className="p2Keys">&lt;</div><div className="p2Keys"></div><div className="p2Keys">&gt;</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<button class="btn button" onClick={onStartGame}>Start Game</button>
+			<button className="btn button" onClick={onStartGame}>Start Game</button>
 		</div>
 	);
 }
@@ -430,7 +430,21 @@ function WinningScreen({player, score1, score2}) {
 	);
 }
 
+function disableNavigationButtons() {
+	let pageContent = document.getElementById("pageContentID");
+
+	pageContent.style.padding  = '0px';
+	pageContent.style.margin   = '0px';
+	pageContent.style.position = 'relative';
+	pageContent.style.zIndex   = '1000';
+
+	let navbar = document.getElementById("navbarID");
+
+	navbar.style.position      = 'absolute';
+}
+
 function Pong() {
+	disableNavigationButtons();
 // Declare refs inside the Canvas component
 	const { player1Id,
 			player2Id } = useContext(GameContext);
@@ -528,7 +542,6 @@ function Pong() {
 
 	const handleStartGame = () => {
         const menu = document.getElementById("gameStartMenu");
-		// BALL_SPEED = 10;
         if (menu) {
             menu.style.opacity = "0"; // Fade out animation
             setTimeout(() => setGameStarted(true), 500); // Wait 0.5s before starting game
@@ -541,19 +554,18 @@ function Pong() {
 	if (winner) {
 		return <WinningScreen player={winner} score1={scores.p1_f_score} score2={scores.p2_f_score}/>
 	}
-
 	if (gameStarted === false) {
 		console.log("Start of the game ball speed: ", BALL_SPEED);
-		return (<div id="pong-container" style={{ width: '100vw', height: '100vh', marginTop: '20px'}}>
+		return (<div id="pong-container" style={{ width: '100vw', height: '100vh', /*marginTop: '20px'*/}}>
 			<GameStartMenu onStartGame={handleStartGame} gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 		</div>);
 	}
 
 
 	return (
-	<div id="pong-container" style={{ width: '100vw', height: '100vh', marginTop: '50px', zIndex:'2000'}}  >
+	<div id="pong-container" style={{ width: '100vw', height: '100vh', /*marginTop: '50px',*/ zIndex:'2000'}}  >
 
-		<ControlPanel/>
+		{/* <ControlPanel/> */}
 		<PlayerPanel scores={scores}/>
 		<Canvas style={{width: '99vw', height: '99vh', zIndex: 10}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
 			{/* <axesHelper args={[15]} /> */}
