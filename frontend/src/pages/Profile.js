@@ -69,13 +69,12 @@ const Profile = () => {
 			console.log('profileData:', profileData);
 			
 			localStorage.setItem('user_id', profileData.user_id);
-			localStorage.setItem('username', profileData.username);
 			setUserIdChanged(true);
 			// Set the fetched profile data in the state
       		setProfile(response.data);
       // Initialize the newDisplayName state with current display name
       		setNewDisplayName(response.data.display_name);
-
+			localStorage.setItem('display_name', response.data.display_name);
 			const users = await fetchUsers();
 			const profile = users.find(user => user.username === profileData.username);
 			setPersonLoggedIn(profile);
@@ -124,6 +123,9 @@ const Profile = () => {
 			// Create form data for the request
 			const formData = new FormData();
 			formData.append('display_name', newDisplayName);
+
+			if (newDisplayName != null)
+				localStorage.setItem('display_name', newDisplayName);
 
 			// Send PATCH request to update display name on the server
 			const response = await fetch(`${BASE_URL}/user_management/players/me/`, {

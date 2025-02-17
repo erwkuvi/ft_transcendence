@@ -11,7 +11,7 @@ export const GameProvider = ({ children }) => {
 	const [ startTheTournament, setStartTheTournament ] = useState(false);
 	const [opponentsId, setOpponentsId] = useState('');
 	const [tournamentPlayers, setTournamentPlayers] = useState([]);
-	const [opponentsUsername, setOpponentsUsername] = useState('');
+	const [opponentsDisplayName, setOpponentsDisplayName] = useState('');
 
     return (
         <GameContext.Provider value={{	isSubmitting,
@@ -28,8 +28,8 @@ export const GameProvider = ({ children }) => {
 										setIsTournamentReady,
 										startTheTournament,
 										setStartTheTournament,
-										opponentsUsername,
-										setOpponentsUsername}}>
+										opponentsDisplayName,
+										setOpponentsDisplayName}}>
             {children}
         </GameContext.Provider>
     );

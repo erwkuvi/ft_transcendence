@@ -9,38 +9,37 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
     const { t } = useTranslation();
 	const { isTournamentReady, setStartTheTournament, tournamentPlayers, setTournamentPlayers  } = useContext(GameContext);
 
+	
 	const userLoggedInId = localStorage.getItem('user_id');
-	const userLoggedInUsername = localStorage.getItem('username');
+	const userLoggedInDisplayName = localStorage.getItem('display_name');
 	console.log("print the players", tournamentPlayers);
 	console.log(tournamentPlayers.map(player => player.id));
 	
 	const handleClick = async () => {
+
 		 if (!userLoggedInId) {
-        console.error("User ID is missing.");
-        return;
-    }
+			console.error("User ID is missing.");
+			return;
+    	}
 
-    const numericUserId = Number(userLoggedInId); // Convert to number
-    if (isNaN(numericUserId)) {
-        console.error("Invalid user ID, not a number:", userLoggedInId);
-        return;
-    }
-
-    const updatedPlayers = [...tournamentPlayers, { id: numericUserId, username: userLoggedInUsername }];
-
-    console.log("Updated Players:", updatedPlayers);
+    	const updatedPlayers = [...tournamentPlayers, { id: userLoggedInId, display_name: userLoggedInDisplayName }];
         setTournamentPlayers(updatedPlayers);
+		
+		const allPlayers = updatedPlayers.map(player => player.id);
+
+		const createTournamentData = {
+			player_ids: allPlayers, 
+			host: userLoggedInId,
+		};
 
 		try{
-			const response = await fetch('http://localhost:8000/game_management/tournament-create/', {
+			const response = await fetch('http://localhost:8000/user_management/tournament-create/', {
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json",
                     Authorization: `JWT ${localStorage.getItem('access_token')}`,
 				},
-				body: JSON.stringify({
-					players: { ids: updatedPlayers.map(player => Number(player.id)) }
-				}),
+				body: JSON.stringify(createTournamentData),
 			});
 				if (!response.ok) {
 					const errorData = await response.json();

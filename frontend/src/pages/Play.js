@@ -8,12 +8,29 @@ import PlayMultiplayerMode from '../components/PlayComponents/PlayMultiplayerMod
 import GameScreen from '../components/PlayComponents/GameScreen';
 import TournamentScreen from '../components/PlayComponents/TournamentScreen';
 import { GameContext } from "../context/GameContext";
+import { getUserProfile } from '../services/getProfile';
+
 
 const Play = () => {
     const { t } = useTranslation();
     const { fontSize } = useContext(AccessibilityContext);
-    const { isReadyToPlay } = useContext(GameContext);
-	const { startTheTournament } = useContext(GameContext);
+    const { isReadyToPlay, startTheTournament } = useContext(GameContext);
+	const [ isInTournament, setIsInTournament] = useState(false);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const data = await getUserProfile();
+                setIsInTournament(data.in_tournament);
+            } catch (error) {
+				console.log("Failed to get user profile", error);
+            }
+        };
+		
+        fetchProfile();
+    }, []);
+	
+	console.log("in tournament", isInTournament)
 
     const scaleStyle = {
         fontSize: `${fontSize}px`,
@@ -24,7 +41,13 @@ const Play = () => {
     console.log("person logged in is: ", personLoggedIn);
 
 	//some check if the tournament is over 
-	// (if not the only thing user can see on /play is the tournamnet screen)
+	if (isInTournament){
+		return (
+			<div className="page-content play">
+				<TournamentScreen scaleStyle={scaleStyle} />
+			</div>
+		)
+	}
 
     return (
         <div className="page-content play">

@@ -28,13 +28,11 @@ class SimpleLoginViewSet(viewsets.GenericViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user_id = serializer.validated_data.get('user_id')
-        display_name = serializer.validated_data.get('display_name')
-
+        user_data = serializer.save()  
         return Response({
             "message": "Authentication successful",
-            "user_id": user_id,
-            "display_name": display_name,
+            "user_id": user_data.get('user_id'),
+            "display_name": user_data.get('display_name')
         }, status=status.HTTP_200_OK)
 
 

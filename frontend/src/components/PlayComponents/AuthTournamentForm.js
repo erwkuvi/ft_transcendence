@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef} from 'react';
 import { GameContext } from "../../context/GameContext";
 import { useTranslation } from "react-i18next";
 import './AuthTournamentForm.css'
@@ -14,6 +14,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
 
     const currentPlayerNumber = tournamentPlayers.length + 1;
 
+	
     const handleAuthentication = async (e) => {
         e.preventDefault();
         setIsBeingSubmitted(true);
@@ -29,7 +30,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
             if (response.ok && typeof data.user_id === 'number') {
                 setTournamentPlayers([...tournamentPlayers, {
                     id: data.user_id,
-                    username: credentials.username
+                    display_name: data.display_name
                 }]);
                 setCredentials({ username: '', password: '' });
 				setError('');
@@ -56,7 +57,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
                 <div className="players-list">
                     {tournamentPlayers.map((player, index) => (
                         <p key={player.id} style={scaleStyle}>
-                            {t("Player")} {index + 1}: {player.username}
+                            {t("Player")} {index + 1}: {player.display_name}
                         </p>
                     ))}
                 </div>
@@ -73,7 +74,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
                 <div className="authenticated-players" style={scaleStyle}>
                     {tournamentPlayers.map((player, index) => (
                         <p key={player.id} style={scaleStyle}>
-                            {t("Player")} {index + 1}: {player.username} ✓
+                            {t("Player")} {index + 1}: {player.display_name} ✓
                         </p>
                     ))}
                 </div>
