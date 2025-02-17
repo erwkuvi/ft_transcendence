@@ -3,26 +3,46 @@ import { useTranslation } from "react-i18next";
 import { GameContext } from "../../context/GameContext";
 import LeaveModal from './LeaveModal'
 import "./TournamentScreen.css";
-import { getPlayersTournament } from '../../services/getPlayersTournament'
+import { getInfoTournament } from '../../services/getInfoTournament'
+import { getAllPlayers } from '../../services/getAllUsers';
 
 const TournamentScreen = ({ scaleStyle }) => {
     const { t } = useTranslation();
     const { tournamentPlayers, setTournamentPlayers, setStartTheTournament, setIsReadyToPlay } = useContext(GameContext);
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
-	const [ allDataMatchTournament, setAllDataMatchTournament] = useState([]); //for now 
+	const [ allDataMatchTournament, setAllDataMatchTournament] = useState([]);   
+	const [ playersData, setPlayersData] = useState([]);
 
 	useEffect(()=>{
+		const fetchMatchesData = async () => {
+			try {
+				const matchData = await getInfoTournament();
+				console.log("Match data", matchData)
+				setAllDataMatchTournament(matchData);
+			} catch (error){
+				console.log("Failed to get matches of the tournament", error);
+			}
+		}
 		const fetchPlayersData = async () => {
 			try {
-				const data = await getPlayersTournament();
-				setAllDataMatchTournament(data);
+				const players = await getAllPlayers();
+				setPlayersData(players)
+				// console.log("Players data", players);
 			} catch (error){
 				console.log("Failed to get players of the tournament", error);
 			}
 		}
+		fetchMatchesData();
 		fetchPlayersData();
 	}, []);
 	
+	const playerNameMap = useMemo(() => {
+		return playersData.reduce((map, player) => {
+			map[player.user_id] = player.display_name;
+			return map;
+		}, {});
+	}, [playersData]);
+
 	const tournamentData = useMemo(() => {
 		let players = new Set();
 		let matches = [];
@@ -44,25 +64,9 @@ const TournamentScreen = ({ scaleStyle }) => {
 		};
 	}, [allDataMatchTournament]);
 	
-	console.log("Extracted Tournament Data:", tournamentData);
-	console.log("test player 1:", tournamentData.players[0])
-	console.log("test player 2:", tournamentData.players[1])	
-	console.log("test player 3:", tournamentData.players[2])
-	console.log("test player 4:", tournamentData.players[3])
-
-	const displayNames = tournamentData.players.map(id => {
-		const player = tournamentPlayers.find(p => p.id === id);
-		return player ? player.display_name : null; // 
-	});
-	
-	console.log("Matching Display Names:", displayNames);
-
     const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
     };
-
-
-	// console.log("and what about this", allDataMatchTournament[0].player1)
 
 
     const confirmLeave = () => {
@@ -78,12 +82,14 @@ const TournamentScreen = ({ scaleStyle }) => {
             
             <div className="tournament-bracket">
                 <div className="round round-1">
+					{tournamentData.matches.length >= 2 && ( <>
+					
                     <div className="match-box">
                         <h3 style={scaleStyle}>{t("Match")} 1</h3>
                         <div className="players">
-                            <div className="player">{tournamentData.players[0] || "Player 1"}</div>
+                            <div className="player">{playerNameMap[tournamentData.matches[0].player1] || "Player 1"}</div>
                             <div className="vs">VS</div>
-                            <div className="player">{tournamentData.players[1] || "Player 2"}</div>
+                            <div className="player">{playerNameMap[tournamentData.matches[0].player2] || "Player 2"}</div>
                         </div>
                         <button className="btn button" style={scaleStyle}>
                             {t("StartMatch")}
@@ -93,14 +99,16 @@ const TournamentScreen = ({ scaleStyle }) => {
                     <div className="match-box">
                         <h3 style={scaleStyle}>{t("Match")} 2</h3>
                         <div className="players">
-                            <div className="player">{tournamentData.players[2] || "Player 3"}</div>
+                            <div className="player">{playerNameMap[tournamentData.matches[1].player1] || "Player 3"}</div>
                             <div className="vs">VS</div>
-                            <div className="player">{tournamentData.players[3] || "Player 4"}</div>
+                            <div className="player">{playerNameMap[tournamentData.matches[1].player2] || "Player 4"}</div>
                         </div>
                         <button className="btn button" style={scaleStyle} disabled>
                             {t("StartMatch")}
                         </button>
                     </div>
+					</>
+					)}
                 </div>
 
                 <div className="round round-2">

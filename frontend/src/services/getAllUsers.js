@@ -1,8 +1,8 @@
 import axiosInstance from './axiosInstance';
 
-const baseUrl = `http://localhost:8000/user_management/match-tournament/`;
+const baseUrl = `http://localhost:8000/user_management/players/`;
 
-export const getPlayersTournament = async () => {
+export const getAllPlayers = async () => {
     try {
         const request = await axiosInstance.get(baseUrl);
         return request.data;
@@ -12,4 +12,4 @@ export const getPlayersTournament = async () => {
     }
 };
 
-export default { getPlayersTournament }
+export default { getAllPlayers }
