@@ -103,13 +103,15 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     display_name = serializers.CharField(required=False)
     otp_active = serializers.SerializerMethodField()
     auth_provider= serializers.SerializerMethodField()
+    language= serializers.CharField(required=False, default='en')
+    mode = serializers.BooleanField(required=False, default=True)
 
     #user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
