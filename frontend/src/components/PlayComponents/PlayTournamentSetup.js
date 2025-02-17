@@ -25,11 +25,11 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
     	const updatedPlayers = [...tournamentPlayers, { id: userLoggedInId, display_name: userLoggedInDisplayName }];
         setTournamentPlayers(updatedPlayers);
 		
-		const allPlayers = updatedPlayers.map(player => player.id);
+		const allPlayers = updatedPlayers.map(player => Number(player.id));
 
 		const createTournamentData = {
 			player_ids: allPlayers, 
-			host: userLoggedInId,
+			host: Number(userLoggedInId),
 		};
 
 		try{
@@ -43,7 +43,6 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			});
 				if (!response.ok) {
 					const errorData = await response.json();
-					
 					console.error("Failed to post players: ", errorData);
 				} else {
 					console.log("Saved players to the tournament");

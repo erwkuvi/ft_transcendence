@@ -17,7 +17,8 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setPlayer1DisplayName, 
 			setPlayer2DisplayName, 
 			setPlayer1Id,
-			setPlayer2Id } = useContext(GameContext);
+			setPlayer2Id,
+			setIndexTournament } = useContext(GameContext);
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	const [ allDataMatchTournament, setAllDataMatchTournament] = useState([]);   
 	const [ isGameStarted, setIsGameStarted ] = useState(false);
@@ -79,12 +80,13 @@ const TournamentScreen = ({ scaleStyle }) => {
 		setShowConfirmModal(true);
     };
 
-	const handleStartMatch = ( player1DisplayName, player1Id, player2DisplayName, player2Id) => {
+	const handleStartMatch = ( player1DisplayName, player1Id, player2DisplayName, player2Id, idx) => {
 		console.log("Starting match between:", player1DisplayName, player1Id, "and", player2DisplayName, player2Id);
 		setPlayer1DisplayName(player1DisplayName);
 		setPlayer1Id(player1Id);
 		setPlayer2DisplayName(player2DisplayName);
 		setPlayer2Id(player2Id);
+		setIndexTournament(idx);
 		setIsGameStarted(true);    
 	};
 
@@ -124,7 +126,8 @@ const TournamentScreen = ({ scaleStyle }) => {
                                         playerNameMap[tournamentData.matches[0].player1] || "Player 3",
                                         tournamentData.matches[0].player1,
                                         playerNameMap[tournamentData.matches[0].player2] || "Player 4",
-                                        tournamentData.matches[0].player2
+                                        tournamentData.matches[0].player2,
+										tournamentData.matches[0].idx
                                     )
                                 }
 						>
@@ -146,7 +149,8 @@ const TournamentScreen = ({ scaleStyle }) => {
                                         playerNameMap[tournamentData.matches[1].player1] || "Player 3",
                                         tournamentData.matches[1].player1,
                                         playerNameMap[tournamentData.matches[1].player2] || "Player 4",
-                                        tournamentData.matches[1].player2
+                                        tournamentData.matches[1].player2,
+										tournamentData.matches[1].idx
                                     )
                                 }
 						>

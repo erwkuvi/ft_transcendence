@@ -433,7 +433,8 @@ function WinningScreen({player, score1, score2}) {
 function Pong() {
 // Declare refs inside the Canvas component
 	const { player1Id,
-			player2Id } = useContext(GameContext);
+			player2Id,
+			indexTournament } = useContext(GameContext);
 
 
 	const player1Ref = useRef();

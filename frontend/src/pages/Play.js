@@ -43,7 +43,7 @@ const Play = () => {
 	//some check if the tournament is over 
 	//also startTheTournament is temp for leaving I need to get it from backend later
 
-	if (isInTournament ){
+	if (isInTournament && startTheTournament){
 		return (
 		<>
 			<TournamentScreen scaleStyle={scaleStyle} />
