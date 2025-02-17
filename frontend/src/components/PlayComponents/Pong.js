@@ -306,6 +306,7 @@ function ControlPanel() {
 
 function PlayerPanel({scores}) {
 	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
+
 	return (
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
 			{player1DisplayName}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {player2DisplayName}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
@@ -415,11 +416,13 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 }
 
 function WinningScreen({player, score1, score2}) {
+	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
+
 	return (
 		<div id="winningScreen">
 			<h2>Winner {player}</h2>
-			<p>Player1 score: {score1}</p>
-			<p>Player2 score: {score2}</p>
+			<p>{player1DisplayName} score: {score1}</p>
+			<p>{player2DisplayName} score: {score2}</p>
 		</div>
 	);
 }
