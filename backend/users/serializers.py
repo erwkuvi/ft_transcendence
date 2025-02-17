@@ -167,7 +167,7 @@ class MatchSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         instance = super().save(**kwargs)
         match_created.send_robust(self.__class__, match=instance)
-        print('after signal in serializer')
+        #print('after signal in serializer')
         return instance
 
 
@@ -423,6 +423,43 @@ class TournamentSerializer(serializers.Serializer):
     
         return matches
 
+class ExitMultiplayerSerializer(serializers.Serializer):
+    leaving_player = serializers.PrimaryKeyRelatedField(queryset=PlayerProfile.objects.all())
+    player2 = serializers.PrimaryKeyRelatedField(queryset=PlayerProfile.objects.all())
+    score_player2 = serializers.IntegerField()
+
+    def validate(self, attrs):
+        player1 = attrs.get('leaving_player')
+        player2 = attrs.get('player2')
+
+        if not player1 or not player2:
+            raise serializers.ValidationError("Both player1 and player2 must be provided.")
+
+        if player1 == player2:
+            raise serializers.ValidationError("Player1 and Player2 cannot be the same.")
+
+        return attrs
+
+    def create(self, validated_data):
+        leaving_player = validated_data.get('leaving_player')
+        player2 = validated_data.get('player2')
+        score_player2 = validated_data.get('score_player2')
+
+        match_data = {
+            "mode": 'regular',
+            "player1": leaving_player.id,
+            "player2": player2.id,
+            "winner": player2.id,
+            "score_player1": 0,
+            "score_player2": score_player2 + 1
+        }
+
+        match_serializer = MatchSerializer(data=match_data)
+        if match_serializer.is_valid():
+            match = match_serializer.save()
+            return {"message": "Player has exited the match and scores have been updated.", "match_id": match.id}
+        else:
+            raise serializers.ValidationError(match_serializer.errors)
 
 class ExitTournamentSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
@@ -506,7 +543,7 @@ class MatchTournamentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['mode'] = 'tournament'
         instance = super().create(validated_data)
-        match_created.send_robust(self.__class__, match=instance)
+        #match_created.send_robust(self.__class__, match=instance)
         return instance
 
 class ScoreRetrieveSerializer(serializers.Serializer):
@@ -540,6 +577,7 @@ class ScoreRetrieveSerializer(serializers.Serializer):
         match.score_player2 = score_player2
         match.winner_id = winner_id
         match.save()
+        match_created.send_robust(self.__class__, match=match)
 
         curr_tournament = match.tournament
         curr_level = match.level
