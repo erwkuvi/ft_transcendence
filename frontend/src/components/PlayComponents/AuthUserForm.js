@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 
 const AuthUserForm = ({scaleStyle}) => {
 	const { t } = useTranslation();
-	const { isOpponentAuthenticated, setIsOpponentAuthenticated, setOpponentsId, setOpponentsDisplayName } = useContext(GameContext); 
+	const { isOpponentAuthenticated, 
+			setIsOpponentAuthenticated, 
+			setPlayer2DisplayName, 
+			setPlayer2Id,
+			setPlayer1DisplayName,
+			setPlayer1Id } = useContext(GameContext); 
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [isBeeingSubmitted, setIsBeeingSubmitted] = useState(false);
     const [error, setError] = useState('');
@@ -25,8 +30,12 @@ const AuthUserForm = ({scaleStyle}) => {
 			
             if (response.ok && typeof data.user_id === 'number') {
                 setIsOpponentAuthenticated(true);
-				setOpponentsId(data.user_id);
-				setOpponentsDisplayName(data.display_name);
+				setPlayer2Id(data.user_id);
+				setPlayer2DisplayName(data.display_name);
+				const personsLoggedInId = localStorage.getItem('user_id');
+				const personsLoggedInDisplayName = localStorage.getItem('display_name');
+				setPlayer1Id(personsLoggedInId);
+				setPlayer1DisplayName(personsLoggedInDisplayName);
                 setError('');
             } else {
                 setError('Invalid credentials');

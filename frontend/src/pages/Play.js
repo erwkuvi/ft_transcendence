@@ -41,24 +41,22 @@ const Play = () => {
     console.log("person logged in is: ", personLoggedIn);
 
 	//some check if the tournament is over 
-	if (isInTournament){
+	//also startTheTournament is temp for leaving I need to get it from backend later
+
+	if (isInTournament ){
+		return (
+		<>
+			<TournamentScreen scaleStyle={scaleStyle} />
+		</>
+		)
+	}else {
 		return (
 			<div className="page-content play">
-				<TournamentScreen scaleStyle={scaleStyle} />
-			</div>
-		)
-	}
-
-    return (
-        <div className="page-content play">
-            {startTheTournament? (
-                <TournamentScreen scaleStyle={scaleStyle} />
-            ) : isReadyToPlay ? (
-                <GameScreen scaleStyle={scaleStyle} />
-            ) : !personLoggedIn ? (
-                <PlayNotLoggedIn scaleStyle={scaleStyle} />
-            ) : (
-                <>
+				{isReadyToPlay ? (
+					<GameScreen scaleStyle={scaleStyle} />
+				) : !personLoggedIn ? (
+					<PlayNotLoggedIn scaleStyle={scaleStyle} />
+				) : (
 					<div className="play-wrapper">
 						<div className="title-container">
 							<h1 className="title mt-5">{t("PlayTitle")}</h1>
@@ -68,10 +66,10 @@ const Play = () => {
 							<PlayTournamentSetup scaleStyle={scaleStyle} />
 						</div>
 					</div>
-                </>
-            )}
-        </div>
-    );
+				)}
+			</div>
+		);
+	}
 };
 
 export default Play;

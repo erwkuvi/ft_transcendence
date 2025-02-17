@@ -230,16 +230,13 @@ function Field({dimensions, borderColor}) {
 
 function Pong({className}) {
 	// Declare refs inside the Canvas component
-	const { opponentsId, setOpponentsId, opponentsDisplayName, setOpponentsDisplayName } = useContext(GameContext);
-	const { setIsSubmitting } = useContext(GameContext);
-	const { setIsOpponentAuthenticated } = useContext(GameContext); 
-	const { setIsReadyToPlay } = useContext(GameContext); 
-	// const { personLoggedIn } = useContext(GameContext);
+	const { player1DisplayName, 	
+			player2DisplayName, 
+			player1Id,
+			player2Id } = useContext(GameContext);
+	
 	const player1Ref = useRef();
 	const player2Ref = useRef();
-
-	
-	
 
 	const [scores, setScores] = useState({
 		p1_f_score: 0,
@@ -250,18 +247,16 @@ function Pong({className}) {
 		p2_won_set_count: 0,
 	});
 
-	const personsLoggedInId = localStorage.getItem('user_id');
-	const personsLoggedInDisplayName = localStorage.getItem('display_name');
-	console.log("personsLoggedInId: ", personsLoggedInId);
-	console.log("opponentsId: ", opponentsId);
-	console.log("persons logged in display name", personsLoggedInDisplayName);
-	console.log("opponents display name", opponentsDisplayName);
 
 	const postMatchResults = async (winnerId, scores) => {
+		if (player1Id === null || player2Id === null) {
+			console.error("Invalid player IDs:", player1Id, player2Id); //handle user not logged in
+			return;
+		}
 		const matchData = {
 			mode: "regular",
-			player1: personsLoggedInId, 
-			player2: opponentsId,
+			player1: player1Id, 
+			player2: player2Id,
 			winner: winnerId,       
 			score_player1: scores.p1_f_score,
 			score_player2: scores.p2_f_score,
@@ -302,7 +297,7 @@ function Pong({className}) {
 				updatedScores.p1_in_set_score = 0; // Reset score for next set
 				updatedScores.p1_won_set_count++;
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
-					postMatchResults(personsLoggedInId, updatedScores);
+					postMatchResults(player1Id, updatedScores);
 				}
 			}
 		  } else if (player === 2) {
@@ -312,7 +307,7 @@ function Pong({className}) {
 				updatedScores.p2_in_set_score = 0; // Reset score for next set
 				updatedScores.p2_won_set_count++;
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
-					postMatchResults(opponentsId, updatedScores);
+					postMatchResults(player2Id, updatedScores);
 				}
 			}
 		  }
@@ -323,9 +318,9 @@ function Pong({className}) {
 	return (
 	<div id="pong-container" >
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
-        	{/* Player 1*/} {personsLoggedInDisplayName}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {/*Player 2*/} {opponentsDisplayName}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count} 
+        	{/* Player 1*/} {player1DisplayName}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {/*Player 2*/} {player2DisplayName}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count} 
       	</div>
-		<Canvas style={{width: '100%', height: '100%'}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
+		<Canvas style={{width: '100vw', height: '100vh'}} camera={{ fov: 75, near: 0.1, far: 200, position: [0, 100, 150] }}>
 			<axesHelper args={[15]} />
 			<OrbitControls
 				enableZoom={true}

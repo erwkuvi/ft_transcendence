@@ -5,7 +5,7 @@ import "./PlayNotLoggedIn.css";
 
 const PlayNotLoggedIn = ({ scaleStyle }) => {
     const { t } = useTranslation();
-    const { setIsReadyToPlay } = useContext(GameContext);
+    const { setIsReadyToPlay, setPlayer1DisplayName, setPlayer2DisplayName} = useContext(GameContext);
 
     return (
         <>
@@ -21,7 +21,11 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
                             <button 
                                 className="btn button" 
                                 style={scaleStyle} 
-                                onClick={() => setIsReadyToPlay("playNotLoggedIn")}
+                                onClick={() => {
+									setPlayer1DisplayName("Player 1");
+									setPlayer2DisplayName("Player 2");
+									setIsReadyToPlay("playNotLoggedIn");
+								}}
                             >
                                 {t("PlayNotLoggedIn")}
                             </button>

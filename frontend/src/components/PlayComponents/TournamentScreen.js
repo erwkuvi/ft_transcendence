@@ -3,15 +3,26 @@ import { useTranslation } from "react-i18next";
 import { GameContext } from "../../context/GameContext";
 import LeaveModal from './LeaveModal'
 import "./TournamentScreen.css";
+import GameScreen from './GameScreen';
+import Pong from './Pong';
 import { getInfoTournament } from '../../services/getInfoTournament'
 import { getAllPlayers } from '../../services/getAllUsers';
 
 const TournamentScreen = ({ scaleStyle }) => {
     const { t } = useTranslation();
-    const { tournamentPlayers, setTournamentPlayers, setStartTheTournament, setIsReadyToPlay } = useContext(GameContext);
+    const { tournamentPlayers, 
+			setTournamentPlayers, 
+			setStartTheTournament, 
+			setIsReadyToPlay, 
+			setPlayer1DisplayName, 
+			setPlayer2DisplayName, 
+			setPlayer1Id,
+			setPlayer2Id } = useContext(GameContext);
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	const [ allDataMatchTournament, setAllDataMatchTournament] = useState([]);   
+	const [ isGameStarted, setIsGameStarted ] = useState(false);
 	const [ playersData, setPlayersData] = useState([]);
+
 
 	useEffect(()=>{
 		const fetchMatchesData = async () => {
@@ -68,6 +79,14 @@ const TournamentScreen = ({ scaleStyle }) => {
 		setShowConfirmModal(true);
     };
 
+	const handleStartMatch = ( player1DisplayName, player1Id, player2DisplayName, player2Id) => {
+		console.log("Starting match between:", player1DisplayName, player1Id, "and", player2DisplayName, player2Id);
+		setPlayer1DisplayName(player1DisplayName);
+		setPlayer1Id(player1Id);
+		setPlayer2DisplayName(player2DisplayName);
+		setPlayer2Id(player2Id);
+		setIsGameStarted(true);    
+	};
 
     const confirmLeave = () => {
         setIsReadyToPlay(null);
@@ -76,7 +95,14 @@ const TournamentScreen = ({ scaleStyle }) => {
         setShowConfirmModal(false);
     };
 
-    return (
+	if (isGameStarted) {
+		return (
+		<>
+			<Pong className="focus-pong" />
+		</>
+		)	
+	}else{
+		return (
         <div className="tournament-matches" style={scaleStyle}>
             <h2 className="tournament-title" style={scaleStyle}>{t("TournamentBracket")}</h2>
             
@@ -91,7 +117,17 @@ const TournamentScreen = ({ scaleStyle }) => {
                             <div className="vs">VS</div>
                             <div className="player">{playerNameMap[tournamentData.matches[0].player2] || "Player 2"}</div>
                         </div>
-                        <button className="btn button" style={scaleStyle}>
+                        <button className="btn button" 
+								style={scaleStyle} 
+								onClick={() => 
+									handleStartMatch(
+                                        playerNameMap[tournamentData.matches[0].player1] || "Player 3",
+                                        tournamentData.matches[0].player1,
+                                        playerNameMap[tournamentData.matches[0].player2] || "Player 4",
+                                        tournamentData.matches[0].player2
+                                    )
+                                }
+						>
                             {t("StartMatch")}
                         </button>
                     </div>
@@ -103,7 +139,17 @@ const TournamentScreen = ({ scaleStyle }) => {
                             <div className="vs">VS</div>
                             <div className="player">{playerNameMap[tournamentData.matches[1].player2] || "Player 4"}</div>
                         </div>
-                        <button className="btn button" style={scaleStyle} disabled>
+                        <button className="btn button" 
+								style={scaleStyle} 
+								onClick={() => 
+									handleStartMatch(
+                                        playerNameMap[tournamentData.matches[1].player1] || "Player 3",
+                                        tournamentData.matches[1].player1,
+                                        playerNameMap[tournamentData.matches[1].player2] || "Player 4",
+                                        tournamentData.matches[1].player2
+                                    )
+                                }
+						>
                             {t("StartMatch")}
                         </button>
                     </div>
@@ -140,8 +186,11 @@ const TournamentScreen = ({ scaleStyle }) => {
                 onConfirm={confirmLeave}
                 onCancel={() => setShowConfirmModal(false)}
             />
+			
         </div>
+		
     );
+}
 };
 
 export default TournamentScreen;
