@@ -15,6 +15,7 @@ router.register('tournament-create', views.TournamentViewSet, basename='tourname
 router.register('exit-tournament', views.ExitTournamentViewSet, basename='exit-tournament')
 router.register('match-tournament', views.MatchTournamentViewSet, basename='match-tournament')
 router.register('score-upload', views.ScoreRetrieveViewSet, basename='score-upload')
+router.register('exit-multiplayer', views.ExitMultiplayerViewSet, basename='exit-multiplayer')
 
 
 urlpatterns = [

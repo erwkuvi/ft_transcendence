@@ -18,6 +18,13 @@ class User(AbstractUser):
     otp_active = models.BooleanField(default=False)
 
 class PlayerProfile(models.Model):
+    LANGUAGE_CHOICES = [
+        ('en', 'English'),
+        ('de', 'German'),
+        ('pl', 'Polish'),
+        ('lt', 'Lithuanian'),
+        ('es', 'Spanish'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=50, unique=True)
     avatar = models.ImageField(
@@ -31,6 +38,12 @@ class PlayerProfile(models.Model):
     #game_alias = models.CharField(max_length=50, null=True, blank=True)
     friends = models.ManyToManyField("self", blank=True)
     in_tournament = models.BooleanField(default=False)
+    is_host = models.BooleanField(default=False)
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='en')
+    mode = models.BooleanField(default=True)#True would be dark mode on frontend, False would be light mode
+    curr_match = models.ForeignKey(
+        'Match', related_name='current_players', on_delete=models.SET_NULL,
+        null=True, blank=True)
     #online_status = models.BooleanField(default=False)
     matches = models.ManyToManyField(
         'Match', through='PlayerMatch', related_name='stats', blank=True)
