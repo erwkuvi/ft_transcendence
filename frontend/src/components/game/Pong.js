@@ -2,6 +2,8 @@
 import React, { useRef, useState, useEffect, forwardRef } from 'react';
 import { Canvas, useFrame, useLoader} from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
+import { GameContext } from "../../context/GameContext";
+import { useNavigate } from 'react-router-dom';
 import './controlPanel.css'
 import './gameStartMenu.css'
 
@@ -20,9 +22,9 @@ const	PLAYER_ONE_COLOR = "#FFFFFF";
 const	PLAYER_TWO_COLOR = "#60616D";
 
 let		BALL_SPEED = 0.12;
-const	BALL_RADIUS = 0.7; //Match ball geometry radius + plus I have added a small safety area
+const	BALL_RADIUS = 0.7;
 
-let 	MAX_SCORE_COUNT = 5;
+let 	MAX_SCORE_COUNT = 3;
 let		MAX_SET_COUNT = 3;
 
 
@@ -306,7 +308,7 @@ function ControlPanel() {
 function PlayerPanel({scores}) {
 	return (
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
-			Player 1: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | Player 2: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
+			Player 1 ({personsLoggedInId}): {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | Player 2 ({opponentsId}): {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
 		</div>
 	);
 }
@@ -423,6 +425,12 @@ function WinningScreen({player, score1, score2}) {
 }
 
 function Pong() {
+// Declare refs inside the Canvas component
+	const { opponentsId } = useContext(GameContext);
+	const { setIsSubmitting } = useContext(GameContext);
+	const { setIsOpponentAuthenticated } = useContext(GameContext); 
+	const { setIsReadyToPlay } = useContext(GameContext); 
+
 	const player1Ref = useRef();
 	const player2Ref = useRef();
 	const [gameStarted, setGameStarted] = useState(false);
@@ -438,6 +446,38 @@ function Pong() {
 		p2_won_set_count: 0,
 	});
 
+	const personsLoggedInId = localStorage.getItem('user_id');
+
+	const postMatchResults = async (winnerId, scores) => {
+		const matchData = {
+			player1: personsLoggedInId, 
+			player2: opponentsId,    
+			winner: winnerId,       
+			score_player1: scores.p1_f_score,
+			score_player2: scores.p2_f_score
+		};
+	
+		try {
+			const response = await fetch('http://localhost:8000/user_management/matches/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'JWT ' + localStorage.getItem('access_token') 
+				},
+				body: JSON.stringify(matchData)
+			});
+	
+			if (!response.ok) {
+				const errorData = await response.json();
+				console.error("Failed to post match results:", errorData);
+			} else {
+				console.log("Match results successfully saved.");
+			}
+		} catch (error) {
+			console.error("Error posting match results:", error);
+		}
+	};
+
 	const handleScore = (player) => {
 		setScores((prev) => {
 		  const updatedScores = { ...prev };
@@ -450,6 +490,7 @@ function Pong() {
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 1 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
+					postMatchResults(personsLoggedInId, updatedScores);
 					setWinner("Player1");
 				}
 			}
@@ -462,6 +503,7 @@ function Pong() {
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 2 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
+					postMatchResults(opponentsId, updatedScores);
 					setWinner("Player2");
 				}
 			}
