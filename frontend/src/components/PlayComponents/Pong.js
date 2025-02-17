@@ -418,11 +418,14 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 function WinningScreen({player, score1, score2}) {
 	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
 
+	const displayName1 = player1DisplayName || "Player 1";
+	const displayName2 = player2DisplayName || "Player 2";
+
 	return (
 		<div id="winningScreen">
 			<h2>Winner {player}</h2>
-			<p>{player1DisplayName} score: {score1}</p>
-			<p>{player2DisplayName} score: {score2}</p>
+			<p>{displayName1} score: {score1}</p>
+			<p>{displayName2} score: {score2}</p>
 		</div>
 	);
 }
@@ -452,10 +455,12 @@ function Pong() {
 
 
 	const postMatchResults = async (winnerId, scores) => {
-		if (player1Id === null || player2Id === null) {
-			console.error("Invalid player IDs:", player1Id, player2Id); //handle user not logged in
+		const isGeustMode = !player1Id || !player2Id;
+		if (isGeustMode) {
+			console.log("Guest mode, skipping posting match results.");
 			return;
 		}
+
 		const matchData = {
 			mode: "regular",
 			player1: player1Id, 
