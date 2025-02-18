@@ -22,5 +22,7 @@ python3 manage.py create_users
 
 python3 manage.py collectstatic --noinput
 
-python3 manage.py runserver 0.0.0.0:8000
+
+#python3 manage.py runserver 0.0.0.0:8000
+python3 manage.py runserver_plus --cert-file cert.pem --key-file key.pem
 #daphne backend.asgi:application -b 0.0.0.0 -p 8000

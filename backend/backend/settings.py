@@ -23,6 +23,8 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# For https connection 
+BASE_URL_SCHEME = 'https'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -39,7 +41,7 @@ HOST_IP = 'localhost'
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -55,6 +57,7 @@ INSTALLED_APPS = [
 	'rest_framework',# Toolkit for building Web APIs
     'djoser',# JWT authentication for DRF
 	'rest_framework_simplejwt.token_blacklist', # Blacklist JWT tokens
+    'django-extensions',
     'corsheaders',# Handle CORS headers
     'notifications',
 	'game',
