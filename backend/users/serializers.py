@@ -641,3 +641,22 @@ class ScoreRetrieveSerializer(serializers.Serializer):
             player_host.is_host = False
             player_host.save()
             return {"message": f"{curr_tournament.champion} is this tournament's champion"}
+
+class TournamentIdSerializer(serializers.Serializer):
+    tournament_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        tournament_id = attrs.get('tournament_id')
+
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+        except Tournament.DoesNotExist:
+            raise serializers.ValidationError("Tournament not found.")
+
+        return attrs
+
+    def create(self, validated_data):
+        tournament_id = validated_data.get('tournament_id')
+        matches = Match.objects.filter(tournament_id=tournament_id)
+
+        return MatchSerializer(matches, many=True).data
