@@ -353,6 +353,15 @@ class TournamentSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=50, required=False, allow_blank=True)
     host = serializers.IntegerField()
 
+    def validate(self, attrs):
+        player_ids = attrs.get('player_ids')
+        host = attrs.get('host')
+
+        if host not in player_ids:
+            raise serializers.ValidationError("Host must be one of the players in the tournament.")
+
+        return attrs
+
     def validate_player_ids(self, value):
         if len(value) < 2 or len(value) > 32 or (len(value) & (len(value) - 1)) != 0:
             raise serializers.ValidationError("Number of players are not enough for holding a tournament.")
