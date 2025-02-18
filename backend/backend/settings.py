@@ -55,9 +55,9 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',# Toolkit for building Web APIs
+    'django_extensions',
     'djoser',# JWT authentication for DRF
 	'rest_framework_simplejwt.token_blacklist', # Blacklist JWT tokens
-    'django-extensions',
     'corsheaders',# Handle CORS headers
     'notifications',
 	'game',
