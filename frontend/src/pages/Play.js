@@ -5,23 +5,26 @@ import { AccessibilityContext } from '../AccessibilityContext';
 import PlayNotLoggedIn from '../components/PlayComponents/PlayNotLoggedIn';
 import PlayTournamentSetup from '../components/PlayComponents/PlayTournamentSetup';
 import PlayMultiplayerMode from '../components/PlayComponents/PlayMultiplayerMode';
-import GameScreen from '../components/PlayComponents/GameScreen';
+import Pong from '../components/PlayComponents/Pong'
 import TournamentScreen from '../components/PlayComponents/TournamentScreen';
 import { GameContext } from "../context/GameContext";
 import { getUserProfile } from '../services/getProfile';
-
+import LeaveModal from '../components/PlayComponents/LeaveModal';
 
 const Play = () => {
     const { t } = useTranslation();
     const { fontSize } = useContext(AccessibilityContext);
     const { isReadyToPlay, startTheTournament } = useContext(GameContext);
 	const [ isInTournament, setIsInTournament] = useState(false);
+	const [ isTheHost, setIsTheHost ] = useState(false);
+	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const data = await getUserProfile();
                 setIsInTournament(data.in_tournament);
+				setIsTheHost(data.is_host);
             } catch (error) {
 				console.log("Failed to get user profile", error);
             }
@@ -30,7 +33,17 @@ const Play = () => {
         fetchProfile();
     }, []);
 	
+	const handleLeaveTournament = () => {
+		setShowConfirmModal(true);
+    };
+
+	const confirmLeave = () => {
+        setShowConfirmModal(false);
+		window.location.reload();
+    };
+
 	console.log("in tournament", isInTournament)
+	console.log("is the host", isTheHost)
 
     const scaleStyle = {
         fontSize: `${fontSize}px`,
@@ -43,19 +56,40 @@ const Play = () => {
 	//some check if the tournament is over 
 	//also startTheTournament is temp for leaving I need to get it from backend later
 
-	if (isInTournament && startTheTournament){
+	if (isTheHost){
 		return (
-		<>
-			<TournamentScreen scaleStyle={scaleStyle} />
-		</>
+			<>
+				<TournamentScreen scaleStyle={scaleStyle} />
+			</>
+		)
+	}else if (!isTheHost && isInTournament){
+		return (
+			<div>
+				<h3 className="page-content play" style={scaleStyle}>
+					{t("You are currently in a tournament.")}
+				</h3>
+				<div>
+					<button className="btn button mt-4" style={scaleStyle} onClick={handleLeaveTournament}>
+						{t("leave the tournament")}
+					</button>
+            	</div>
+				<LeaveModal
+					isOpen={showConfirmModal}
+					title={t("Are you sure you want to leave?")}
+					message={t("This means you will officially lose the tournament match and you can't come back to this tournament.")}
+					style={scaleStyle}
+					onConfirm={confirmLeave}
+					onCancel={() => setShowConfirmModal(false)}
+				/>
+			</div>
 		)
 	}else {
 		return (
 			<div className="page-content play">
 				{isReadyToPlay ? (
-					<GameScreen scaleStyle={scaleStyle} />
+					<Pong className="focus-pong" />
 				) : !personLoggedIn ? (
-					<PlayNotLoggedIn scaleStyle={scaleStyle} />
+					<PlayNotLoggedIn style={scaleStyle} />
 				) : (
 					<div className="play-wrapper">
 						<div className="title-container">

@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { GameContext } from "../../context/GameContext";
 import LeaveModal from './LeaveModal'
 import "./TournamentScreen.css";
-import GameScreen from './GameScreen';
-import Pong from './Pong';
+import Pong from './Pong'
 import { getInfoTournament } from '../../services/getInfoTournament'
 import { getAllPlayers } from '../../services/getAllUsers';
 
@@ -18,23 +17,21 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setPlayer2DisplayName, 
 			setPlayer1Id,
 			setPlayer2Id,
-			setIndexTournament } = useContext(GameContext);
+			gameTournamentStarted,
+			setgameTournamentStarted,
+			setMatchIndex,
+			setIDTournamentGame,
+			tournamentMatches,
+			setTournamentMatches } = useContext(GameContext);
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
-	const [ allDataMatchTournament, setAllDataMatchTournament] = useState([]);   
-	const [ isGameStarted, setIsGameStarted ] = useState(false);
 	const [ playersData, setPlayersData] = useState([]);
 
+	useEffect(() => {
+		console.log("Updated tournamentMatches:", tournamentMatches);
+	}, [tournamentMatches]);
+	
 
 	useEffect(()=>{
-		const fetchMatchesData = async () => {
-			try {
-				const matchData = await getInfoTournament();
-				console.log("Match data", matchData)
-				setAllDataMatchTournament(matchData);
-			} catch (error){
-				console.log("Failed to get matches of the tournament", error);
-			}
-		}
 		const fetchPlayersData = async () => {
 			try {
 				const players = await getAllPlayers();
@@ -44,7 +41,6 @@ const TournamentScreen = ({ scaleStyle }) => {
 				console.log("Failed to get players of the tournament", error);
 			}
 		}
-		fetchMatchesData();
 		fetchPlayersData();
 	}, []);
 	
@@ -56,38 +52,55 @@ const TournamentScreen = ({ scaleStyle }) => {
 	}, [playersData]);
 
 	const tournamentData = useMemo(() => {
+		console.log("Computing tournamentData from tournamentMatches:", tournamentMatches);
 		let players = new Set();
 		let matches = [];
+		let matchWinners = {};
 	
-		allDataMatchTournament.forEach(match => {
+		tournamentMatches.forEach(match => {
 			players.add(match.player1);
 			players.add(match.player2);
 			matches.push({
 				idx: match.idx,
+				level: match.level,
 				player1: match.player1,
 				player2: match.player2,
 				winner: match.winner
 			});
+			if (match.winner) {
+				matchWinners[match.idx] = match.winner;
+			}
 		});
 	
-		return {
+		const result = {
 			players: Array.from(players),
-			matches
+			matches,
+			match1Winner: matchWinners[0] || null,
+			match2Winner: matchWinners[1] || null,
 		};
-	}, [allDataMatchTournament]);
-	
+		
+		console.log("Computed tournamentData:", result);
+		return result;
+	}, [tournamentMatches]);
+
+	console.log("Tournament Matches:", tournamentMatches);
+
+	console.log("Tournament Data:", JSON.stringify(tournamentData, null, 2));
+
     const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
     };
 
-	const handleStartMatch = ( player1DisplayName, player1Id, player2DisplayName, player2Id, idx) => {
+	const handleStartMatch = ( player1DisplayName, player1Id, player2DisplayName, player2Id, matchIndex, matchId) => {
 		console.log("Starting match between:", player1DisplayName, player1Id, "and", player2DisplayName, player2Id);
+		console.log("Index of match", matchIndex, "and id of match", matchId)
 		setPlayer1DisplayName(player1DisplayName);
 		setPlayer1Id(player1Id);
 		setPlayer2DisplayName(player2DisplayName);
 		setPlayer2Id(player2Id);
-		setIndexTournament(idx);
-		setIsGameStarted(true);    
+		setMatchIndex(matchIndex)
+		setIDTournamentGame(matchId);
+		setgameTournamentStarted(true);    
 	};
 
     const confirmLeave = () => {
@@ -97,11 +110,16 @@ const TournamentScreen = ({ scaleStyle }) => {
         setShowConfirmModal(false);
     };
 
-	if (isGameStarted) {
+	// if (!tournamentData) {
+    //     return <div>Loading tournament data...</div>;
+    // }
+
+
+	if (gameTournamentStarted) {
 		return (
-		<>
-			<Pong className="focus-pong" />
-		</>
+			<>
+				<Pong className="focus-pong" />
+			</>
 		)	
 	}else{
 		return (
@@ -121,13 +139,15 @@ const TournamentScreen = ({ scaleStyle }) => {
                         </div>
                         <button className="btn button" 
 								style={scaleStyle} 
+								disabled={tournamentData.matches[0].winner !== null}
 								onClick={() => 
 									handleStartMatch(
-                                        playerNameMap[tournamentData.matches[0].player1] || "Player 3",
+                                        playerNameMap[tournamentData.matches[0].player1] || "Player 1",
                                         tournamentData.matches[0].player1,
-                                        playerNameMap[tournamentData.matches[0].player2] || "Player 4",
+                                        playerNameMap[tournamentData.matches[0].player2] || "Player 2",
                                         tournamentData.matches[0].player2,
-										tournamentData.matches[0].idx
+										1,
+										tournamentData.matches[0].id
                                     )
                                 }
 						>
@@ -144,13 +164,15 @@ const TournamentScreen = ({ scaleStyle }) => {
                         </div>
                         <button className="btn button" 
 								style={scaleStyle} 
+								disabled={tournamentData.matches[1].winner !== null}
 								onClick={() => 
 									handleStartMatch(
-                                        playerNameMap[tournamentData.matches[1].player1] || "Player 3",
+                                        playerNameMap[tournamentData.matches[1].player1] || "Player 1",
                                         tournamentData.matches[1].player1,
-                                        playerNameMap[tournamentData.matches[1].player2] || "Player 4",
+                                        playerNameMap[tournamentData.matches[1].player2] || "Player 2",
                                         tournamentData.matches[1].player2,
-										tournamentData.matches[1].idx
+										1,
+										tournamentData.matches[1].id
                                     )
                                 }
 						>
@@ -163,15 +185,34 @@ const TournamentScreen = ({ scaleStyle }) => {
 
                 <div className="round round-2">
                     <div className="match-box final">
-                        <h3 style={scaleStyle}>{t("FinalMatch")}</h3>
-                        <div className="players">
-                            <div className="player">{"???"}</div>
-                            <div className="vs">VS</div>
-                            <div className="player">{"???"}</div>
-                        </div>
-                        <button className="btn button" style={scaleStyle} disabled>
-                            {t("StartMatch")}
-                        </button>
+					<h3 style={scaleStyle}>{t("FinalMatch")}</h3>
+						<div className="players">
+							<div className="player">
+								{tournamentData.match1Winner ? playerNameMap[tournamentData.match1Winner] || "???" : "???"}
+							</div>
+							<div className="vs">VS</div>
+							<div className="player">
+								{tournamentData.match2Winner ? playerNameMap[tournamentData.match2Winner] || "???" : "???"}
+							</div>
+						</div>
+						<button className="btn button" 
+								style={scaleStyle} 
+								disabled={!tournamentData.match1Winner || !tournamentData.match2Winner} 
+								onClick={() => {
+									if (tournamentData.match1Winner && tournamentData.match2Winner) {
+										handleStartMatch(
+											playerNameMap[tournamentData.match1Winner] || "Player 1",
+											tournamentData.match1Winner,
+											playerNameMap[tournamentData.match2Winner] || "Player 2",
+											tournamentData.match2Winner,
+											0,
+											tournamentData.matches[2].id
+										);
+									}
+								}}
+						>
+							{t("StartMatch")}
+						</button>
                     </div>
                 </div>
             </div>
@@ -185,8 +226,8 @@ const TournamentScreen = ({ scaleStyle }) => {
             <LeaveModal
                 isOpen={showConfirmModal}
                 title={t("Are you sure you want to leave?")}
-                message={t("This means you will officially lose the tournament match and you can't come back to this tournament.")}
-				scaleStyle={scaleStyle}
+                message={t("This means you will officially end the tournament.")}
+				style={scaleStyle}
                 onConfirm={confirmLeave}
                 onCancel={() => setShowConfirmModal(false)}
             />

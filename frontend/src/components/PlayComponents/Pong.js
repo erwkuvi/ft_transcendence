@@ -2,9 +2,13 @@
 import React, { useRef, useState, useEffect, forwardRef, useContext } from 'react';
 import { Canvas, useFrame, useLoader} from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
+import { AccessibilityContext } from '../../AccessibilityContext';
 import { GameContext } from "../../context/GameContext";
 import '../game/controlPanel.css'
 import '../game/gameStartMenu.css'
+import BackButton from './BackButton';
+import PlayNextGame from './PlayNextGame';
+import UltimateWinner from './UltimateWinner';
 
 let 	FIELD_WIDTH         = 26;
 let 	FIELD_LEN           = 32;
@@ -26,7 +30,7 @@ let		BALL_SPEED          = STARTING_BALL_SPEED;
 const	BALL_RADIUS         = 0.7;
 
 const 	MAX_SCORE_COUNT     = 3;
-const 	MAX_SET_COUNT       = 3;
+const 	MAX_SET_COUNT       = 0; //dev
 
 
 function Ball({player1Ref, player2Ref, handleScore}) {
@@ -416,7 +420,13 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 }
 
 function WinningScreen({player, score1, score2}) {
-	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
+	const { player1DisplayName, player2DisplayName, matchIndex } = useContext(GameContext);
+	const { fontSize } = useContext(AccessibilityContext);
+
+	const scaleStyle = {
+        fontSize: `${fontSize}px`,
+        lineHeight: '1.5'
+    };
 
 	const displayName1 = player1DisplayName || "Player 1";
 	const displayName2 = player2DisplayName || "Player 2";
@@ -426,6 +436,16 @@ function WinningScreen({player, score1, score2}) {
 			<h2>Winner {player}</h2>
 			<p>{displayName1} score: {score1}</p>
 			<p>{displayName2} score: {score2}</p>
+			
+			{(player1DisplayName && player2DisplayName) ? (
+				matchIndex === 1 ? (
+					<PlayNextGame scaleStyle={scaleStyle} />
+				) : matchIndex === 0 ? (
+					<UltimateWinner scaleStyle={scaleStyle} />
+				) : null
+			) : (
+				<BackButton scaleStyle={scaleStyle} />
+			)}
 		</div>
 	);
 }
@@ -434,7 +454,8 @@ function Pong() {
 // Declare refs inside the Canvas component
 	const { player1Id,
 			player2Id,
-			indexTournament } = useContext(GameContext);
+			iDTournamentGame,
+			tournamentMatches } = useContext(GameContext);
 
 
 	const player1Ref = useRef();
@@ -444,7 +465,7 @@ function Pong() {
 	const [winner, setWinner] = useState(null);
 	BALL_SPEED = STARTING_BALL_SPEED;
 
-
+console.log("match Id rn: ", iDTournamentGame);
 	const [scores, setScores] = useState({
 		p1_f_score: 0,
 		p2_f_score: 0,
@@ -456,12 +477,12 @@ function Pong() {
 
 
 	const postMatchResults = async (winnerId, scores) => {
-		const isGeustMode = !player1Id || !player2Id;
-		if (isGeustMode) {
+		const isGuestMode = !player1Id || !player2Id;
+		if (isGuestMode) {
 			console.log("Guest mode, skipping posting match results.");
 			return;
 		}
-
+	
 		const matchData = {
 			mode: "regular",
 			player1: player1Id, 
@@ -470,9 +491,56 @@ function Pong() {
 			score_player1: scores.p1_f_score,
 			score_player2: scores.p2_f_score,
 		};
-
+	
+		const tournamentMatchData = {
+			id: iDTournamentGame || null,
+			score_player1: scores.p1_f_score,
+			score_player2: scores.p2_f_score,
+			winner: winnerId || null
+		};
+	
+		if (iDTournamentGame) {
+			// Tournament mode: Handle posting tournament match data
+			await postTournamentMatchResults(tournamentMatchData);
+		} else {
+			// Regular mode: Handle posting regular match data
+			await postRegularMatchResults(matchData);
+		}
+	};
+	
+	const postTournamentMatchResults = async (tournamentMatchData) => {
+		const endpoint = 'http://localhost:8000/user_management/score-upload/';
+	
 		try {
-			const response = await fetch('http://localhost:8000/user_management/matches/', {
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'JWT ' + localStorage.getItem('access_token') 
+				},
+				body: JSON.stringify(tournamentMatchData)
+			});
+	
+			if (!response.ok) {
+				const errorData = await response.json();
+				console.error("Failed to post tournament match results:", errorData);
+				return;
+			}
+	
+			const updatedMatchData = await response.json();
+			updateTournamentMatches(updatedMatchData);
+	
+			console.log("Tournament match results successfully saved.");
+		} catch (error) {
+			console.error("Error posting tournament match results:", error);
+		}
+	};
+	
+	const postRegularMatchResults = async (matchData) => {
+		const endpoint = 'http://localhost:8000/user_management/matches/';
+	
+		try {
+			const response = await fetch(endpoint, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -480,19 +548,37 @@ function Pong() {
 				},
 				body: JSON.stringify(matchData)
 			});
-			const textResponse = await response.text();  // Get raw text response
-			console.log("Raw response:", textResponse);
+	
 			if (!response.ok) {
 				const errorData = await response.json();
-				console.error("Failed to post match results:", errorData);
-			} else {
-				console.log("Match results successfully saved.");
+				console.error("Failed to post regular match results:", errorData);
+				return;
 			}
+	
+			console.log("Regular match results successfully saved.");
 		} catch (error) {
-			console.error("Error posting match results:", error);
+			console.error("Error posting regular match results:", error);
 		}
 	};
-
+	
+	const updateTournamentMatches = (updatedMatchData) => {
+		if (tournamentMatches.length > 0) {
+			const updatedMatches = tournamentMatches.map(match => {
+				if (match.id === iDTournamentGame) {
+					return {
+						...match,
+						winner: updatedMatchData.winner,
+						score_player1: updatedMatchData.score_player1,
+						score_player2: updatedMatchData.score_player2
+					};
+				}
+				return match;
+			});
+	
+			setTournamentMatches(updatedMatches);
+		}
+	};
+	
 	const handleScore = (player) => {
 		setScores((prev) => {
 		  const updatedScores = { ...prev };

@@ -511,7 +511,7 @@ class ExitTournamentSerializer(serializers.Serializer):
         player.save()
 
         if player.is_host:
-            delete_tournament_and_update_players(tournament.id) 
+            # delete_tournament_and_update_players(tournament.id) 
             return {"message": "Tournament has been destroyed due to the host leaving"}
 
         if match:

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import { useTranslation } from "react-i18next";
 import AuthTournamentForm from './AuthTournamentForm';
 import { GameContext } from "../../context/GameContext";
@@ -7,9 +7,13 @@ import "./PlayTournamentSetup.css";
 
 const PlayTournamentSetup = ({ scaleStyle }) => {
     const { t } = useTranslation();
-	const { isTournamentReady, setStartTheTournament, tournamentPlayers, setTournamentPlayers  } = useContext(GameContext);
+	const { isTournamentReady, 
+			setStartTheTournament, 
+			tournamentPlayers, 
+			setTournamentPlayers,
+			setTournamentMatches,
+			setTournamentMatchID } = useContext(GameContext);
 
-	
 	const userLoggedInId = localStorage.getItem('user_id');
 	const userLoggedInDisplayName = localStorage.getItem('display_name');
 	console.log("print the players", tournamentPlayers);
@@ -29,7 +33,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 
 		const createTournamentData = {
 			player_ids: allPlayers, 
-			host: Number(userLoggedInId),
+			host: userLoggedInId,
 		};
 
 		try{
@@ -41,12 +45,38 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				},
 				body: JSON.stringify(createTournamentData),
 			});
-				if (!response.ok) {
-					const errorData = await response.json();
-					console.error("Failed to post players: ", errorData);
-				} else {
-					console.log("Saved players to the tournament");
+			const data = await response.json();
+			console.log("What is in data, tournament create", data)
+
+			if (!response.ok) {
+				let errorMessage = "An error occurred while creating the tournament.";
+	
+				if (response.status === 400) {
+					if (data.detail) {
+						errorMessage = data.detail; 
+					} else if (typeof data === "object") {
+
+						const firstKey = Object.keys(data)[0];
+						errorMessage = data[firstKey] || errorMessage;
+					} else if (typeof data === "string") {
+
+						errorMessage = data;
+					}
+				}
+	
+					alert(errorMessage);
+					setTournamentPlayers([]);
+					return;
+				}
+				if (Array.isArray(data)) {
+					console.log("Tournament created successfully:", data);
+					setTournamentMatches(data); 
 					setStartTheTournament(true);
+					window.location.reload();
+				
+				} else {
+					console.error("Unexpected response format:", data);
+
 				}
 
 		}catch (error) {

@@ -24,6 +24,7 @@
 
 	"LogInButton": "LOG IN WITH 42",
 
+	"You are currently in a tournament.": "You are currently in a tournament.",
 	"AboutTitle": "about",
 	"AboutT1": "This website is the result of the final project in the common core at 42 school, ft_transcendence. ",
 	"AboutT2": "It is built using HTML/CSS, Bootstrap, React, Django, and PostgreSQL.",
