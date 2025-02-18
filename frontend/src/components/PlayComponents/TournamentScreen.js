@@ -22,15 +22,12 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setMatchIndex,
 			setIDTournamentGame,
 			tournamentMatches,
-			setTournamentMatches } = useContext(GameContext);
+			tournamentMatchID } = useContext(GameContext);
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	const [ playersData, setPlayersData] = useState([]);
+	const [fetchedTournamentData, setFetchedTournamentData] = useState([]);
 
-	useEffect(() => {
-		console.log("Updated tournamentMatches:", tournamentMatches);
-	}, [tournamentMatches]);
 	
-
 	useEffect(()=>{
 		const fetchPlayersData = async () => {
 			try {
@@ -44,6 +41,24 @@ const TournamentScreen = ({ scaleStyle }) => {
 		fetchPlayersData();
 	}, []);
 	
+	useEffect(() => {
+		const fetchTournamentData = async () => {
+			// if (!tournamentMatchID) return; // Prevent fetching if ID is undefined
+			
+			try {
+				const response = await fetch(`http://localhost:8000/user_management/tournaments/2/`);
+				if (!response.ok) throw new Error("Failed to fetch tournament data");
+				
+				const data = await response.json();
+				setFetchedTournamentData(data); // Update state with fetched matches
+			} catch (error) {
+				console.error("Error fetching tournament data:", error);
+			}
+		};
+		
+		fetchTournamentData();
+	}, [tournamentMatchID]);
+	
 	const playerNameMap = useMemo(() => {
 		return playersData.reduce((map, player) => {
 			map[player.user_id] = player.display_name;
@@ -52,41 +67,53 @@ const TournamentScreen = ({ scaleStyle }) => {
 	}, [playersData]);
 
 	const tournamentData = useMemo(() => {
-		console.log("Computing tournamentData from tournamentMatches:", tournamentMatches);
-		let players = new Set();
-		let matches = [];
-		let matchWinners = {};
-	
-		tournamentMatches.forEach(match => {
-			players.add(match.player1);
-			players.add(match.player2);
+		console.log("Computing tournamentData from fetchedTournamentData:", fetchedTournamentData);
+		
+		let players = new Set();  // For unique players
+		let matches = [];         // To hold the matches
+		let matchWinners = {};    // To track winners by match ID
+		
+		fetchedTournamentData.forEach((match) => {
+			// Add player1 and player2 to the players set (unique list of players)
+			if (match.player1) players.add(match.player1);
+			if (match.player2) players.add(match.player2);
+			
+			// Add match details
 			matches.push({
-				idx: match.idx,
-				level: match.level,
+				id: match.id,
 				player1: match.player1,
 				player2: match.player2,
-				winner: match.winner
+				winner: match.winner,
 			});
-			if (match.winner) {
-				matchWinners[match.idx] = match.winner;
+	
+			// If a winner exists, store it
+			if (match.winner !== null) {
+				matchWinners[match.id] = match.winner;
 			}
 		});
 	
+		// Return the structure with players, matches, and match winners
 		const result = {
-			players: Array.from(players),
-			matches,
-			match1Winner: matchWinners[0] || null,
-			match2Winner: matchWinners[1] || null,
+			players: Array.from(players),  // List of unique players
+			matches,                       // All matches with player1, player2, and winner
+			matchWinners,                 // Map of match winners
 		};
-		
+	
 		console.log("Computed tournamentData:", result);
 		return result;
-	}, [tournamentMatches]);
+	}, [fetchedTournamentData]);  // Only recompute when fetchedTournamentData changes
+	// Only recompute when fetchedTournamentData changes
+	
+	
+	console.log("What is the id of the tournament: ", tournamentMatchID)
+	console.log("Tournament Matches:", fetchedTournamentData);
+	
+	// console.log("Tournament Data:",  tournamentData.matches[0].player1 );
+	
+	useEffect (() => {
 
-	console.log("Tournament Matches:", tournamentMatches);
-
-	console.log("Tournament Data:", JSON.stringify(tournamentData, null, 2));
-
+	}, [tournamentData]);
+	console.log("tournamet data", tournamentData)
     const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
     };
@@ -102,7 +129,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 		setIDTournamentGame(matchId);
 		setgameTournamentStarted(true);    
 	};
-
+	
     const confirmLeave = () => {
         setIsReadyToPlay(null);
         setStartTheTournament(false);
@@ -111,19 +138,19 @@ const TournamentScreen = ({ scaleStyle }) => {
     };
 
 	// if (!tournamentData) {
-    //     return <div>Loading tournament data...</div>;
-    // }
-
-
-	if (gameTournamentStarted) {
-		return (
-			<>
+		//     return <div>Loading tournament data...</div>;
+		// }
+		
+		
+		if (gameTournamentStarted) {
+			return (
+				<>
 				<Pong className="focus-pong" />
 			</>
 		)	
 	}else{
 		return (
-        <div className="tournament-matches" style={scaleStyle}>
+			<div className="tournament-matches" style={scaleStyle}>
             <h2 className="tournament-title" style={scaleStyle}>{t("TournamentBracket")}</h2>
             
             <div className="tournament-bracket">
@@ -183,28 +210,34 @@ const TournamentScreen = ({ scaleStyle }) => {
 					)}
                 </div>
 
-                <div className="round round-2">
-                    <div className="match-box final">
-					<h3 style={scaleStyle}>{t("FinalMatch")}</h3>
+				<div className="round round-2">
+					<div className="match-box final">
+						<h3 style={scaleStyle}>{t("FinalMatch")}</h3>
 						<div className="players">
 							<div className="player">
-								{tournamentData.match1Winner ? playerNameMap[tournamentData.match1Winner] || "???" : "???"}
+								{/* Ensure matches has 3 elements and that player1 is defined */}
+								{tournamentData.matches.length > 2 && tournamentData.matches[2] && tournamentData.matches[2].player1
+									? playerNameMap[tournamentData.matches[2].player1] || "???"
+									: "???"}
 							</div>
 							<div className="vs">VS</div>
 							<div className="player">
-								{tournamentData.match2Winner ? playerNameMap[tournamentData.match2Winner] || "???" : "???"}
+								{/* Ensure matches has 3 elements and that player2 is defined */}
+								{tournamentData.matches.length > 2 && tournamentData.matches[2] && tournamentData.matches[2].player2
+									? playerNameMap[tournamentData.matches[2].player2] || "???"
+									: "???"}
 							</div>
 						</div>
 						<button className="btn button" 
 								style={scaleStyle} 
-								disabled={!tournamentData.match1Winner || !tournamentData.match2Winner} 
+								disabled={!tournamentData.matches[2] || !tournamentData.matches[2].player1 || !tournamentData.matches[2].player2} 
 								onClick={() => {
-									if (tournamentData.match1Winner && tournamentData.match2Winner) {
+									if (tournamentData.matches[2] && tournamentData.matches[2].player1 && tournamentData.matches[2].player2) {
 										handleStartMatch(
-											playerNameMap[tournamentData.match1Winner] || "Player 1",
-											tournamentData.match1Winner,
-											playerNameMap[tournamentData.match2Winner] || "Player 2",
-											tournamentData.match2Winner,
+											playerNameMap[tournamentData.matches[2].player1] || "Player 1",
+											tournamentData.matches[2].player1,
+											playerNameMap[tournamentData.matches[2].player2] || "Player 2",
+											tournamentData.matches[2].player2,
 											0,
 											tournamentData.matches[2].id
 										);
@@ -213,8 +246,10 @@ const TournamentScreen = ({ scaleStyle }) => {
 						>
 							{t("StartMatch")}
 						</button>
-                    </div>
-                </div>
+					</div>
+				</div>
+
+
             </div>
 
             <div>

@@ -12,6 +12,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			tournamentPlayers, 
 			setTournamentPlayers,
 			setTournamentMatches,
+			tournamentMatchID,
 			setTournamentMatchID } = useContext(GameContext);
 
 	const userLoggedInId = localStorage.getItem('user_id');
@@ -70,7 +71,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				}
 				if (Array.isArray(data)) {
 					console.log("Tournament created successfully:", data);
-					setTournamentMatches(data); 
+					setTournamentMatchID(data.tournament); 
 					setStartTheTournament(true);
 					window.location.reload();
 				
