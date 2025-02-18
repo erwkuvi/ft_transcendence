@@ -510,7 +510,7 @@ class ExitTournamentSerializer(serializers.Serializer):
         user_id = validated_data.get('user_id')
         player = PlayerProfile.objects.get(user_id=user_id)
         match = player.curr_match
-        tournament= match.tournament
+        tournament = match.tournament
 
         player.in_tournament = False
         player.curr_match = None
@@ -535,7 +535,7 @@ class ExitTournamentSerializer(serializers.Serializer):
             else:
                 raise serializers.ValidationError(score_serializer.errors)
 
-        return {"user_id": user_id, "in_tournament": player.in_tournament}
+        return {"message": f"{player.display_name} has left the tournament"}
 
 
 #class TournamentSerializer(serializers.ModelSerializer):
