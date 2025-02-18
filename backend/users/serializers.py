@@ -353,6 +353,15 @@ class TournamentSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=50, required=False, allow_blank=True)
     host = serializers.IntegerField()
 
+    def validate(self, attrs):
+        player_ids = attrs.get('player_ids')
+        host = attrs.get('host')
+
+        if host not in player_ids:
+            raise serializers.ValidationError("Host must be one of the players in the tournament.")
+
+        return attrs
+
     def validate_player_ids(self, value):
         if len(value) < 2 or len(value) > 32 or (len(value) & (len(value) - 1)) != 0:
             raise serializers.ValidationError("Number of players are not enough for holding a tournament.")
@@ -504,7 +513,7 @@ class ExitTournamentSerializer(serializers.Serializer):
         user_id = validated_data.get('user_id')
         player = PlayerProfile.objects.get(user_id=user_id)
         match = player.curr_match
-        tournament= match.tournament
+        tournament = match.tournament
 
         player.in_tournament = False
         player.curr_match = None
@@ -529,7 +538,7 @@ class ExitTournamentSerializer(serializers.Serializer):
             else:
                 raise serializers.ValidationError(score_serializer.errors)
 
-        return {"user_id": user_id, "in_tournament": player.in_tournament}
+        return {"message": f"{player.display_name} has left the tournament"}
 
 
 #class TournamentSerializer(serializers.ModelSerializer):
@@ -635,3 +644,22 @@ class ScoreRetrieveSerializer(serializers.Serializer):
             player_host.is_host = False
             player_host.save()
             return {"message": f"{curr_tournament.champion} is this tournament's champion"}
+
+class TournamentIdSerializer(serializers.Serializer):
+    tournament_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        tournament_id = attrs.get('tournament_id')
+
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+        except Tournament.DoesNotExist:
+            raise serializers.ValidationError("Tournament not found.")
+
+        return attrs
+
+    def create(self, validated_data):
+        tournament_id = validated_data.get('tournament_id')
+        matches = Match.objects.filter(tournament_id=tournament_id)
+
+        return MatchSerializer(matches, many=True).data
