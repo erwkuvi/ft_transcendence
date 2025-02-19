@@ -111,7 +111,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode', 'tournament'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
@@ -639,6 +639,7 @@ class ScoreRetrieveSerializer(serializers.Serializer):
             curr_tournament.save()
             player_winner = PlayerProfile.objects.get(user_id=winner_id)
             player_winner.curr_match = None
+            player_winner.in_tournament = None
             player_winner.save()
             player_host = PlayerProfile.objects.get(user_id=curr_tournament.host)
             player_host.is_host = False
