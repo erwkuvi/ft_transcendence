@@ -642,6 +642,7 @@ class ScoreRetrieveSerializer(serializers.Serializer):
             curr_tournament.save()
             player_winner = PlayerProfile.objects.get(user_id=winner_id)
             player_winner.curr_match = None
+            player_winner.in_tournament = None
             player_winner.save()
             player_host = PlayerProfile.objects.get(user_id=curr_tournament.host)
             player_host.is_host = False
