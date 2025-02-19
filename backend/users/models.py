@@ -39,6 +39,7 @@ class PlayerProfile(models.Model):
     friends = models.ManyToManyField("self", blank=True)
     in_tournament = models.BooleanField(default=False)
     is_host = models.BooleanField(default=False)
+    tournament = models.ForeignKey('Tournament', related_name='player_profiles', on_delete=models.SET_NULL, null=True, blank=True)
     language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='en')
     mode = models.BooleanField(default=True)#True would be dark mode on frontend, False would be light mode
     curr_match = models.ForeignKey(
@@ -70,7 +71,7 @@ class Match(models.Model):
     idx = models.IntegerField(default=0)
     level = models.IntegerField(default=0)
     finished = models.BooleanField(default=False)
-    tournament = models.ForeignKey(Tournament, related_name='tournament', on_delete=models.CASCADE, null=True, blank=True)
+    tournament = models.ForeignKey(Tournament, related_name='matches', on_delete=models.CASCADE, null=True, blank=True)
     player1 = models.ForeignKey(
         PlayerProfile, related_name='player1_matches',
         on_delete=models.CASCADE)

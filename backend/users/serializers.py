@@ -111,7 +111,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode', 'tournament'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
@@ -407,6 +407,8 @@ class TournamentSerializer(serializers.Serializer):
             description=validated_data.get('description', ''),
             host=host
         )
+        player_profile.tournament = tournament
+        player_profile.save()
     
         player_profiles = PlayerProfile.objects.filter(user_id__in=player_ids)
         
@@ -491,6 +493,7 @@ class ExitTournamentSerializer(serializers.Serializer):
 
         return attrs
 
+    @staticmethod
     def delete_tournament_and_update_players(tournament_id):
         try:
             tournament = Tournament.objects.get(id=tournament_id)
@@ -520,7 +523,7 @@ class ExitTournamentSerializer(serializers.Serializer):
         player.save()
 
         if player.is_host:
-            # delete_tournament_and_update_players(tournament.id) 
+            ExitTournamentSerializer.delete_tournament_and_update_players(tournament.id)
             return {"message": "Tournament has been destroyed due to the host leaving"}
 
         if match:
@@ -642,6 +645,7 @@ class ScoreRetrieveSerializer(serializers.Serializer):
             player_winner.save()
             player_host = PlayerProfile.objects.get(user_id=curr_tournament.host)
             player_host.is_host = False
+            player_host.tournament = None
             player_host.save()
             return {"message": f"{curr_tournament.champion} is this tournament's champion"}
 

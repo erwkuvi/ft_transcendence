@@ -23,6 +23,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setMatchIndex,
 			setIDTournamentGame,
 			tournamentMatches,
+			setTournamentMatchID,
 			tournamentMatchID } = useContext(GameContext);
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	const [ playersData, setPlayersData] = useState([]);
@@ -33,8 +34,16 @@ const TournamentScreen = ({ scaleStyle }) => {
 		const fetchPlayersData = async () => {
 			try {
 				const players = await getAllPlayers();
+
+				console.log("Players data", players);
+
 				setPlayersData(players)
-				// console.log("Players data", players);
+				const loggedInUserId = parseInt(localStorage.getItem("user_id"), 10);
+				const host = players.find(player => player.user_id === loggedInUserId);
+				if (host && host.tournament) {
+					let tournamentId = parseInt(host.tournament, 10);
+					setTournamentMatchID(tournamentId);
+				  }
 			} catch (error){
 				console.log("Failed to get players of the tournament", error);
 			}
@@ -48,7 +57,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 			// if (!tournamentMatchID) return; // Prevent fetching if ID is undefined
 			
 			try {
-				const response = await fetch(`http://localhost:8000/user_management/tournaments/1/`);
+				const response = await fetch(`http://localhost:8000/user_management/tournaments/${tournamentMatchID}/`);
 				if (!response.ok) throw new Error("Failed to fetch tournament data");
 				
 				const data = await response.json();
@@ -59,7 +68,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 		};
 		
 		fetchTournamentData();
-	}, [gameTournamentStarted]);
+	}, [gameTournamentStarted, tournamentMatchID]);
 	
 	const playerNameMap = useMemo(() => {
 		return playersData.reduce((map, player) => {
