@@ -6,6 +6,7 @@ import "./TournamentScreen.css";
 import Pong from './Pong'
 import { getInfoTournament } from '../../services/getInfoTournament'
 import { getAllPlayers } from '../../services/getAllUsers';
+import { createTournament } from '../../services/postCreateTournament';  // Import your service
 
 const TournamentScreen = ({ scaleStyle }) => {
     const { t } = useTranslation();
@@ -43,10 +44,11 @@ const TournamentScreen = ({ scaleStyle }) => {
 	
 	useEffect(() => {
 		const fetchTournamentData = async () => {
+			console.log("The id of the tournament is now: ", tournamentMatchID)
 			// if (!tournamentMatchID) return; // Prevent fetching if ID is undefined
 			
 			try {
-				const response = await fetch(`http://localhost:8000/user_management/tournaments/2/`);
+				const response = await fetch(`http://localhost:8000/user_management/tournaments/1/`);
 				if (!response.ok) throw new Error("Failed to fetch tournament data");
 				
 				const data = await response.json();
@@ -57,7 +59,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 		};
 		
 		fetchTournamentData();
-	}, [tournamentMatchID]);
+	}, [gameTournamentStarted]);
 	
 	const playerNameMap = useMemo(() => {
 		return playersData.reduce((map, player) => {
@@ -110,9 +112,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 	
 	// console.log("Tournament Data:",  tournamentData.matches[0].player1 );
 	
-	useEffect (() => {
 
-	}, [tournamentData]);
 	console.log("tournamet data", tournamentData)
     const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
@@ -130,19 +130,35 @@ const TournamentScreen = ({ scaleStyle }) => {
 		setgameTournamentStarted(true);    
 	};
 	
-    const confirmLeave = () => {
-        setIsReadyToPlay(null);
-        setStartTheTournament(false);
-        setTournamentPlayers([]);
-        setShowConfirmModal(false);
-    };
+
+	const confirmLeave = async () => {
+		try {
+			const response = await fetch("http://localhost:8000/user_management/exit-tournament/", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ user_id: localStorage.getItem("user_id") }),
+			});
+	
+			if (!response.ok) throw new Error("Failed to exit tournament");
+	
+			console.log("Successfully exited tournament");
+			setIsReadyToPlay(null);
+			setStartTheTournament(false);
+			setTournamentPlayers([]);
+			setShowConfirmModal(false);
+			window.location.reload(); // Or another way to update state
+		} catch (error) {
+			console.error("Error exiting tournament:", error);
+		}
+	};
+
 
 	// if (!tournamentData) {
 		//     return <div>Loading tournament data...</div>;
 		// }
 		
 		
-		if (gameTournamentStarted) {
+	if (gameTournamentStarted) {
 			return (
 				<>
 				<Pong className="focus-pong" />

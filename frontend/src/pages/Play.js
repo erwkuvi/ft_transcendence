@@ -14,7 +14,7 @@ import LeaveModal from '../components/PlayComponents/LeaveModal';
 const Play = () => {
     const { t } = useTranslation();
     const { fontSize } = useContext(AccessibilityContext);
-    const { isReadyToPlay, startTheTournament } = useContext(GameContext);
+    const { isReadyToPlay, gameTournamentStarted } = useContext(GameContext);
 	const [ isInTournament, setIsInTournament] = useState(false);
 	const [ isTheHost, setIsTheHost ] = useState(false);
 	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
@@ -31,16 +31,30 @@ const Play = () => {
         };
 		
         fetchProfile();
-    }, []);
+    }, [gameTournamentStarted]);
 	
 	const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
     };
 
-	const confirmLeave = () => {
-        setShowConfirmModal(false);
-		window.location.reload();
-    };
+	const confirmLeave = async () => {
+		try {
+			const response = await fetch("http://localhost:8000/user_management/exit-tournament/", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ user_id: localStorage.getItem("user_id") }),
+			});
+	
+			if (!response.ok) throw new Error("Failed to exit tournament");
+	
+			console.log("Successfully exited tournament");
+			setShowConfirmModal(false);
+			window.location.reload(); // Or another way to update state
+		} catch (error) {
+			console.error("Error exiting tournament:", error);
+		}
+	};
+	
 
 	console.log("in tournament", isInTournament)
 	console.log("is the host", isTheHost)
@@ -53,8 +67,6 @@ const Play = () => {
     const personLoggedIn = localStorage.getItem('user_id');
     console.log("person logged in is: ", personLoggedIn);
 
-	//some check if the tournament is over 
-	//also startTheTournament is temp for leaving I need to get it from backend later
 
 	if (isTheHost){
 		return (
