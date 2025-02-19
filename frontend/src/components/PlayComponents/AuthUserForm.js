@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import { GameContext } from "../../context/GameContext";
 import { useTranslation } from "react-i18next";
 
+import './AuthUserForm.css'
+
 const AuthUserForm = ({scaleStyle}) => {
 	const { t } = useTranslation();
 	const { isOpponentAuthenticated, 
@@ -54,9 +56,9 @@ const AuthUserForm = ({scaleStyle}) => {
 			<h4 style={scaleStyle}>
                 {t("Add a player")}
             </h4>
-            <p style={scaleStyle}>
+            <p style={scaleStyle} class="AuthUser_and_TournamentFormInput_holder">
 				{t("Username")}
-                <input 	value={credentials.username} 
+                <input 	value={credentials.username} className="AuthUser_and_TournamentFormInput"
 						style={scaleStyle}
 						onChange={(e) => setCredentials({ ...credentials, username: e.target.value })} 
 						required 
@@ -71,7 +73,7 @@ const AuthUserForm = ({scaleStyle}) => {
 						required 
 				/>
                 <button type="submit" 
-						className="btn button"
+						className="submitInfoBtn" /*btn button*/
 						style={scaleStyle}
 						disabled={isOpponentAuthenticated || isBeeingSubmitted}>
                     {isOpponentAuthenticated ?  t("Ready")  : t("Submit")}

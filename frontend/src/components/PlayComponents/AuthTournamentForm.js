@@ -79,7 +79,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
                     ))}
                 </div>
             )}
-            <p style={scaleStyle}>
+            <p style={scaleStyle} class="AuthUser_and_TournamentFormInput_holder">
                 {t("Username")}
                 <input 
 					ref={usernameInputRef}
@@ -100,7 +100,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
                 />
                 <button 
                     type="submit"
-                    className="btn button"
+                    className="submitInfoBtn"
                     style={scaleStyle}
                     disabled={isBeingSubmitted}
                 >

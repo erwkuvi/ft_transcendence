@@ -19,7 +19,7 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
                             <h3 style={scaleStyle}>{t("PlayTitleNotLoggedIn")}</h3>
                             <p style={scaleStyle}>{t("PlayDescriptionNotLoggedIn")}</p>
                             <button 
-                                className="btn button" 
+                                className="btn button " /*startGameBtn*/ 
                                 style={scaleStyle} 
                                 onClick={() => {
 									setPlayer1DisplayName("Player 1");

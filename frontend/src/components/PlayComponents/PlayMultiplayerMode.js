@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import AuthUserForm from './AuthUserForm';
 import { GameContext } from "../../context/GameContext";
 
+
 const PlayMultiplayerMode = ({ scaleStyle }) => {
     const { t } = useTranslation();
 	const { setIsReadyToPlay, isOpponentAuthenticated } = useContext(GameContext);
@@ -16,7 +17,7 @@ const PlayMultiplayerMode = ({ scaleStyle }) => {
 							<h3 style={scaleStyle}>{t("PlayTitleMultiplayer")}</h3>
 							<p style={scaleStyle}>{t("PlayDescriptionMultiplayer")}</p>
 							<AuthUserForm scaleStyle={scaleStyle}/>
-							<button className="btn button" 
+							<button className="btn button"
 									style={scaleStyle} 
 									onClick={() => setIsReadyToPlay("multiplayer")} 
 									disabled={!isOpponentAuthenticated}
