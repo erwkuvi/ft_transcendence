@@ -21,7 +21,6 @@ export const GameProvider = ({ children }) => {
 	const [ gameTournamentStarted, setgameTournamentStarted ] = useState(false);
 	const [ matchIndex, setMatchIndex ] = useState(null);
 	const [ tournamentMatchID, setTournamentMatchID ] = useState(null);
-	const [tournamentMatches, setTournamentMatches] = useState([]);
 
     return (
         <GameContext.Provider value={{	isSubmitting,
@@ -55,9 +54,7 @@ export const GameProvider = ({ children }) => {
 										gameTournamentStarted,
 										setgameTournamentStarted,
 										tournamentMatchID,
-										setTournamentMatchID,
-										tournamentMatches,
-            							setTournamentMatches
+										setTournamentMatchID
 									}}
 		>
             {children}

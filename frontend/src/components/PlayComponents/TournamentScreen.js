@@ -22,7 +22,6 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setgameTournamentStarted,
 			setMatchIndex,
 			setIDTournamentGame,
-			tournamentMatches,
 			setTournamentMatchID,
 			tournamentMatchID } = useContext(GameContext);
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);

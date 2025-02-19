@@ -12,7 +12,6 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			setStartTheTournament, 
 			tournamentPlayers, 
 			setTournamentPlayers,
-			setTournamentMatches,
 			tournamentMatchID,
 			setTournamentMatchID } = useContext(GameContext);
 	const [shouldReload, setShouldReload] = useState(false);

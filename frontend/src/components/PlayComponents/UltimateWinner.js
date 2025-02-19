@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import { useTranslation } from "react-i18next";
 import { GameContext } from "../../context/GameContext";
 
-const UltimateWinner = ({ scaleStyle }) => {
+const UltimateWinner = ({ player, scaleStyle }) => {
 	const {t} = useTranslation();
 	const { setgameTournamentStarted, setIsReadyToPlay, setIsOpponentAuthenticated } = useContext(GameContext);
 
@@ -16,7 +16,7 @@ const UltimateWinner = ({ scaleStyle }) => {
 				setgameTournamentStarted(false);
 			}}
 		>
-			{t("Congrats to the Ultimate Winner!")} 
+			{t("Congrats to the Ultimate Winner")} {player} !
 		</button>
 	);
 };

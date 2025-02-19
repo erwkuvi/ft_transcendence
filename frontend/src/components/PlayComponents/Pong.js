@@ -420,43 +420,13 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 	);
 }
 
-// function WinningScreen({player, score1, score2}) {
-// 	const { player1DisplayName, player2DisplayName, matchIndex } = useContext(GameContext);
-// 	const { fontSize } = useContext(AccessibilityContext);
-
-// 	const scaleStyle = {
-//         fontSize: `${fontSize}px`,
-//         lineHeight: '1.5'
-//     };
-
-// 	const displayName1 = player1DisplayName || "Player 1";
-// 	const displayName2 = player2DisplayName || "Player 2";
-
-// 	return (
-// 		<div id="winningScreen">
-// 			<h2>Winner {player}</h2>
-// 			<p>{displayName1} score: {score1}</p>
-// 			<p>{displayName2} score: {score2}</p>
-			
-// 			{(player1DisplayName && player2DisplayName) ? (
-// 				matchIndex === 1 ? (
-// 					<PlayNextGame scaleStyle={scaleStyle} />
-// 				) : matchIndex === 0 ? (
-// 					<UltimateWinner scaleStyle={scaleStyle} />
-// 				) : null
-// 			) : (
-// 				<BackButton scaleStyle={scaleStyle} />
-// 			)}
-// 		</div>
-// 	);
-// }
-
 function Pong() {
 // Declare refs inside the Canvas component
 	const { player1Id,
 			player2Id,
 			iDTournamentGame,
-			tournamentMatches } = useContext(GameContext);
+			player1DisplayName, 
+			player2DisplayName } = useContext(GameContext);
 
 
 	const player1Ref = useRef();
@@ -530,7 +500,7 @@ console.log("match Id rn: ", iDTournamentGame);
 			}
 	
 			const updatedMatchData = await response.json();
-			updateTournamentMatches(updatedMatchData);
+			// updateTournamentMatches(updatedMatchData);
 	
 			console.log("Tournament match results successfully saved.");
 		} catch (error) {
@@ -563,24 +533,6 @@ console.log("match Id rn: ", iDTournamentGame);
 		}
 	};
 	
-	const updateTournamentMatches = (updatedMatchData) => {
-		if (tournamentMatches.length > 0) {
-			const updatedMatches = tournamentMatches.map(match => {
-				if (match.id === iDTournamentGame) {
-					return {
-						...match,
-						winner: updatedMatchData.winner,
-						score_player1: updatedMatchData.score_player1,
-						score_player2: updatedMatchData.score_player2
-					};
-				}
-				return match;
-			});
-	
-			setTournamentMatches(updatedMatches);
-		}
-	};
-	
 	const handleScore = (player) => {
 		setScores((prev) => {
 		  const updatedScores = { ...prev };
@@ -594,7 +546,7 @@ console.log("match Id rn: ", iDTournamentGame);
 					// alert('Player 1 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
 					postMatchResults(player1Id, updatedScores);
-					setWinner("Player1");
+					setWinner(player1DisplayName ? player1DisplayName : "Player 1");
 				}
 			}
 		  } else if (player === 2) {
@@ -607,7 +559,7 @@ console.log("match Id rn: ", iDTournamentGame);
 					// alert('Player 2 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
 					postMatchResults(player2Id, updatedScores);
-					setWinner("Player2");
+					setWinner(player2DisplayName ? player2DisplayName : "Player 2");
 				}
 			}
 		  }
