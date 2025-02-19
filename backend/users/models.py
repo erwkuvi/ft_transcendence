@@ -66,12 +66,12 @@ class Match(models.Model):
         ('regular', 'Regular'),
         ('tournament', 'Tournament'),
     ]
+    tournament = models.ForeignKey(Tournament, related_name='matches', on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     mode = models.CharField(max_length=50, choices=MATCH_MODE_CHOICES, default='regular')
     idx = models.IntegerField(default=0)
     level = models.IntegerField(default=0)
     finished = models.BooleanField(default=False)
-    tournament = models.ForeignKey(Tournament, related_name='matches', on_delete=models.CASCADE, null=True, blank=True)
     player1 = models.ForeignKey(
         PlayerProfile, related_name='player1_matches',
         on_delete=models.CASCADE)
