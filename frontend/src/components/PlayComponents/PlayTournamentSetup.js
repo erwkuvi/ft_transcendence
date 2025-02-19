@@ -51,55 +51,30 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 		};
 
 		try {
-			const response = await fetch('http://localhost:8000/user_management/tournament-create/', {
-				method: 'POST',
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `JWT ${localStorage.getItem('access_token')}`,
-				},
-				body: JSON.stringify(createTournamentData),
-			});
+			const { success, data, error } = await createTournament(createTournamentData);
 	
-			const data = await response.json();
-	
-			// Log the data for debugging
-			console.log("Data from backend:", data);
-	
-			// Check if the response is successful
-			if (!response.ok) {
-				let errorMessage = "An error occurred while creating the tournament.";
-	
-				if (response.status === 400) {
-					// Backend sends an error message like "Lukas is already in the tournament"
-					if (data.detail) {
-						errorMessage = data.detail; // Use the error message from the backend
-					} else if (typeof data === "object") {
-						const firstKey = Object.keys(data)[0];
-						errorMessage = data[firstKey] || errorMessage;
-					} else if (typeof data === "string") {
-						errorMessage = data;
-					}
-				}
-	
-				alert(errorMessage); // Show the error to the user
-				setTournamentPlayers([]);  // Reset the players state
+			if (!success) {
+				console.error("Error creating tournament:", error);
+				setTournamentPlayers([]);  // Reset players if creation fails
+				alert(error);  // Show backend error message
 				return;
 			}
 	
-			// If the response is ok, proceed with tournament creation
+			console.log("Tournament Data:", data);
+	
 			if (Array.isArray(data) && data.length > 0) {
 				console.log("Tournament created successfully:", data);
-				const tournamentId = data[0].tournament; 
-				setTournamentMatchID(tournamentId); 
+				const tournamentId = data[0].tournament;
+				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);
-				window.location.reload(); // Refresh page or set state accordingly
+				window.location.reload();
 			} else {
 				console.error("Unexpected response format:", data);
 			}
 		} catch (error) {
 			console.error("Error saving players to the tournament:", error);
-			setTournamentPlayers([]);  // Reset the players state
-			alert(error.message);  // Show the error message
+			setTournamentPlayers([]);
+			alert(error.message);
 		}
 	};
 

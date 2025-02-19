@@ -124,5 +124,8 @@
 	"Open the application and scan the barcode:" : "Open the application and scan the barcode:",
 	"Enter the one-time code provided by the application and click Submit to finish the setup.":
 		"Enter the one-time code provided by the application and click Submit to finish the setup.",
-	"Enter OTP Code:" : "Enter OTP Code:"
+	"Enter OTP Code:" : "Enter OTP Code:",
+
+	"Winner": "Winner",
+	"score": "score"
 }

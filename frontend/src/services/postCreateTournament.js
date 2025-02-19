@@ -11,28 +11,33 @@ export const createTournament = async (createTournamentData) => {
             },
         });
 
-        // If the request is successful, return the data
-        if (response.status === 200) {
-            return { success: true, data: response.data };
-        } else {
-            return { success: false, error: "An error occurred while creating the tournament." };
-        }
+        // If the request is successful, return the response data
+        return { success: true, data: response.data, error: null };
     } catch (error) {
         console.error("Error creating tournament:", error);
+
+        let errorMessage = "An unknown error occurred.";
 
         if (error.response) {
             const { status, data } = error.response;
 
             if (status === 400) {
-                return { success: false, error: data.detail || "An error occurred while creating the tournament." };
+                if (data.detail) {
+                    errorMessage = data.detail;
+                } else if (typeof data === "object" && data !== null) {
+                    const firstKey = Object.keys(data)[0];
+                    errorMessage = data[firstKey] || errorMessage;
+                } else if (typeof data === "string") {
+                    errorMessage = data;
+                }
             } else {
-                return { success: false, error: `Error ${status}: ${data?.message || "An unknown error occurred."}` };
+                errorMessage = `Error ${status}: ${data?.message || "An unknown error occurred."}`;
             }
         } else {
-            return { success: false, error: "Network error: Unable to connect to the backend." };
+            errorMessage = "Network error: Unable to connect to the backend.";
         }
+
+        return { success: false, data: null, error: errorMessage };
     }
 };
-
-export default { createTournament };
 

@@ -6,6 +6,7 @@ import { AccessibilityContext } from '../../AccessibilityContext';
 import { GameContext } from "../../context/GameContext";
 import '../game/controlPanel.css'
 import '../game/gameStartMenu.css'
+import WinningScreen from './WinningScreen';
 import BackButton from './BackButton';
 import PlayNextGame from './PlayNextGame';
 import UltimateWinner from './UltimateWinner';
@@ -419,36 +420,36 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 	);
 }
 
-function WinningScreen({player, score1, score2}) {
-	const { player1DisplayName, player2DisplayName, matchIndex } = useContext(GameContext);
-	const { fontSize } = useContext(AccessibilityContext);
+// function WinningScreen({player, score1, score2}) {
+// 	const { player1DisplayName, player2DisplayName, matchIndex } = useContext(GameContext);
+// 	const { fontSize } = useContext(AccessibilityContext);
 
-	const scaleStyle = {
-        fontSize: `${fontSize}px`,
-        lineHeight: '1.5'
-    };
+// 	const scaleStyle = {
+//         fontSize: `${fontSize}px`,
+//         lineHeight: '1.5'
+//     };
 
-	const displayName1 = player1DisplayName || "Player 1";
-	const displayName2 = player2DisplayName || "Player 2";
+// 	const displayName1 = player1DisplayName || "Player 1";
+// 	const displayName2 = player2DisplayName || "Player 2";
 
-	return (
-		<div id="winningScreen">
-			<h2>Winner {player}</h2>
-			<p>{displayName1} score: {score1}</p>
-			<p>{displayName2} score: {score2}</p>
+// 	return (
+// 		<div id="winningScreen">
+// 			<h2>Winner {player}</h2>
+// 			<p>{displayName1} score: {score1}</p>
+// 			<p>{displayName2} score: {score2}</p>
 			
-			{(player1DisplayName && player2DisplayName) ? (
-				matchIndex === 1 ? (
-					<PlayNextGame scaleStyle={scaleStyle} />
-				) : matchIndex === 0 ? (
-					<UltimateWinner scaleStyle={scaleStyle} />
-				) : null
-			) : (
-				<BackButton scaleStyle={scaleStyle} />
-			)}
-		</div>
-	);
-}
+// 			{(player1DisplayName && player2DisplayName) ? (
+// 				matchIndex === 1 ? (
+// 					<PlayNextGame scaleStyle={scaleStyle} />
+// 				) : matchIndex === 0 ? (
+// 					<UltimateWinner scaleStyle={scaleStyle} />
+// 				) : null
+// 			) : (
+// 				<BackButton scaleStyle={scaleStyle} />
+// 			)}
+// 		</div>
+// 	);
+// }
 
 function Pong() {
 // Declare refs inside the Canvas component
@@ -475,6 +476,7 @@ console.log("match Id rn: ", iDTournamentGame);
 		p2_won_set_count: 0,
 	});
 
+	
 
 	const postMatchResults = async (winnerId, scores) => {
 		const isGuestMode = !player1Id || !player2Id;
