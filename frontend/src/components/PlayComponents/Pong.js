@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect, forwardRef, useContext } from 'react';
 import { Canvas, useFrame, useLoader} from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
+import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from '../../AccessibilityContext';
 import { GameContext } from "../../context/GameContext";
 import '../game/controlPanel.css'
@@ -10,6 +11,7 @@ import WinningScreen from './WinningScreen';
 import BackButton from './BackButton';
 import PlayNextGame from './PlayNextGame';
 import UltimateWinner from './UltimateWinner';
+import { t } from 'i18next';
 
 let 	FIELD_WIDTH         = 26;
 let 	FIELD_LEN           = 32;
@@ -314,7 +316,7 @@ function PlayerPanel({scores}) {
 
 	return (
 		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
-			{player1DisplayName}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {player2DisplayName}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
+			{player1DisplayName}: {scores.p1_in_set_score} {t("Set count")}: {scores.p1_won_set_count} | {player2DisplayName}: {scores.p2_in_set_score} {t("Set count")}: {scores.p2_won_set_count}
 		</div>
 	);
 }
@@ -322,8 +324,9 @@ function PlayerPanel({scores}) {
 
 function GameStartMapMenu() {
 	const [selectedOption, setSelectedOption] = useState("normal");
+	const { t } = useTranslation();
 
-    const options = ["normal", "wide", "narrow"];
+    const options = [t("normal"), t("wide"), t("narrow")];
 
 	if (selectedOption === "normal") {
 		FIELD_WIDTH = 26;
@@ -360,8 +363,9 @@ function GameStartMapMenu() {
 
 function GameStartStylesMenu({gameFieldStyle, setGameStyle}) {
 	// const [selectedOption, setSelectedOption] = useState("normal");
+	const { t } = useTranslation();
 
-    const options = ["normal", "option2"];
+    const options = [t("normal"), t("option2")];
 
     return (
         <div id="menu">
@@ -380,26 +384,28 @@ function GameStartStylesMenu({gameFieldStyle, setGameStyle}) {
 }
 
 function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
+	const { t } = useTranslation();
+
 	return (
 		<div id="gameStartMenu">
-			<h2>Welcome to the game start menu</h2>
+			<h2>{t("Welcome to the game start menu")}</h2>
 			<div id="gameMenuArea1">
 				<div id="gameMenuElementWrapper">
 					<div id="choiceArea">
-						<h2 class="gameStartMenuH2">Choices</h2>
+						<h2 class="gameStartMenuH2">{t("Choices")}</h2>
 						<div class="choiceAreaSections">
 							<div>
-								<h3 class="gameStartMenuH3">Map</h3>
+								<h3 class="gameStartMenuH3">{t("Map")}</h3>
 								<GameStartMapMenu/>
 							</div>
 							<div>
-								<h3 class="gameStartMenuH3">Styles</h3>
+								<h3 class="gameStartMenuH3">{t("Styles")}</h3>
 								<GameStartStylesMenu gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 							</div>
 						</div>
 					</div>
 					<div id="controlsArea">
-						<h2 class="gameStartMenuH2">Keyboard Controls</h2>
+						<h2 class="gameStartMenuH2">{t("Keyboard Controls")}</h2>
 						<div id="p1Controls">
 							<h3 class="gameStartMenuH3">P1</h3>
 							<div class="pControlsWrapper">
@@ -415,7 +421,7 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 					</div>
 				</div>
 			</div>
-			<button class="btn button" onClick={onStartGame}>Start Game</button>
+			<button class="btn button" onClick={onStartGame}>{t("Start Game")}</button>
 		</div>
 	);
 }
@@ -546,7 +552,7 @@ console.log("match Id rn: ", iDTournamentGame);
 					// alert('Player 1 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
 					postMatchResults(player1Id, updatedScores);
-					setWinner(player1DisplayName ? player1DisplayName : "Player 1");
+					setWinner(player1DisplayName ? player1DisplayName : t("Player 1"));
 				}
 			}
 		  } else if (player === 2) {
@@ -559,7 +565,7 @@ console.log("match Id rn: ", iDTournamentGame);
 					// alert('Player 2 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
 					postMatchResults(player2Id, updatedScores);
-					setWinner(player2DisplayName ? player2DisplayName : "Player 2");
+					setWinner(player2DisplayName ? player2DisplayName : t("Player 2"));
 				}
 			}
 		  }

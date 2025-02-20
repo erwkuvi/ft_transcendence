@@ -42,7 +42,7 @@ const Otp = ({ onSuccess }) => { // Accept onSuccess prop
 			console.log('Response:', response.data);
 			// Remove qr_code_url from local storage
 			localStorage.removeItem('qr_code_url');
-			alert('2FA successfully activated');
+			alert(t('2FA successfully activated'));
 			if (onSuccess) onSuccess(); // Call onSuccess callback
 		} catch (error) {
 			console.error('Error:', error);

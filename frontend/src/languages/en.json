@@ -69,6 +69,8 @@
 		"This means you will officially lose the tournament match and you can't come back to this tournament.",
 	"Leave": "Leave",
 	"Back to Mode Selection": "Back to Mode Selection",
+	"Play next game": "Play next game",
+	"Congrats to the Ultimate Winner": "Congrats to the Ultimate Winner:",
 
 	"About 42": "About 42",
 
@@ -82,9 +84,18 @@
 	"Enable 2FA": "Enable 2FA",
 
 	"email": "Email: ",
+
 	"Stats": "Stats",
-	"Games played": "Games played:",
+	"Overall Record": "Overall Record",
+	"Won": "Won",
+	"Lost": "Lost",
 	"Wins": "Wins:",
+	"Losses": "Losses:",
+	"1v1 Games": "1v1 Games",
+	"No 1v1 games played": "No 1v1 games played",
+	"Tournament Games": "Tournament Games",
+	"No tournament games played yet": "No tournament games played yet",
+
 	"List of friends": "List of friends",
 	"List of users": "List of users",
 	"Search for users": "Search for users",
@@ -126,7 +137,31 @@
 		"Enter the one-time code provided by the application and click Submit to finish the setup.",
 	"Enter OTP Code:" : "Enter OTP Code:",
 
+	"2FA successfully activated": "2FA successfully activated",
+	"2FA successfully deactivated": "2FA successfully deactivated",
+	"Failed to update avatar": "Failed to update avatar",
+	"Failed to update display name": "Failed to update display name",
+	"Username already exists. Please choose a different one.": "Username already exists. Please choose a different one.",
+	"Sign up failed. Please try again.": "Sign up failed. Please try again.",
+	"Login failed. Please check your credentials." : "Login failed. Please check your credentials.",
+
 	"Winner": "Winner",
 	"score": "score",
-	"Congrats to the Ultimate Winner": "Congrats to the Ultimate Winner:"
+	"Player 1": "Player 1",
+	"Player 2": "Player 2",
+	"Set count": "Set count",
+
+	"Welcome to the game start menu": "Welcome to the game start menu",
+	"Choices": "Choices",
+	"Map": "Map",
+	"Styles": "Styles",
+	"normal": "normal",
+	"wide": "wide",
+	"narrow": "narrow",
+	"option2": "option2",
+	"Keyboard Controls": "Keyboard Controls",
+	"Start Game": "Start Game",
+
+	"Invalid credentials": "Invalid credentials",
+	"Authentication failed": "Authentication failed"
 }

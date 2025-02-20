@@ -11,6 +11,7 @@ import Filter from '../components/ProfileComponents/Filter';
 import ListFriends from '../components/ProfileComponents/ListFriends';
 import Notification from '../components/Notification';
 import PasswordModal from '../components/PasswordModal';
+import StatisticsCard from '../components/ProfileComponents/StatisticsCard';
 import Otp from '../components/OTPActivationModal';
 import { AuthContext } from '../context/AuthContext';
 
@@ -118,7 +119,7 @@ const Profile = () => {
 				const errorData = await response.json();
 				console.error('Error response from server:', errorData);
 				alert(`Failed to update display name: ${JSON.stringify(errorData)}`);
-				throw new Error('Failed to update display name');
+				throw new Error(t('Failed to update display name'));
 			}
 
 			const data = await response.json();
@@ -131,7 +132,7 @@ const Profile = () => {
 			setIsEditingDisplayName(false);
 		} catch (err) {
 			console.error('Error updating display name:', err);
-			alert('Failed to update display name');
+			alert(t('Failed to update display name'));
 		}
 	};
 
@@ -195,7 +196,7 @@ const Profile = () => {
 				}));
 		} catch (err) {
 			console.error('Error updating avatar:', err);
-			alert('Failed to update avatar');
+			alert(t('Failed to update avatar'));
 		}
 	};
 
@@ -244,7 +245,7 @@ const handleToggle2FA = async (password = null) => {
 			}
 		);
 		console.log('Response:', response.data);
-		alert('2FA successfully deactivated')
+		alert(t('2FA successfully deactivated'))
 
 		// Update local state with new 2FA status
 		setProfile(prev => ({
@@ -375,12 +376,10 @@ const handleToggle2FA = async (password = null) => {
 					/>
 					{isOtpActive && <Otp onSuccess={() => setOtpActive(false)} />}
 				</div>
-				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
-					<h2>{t("Stats")}</h2>
-					<p>{t("Games played")} <span>{profile.matches_id.join(', ')}</span></p>
-					<p>{t("Wins")} <span>{profile.wins}</span></p>
-				</div>
-				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
+				<StatisticsCard	losses={profile.losses}
+								wins={profile.wins}
+								fontSize={fontSize} />
+				<div className='card basic' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
 					<Filter className="serach-users" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>

@@ -4,7 +4,7 @@ import "./LeaveModal.css";
 
 const LeaveModal = ({ isOpen, title, message, scaleStyle, onConfirm, onCancel }) => {
 	const { t } = useTranslation();
-	const userLoggedInID = localStorage.getItem('user_id');
+	// const userLoggedInID = localStorage.getItem('user_id');
 	if (!isOpen) return null
 	
     return (

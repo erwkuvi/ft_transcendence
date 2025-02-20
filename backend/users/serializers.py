@@ -412,7 +412,7 @@ class TournamentSerializer(serializers.Serializer):
     
         player_profiles = PlayerProfile.objects.filter(user_id__in=player_ids)
         
-        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=True) #me, karolina added this I hope it's ok?
+        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=True)
 
     
         matches = []

@@ -16,8 +16,8 @@ function WinningScreen({ player, score1, score2 }) {
         lineHeight: '1.5'
     };
 
-    const defaultDisplayName1 = "Player 1";
-    const defaultDisplayName2 = "Player 2";
+    const defaultDisplayName1 = t("Player 1");
+    const defaultDisplayName2 = t("Player 2");
     
     // Check if user is logged in (i.e., player names are not default values)
     const isLoggedIn = player1DisplayName !== defaultDisplayName1 && player2DisplayName !== defaultDisplayName2;

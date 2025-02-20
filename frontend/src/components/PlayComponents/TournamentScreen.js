@@ -53,14 +53,14 @@ const TournamentScreen = ({ scaleStyle }) => {
 	useEffect(() => {
 		const fetchTournamentData = async () => {
 			console.log("The id of the tournament is now: ", tournamentMatchID)
-			// if (!tournamentMatchID) return; // Prevent fetching if ID is undefined
+			if (!tournamentMatchID) return; 
 			
 			try {
 				const response = await fetch(`http://localhost:8000/user_management/tournaments/${tournamentMatchID}/`);
 				if (!response.ok) throw new Error("Failed to fetch tournament data");
 				
 				const data = await response.json();
-				setFetchedTournamentData(data); // Update state with fetched matches
+				setFetchedTournamentData(data);
 			} catch (error) {
 				console.error("Error fetching tournament data:", error);
 			}
@@ -79,16 +79,14 @@ const TournamentScreen = ({ scaleStyle }) => {
 	const tournamentData = useMemo(() => {
 		console.log("Computing tournamentData from fetchedTournamentData:", fetchedTournamentData);
 		
-		let players = new Set();  // For unique players
-		let matches = [];         // To hold the matches
-		let matchWinners = {};    // To track winners by match ID
+		let players = new Set();  
+		let matches = [];         
+		let matchWinners = {};   
 		
 		fetchedTournamentData.forEach((match) => {
-			// Add player1 and player2 to the players set (unique list of players)
 			if (match.player1) players.add(match.player1);
 			if (match.player2) players.add(match.player2);
 			
-			// Add match details
 			matches.push({
 				id: match.id,
 				player1: match.player1,
@@ -96,32 +94,21 @@ const TournamentScreen = ({ scaleStyle }) => {
 				winner: match.winner,
 			});
 	
-			// If a winner exists, store it
 			if (match.winner !== null) {
 				matchWinners[match.id] = match.winner;
 			}
 		});
 	
-		// Return the structure with players, matches, and match winners
 		const result = {
-			players: Array.from(players),  // List of unique players
-			matches,                       // All matches with player1, player2, and winner
-			matchWinners,                 // Map of match winners
+			players: Array.from(players),  
+			matches,                       
+			matchWinners,                 
 		};
 	
 		console.log("Computed tournamentData:", result);
 		return result;
-	}, [fetchedTournamentData]);  // Only recompute when fetchedTournamentData changes
-	// Only recompute when fetchedTournamentData changes
+	}, [fetchedTournamentData]);	
 	
-	
-	console.log("What is the id of the tournament: ", tournamentMatchID)
-	console.log("Tournament Matches:", fetchedTournamentData);
-	
-	// console.log("Tournament Data:",  tournamentData.matches[0].player1 );
-	
-
-	console.log("tournamet data", tournamentData)
     const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
     };
@@ -138,7 +125,6 @@ const TournamentScreen = ({ scaleStyle }) => {
 		setgameTournamentStarted(true);    
 	};
 	
-
 	const confirmLeave = async () => {
 		try {
 			const response = await fetch("http://localhost:8000/user_management/exit-tournament/", {
@@ -160,12 +146,6 @@ const TournamentScreen = ({ scaleStyle }) => {
 		}
 	};
 
-
-	// if (!tournamentData) {
-		//     return <div>Loading tournament data...</div>;
-		// }
-		
-		
 	if (gameTournamentStarted) {
 			return (
 				<>

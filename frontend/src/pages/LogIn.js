@@ -94,41 +94,50 @@ const LogIn = () => {
 				console.log('Sign up successful:', response.data);
 				setIsSignUp(false);
 			} catch (error) {
-				console.error('Error signing up:', error);
+				if (error.response) {
+					console.error('Error signing up:', error.response.data);
+					
+					if (error.response.data.username) {
+						alert(t('Username already exists. Please choose a different one.'));
+					} else {
+						alert(t('Sign up failed. Please try again.'));
+					}
+				}
 			}
 		} else {
       // Handle login with potential two-factor authentication
-      try {
-        // Create credentials object for the initial login attempt
-        const credentials = { username, password };
-        const response = await axiosInstance.post(login_url, credentials);
-        
-        // If no OTP is required, proceed with normal login
-        const { access, refresh } = response.data;
-        localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refresh);
+				try {
+					// Create credentials object for the initial login attempt
+					const credentials = { username, password };
+					const response = await axiosInstance.post(login_url, credentials);
+					
+					// If no OTP is required, proceed with normal login
+					const { access, refresh } = response.data;
+					localStorage.setItem('access_token', access);
+					localStorage.setItem('refresh_token', refresh);
 
-        console.log('Log in successful:', localStorage);
+					console.log('Log in successful:', localStorage);
 
-				// Update AuthContext state
-				setIsLoggedIn(true);
-				navigate('/profile');
-				
-      } catch (error) {
-        if (error.response && 
-            error.response.status === 401 && 
-            error.response.data.detail === "OTP code is required.") {
+							// Update AuthContext state
+							setIsLoggedIn(true);
+							navigate('/profile');
+							
+				} catch (error) {
+					if (error.response && 
+						error.response.status === 401 && 
+						error.response.data.detail === "OTP code is required.") {
 
-          setLoginCredentials({ username, password });
-          setShowOTPModal(true);
-        } else {
-          // Handle other types of login errors
-          console.error('Error logging in:', error);
-          alert('Login failed. Please check your credentials.');
-        }
-      }
+					setLoginCredentials({ username, password });
+					setShowOTPModal(true);
+					} else {
+					// Handle other types of login errors
+					console.error('Error logging in:', error);
+					alert(t("Login failed. Please check your credentials."));
+					}
+				}
+			}	
 		}
-	};
+
 	return (
 		<div className="page-content login mt-5" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="login-title">
@@ -219,4 +228,3 @@ const LogIn = () => {
 };
 
 export default LogIn;
-

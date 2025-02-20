@@ -1,6 +1,7 @@
 import React, { useState, useContext, useRef} from 'react';
 import { GameContext } from "../../context/GameContext";
 import { useTranslation } from "react-i18next";
+import { authenticateUser } from '../../services/postAuthenticateUser';
 import './AuthTournamentForm.css'
 
 const AuthTournamentForm = ({scaleStyle}) => {
@@ -18,22 +19,18 @@ const AuthTournamentForm = ({scaleStyle}) => {
     const handleAuthentication = async (e) => {
         e.preventDefault();
         setIsBeingSubmitted(true);
+		setError('');
 
         try {
-            const response = await fetch('http://localhost:8000/user_management/simple-auth/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(credentials),
-            });
-            const data = await response.json();
+            const data = await authenticateUser(credentials);
             
-            if (response.ok && typeof data.user_id === 'number') {
+            if (typeof data.user_id === 'number') {
                 setTournamentPlayers([...tournamentPlayers, {
                     id: data.user_id,
                     display_name: data.display_name
                 }]);
                 setCredentials({ username: '', password: '' });
-				setError('');
+				
 				if (currentPlayerNumber == 3)
 				{
 					setIsTournamentReady(true);
@@ -42,10 +39,10 @@ const AuthTournamentForm = ({scaleStyle}) => {
                     usernameInputRef.current.focus();
                 }
             } else {
-                setError('Invalid credentials');
+                setError(t('Invalid credentials'));
             }
         } catch {
-            setError('Authentication failed');
+            setError(t('Authentication failed'));
         }
         setIsBeingSubmitted(false);
     };
