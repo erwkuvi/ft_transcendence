@@ -1,0 +1,8 @@
+.aboutPContainer {
+    /* border: 1px solid red; */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    /* width: 50%; */
+    max-width: 800px;
+}

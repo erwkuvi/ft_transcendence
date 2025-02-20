@@ -15,10 +15,10 @@ const Home = () => {
 				minipong
 				<i className="fa-solid fa-circle ball px-1" style={{ fontSize: `${fontSize}px` }}></i>
 			</h1>
-			<div className="stuff">
+			{/* <div className="stuff">
 				<p >{t("HomeText")}</p>
 				<PlayButton/>
-			</div>
+			</div> */}
 		</div>
 	);
 };

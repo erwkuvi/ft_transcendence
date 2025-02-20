@@ -193,7 +193,7 @@ const TournamentScreen = ({ scaleStyle }) => {
                             <div className="vs">VS</div>
                             <div className="player">{playerNameMap[tournamentData.matches[1].player2] || "Player 4"}</div>
                         </div>
-                        <button className="btn button" 
+                        <button className="btn button " 
 								style={scaleStyle} 
 								disabled={tournamentData.matches[1].winner !== null}
 								onClick={() => 

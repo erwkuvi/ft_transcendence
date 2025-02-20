@@ -1,5 +1,15 @@
 .footer {
 	flex-shrink: 0;
+	position: absolute;
+	bottom: 10px;
+	width:100%;
+}
+
+@media (max-height: 816px) {
+	.footer {
+		margin-top:		2rem;
+		position:		relative;
+	}
 }
 
 .footer-link {

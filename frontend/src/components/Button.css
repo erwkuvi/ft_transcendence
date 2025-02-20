@@ -17,7 +17,7 @@
 	-webkit-backdrop-filter: blur(10px);
 	backdrop-filter: blur(10px);
 	border: 1px solid var(--text-color);
-	box-shadow: 2px 8px 8px rgba(0, 0, 0, 0.4);
+	/* box-shadow: 2px 8px 8px rgba(0, 0, 0, 0.4); */
 }
 
 .button:focus-visible {
@@ -28,5 +28,5 @@
 .button:active {
 	color: inherit;
 	transform: translateY(0px);
-	box-shadow: 2px 2px 8px black inset;
+	/* box-shadow: 2px 2px 8px black inset; */
 }

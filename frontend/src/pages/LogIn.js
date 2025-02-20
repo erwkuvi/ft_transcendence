@@ -140,11 +140,11 @@ const LogIn = () => {
 		}
 
 	return (
-		<div className="page-content login mt-5" style={{ fontSize: `${fontSize}px` }}>
+		<div className="page-content login" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="login-title">
 				{t("LogInTitle")}
 			</h1>
-			<div className="container login-box p-4">
+			<div className="loginCardHolderStyle"> {/*container login-box p-4 */}
 				<div className="login-toggle">
 					<input
 						id="status"
@@ -161,12 +161,12 @@ const LogIn = () => {
 						</div>
 					</label>
 				</div>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleSubmit} className="w-100">
 					<div className="login-field">
 						<p className="field-name">
 							{t("LogInText3")}
 							<input
-								className="text-field form-control"
+								className="inputFieldStyle1"
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								required
@@ -176,7 +176,7 @@ const LogIn = () => {
 							<p className="field-name">
 								{t("LogInText6")}
 								<input
-									className="text-field form-control"
+									className="inputFieldStyle1"
 									type="email"
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
@@ -187,7 +187,7 @@ const LogIn = () => {
 						<p className="field-name">
 							{t("LogInText4")}
 							<input
-								className="text-field form-control"
+								className="inputFieldStyle1"
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
@@ -198,8 +198,8 @@ const LogIn = () => {
 							isSignUp && (
 								<p className="field-name">
 									{t("LogInText5")}
-									<input
-										className="text-field form-control"
+									<input 
+										className="inputFieldStyle1" /*text-field form-control*/
 										type="password"
 										value={confirmPassword}
 										onChange={(e) => setConfirmPassword(e.target.value)}
@@ -209,7 +209,7 @@ const LogIn = () => {
 								)
 						}
 						<div>
-							<button type="submit" className="btn button login-button py-2 px-5" onClick={() => console.log('Submit button clicked')}>
+							<button type="submit" className="buttonStyle1" onClick={() => console.log('Submit button clicked')}> {/*btn button login-button py-2 px-5*/}
 								{isSignUp ? t("LogInText2") : t("LogInText")}
 							</button>
 							<LogInButton/>

@@ -4,7 +4,7 @@ import './Main.css';
 const Main = ({children}) => {
 	return (
 		<main>
-			<div className="container-fluid">
+			<div className="d-flex justify-content-center align-items-center w-100 flex-wrap"> {/*container-fluid */}
 				{children}
 			</div>
 		</main>

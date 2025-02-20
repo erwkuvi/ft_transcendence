@@ -22,9 +22,9 @@ function App() {
 	return (
 		<AuthProvider>
 			<AccessibilityProvider>
+				<Header />
 				<div className="App">
 					<AuthGuard />
-					<Header />
 					<Main>
 						<ScrollReset>
 							<Routes>
@@ -44,8 +44,8 @@ function App() {
 							</Routes>
 						</ScrollReset>
 					</Main>
-					<Footer />
 				</div>
+				<Footer />
 			</AccessibilityProvider>
 		</AuthProvider>
 	);

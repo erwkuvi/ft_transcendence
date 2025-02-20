@@ -69,11 +69,12 @@
 }
 
 .auth-form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 10px;
-	width: 100%;
+	display: 		flex;
+	flex-direction:	column;
+	/* align-items: center; */
+	gap:			10px;
+	width:			100%;
+	text-align: 	center;
 }
   
 .auth-form input {
@@ -113,8 +114,11 @@
 
 .play-modes-wrapper {
     display: flex;
-    gap: 24px;
-    max-width: 1200px;
+	flex-direction: row;
+	
+	flex-wrap: wrap;
+    gap: 4rem;
+    /* max-width: 1200px; */
     margin: 0 auto;
 	justify-content: center;
 	align-items: baseline;

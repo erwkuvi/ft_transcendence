@@ -20,6 +20,11 @@
     max-width: 50%;
 }
 
+.startGameBtn {
+    border: 1px solid red;
+    background-color: white;
+}
+
 .play-not-logged-in .extra-text {
     flex: 1;
     max-width: 40%;

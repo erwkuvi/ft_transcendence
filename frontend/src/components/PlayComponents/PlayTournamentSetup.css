@@ -14,3 +14,23 @@
     max-width: 50%;
 }
  */
+
+.playButtonStyle2 {
+	margin-top:			1.5rem;
+    width:				100%;
+    padding:			12px;
+    border-radius: 		6px;
+    color:              var(--text-color);
+    background-color:   var(--color-5);
+    border:         	none;
+}
+
+.playButtonStyle2:hover {
+    background-color:	var(--text-color);
+    color:				var(--color-5);
+}
+
+.playButtonStyle2:disabled {
+    opacity:        0.5;
+    cursor:         not-allowed;
+}
