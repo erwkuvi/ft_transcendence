@@ -1,18 +1,30 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './LanguageDropdown.css'
 import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from "../AccessibilityContext";
+import { AuthContext } from '../context/AuthContext';
+import  updateUserProfile  from '../services/patchUserProfile';
 
 const LanguageDropdown = () => {
 	const { i18n, t } = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	
-	const [language, setLanguage] = useState('en');
+	const {language, setLanguage} = useContext(AuthContext);
 
-	const handleChange = (event) => {
+	useEffect(() => {
+		i18n.changeLanguage(language);
+	}, [language, i18n]);
+	
+	const handleChange = async (event) => {
 		const lang_code = event.target.value;
 		i18n.changeLanguage(lang_code);
 		setLanguage(lang_code);
+
+		try {
+            await updateUserProfile({ language: lang_code});
+        } catch (error) {
+            console.error("Failed to update language on backend");
+        }
 	};
 
 	const languages = [

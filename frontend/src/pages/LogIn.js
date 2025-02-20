@@ -121,6 +121,7 @@ const LogIn = () => {
 							// Update AuthContext state
 							setIsLoggedIn(true);
 							navigate('/profile');
+							window.location.reload();
 							
 				} catch (error) {
 					if (error.response && 
