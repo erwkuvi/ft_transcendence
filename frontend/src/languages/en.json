@@ -142,6 +142,7 @@
 	"Failed to update avatar": "Failed to update avatar",
 	"Failed to update display name": "Failed to update display name",
 	"Username already exists. Please choose a different one.": "Username already exists. Please choose a different one.",
+	"Email was already used. Please choose a different one.": "Email was already used. Please choose a different one.",
 	"Sign up failed. Please try again.": "Sign up failed. Please try again.",
 	"Login failed. Please check your credentials." : "Login failed. Please check your credentials.",
 

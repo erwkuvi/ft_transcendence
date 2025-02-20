@@ -99,6 +99,8 @@ const LogIn = () => {
 					
 					if (error.response.data.username) {
 						alert(t('Username already exists. Please choose a different one.'));
+					}else if(error.response.data.email){
+						alert(t('Email was already used. Please choose a different one.'));
 					} else {
 						alert(t('Sign up failed. Please try again.'));
 					}

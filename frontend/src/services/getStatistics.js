@@ -7,7 +7,7 @@ export const fetchGames = async () => {
         const response = await axiosInstance.get(GAME_URL, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'JWT ' + localStorage.getItem('access'),
+                'Authorization': 'JWT ' + localStorage.getItem('access_token'),
             },
         });
 

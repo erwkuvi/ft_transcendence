@@ -1,5 +1,6 @@
 //import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import React from 'react';
 import { GameProvider } from "./context/GameContext"; 
 import axiosInstance from './services/axiosInstance';
 import { AuthGuard } from './guards/authGuard';
@@ -17,11 +18,22 @@ import ScrollReset from './components/ScrollReset';
 import { AccessibilityProvider } from "./AccessibilityContext";
 import { AuthProvider } from './context/AuthContext';
 
+function ScrollToTop() {
+	const location = useLocation();
+	
+	React.useEffect(() => {
+	  window.scrollTo(0, 0);
+	}, [location.pathname]);
+	
+	return null;
+  }
+  
 
 function App() {
 	return (
 		<AuthProvider>
 			<AccessibilityProvider>
+				<ScrollToTop />
 				<Header />
 				<div className="App">
 					<AuthGuard />
