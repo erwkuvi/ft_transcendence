@@ -20,9 +20,11 @@ const StatisticsCard = ({ losses, wins, fontSize }) => {
           game => game.player1 === userLoggedInID || game.player2 === userLoggedInID
         );
 
-        const filteredTournamentGames = tournamentGames.filter(
-          game => game.player1 === userLoggedInID || game.player2 === userLoggedInID
-        );
+		const filteredTournamentGames = tournamentGames.filter(
+			game => 
+			  (game.player1 === userLoggedInID || game.player2 === userLoggedInID) &&
+			  !(game.score_player1 === 0 && game.score_player2 === 0) 
+		  );
 
         setOneVOneGames(filteredOneVOneGames);
         setTournamentGames(filteredTournamentGames);

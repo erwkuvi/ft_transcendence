@@ -11,11 +11,11 @@ const DarkModeToggle = () => {
         if (html) {
             html.setAttribute("data-bs-theme", modeDarkLight ? "dark" : "light");
         }
-    }, [modeDarkLight]); // ✅ Depend on `modeDarkLight` only
+    }, [modeDarkLight]); 
 
     const toggleDarkMode = async () => {
-        const newMode = !modeDarkLight; // Toggle from global state
-        setModeDarkLight(newMode); // ✅ Update global state
+        const newMode = !modeDarkLight;
+        setModeDarkLight(newMode); 
 
         try {
             await updateUserProfile({ mode: newMode });
