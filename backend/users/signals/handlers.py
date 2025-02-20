@@ -35,7 +35,7 @@ def match_results_to_profile(sender, **kwargs):
         PlayerMatch.objects.create(player=player1, match=match, date=match.date)
         PlayerMatch.objects.create(player=player2, match=match, date=match.date)
 
-        print('ok')
+        #print('ok')
 
 
 @receiver(friendship_created)
