@@ -11,6 +11,17 @@ export const GameProvider = ({ children }) => {
 	const [ startTheTournament, setStartTheTournament ] = useState(false);
 	const [opponentsId, setOpponentsId] = useState('');
 	const [tournamentPlayers, setTournamentPlayers] = useState([]);
+	const [opponentsDisplayName, setOpponentsDisplayName] = useState('');
+
+	const [ player1DisplayName, setPlayer1DisplayName ] = useState(null);
+	const [ player1Id, setPlayer1Id ] = useState(null);
+	const [ player2DisplayName, setPlayer2DisplayName ] = useState(null);
+	const [ player2Id, setPlayer2Id ] = useState(null);
+	const [ iDTournamentGame, setIDTournamentGame ] = useState(null);
+	const [ gameTournamentStarted, setgameTournamentStarted ] = useState(false);
+	const [ matchIndex, setMatchIndex ] = useState(null);
+	const [ tournamentMatchID, setTournamentMatchID ] = useState(null);
+	const [tournamentMatches, setTournamentMatches] = useState([]);
 
     return (
         <GameContext.Provider value={{	isSubmitting,
@@ -26,7 +37,29 @@ export const GameProvider = ({ children }) => {
 										isTournamentReady,
 										setIsTournamentReady,
 										startTheTournament,
-										setStartTheTournament }}>
+										setStartTheTournament,
+										opponentsDisplayName,
+										setOpponentsDisplayName,
+										player1DisplayName,
+										setPlayer1DisplayName,
+										player1Id,
+										setPlayer1Id,
+										player2DisplayName,
+										setPlayer2DisplayName,
+										player2Id,
+										setPlayer2Id,
+										matchIndex,
+										setMatchIndex,
+										iDTournamentGame,
+										setIDTournamentGame,
+										gameTournamentStarted,
+										setgameTournamentStarted,
+										tournamentMatchID,
+										setTournamentMatchID,
+										tournamentMatches,
+            							setTournamentMatches
+									}}
+		>
             {children}
         </GameContext.Provider>
     );

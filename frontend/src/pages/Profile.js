@@ -1,6 +1,7 @@
 import './Profile.css';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { fetchUsers } from '../services/fetchUsers';
+import { getUserProfile } from '../services/getProfile';
 import { useTranslation } from 'react-i18next';
 import axiosInstance from '../services/axiosInstance';
 import { AccessibilityContext } from '../AccessibilityContext';
@@ -11,16 +12,16 @@ import ListFriends from '../components/ProfileComponents/ListFriends';
 import Notification from '../components/Notification';
 import PasswordModal from '../components/PasswordModal';
 import Otp from '../components/OTPActivationModal';
+import { AuthContext } from '../context/AuthContext';
 
 const Profile = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	const fileInputRef = useRef(null);
-	const navigate = useNavigate(); // Use useNavigate hook for navigation
+	const navigate = useNavigate(); 
 
 	const [profile, setProfile] = useState(null);
 	const [friends, setFriends] = useState([]);
-
 	const [allUsers, setAllUsers] = useState([]);
 	const [query, setQuery] = useState('');
 	const [filterUsers, setFilterUsers] = useState([]);
@@ -28,75 +29,55 @@ const Profile = () => {
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	// State for managing display name editing
 	const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
 	const [newDisplayName, setNewDisplayName] = useState('');
-	// end
-  //this one is not being used
-	const [message, setMessage] = useState('');
-	const [userIdChanged, setUserIdChanged] = useState(false);
-	const [socket, setSocket] = useState(null);
-  //this one is not being used end
-	//
-	// State to track if 2FA status is being saved
+
 	const [isSaving2FA, setIsSaving2FA] = useState(false);
 	// State for password confirmation modal
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
 	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
 
+
 	useEffect(() => {
 		const token = localStorage.getItem('access_token');
 		if (!token) {
-			navigate('/login'); // Redirect to login page
+			navigate('/login'); 
 		}
 	}, [navigate]);
-  // Fetch data on component mount
-	useEffect(() => {
-		const fetchProfile = async () => {
-			try {
-			// Request from API
-			const response = await axiosInstance.get('/user_management/players/me/');
-			// Prepend BASE_URL to avatar if it's a relative URL
-			const profileData = {
-				...response.data,
-				avatar: response.data.avatar.startsWith('/')
-					? `${BASE_URL}${response.data.avatar}`
-					: response.data.avatar,
-			};
-			//console.log('Avatar URL:', profileData.avatar);
-			console.log('profileData:', profileData);
-			
-			localStorage.setItem('user_id', profileData.user_id);
-			setUserIdChanged(true);
-			// Set the fetched profile data in the state
-      setProfile(response.data);
-      // Initialize the newDisplayName state with current display name
-      setNewDisplayName(response.data.display_name);
 
+  
+  useEffect(() => {
+	const loadProfile = async () => {
+		try {
+			const profileData = await getUserProfile();
+			localStorage.setItem('user_id', profileData.user_id);
+			localStorage.setItem('display_name', profileData.display_name);
+
+			setProfile(profileData);
+			setNewDisplayName(profileData.display_name);
+			
 			const users = await fetchUsers();
-			const profile = users.find(user => user.username === profileData.username);
-			setPersonLoggedIn(profile);
+			const loggedInUser = users.find(user => user.username === profileData.username);
+			setPersonLoggedIn(loggedInUser);
 
 			const otherUsers = users.filter(user => user.username !== profileData.username);
 			setAllUsers(otherUsers);
 
 			const friendsList = otherUsers.filter(user =>
-				profileData.friends.some(friend => friend === user.id)
+				profileData.friends.includes(user.id)
 			);
 			setFriends(friendsList);
 
 		} catch (err) {
-  	// Handle any errors
 			setError(err.message || 'An error occurred');
 		} finally {
-		// Stop the loading indicator
 			setLoading(false);
-			}
-		};
-            
-		fetchProfile();
-	}, []);
+		}
+	};
+
+	loadProfile();
+}, []);
 
 	const handleSearch = (event) => {
 		const currFiltered = event.target.value
@@ -111,17 +92,18 @@ const Profile = () => {
 			setFilterUsers(filteredUsers)
 		}
 	}
-	// Handler to enable display name editing mode
-	const handleEditDisplayName = () => {
-		setIsEditingDisplayName(true);
-	};
 
-	// Handler to save the new display name
+	const handleEditDisplayName = () => setIsEditingDisplayName(true);
+
+
 	const handleSaveDisplayName = async () => {
 		try {
 			// Create form data for the request
 			const formData = new FormData();
 			formData.append('display_name', newDisplayName);
+
+			if (newDisplayName != null)
+				localStorage.setItem('display_name', newDisplayName);
 
 			// Send PATCH request to update display name on the server
 			const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
@@ -161,10 +143,9 @@ const Profile = () => {
 		setIsEditingDisplayName(false);
 	};
 
-	// Handler to trigger file input click
-	const handleEditAvatar = () => {
-		fileInputRef.current.click();
-	};
+
+	const handleEditAvatar = () => fileInputRef.current.click();
+	
 
 	// Handler for avatar file change
 	const handleAvatarChange = async (event) => {
@@ -369,7 +350,7 @@ const handleToggle2FA = async (password = null) => {
 							</>
 						)}
 					</p>
-					<p>{t("Email:")} <span>{profile.email}</span></p>
+					<p>{t("email")} <span>{profile.email}</span></p>
 			{/* 2FA Authentication section */}
 			{profile.auth_provider !== "42api" && (
 					<div className="mt-4">
@@ -396,7 +377,7 @@ const handleToggle2FA = async (password = null) => {
 				</div>
 				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Stats")}</h2>
-					<p>{t("Games played:")} <span>{profile.matches_id.join(', ')}</span></p>
+					<p>{t("Games played")} <span>{profile.matches_id.join(', ')}</span></p>
 					<p>{t("Wins")} <span>{profile.wins}</span></p>
 				</div>
 				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>

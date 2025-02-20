@@ -1,11 +1,16 @@
 import axiosInstance from './axiosInstance';
 
-const baseURL = `http://localhost:8000/api/users/`;
+const URL = `http://localhost:8000/api/users/`;
 
 export const fetchUsers = async () => {
     try {
-        const usersResponse = await axiosInstance.get(baseURL);
-        return usersResponse.data;
+        const response = await axiosInstance.get(URL, {
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': 'JWT ' + localStorage.getItem('access'),
+            },
+        });
+        return response.data;
     } catch (error) {
         console.error("Error fetching users:", error);
         throw error;

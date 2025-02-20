@@ -24,22 +24,25 @@
 
 .home .ball {
 	color: var(--text-color); 
-	padding: 60px;
+	padding: 15% 10vw 10vh;
 	font-size: 0.2em;
-	animation: bounce 1s infinite;
+	animation-timing-function: cubic-bezier(1, 0, 0.3, 1); /* More natural movement */
+
+	animation: bounce 1.2s infinite;
 	animation-timing-function: linear;
+	bottom: 10vh;
 }
 
 @keyframes bounce {
-	0% { transform: translateY(-50px); }
-	10% { transform: translateY(-48px); }
-	20% { transform: translateY(-42px); }
-	30% { transform: translateY(-32px); }
-	40% { transform: translateY(-18px); }
-	50% { transform: translateY(0); }
-	60% { transform: translateY(-18px); }
-	70% { transform: translateY(-32px); }
-	80% { transform: translateY(-42px); }
-	90% { transform: translateY(-48px); }
-	100% { transform: translateY(-50px); }
+	0% { transform: translateY(-4em); }  /* Higher bounce */
+	10% { transform: translateY(-3.6em); }
+	20% { transform: translateY(-3em); }
+	30% { transform: translateY(-2em); }
+	40% { transform: translateY(-1em); }
+	50% { transform: translateY(0); }  /* Ground level */
+	60% { transform: translateY(-1em); }
+	70% { transform: translateY(-2em); }
+	80% { transform: translateY(-3em); }
+	90% { transform: translateY(-3.6em); }
+	100% { transform: translateY(-4em); } /* Returns to highest bounce */
 }

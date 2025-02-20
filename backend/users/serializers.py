@@ -111,7 +111,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode', 'tournament'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):
@@ -129,7 +129,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     def get_auth_provider(self, obj):
         auth_provider = obj.user.auth_provider
-        print(f"Auth Provider for {obj.user.username}: {auth_provider}")  # Debugging line
+        #print(f"Auth Provider for {obj.user.username}: {auth_provider}")  # Debugging line
         return auth_provider
 
     def get_username(self, obj):
@@ -353,6 +353,15 @@ class TournamentSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=50, required=False, allow_blank=True)
     host = serializers.IntegerField()
 
+    def validate(self, attrs):
+        player_ids = attrs.get('player_ids')
+        host = attrs.get('host')
+
+        if host not in player_ids:
+            raise serializers.ValidationError("Host must be one of the players in the tournament.")
+
+        return attrs
+
     def validate_player_ids(self, value):
         if len(value) < 2 or len(value) > 32 or (len(value) & (len(value) - 1)) != 0:
             raise serializers.ValidationError("Number of players are not enough for holding a tournament.")
@@ -398,8 +407,24 @@ class TournamentSerializer(serializers.Serializer):
             description=validated_data.get('description', ''),
             host=host
         )
+        player_profile.tournament = tournament
+        player_profile.save()
     
+        temp_user, created = User.objects.get_or_create(
+            username='temp_user',
+            defaults={'email': 'temp_user@example.com'}
+        )
+        temp_profile, created = PlayerProfile.objects.get_or_create(
+            user=temp_user,
+            defaults={'display_name': 'Temporary Player'}
+        )
+        temp_profile.tournament = tournament
+        temp_profile.in_tournament = True
+        temp_profile.save()
         player_profiles = PlayerProfile.objects.filter(user_id__in=player_ids)
+        
+        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=True) #me, karolina added this I hope it's ok?
+
     
         matches = []
         for i in range(0, len(player_ids), 2):
@@ -474,18 +499,24 @@ class ExitTournamentSerializer(serializers.Serializer):
         except PlayerProfile.DoesNotExist:
             raise serializers.ValidationError("Player profile not found.")
 
-        if not player.in_tournament:
+        if not player.in_tournament and not player.is_host:
             raise serializers.ValidationError("Player is not currently in a tournament.")
 
         return attrs
 
+    @staticmethod
     def delete_tournament_and_update_players(tournament_id):
         try:
             tournament = Tournament.objects.get(id=tournament_id)
         except Tournament.DoesNotExist:
             raise serializers.ValidationError("Tournament not found.")
-    
-        # Retrieve all matches associated with the tournament
+        temp_profile = PlayerProfile.objects.filter(tournament=tournament, user__username='temp_user').first()
+
+        if temp_profile:
+            temp_user = temp_profile.user
+            temp_profile.delete()
+            temp_user.delete()
+
         matches = Match.objects.filter(tournament=tournament)
     
         player_ids = set()
@@ -493,7 +524,8 @@ class ExitTournamentSerializer(serializers.Serializer):
             player_ids.add(match.player1_id)
             player_ids.add(match.player2_id)
     
-        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=False)
+        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=False, is_host=False)
+        
     
         tournament.delete()
 
@@ -501,17 +533,34 @@ class ExitTournamentSerializer(serializers.Serializer):
         user_id = validated_data.get('user_id')
         player = PlayerProfile.objects.get(user_id=user_id)
         match = player.curr_match
-        tournament= match.tournament
-
+        if match:
+            tournament = match.tournament
+            #print(f'---------------------------------------- match is {match} --------------------------- ')
+        else:
+            tournament = player.tournament
         player.in_tournament = False
         player.curr_match = None
         player.save()
 
-        if player.is_host:
-            delete_tournament_and_update_players(tournament.id) 
-            return {"message": "Tournament has been destroyed due to the host leaving"}
+        if player.is_host and match is None:
+            ExitTournamentSerializer.delete_tournament_and_update_players(tournament.id)
+            #print(f'---------------------------------------- match is None --------------------------- ')
+            return {"message": "Tournament has been destroyed due to the host destroying it"}
+
+        final_match = Match.objects.filter(tournament=tournament, level=0).first()
+
+        if player.is_host and match.level and final_match == None:
+            #print(f'---------------------------------------- match level is {match.level} --------------------------- ')
+            ExitTournamentSerializer.delete_tournament_and_update_players(tournament.id)
+            return {"message": "Tournament has been destroyed due to the host destroying it"}
 
         if match:
+            if not match.player2_id:
+                temp_profile = PlayerProfile.objects.filter(tournament=tournament, user__username='temp_user').first()
+                if temp_profile:
+                    match.player1 = temp_profile
+                    match.save()
+                    return {"message": f"{player.display_name} has left the tournament"}
             other_player_id = match.player1_id if match.player2_id == user_id else match.player2_id
 
             score_data = {
@@ -526,7 +575,11 @@ class ExitTournamentSerializer(serializers.Serializer):
             else:
                 raise serializers.ValidationError(score_serializer.errors)
 
-        return {"user_id": user_id, "in_tournament": player.in_tournament}
+            #if player.is_host:
+            #    player.is_host = False
+            #    player.save()
+
+        return {"message": f"{player.display_name} has left the tournament"}
 
 
 #class TournamentSerializer(serializers.ModelSerializer):
@@ -585,6 +638,7 @@ class ScoreRetrieveSerializer(serializers.Serializer):
         curr_level = match.level
         curr_idx = match.idx
         PlayerProfile.objects.filter(user_id=match.player1_id if match.player2_id == winner_id else match.player2_id).update(in_tournament=False, curr_match=None)
+        #print(f'curr_level: {curr_level}')
 
         def half_number(number):
             if number in (0, 1):
@@ -604,6 +658,27 @@ class ScoreRetrieveSerializer(serializers.Serializer):
                 idx=next_idx
             ).first()
             if existing_match:
+                temp_profile = PlayerProfile.objects.filter(tournament=curr_tournament, user__username='temp_user').first()
+                if existing_match.player1_id == temp_profile.user_id:
+                    curr_tournament.champion = str(PlayerProfile.objects.get(user_id=winner_id).display_name)
+                    curr_tournament.save()
+                    player_winner = PlayerProfile.objects.get(user_id=winner_id)
+                    player_winner.curr_match = None
+                    player_winner.in_tournament = False
+                    player_winner.save()
+                    player_host = PlayerProfile.objects.get(user_id=curr_tournament.host)
+                    player_host.is_host = False
+                    player_host.tournament = None
+                    player_host.save()
+
+                    existing_match.delete()
+
+                    if temp_profile:
+                        temp_user = temp_profile.user
+                        temp_profile.delete()
+                        temp_user.delete()
+                    return {"message": f"{curr_tournament.champion} is this tournament's champion by forfeit"}
+
                 existing_match.player2_id = winner_id
                 existing_match.save()
                 player = PlayerProfile.objects.get(user_id=winner_id)
@@ -627,8 +702,35 @@ class ScoreRetrieveSerializer(serializers.Serializer):
             curr_tournament.save()
             player_winner = PlayerProfile.objects.get(user_id=winner_id)
             player_winner.curr_match = None
+            player_winner.in_tournament = False
             player_winner.save()
             player_host = PlayerProfile.objects.get(user_id=curr_tournament.host)
             player_host.is_host = False
+            player_host.tournament = None
             player_host.save()
+
+            temp_profile = PlayerProfile.objects.filter(tournament=curr_tournament, user__username='temp_user').first()
+            if temp_profile:
+                temp_user = temp_profile.user
+                temp_profile.delete()
+                temp_user.delete()
             return {"message": f"{curr_tournament.champion} is this tournament's champion"}
+
+class TournamentIdSerializer(serializers.Serializer):
+    tournament_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        tournament_id = attrs.get('tournament_id')
+
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+        except Tournament.DoesNotExist:
+            raise serializers.ValidationError("Tournament not found.")
+
+        return attrs
+
+    def create(self, validated_data):
+        tournament_id = validated_data.get('tournament_id')
+        matches = Match.objects.filter(tournament_id=tournament_id)
+
+        return MatchSerializer(matches, many=True).data

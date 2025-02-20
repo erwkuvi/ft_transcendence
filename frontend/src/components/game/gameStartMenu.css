@@ -1,0 +1,107 @@
+#gameStartMenu {
+	width: 80%;
+	/*height: 50%; */
+	border: 1px solid white;
+	margin: 0;
+	padding: 2rem;
+	padding-top: 2rem;
+	gap: 2rem;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* background-color: var(--fill-color); */
+}
+
+.gameStartMenuH2 {
+	font-size: 1.8rem;
+	margin-bottom: 1.5rem;
+}
+
+.gameStartMenuH3 {
+	font-size: 1.5rem;
+}
+
+#gameMenuArea1 {
+	/* border: 1px solid yellow; */
+	width: 80%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 2rem;
+}
+
+#gameMenuElementWrapper {
+	/* border: 1px solid cyan; */
+	display: flex;
+	flex-direction: row;
+	gap: 10rem;
+}
+
+#choiceArea {
+	/* border: 1px solid pink; */
+	display: flex;
+	flex-direction: column;
+	font-size: 1.2rem;	
+}
+
+.choiceAreaSections {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 6rem;
+	/* border: 1px solid red; */
+}
+
+.menuChoiceElement {
+	/* border: 1px solid red; */
+	font-weight: 100;
+}
+
+#controlsArea {
+	/* border: 1px solid white; */
+	display: flex;
+	flex-direction: column;
+}
+
+#menu {
+	/* border: 1px solid white; */
+	width: 8rem;
+}
+
+#p1Controls {
+}
+
+#p2Controls {
+	margin-top: 1.5rem;
+}
+
+.pControlsWrapper {
+	display: flex;
+	/* border: 1px solid red; */
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 1rem;
+	margin-top: 0.8rem;
+}
+
+.p2Keys {
+	border: 1px solid white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	width: 4rem;
+	height: 4rem;
+}
+
+.p1Keys {
+	border: 1px solid white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	width: 4rem;
+	height: 4rem;
+}

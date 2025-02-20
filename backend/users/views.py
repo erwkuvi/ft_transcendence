@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
-from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, ScoreRetrieveSerializer, ExitMultiplayerSerializer
+from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, ScoreRetrieveSerializer, ExitMultiplayerSerializer, TournamentIdSerializer
 from .models import User, PlayerProfile, Match, Tournament
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
@@ -375,7 +375,7 @@ class LogoutView(generics.GenericAPIView):
 
 
 # ---------------------- Tournament Endpoints ----------------
-class TournamentViewSet(viewsets.GenericViewSet):
+class TournamentCreateViewSet(viewsets.GenericViewSet):
     serializer_class = TournamentSerializer
     permission_classes = [AllowAny]
 
@@ -471,3 +471,13 @@ class ScoreRetrieveViewSet(viewsets.GenericViewSet):
             return Response(result, status=status.HTTP_200_OK)
         
         return Response(self.get_serializer(result).data, status=status.HTTP_201_CREATED)
+
+
+class TournamentViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    def retrieve(self, request, pk=None):
+        serializer = TournamentIdSerializer(data={'tournament_id': pk})
+        if serializer.is_valid():
+            matches_data = serializer.create(serializer.validated_data)
+            return Response(matches_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
