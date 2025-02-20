@@ -18,9 +18,9 @@ const Header = () => {
 
 	return (
 		<div>
-			<nav className="navbar header m-0 p-0" id="navbarID">
+			<nav className="navbar header mt-0 p-0" id="navbarID">
 				<div className="container-fluid p-0">
-					<nav className="menu custom-menu" >
+					<nav className="d-flex flex-wrap menu">
 						<Link style={{ fontSize: `${fontSize}px` }} to="/">{t("HeaderHome")}</Link>
 						<Link style={{ fontSize: `${fontSize}px` }} to="/play">{t("HeaderPlay")}</Link>
 						<Link style={{ fontSize: `${fontSize}px` }} to="/profile">{t("HeaderProfile")}</Link>

@@ -59,9 +59,9 @@ const Play = () => {
 				) : (
 					<div className="play-wrapper">
 						<div className="title-container">
-							<h1 className="title mt-5">{t("PlayTitle")}</h1>
+							<h1 className="title mt-0 mb-0">{t("PlayTitle")}</h1>
 						</div>
-						<div className="play-modes-wrapper">
+						<div className="play-modes-wrapper mt-5">
 							<PlayMultiplayerMode scaleStyle={scaleStyle} />
 							<PlayTournamentSetup scaleStyle={scaleStyle} />
 						</div>

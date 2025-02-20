@@ -82,7 +82,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
             <p style={scaleStyle} class="AuthUser_and_TournamentFormInput_holder">
                 {t("Username")}
                 <input 
-					ref={usernameInputRef}
+					ref={usernameInputRef} className="inputFieldStyle1"
                     value={credentials.username}
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
@@ -92,7 +92,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
             <p style={scaleStyle}>
                 {t("Password")}
                 <input
-                    type="password"
+                    type="password" className="inputFieldStyle1"
                     value={credentials.password}
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
@@ -100,7 +100,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
                 />
                 <button 
                     type="submit"
-                    className="submitInfoBtn"
+                    className="buttonStyle1"
                     style={scaleStyle}
                     disabled={isBeingSubmitted}
                 >

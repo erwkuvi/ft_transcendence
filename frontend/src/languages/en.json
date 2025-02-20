@@ -15,8 +15,8 @@
 	"HomeButton": "PLAY NOW",
 
 	"LogInTitle": "Log In",
-	"LogInText": "Log in",
-	"LogInText2": "Sign up",
+	"LogInText": "LOG IN",
+	"LogInText2": "SIGN UP",
 	"LogInText3": "Username",
 	"LogInText4": "Password",
 	"LogInText5": "Confirm Password",
@@ -52,7 +52,7 @@
 	"alias name": "Alias name:",
 	"Add a player": "Add a player",
 	"Ready": "Ready",
-	"Submit": "Submit",
+	"Submit": "SUBMIT",
 
 	"Cancel": "Cancel",
 	"Yes, Leave": "Yes, Leave",

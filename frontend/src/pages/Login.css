@@ -1,7 +1,8 @@
 .login {
 	display: flex;
 	width: 100%;
-	justify-content: space-around;
+	justify-content:space-around;
+	align-items: center;
 	justify-self: center;
 	flex-flow: row wrap;
 }
@@ -33,6 +34,31 @@
 	height: 40px;
 	cursor: pointer;
 }
+
+@media (max-width: 530px) {
+	.loginCardHolderStyle {
+		width: 100% !important;
+	}
+}
+
+.loginCardHolderStyle {
+    border:				1px solid var(--text-color);
+	border-radius:		7px;
+    background-color:	var(--fill-color);
+    min-width:			200px;
+    max-width:			800px;
+	width:				500px;
+	min-height:			380px;
+    height:				auto;
+    padding:   			2rem !important;
+    display:   			flex;
+    flex-direction: 	column;
+    justify-content:	space-between;
+    align-items:		center;
+	/* margin:				40px !important; */
+	color:				var(--text-color);
+}
+
 
 .status-switch {
 	position: relative;

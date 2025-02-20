@@ -406,7 +406,7 @@ const handleToggle2FA = async (password = null) => {
 				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
-					<Filter className="serach-users" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
+					<Filter className="inputFieldStyle1" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
 					<ListUsers	filterUsers={filterUsers}
 								setAllUsers={setAllUsers}
 								setFilterUsers={setFilterUsers}
