@@ -2,10 +2,10 @@
     background-color: var(--fill-color);
     border: 1px solid var(--text-color);
     border-radius: 12px;
-    padding: 20px;
-    max-width: 400px;
-    margin: auto;
-    text-align: center;
+    padding: 1.5rem !important;
+    /* max-width: 400px; */
+    /* margin: auto; */
+    /* text-align: center; */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -40,7 +40,7 @@
 }
 
 .auth-form .button {
-    width: 100%;
+    /* width: 100%;
     padding: 12px;
     margin-top: 10px;
     background: linear-gradient(135deg, var(--accent-color), var(--accent-dark));
@@ -49,9 +49,9 @@
     border: none;
     border-radius: 8px;
     font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease, transform 0.1s ease;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer; */
+    /* transition: all 0.3s ease, transform 0.1s ease; */
+    /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
 }
 
 .auth-form .button:hover {

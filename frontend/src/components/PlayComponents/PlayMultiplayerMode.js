@@ -17,7 +17,7 @@ const PlayMultiplayerMode = ({ scaleStyle }) => {
 							<h3 style={scaleStyle}>{t("PlayTitleMultiplayer")}</h3>
 							<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionMultiplayer")}</p>
 							<AuthUserForm scaleStyle={scaleStyle}/>
-							<button className="btn button"
+							<button className="playButtonStyle2"
 									style={scaleStyle} 
 									onClick={() => setIsReadyToPlay("multiplayer")} 
 									disabled={!isOpponentAuthenticated}

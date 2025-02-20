@@ -65,7 +65,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
                         	<h3 style={scaleStyle}>{t("PlayTitleTournament")}</h3>
                         	<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionTournament")}</p>
                         	<AuthTournamentForm scaleStyle={scaleStyle}/>
-                        	<button className="btn button" 
+                        	<button className="playButtonStyle2" 
 								style={scaleStyle} 
 								onClick={handleClick} 
 								disabled={!isTournamentReady}
