@@ -499,7 +499,7 @@ class ExitTournamentSerializer(serializers.Serializer):
         except PlayerProfile.DoesNotExist:
             raise serializers.ValidationError("Player profile not found.")
 
-        if not player.in_tournament:
+        if not player.in_tournament and not player.is_host:
             raise serializers.ValidationError("Player is not currently in a tournament.")
 
         return attrs
@@ -510,7 +510,13 @@ class ExitTournamentSerializer(serializers.Serializer):
             tournament = Tournament.objects.get(id=tournament_id)
         except Tournament.DoesNotExist:
             raise serializers.ValidationError("Tournament not found.")
-    
+        temp_profile = PlayerProfile.objects.filter(tournament=tournament, user__username='temp_user').first()
+
+        if temp_profile:
+            temp_user = temp_profile.user
+            temp_profile.delete()
+            temp_user.delete()
+
         matches = Match.objects.filter(tournament=tournament)
     
         player_ids = set()
@@ -518,17 +524,8 @@ class ExitTournamentSerializer(serializers.Serializer):
             player_ids.add(match.player1_id)
             player_ids.add(match.player2_id)
     
-        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=False)
+        PlayerProfile.objects.filter(user_id__in=player_ids).update(in_tournament=False, is_host=False)
         
-        temp_profile = PlayerProfile.objects.filter(tournament=tournament, user__username='temp_user').first()
-        
-        if temp_profile:
-            temp_user = temp_profile.user
-            temp_profile.delete()
-            temp_user.delete()
-
-        temp_profile.delete()
-        temp_user.delete()
     
         tournament.delete()
 
@@ -536,17 +533,26 @@ class ExitTournamentSerializer(serializers.Serializer):
         user_id = validated_data.get('user_id')
         player = PlayerProfile.objects.get(user_id=user_id)
         match = player.curr_match
-        tournament = match.tournament
-
+        if match:
+            tournament = match.tournament
+            #print(f'---------------------------------------- match is {match} --------------------------- ')
+        else:
+            tournament = player.tournament
         player.in_tournament = False
         player.curr_match = None
         player.save()
 
-        if player.is_host and match.level:
-            player.is_host = False
-            player.save()
+        if player.is_host and match is None:
             ExitTournamentSerializer.delete_tournament_and_update_players(tournament.id)
-            return {"message": "Tournament has been destroyed due to the host leaving"}
+            #print(f'---------------------------------------- match is None --------------------------- ')
+            return {"message": "Tournament has been destroyed due to the host destroying it"}
+
+        final_match = Match.objects.filter(tournament=tournament, level=0).first()
+
+        if player.is_host and match.level and final_match == None:
+            #print(f'---------------------------------------- match level is {match.level} --------------------------- ')
+            ExitTournamentSerializer.delete_tournament_and_update_players(tournament.id)
+            return {"message": "Tournament has been destroyed due to the host destroying it"}
 
         if match:
             if not match.player2_id:
@@ -632,7 +638,7 @@ class ScoreRetrieveSerializer(serializers.Serializer):
         curr_level = match.level
         curr_idx = match.idx
         PlayerProfile.objects.filter(user_id=match.player1_id if match.player2_id == winner_id else match.player2_id).update(in_tournament=False, curr_match=None)
-        print(f'curr_level: {curr_level}')
+        #print(f'curr_level: {curr_level}')
 
         def half_number(number):
             if number in (0, 1):
