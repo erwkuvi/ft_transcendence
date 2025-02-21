@@ -9,6 +9,19 @@
 	background-color: var(--card-color);
 }
 
+.profileCardHolder {
+	display:			flex;
+	flex-direction: 	row !important;
+	justify-content:	space-evenly;
+	align-items:		center;
+	flex-wrap:			wrap;
+	background-color: var(--card-color);
+}
+
+.profileCardStyle1 {
+	color: var(--text-color);
+}
+
 .cards{
 	display: flex;
 	justify-content: center;

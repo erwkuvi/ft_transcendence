@@ -295,9 +295,9 @@ const handleToggle2FA = async (password = null) => {
 
 	return (
 		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
-			<h1>{t("PROFILE")}</h1>
-			<div className='container-fluid cards mt-4' style={{ fontSize: `${fontSize}px` }}>
-				<div className='card basic user-info ' style={{ fontSize: `${fontSize}px` }}>
+			<h1>{t("profile")}</h1>
+			<div className='profileCardHolder  mt-4' style={{ fontSize: `${fontSize}px` }}>
+				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
 					{/* Avatar section with edit functionality */}
 					<div className="relative inline-block">
