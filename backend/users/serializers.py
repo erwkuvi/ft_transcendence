@@ -565,8 +565,8 @@ class ExitTournamentSerializer(serializers.Serializer):
 
             score_data = {
                 'id': match.id,
-                'score_player1': 2 if match.player1_id == other_player_id else 0,
-                'score_player2': 2 if match.player2_id == other_player_id else 0,
+                'score_player1': 1 if match.player1_id == other_player_id else 0,
+                'score_player2': 1 if match.player2_id == other_player_id else 0,
                 'winner': other_player_id
             }
             score_serializer = ScoreRetrieveSerializer(data=score_data)
@@ -581,11 +581,6 @@ class ExitTournamentSerializer(serializers.Serializer):
 
         return {"message": f"{player.display_name} has left the tournament"}
 
-
-#class TournamentSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = Tournament
-#        fields = ['id', 'champion', 'description', 'host']  # Include fields you want to serialize
 
 class MatchTournamentSerializer(serializers.ModelSerializer):
     stats = PlayerMatchSerializer(source='playermatch_set', many=True, read_only=True)
