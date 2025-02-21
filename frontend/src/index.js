@@ -5,12 +5,14 @@ import App from './App';
 import './index.css';
 import './components/Scrollbar.css';
 import './i18n';
-
+import { AuthProvider } from './context/AuthContext';
 
 const root = createRoot(document.getElementById('root'));
 
 root.render(
-	<BrowserRouter>
-		<App />
-	</BrowserRouter>
+	<AuthProvider>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</AuthProvider>
 )
