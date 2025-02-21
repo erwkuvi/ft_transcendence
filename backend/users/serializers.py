@@ -478,7 +478,7 @@ class ExitMultiplayerSerializer(serializers.Serializer):
             "player2": player2.id,
             "winner": player2.id,
             "score_player1": 0,
-            "score_player2": score_player2 + 1
+            "score_player2": 1
         }
 
         match_serializer = MatchSerializer(data=match_data)
@@ -565,8 +565,8 @@ class ExitTournamentSerializer(serializers.Serializer):
 
             score_data = {
                 'id': match.id,
-                'score_player1': 2 if match.player1_id == other_player_id else 0,
-                'score_player2': 2 if match.player2_id == other_player_id else 0,
+                'score_player1': 1 if match.player1_id == other_player_id else 0,
+                'score_player2': 1 if match.player2_id == other_player_id else 0,
                 'winner': other_player_id
             }
             score_serializer = ScoreRetrieveSerializer(data=score_data)

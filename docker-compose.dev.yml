@@ -32,6 +32,7 @@ services:
       - transcend
     volumes:
       - ./backend/:/app
+      - certs:/certs
     depends_on:
       - postgresql
   
@@ -51,6 +52,9 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
 
+volumes:
+  certs:
+    driver: local
 
 networks:
   transcend:
