@@ -7,7 +7,7 @@ export const getInfoTournament = async () => {
         const request = await axiosInstance.get(baseUrl, {
             headers: {
                 'Content-Type': 'application/json', 
-                'Authorization': 'JWT ' + localStorage.getItem('access'),
+                'Authorization': 'JWT ' + localStorage.getItem('access_token'),
             },
         });
         return request.data;

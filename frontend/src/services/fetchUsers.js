@@ -7,7 +7,7 @@ export const fetchUsers = async () => {
         const response = await axiosInstance.get(URL, {
             headers: {
                 'Content-Type': 'application/json', 
-                'Authorization': 'JWT ' + localStorage.getItem('access'),
+                'Authorization': 'JWT ' + localStorage.getItem('access_token'),
             },
         });
         return response.data;

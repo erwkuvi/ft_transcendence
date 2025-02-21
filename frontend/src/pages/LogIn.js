@@ -99,6 +99,8 @@ const LogIn = () => {
 					
 					if (error.response.data.username) {
 						alert(t('Username already exists. Please choose a different one.'));
+					}else if(error.response.data.email){
+						alert(t('Email was already used. Please choose a different one.'));
 					} else {
 						alert(t('Sign up failed. Please try again.'));
 					}
@@ -167,6 +169,7 @@ const LogIn = () => {
 							{t("LogInText3")}
 							<input
 								className="inputFieldStyle1"
+								autoComplete="off"
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								required
@@ -188,6 +191,7 @@ const LogIn = () => {
 							{t("LogInText4")}
 							<input
 								className="inputFieldStyle1"
+								autoComplete="off"
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
@@ -200,6 +204,7 @@ const LogIn = () => {
 									{t("LogInText5")}
 									<input 
 										className="inputFieldStyle1" /*text-field form-control*/
+										autoComplete="off"
 										type="password"
 										value={confirmPassword}
 										onChange={(e) => setConfirmPassword(e.target.value)}

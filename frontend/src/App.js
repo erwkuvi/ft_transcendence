@@ -1,7 +1,7 @@
 //import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
 import { GameProvider } from "./context/GameContext"; 
-import axiosInstance from './services/axiosInstance';
 import { AuthGuard } from './guards/authGuard';
 import Header from './components/Header';
 import Footer from './components/Footer'
@@ -15,39 +15,57 @@ import Otp from './pages/Otp';
 import './App.css';
 import ScrollReset from './components/ScrollReset';
 import { AccessibilityProvider } from "./AccessibilityContext";
-import { AuthProvider } from './context/AuthContext';
+import { AuthContext } from './context/AuthContext';
 
+function ScrollToTop() {
+	const location = useLocation();
+	
+	React.useEffect(() => {
+	  window.scrollTo(0, 0);
+	}, [location.pathname]);
+	
+	return null;
+  }
+  
 
 function App() {
+	const { isLoggedIn } = useContext(AuthContext);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (isLoggedIn && location.pathname === '/login') {
+			navigate('/profile');
+		}
+	}, [isLoggedIn, navigate]);
+
 	return (
-		<AuthProvider>
-			<AccessibilityProvider>
-				<Header />
-				<div className="App">
-					<AuthGuard />
-					<Main>
-						<ScrollReset>
-							<Routes>
-								<Route path="/" element={<Home />} />
-								<Route 
-									path="/play" 
-									element={
-										<GameProvider>
-											<Play />
-										</GameProvider>
-									} 
-								/>
-								<Route path="/profile" element={<Profile />} />
-								<Route path="/about" element={<About />} />
-								<Route path="/login" element={<LogIn />} />
-								<Route path="/otp" element={<Otp />} />
-							</Routes>
-						</ScrollReset>
-					</Main>
-				</div>
-				<Footer />
-			</AccessibilityProvider>
-		</AuthProvider>
+		<AccessibilityProvider>
+			<ScrollToTop />
+			<Header />
+			<div className="App">
+				<AuthGuard />
+				<Main>
+					<ScrollReset>
+						<Routes>
+							<Route path="/" element={<Home />} />
+							<Route 
+								path="/play" 
+								element={
+									<GameProvider>
+										<Play />
+									</GameProvider>
+								} 
+							/>
+							<Route path="/profile" element={isLoggedIn ? <Profile /> : <LogIn />} />
+							<Route path="/about" element={<About />} />
+							<Route path="/login"  element={isLoggedIn ? <Profile /> : <LogIn />} />
+							{/* <Route path="/otp" element={<Otp />} /> */}
+						</Routes>
+					</ScrollReset>
+				</Main>
+			</div>
+			<Footer />
+		</AccessibilityProvider>
 	);
 }
 

@@ -136,6 +136,29 @@ class OAuth42LoginView(views.APIView):
         # Redirect the user to the 42 authorization URL
         return redirect(auth_url)
 
+class OAuth42MatchView(views.APIView):
+    permission_classes = [AllowAny]  # Allow any user to access this view
+
+    def get(self, request):
+        # Generate a secure random string for the state parameter to prevent CSRF attacks
+        characters = string.ascii_letters + string.digits
+        state = ''.join(secrets.choice(characters) for _ in range(30))  # Adjust length as needed
+        request.session['oauth_state'] = state
+        # Construct the URL with query parameters
+
+        auth_url = (
+                f"{settings.API_42_AUTH_URL}"
+                f"?client_id={settings.INTRA_UID_42}"
+                f"&redirect_uri={settings.API_42_REDIRECT_URI_MATCH}"
+                f"&response_type=code"
+                f"&scope=public"
+                f"&state={state}"
+                )
+        # Redirect the user to the 42 authorization URL
+        return redirect(auth_url)
+    
+
+
 def save_avatar_locally(avatar_url, player_profile, user):
     response = requests.get(avatar_url)
     if response.status_code == 200:
@@ -147,6 +170,143 @@ def save_avatar_locally(avatar_url, player_profile, user):
         img_temp.write(response.content)
         img_temp.flush()
         player_profile.avatar.save(f"{user.username}_avatar.jpg", File(img_temp), save=True)
+
+
+
+class OAuth42CallbackMatchView(views.APIView):
+
+    permission_classes = [AllowAny]  # Allow any user to access this view
+
+    def post(self, request):
+        try:
+            # 1. Get authorization code from request
+            code = request.data.get('code')
+            if not code:
+                raise ValueError("No authorization code provided")
+
+            # 2. Exchange code for access token
+            token_response = requests.post(
+                'https://api.intra.42.fr/oauth/token',
+                data={
+                    'grant_type': 'authorization_code',
+                    'client_id': settings.INTRA_UID_42,
+                    'client_secret': settings.INTRA_SECRET_42,
+                    'code': code,
+                    'redirect_uri': settings.API_42_REDIRECT_URI
+                }
+            )
+            
+            if token_response.status_code != 200:
+                raise ValueError("Failed to exchange code for token")
+            
+            token_data = token_response.json()
+            access_token = token_data['access_token']
+
+            # 3. Fetch user information
+            user_info_response = requests.get(
+                'https://api.intra.42.fr/v2/me',
+                headers={'Authorization': f'Bearer {access_token}'}
+            )
+            
+            if user_info_response.status_code != 200:
+                raise ValueError("Failed to retrieve user information")
+            
+            user_info = user_info_response.json()
+
+            # 4. Create or get user
+            try:
+                user = User.objects.get(email=user_info.get('email'))
+            except User.DoesNotExist:
+                raise ValueError("User not found")
+
+            try:
+                player_profile = PlayerProfile.objects.get(
+                    user=user,
+                    display_name=user_info.get("displayname"),
+                )
+            except PlayerProfile.DoesNotExist:
+                raise ValueError("Player profile does not exist")
+
+            # Return only user_id and display_name
+            return Response({
+                "user_id": user.id,
+                "display_name": player_profile.display_name
+            }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def get(self, request):
+        try:
+            code = request.query_params.get('code')
+            state = request.query_params.get('state')
+            session_state = request.session.get('oauth_state')
+
+            if not code or not state:
+                raise AuthenticationFailed("Missing code or state in the callback response.")
+            
+            # Validate state parameter
+            if state != session_state:
+                raise AuthenticationFailed("Invalid state parameter.")
+            
+            # Exchange code for access token
+            token_response = requests.post(
+                'https://api.intra.42.fr/oauth/token',
+                data={
+                    'grant_type': 'authorization_code',
+                    'client_id': settings.INTRA_UID_42,
+                    'client_secret': settings.INTRA_SECRET_42,
+                    'code': code,
+                    'redirect_uri': settings.API_42_REDIRECT_URI_MATCH,
+                }
+            )
+
+            if token_response.status_code != 200:
+                raise AuthenticationFailed("Failed to obtain access token.")
+
+            token_data = token_response.json()
+            access_token = token_data.get('access_token')
+
+            # Fetch user info from 42 API
+            user_info_response = requests.get(
+                'https://api.intra.42.fr/v2/me',
+                headers={'Authorization': f'Bearer {access_token}'}
+            )
+            if user_info_response.status_code != 200:
+                raise AuthenticationFailed("Failed to obtain user information.")
+            
+            user_info = user_info_response.json()
+
+            # Get user's data
+            try:
+                user = User.objects.get(email=user_info.get('email'))
+            except User.DoesNotExist:
+                raise ValueError("User not found")
+
+            try:
+                player_profile = PlayerProfile.objects.get(
+                    user=user,
+                    display_name=user_info.get("displayname"),
+                )
+            except PlayerProfile.DoesNotExist:
+                raise ValueError("Player profile does not exist")
+
+            # Return user_id, display_name, and username
+            return Response({
+                "user_id": user.id,
+                "display_name": player_profile.display_name,
+                "username": user.username
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 
 class OAuth42CallbackView(views.APIView):
 
