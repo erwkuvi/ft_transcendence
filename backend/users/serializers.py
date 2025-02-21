@@ -62,12 +62,8 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         }
 
     def validate_username(self, value):
-        #Username is alphanumeric and can include underscores, hyphens, and periods
         if not re.match(r'^[a-zA-Z0-9._-]{3,30}$', value):
             raise serializers.ValidationError("Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods.")
-        
-        if User.objects.filter(username__iexact=value).exists():
-            raise serializers.ValidationError("Username already exists.")
         
         return value
 

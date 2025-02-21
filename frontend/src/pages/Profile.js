@@ -39,7 +39,28 @@ const Profile = () => {
 	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
 
+	const [status, setStatus] = useState('');
 
+	useEffect(() => {
+		const ws = new WebSocket('ws://localhost:8000/ws/online-status/');
+		ws.onopen = () => console.log('WebSocket for game connection established');
+
+		ws.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			console.log('Data:', data);
+			if (data.type === 'notification') {
+				setNotification(data);
+			}
+		};
+
+		ws.onerror = (error) => {
+			console.error('WebSocket error:', error);
+		};
+
+		return () => {
+			ws.close();
+		};
+	}, []);
 	useEffect(() => {
 		const token = localStorage.getItem('access_token');
 		if (!token) {
