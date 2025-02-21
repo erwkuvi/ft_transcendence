@@ -164,5 +164,6 @@
 	"Start Game": "Start Game",
 
 	"Invalid credentials": "Invalid credentials",
-	"Authentication failed": "Authentication failed"
+	"Authentication failed": "Authentication failed",
+	"You can not play pong with yourself": "You can not play pong with yourself"
 }

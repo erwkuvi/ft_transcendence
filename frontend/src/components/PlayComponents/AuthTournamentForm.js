@@ -81,6 +81,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
                 <input 
 					ref={usernameInputRef} className="inputFieldStyle1"
                     value={credentials.username}
+					autoComplete="off"
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
                     required
@@ -90,6 +91,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
                 {t("Password")}
                 <input
                     type="password" className="inputFieldStyle1"
+					autoComplete="off"
                     value={credentials.password}
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}

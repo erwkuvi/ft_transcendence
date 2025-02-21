@@ -169,6 +169,7 @@ const LogIn = () => {
 							{t("LogInText3")}
 							<input
 								className="inputFieldStyle1"
+								autoComplete="off"
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								required
@@ -190,6 +191,7 @@ const LogIn = () => {
 							{t("LogInText4")}
 							<input
 								className="inputFieldStyle1"
+								autoComplete="off"
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
@@ -202,6 +204,7 @@ const LogIn = () => {
 									{t("LogInText5")}
 									<input 
 										className="inputFieldStyle1" /*text-field form-control*/
+										autoComplete="off"
 										type="password"
 										value={confirmPassword}
 										onChange={(e) => setConfirmPassword(e.target.value)}
