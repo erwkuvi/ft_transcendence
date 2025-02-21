@@ -18,6 +18,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
 from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, ScoreRetrieveSerializer, ExitMultiplayerSerializer, TournamentIdSerializer
 from .models import User, PlayerProfile, Match, Tournament
+from django.http import HttpResponseRedirect
+
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
 class ExitMultiplayerViewSet(viewsets.ViewSet):
@@ -291,11 +293,17 @@ class OAuth42CallbackMatchView(views.APIView):
                 raise ValueError("Player profile does not exist")
 
             # Return user_id, display_name, and username
-            return Response({
-                "user_id": user.id,
-                "display_name": player_profile.display_name,
-                "username": user.username
-            }, status=status.HTTP_200_OK)
+            # return Response({
+            #     "user_id": user.id,
+            #     "display_name": player_profile.display_name,
+            #     "username": user.username
+            # }, status=status.HTTP_200_OK)
+             # Prepare the redirect URL (the frontend URL to return to)
+            URL = "http://localhost:8081"
+            redirect_url = f"{URL}/play/?user_id={user.id}&display_name={player_profile.display_name}"
+
+            # Return a redirect to the frontend URL
+            return HttpResponseRedirect(redirect_url)
 
         except Exception as e:
             return Response(

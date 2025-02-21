@@ -229,6 +229,7 @@ LOGGING = {
     },
 }
 
+FRONTEND_URL = 'http://localhost:8081'
 
 # ----------------- OAUTH 2.0 - 42 INTRA SETTINGS -----------------:
 # 42 Intra auth URL
@@ -249,3 +250,4 @@ EXCHANGE_CODE_TIMEOUT = 30
 INTRA_UID_42 = os.environ['CLIENT_ID']
 # API CLIENT SECRET
 INTRA_SECRET_42 = os.environ['CLIENT_SECRET']
+
