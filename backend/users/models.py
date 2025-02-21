@@ -20,9 +20,8 @@ class User(AbstractUser):
 class PlayerProfile(models.Model):
     LANGUAGE_CHOICES = [
         ('en', 'English'),
-        ('de', 'German'),
-        ('pl', 'Polish'),
         ('lt', 'Lithuanian'),
+        ('pl', 'Polish'),
         ('es', 'Spanish'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -45,7 +44,7 @@ class PlayerProfile(models.Model):
     curr_match = models.ForeignKey(
         'Match', related_name='current_players', on_delete=models.SET_NULL,
         null=True, blank=True)
-    #online_status = models.BooleanField(default=False)
+    online = models.BooleanField(default=False)
     matches = models.ManyToManyField(
         'Match', through='PlayerMatch', related_name='stats', blank=True)
 

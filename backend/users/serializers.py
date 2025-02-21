@@ -1,4 +1,5 @@
 # serializers.py
+import re
 import math
 import random
 import datetime
@@ -60,10 +61,21 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "qr_code": {"read_only": True},
         }
 
+    def validate_username(self, value):
+        #Username is alphanumeric and can include underscores, hyphens, and periods
+        if not re.match(r'^[a-zA-Z0-9._-]{3,30}$', value):
+            raise serializers.ValidationError("Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods.")
+        
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("Username already exists.")
+        
+        return value
+
     def validate(self, attrs: dict):
         email = attrs.get("email").lower().strip()
         if User.objects.filter(email__iexact=email).exists():
             raise serializers.ValidationError({"email": "Email already exists!"})
+        self.validate_username(attrs.get("username"))
         return super().validate(attrs)
 
     def create(self, validated_data: dict):
