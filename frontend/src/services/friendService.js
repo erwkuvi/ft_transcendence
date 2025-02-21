@@ -10,7 +10,7 @@ export const changeFriendStatus = async ({ userId, senderId, status, endpoint })
 			},{
 				headers: {
 					'Content-Type':'application/json',
-					'Authorization': 'JWT ' + localStorage.getItem('access'),
+					'Authorization': 'JWT ' + localStorage.getItem('access_token'),
 				}
 			}
 		);

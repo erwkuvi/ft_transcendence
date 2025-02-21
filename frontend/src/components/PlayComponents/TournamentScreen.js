@@ -4,9 +4,9 @@ import { GameContext } from "../../context/GameContext";
 import LeaveModal from './LeaveModal'
 import "./TournamentScreen.css";
 import Pong from './Pong'
-import { getInfoTournament } from '../../services/getInfoTournament'
+import { getTournamentData } from '../../services/getInfoTorunamentId';
 import { getAllPlayers } from '../../services/getAllUsers';
-import { createTournament } from '../../services/postCreateTournament';  // Import your service
+import { exitTournament } from '../../services/postExitTournament';  
 
 const TournamentScreen = ({ scaleStyle }) => {
     const { t } = useTranslation();
@@ -52,14 +52,10 @@ const TournamentScreen = ({ scaleStyle }) => {
 	
 	useEffect(() => {
 		const fetchTournamentData = async () => {
-			console.log("The id of the tournament is now: ", tournamentMatchID)
 			if (!tournamentMatchID) return; 
 			
 			try {
-				const response = await fetch(`http://localhost:8000/user_management/tournaments/${tournamentMatchID}/`);
-				if (!response.ok) throw new Error("Failed to fetch tournament data");
-				
-				const data = await response.json();
+				const data = await getTournamentData(tournamentMatchID);
 				setFetchedTournamentData(data);
 			} catch (error) {
 				console.error("Error fetching tournament data:", error);
@@ -126,16 +122,10 @@ const TournamentScreen = ({ scaleStyle }) => {
 	};
 	
 	const confirmLeave = async () => {
+		const userId = localStorage.getItem("user_id");
+
 		try {
-			const response = await fetch("http://localhost:8000/user_management/exit-tournament/", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ user_id: localStorage.getItem("user_id") }),
-			});
-	
-			if (!response.ok) throw new Error("Failed to exit tournament");
-	
-			console.log("Successfully exited tournament");
+			await exitTournament(userId);
 			setIsReadyToPlay(null);
 			setStartTheTournament(false);
 			setTournamentPlayers([]);
@@ -147,11 +137,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 	};
 
 	if (gameTournamentStarted) {
-			return (
-				<>
-				<Pong className="focus-pong" />
-			</>
-		)	
+			return <Pong className="focus-pong" />
 	}else{
 		return (
 			<div className="tournament-matches" style={scaleStyle}>
