@@ -139,6 +139,10 @@ class OAuth42LoginView(views.APIView):
 def save_avatar_locally(avatar_url, player_profile, user):
     response = requests.get(avatar_url)
     if response.status_code == 200:
+        # Check if there is an existing avatar and delete it
+        if player_profile.avatar and player_profile.avatar.name != 'avatar.png':
+            player_profile.avatar.delete(save=False)
+
         img_temp = NamedTemporaryFile(delete=True)
         img_temp.write(response.content)
         img_temp.flush()

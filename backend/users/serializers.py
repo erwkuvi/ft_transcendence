@@ -116,9 +116,15 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         matches = validated_data.pop('matches', None)
+        new_avatar = validated_data.get('avatar', None)
+
+        if new_avatar and instance.avatar and instance.avatar.name != 'avatar.png':
+            instance.avatar.delete(save=False)
+
         if matches:
             for match in matches:
                 instance.matches.add(match)
+
         return super().update(instance, validated_data)
         
     def get_otp_active(self, obj):
@@ -141,12 +147,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.avatar.url)
         return None
 
-
-class SimplePlayerSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = PlayerProfile
-        fields = ['display_name', 'avatar', 'id']
 
 class PlayerMatchSerializer(serializers.ModelSerializer):
     player = PlayerProfileSerializer(read_only=True)

@@ -35,7 +35,6 @@ class PlayerProfile(models.Model):
     )
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    #game_alias = models.CharField(max_length=50, null=True, blank=True)
     friends = models.ManyToManyField("self", blank=True)
     in_tournament = models.BooleanField(default=False)
     is_host = models.BooleanField(default=False)
