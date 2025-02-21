@@ -18,6 +18,7 @@ User = get_user_model()
 
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        print("Scope at the beginning of connect:", self.scope)  # Print the scope for debugging
         self.user = self.scope['user']
         if self.user.is_authenticated:
             await self.update_user_incr(self.user)
