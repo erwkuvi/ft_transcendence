@@ -10,14 +10,23 @@ import TournamentScreen from '../components/PlayComponents/TournamentScreen';
 import { GameContext } from "../context/GameContext";
 import { getUserProfile } from '../services/getProfile';
 import LeaveModal from '../components/PlayComponents/LeaveModal';
+import { exitTournament } from '../services/postExitTournament';  
 
 const Play = () => {
-    const { t } = useTranslation();
+	const { t } = useTranslation();
     const { fontSize } = useContext(AccessibilityContext);
     const { isReadyToPlay, gameTournamentStarted } = useContext(GameContext);
 	const [ isInTournament, setIsInTournament] = useState(false);
 	const [ isTheHost, setIsTheHost ] = useState(false);
 	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
+	
+	const personLoggedIn = localStorage.getItem('user_id');
+	console.log("person logged in is: ", personLoggedIn);
+
+	const scaleStyle = {
+		fontSize: `${fontSize}px`,
+		lineHeight: '1.5'
+	};
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -38,15 +47,9 @@ const Play = () => {
     };
 
 	const confirmLeave = async () => {
+		const userId = localStorage.getItem("user_id");
 		try {
-			const response = await fetch("http://localhost:8000/user_management/exit-tournament/", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ user_id: localStorage.getItem("user_id") }),
-			});
-	
-			if (!response.ok) throw new Error("Failed to exit tournament");
-	
+			await exitTournament(userId);
 			console.log("Successfully exited tournament");
 			setShowConfirmModal(false);
 			window.location.reload(); // Or another way to update state
@@ -56,16 +59,10 @@ const Play = () => {
 	};
 	
 
-	console.log("in tournament", isInTournament)
-	console.log("is the host", isTheHost)
+	// console.log("in tournament", isInTournament)
+	// console.log("is the host", isTheHost)
 
-    const scaleStyle = {
-        fontSize: `${fontSize}px`,
-        lineHeight: '1.5'
-    };
 
-    const personLoggedIn = localStorage.getItem('user_id');
-    console.log("person logged in is: ", personLoggedIn);
 
 
 	if (isTheHost){

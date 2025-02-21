@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { GameContext } from "../../context/GameContext";
 import { useTranslation } from "react-i18next";
-
+import { authenticateUser } from '../../services/postAuthenticateUser';
 import './AuthUserForm.css'
 
 const AuthUserForm = ({scaleStyle}) => {
@@ -13,27 +13,22 @@ const AuthUserForm = ({scaleStyle}) => {
 			setPlayer1DisplayName,
 			setPlayer1Id } = useContext(GameContext); 
     const [credentials, setCredentials] = useState({ username: '', password: '' });
-    const [isBeeingSubmitted, setIsBeeingSubmitted] = useState(false);
+    const [isBeingSubmitted, setIsBeingSubmitted] = useState(false);
     const [error, setError] = useState('');
 
     const handleAuthentication = async (e) => {
         e.preventDefault();
-        setIsBeeingSubmitted(true);
-
+        setIsBeingSubmitted(true);
+		setError('');
 
         try {
-            const response = await fetch('http://localhost:8000/user_management/simple-auth/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(credentials),
-            });
-			const data = await response.json();
-			console.log("response: ", data);
-			
-            if (response.ok && typeof data.user_id === 'number') {
-				const personsLoggedInId = localStorage.getItem('user_id');
+			const data = await authenticateUser(credentials);
+
+            if (typeof data.user_id === 'number') {
+				const personsLoggedInId = Number(localStorage.getItem('user_id'));
 				const personsLoggedInDisplayName = localStorage.getItem('display_name');
-				if (data.user_id == personsLoggedInId){
+
+				if (data.user_id === personsLoggedInId){
 					setError(t('You can not play pong with yourself'));					
 					setIsOpponentAuthenticated(false);
 				}else{
@@ -42,18 +37,17 @@ const AuthUserForm = ({scaleStyle}) => {
 					setPlayer2DisplayName(data.display_name);
 					setPlayer1Id(personsLoggedInId);
 					setPlayer1DisplayName(personsLoggedInDisplayName);
-					setError('');
 				}
             } else {
                 setError(t('Invalid credentials'));
                 setIsOpponentAuthenticated(false);
             }
-        } catch {
+        } catch (error) {
             setError(t('Authentication failed'));
             setIsOpponentAuthenticated(false);
-        }
-
-        setIsBeeingSubmitted(false);
+        } finally {
+			setIsBeingSubmitted(false);
+		}
     };
 
     return (
@@ -82,7 +76,7 @@ const AuthUserForm = ({scaleStyle}) => {
                 <button type="submit" 
 						className="buttonStyle1" /*btn button*/
 						style={scaleStyle}
-						disabled={isOpponentAuthenticated || isBeeingSubmitted}>
+						disabled={isOpponentAuthenticated || isBeingSubmitted}>
                     {isOpponentAuthenticated ?  t("Ready")  : t("Submit")}
                 </button>
             </p>

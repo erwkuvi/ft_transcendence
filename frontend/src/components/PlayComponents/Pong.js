@@ -4,13 +4,11 @@ import { Canvas, useFrame, useLoader} from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
 import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from '../../AccessibilityContext';
+import { postMatchResults } from '../../services/postMatchResults';
 import { GameContext } from "../../context/GameContext";
 import '../game/controlPanel.css'
 import '../game/gameStartMenu.css'
 import WinningScreen from './WinningScreen';
-import BackButton from './BackButton';
-import PlayNextGame from './PlayNextGame';
-import UltimateWinner from './UltimateWinner';
 import { t } from 'i18next';
 
 let 	FIELD_WIDTH         = 26;
@@ -433,7 +431,7 @@ function Pong() {
 			player1DisplayName, 
 			player2DisplayName } = useContext(GameContext);
 
-
+	const { t } = useTranslation();
 	const player1Ref = useRef();
 	const player2Ref = useRef();
 	const [gameStarted, setGameStarted] = useState(false);
@@ -450,93 +448,6 @@ console.log("match Id rn: ", iDTournamentGame);
 		p1_won_set_count: 0,
 		p2_won_set_count: 0,
 	});
-
-	
-
-	const postMatchResults = async (winnerId, scores) => {
-		const isGuestMode = !player1Id || !player2Id;
-		if (isGuestMode) {
-			console.log("Guest mode, skipping posting match results.");
-			return;
-		}
-	
-		const matchData = {
-			mode: "regular",
-			player1: player1Id, 
-			player2: player2Id,
-			winner: winnerId,       
-			score_player1: scores.p1_f_score,
-			score_player2: scores.p2_f_score,
-		};
-	
-		const tournamentMatchData = {
-			id: iDTournamentGame || null,
-			score_player1: scores.p1_f_score,
-			score_player2: scores.p2_f_score,
-			winner: winnerId || null
-		};
-	
-		if (iDTournamentGame) {
-			// Tournament mode: Handle posting tournament match data
-			await postTournamentMatchResults(tournamentMatchData);
-		} else {
-			// Regular mode: Handle posting regular match data
-			await postRegularMatchResults(matchData);
-		}
-	};
-	
-	const postTournamentMatchResults = async (tournamentMatchData) => {
-		const endpoint = 'http://localhost:8000/user_management/score-upload/';
-	
-		try {
-			const response = await fetch(endpoint, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'JWT ' + localStorage.getItem('access_token') 
-				},
-				body: JSON.stringify(tournamentMatchData)
-			});
-	
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error("Failed to post tournament match results:", errorData);
-				return;
-			}
-	
-			const updatedMatchData = await response.json();
-			// updateTournamentMatches(updatedMatchData);
-	
-			console.log("Tournament match results successfully saved.");
-		} catch (error) {
-			console.error("Error posting tournament match results:", error);
-		}
-	};
-	
-	const postRegularMatchResults = async (matchData) => {
-		const endpoint = 'http://localhost:8000/user_management/matches/';
-	
-		try {
-			const response = await fetch(endpoint, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'JWT ' + localStorage.getItem('access_token') 
-				},
-				body: JSON.stringify(matchData)
-			});
-	
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error("Failed to post regular match results:", errorData);
-				return;
-			}
-	
-			console.log("Regular match results successfully saved.");
-		} catch (error) {
-			console.error("Error posting regular match results:", error);
-		}
-	};
 	
 	const handleScore = (player) => {
 		setScores((prev) => {
@@ -550,7 +461,7 @@ console.log("match Id rn: ", iDTournamentGame);
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 1 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
-					postMatchResults(player1Id, updatedScores);
+					postMatchResults(player1Id, updatedScores, iDTournamentGame, player1Id, player2Id);
 					setWinner(player1DisplayName ? player1DisplayName : t("Player 1"));
 				}
 			}
@@ -563,7 +474,7 @@ console.log("match Id rn: ", iDTournamentGame);
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 2 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
-					postMatchResults(player2Id, updatedScores);
+					postMatchResults(player2Id, updatedScores, iDTournamentGame, player1Id, player2Id);
 					setWinner(player2DisplayName ? player2DisplayName : t("Player 2"));
 				}
 			}

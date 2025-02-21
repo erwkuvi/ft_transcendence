@@ -14,6 +14,7 @@ import PasswordModal from '../components/PasswordModal';
 import StatisticsCard from '../components/ProfileComponents/StatisticsCard';
 import Otp from '../components/OTPActivationModal';
 import { AuthContext } from '../context/AuthContext';
+import { updateUserProfile } from '../services/patchUserProfile';
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -96,104 +97,42 @@ const Profile = () => {
 
 	const handleEditDisplayName = () => setIsEditingDisplayName(true);
 
-
 	const handleSaveDisplayName = async () => {
 		try {
-			// Create form data for the request
-			const formData = new FormData();
-			formData.append('display_name', newDisplayName);
+			const updatedProfile = await updateUserProfile({ display_name: newDisplayName });
 
-			if (newDisplayName != null)
-				localStorage.setItem('display_name', newDisplayName);
-
-			// Send PATCH request to update display name on the server
-			const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
-				method: 'PATCH',
-				headers: {
-					Authorization: 'JWT ' + localStorage.getItem('access_token')
-				},
-				body: formData
-			});
-
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error('Error response from server:', errorData);
-				alert(`Failed to update display name: ${JSON.stringify(errorData)}`);
-				throw new Error(t('Failed to update display name'));
-			}
-
-			const data = await response.json();
-			// Update local state with new display name
-			setProfile(prev => ({
-				...prev,
-				display_name: data.display_name
-			}));
-			// Exit editing mode
+            setProfile(updatedProfile);
+            localStorage.setItem('display_name', newDisplayName);
 			setIsEditingDisplayName(false);
+	
 		} catch (err) {
 			console.error('Error updating display name:', err);
 			alert(t('Failed to update display name'));
 		}
 	};
 
-	// Handler to cancel display name editing
 	const handleCancelEdit = () => {
-		// Reset the new display name to the current one
 		setNewDisplayName(profile.display_name);
-		// Exit editing mode
 		setIsEditingDisplayName(false);
 	};
 
 
 	const handleEditAvatar = () => fileInputRef.current.click();
 	
-
-	// Handler for avatar file change
 	const handleAvatarChange = async (event) => {
 		const file = event.target.files[0];
-		if (!file) return;
+        if (!file) return;
 
-		// Validate file type
-		if (!file || !file.type.startsWith('image/')) {
-			alert('Please select an image file');
-			return;
-		}
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file');
+            return;
+        }
 
-		try {
-			// Create form data for file upload
-			const formData = new FormData();
-			formData.append('avatar', file);
+        try {
+            const updatedProfile = await updateUserProfile({ avatar: file });
 
-				// Send PUT request to update avatar
-				const response = await fetch(`${BASE_URL}/user_management/players/me/`, {
-					method: 'PATCH',
-					headers: {
-						Authorization: 'JWT ' + localStorage.getItem('access_token')
-					},
-					body: formData
-				});
-
-				if (!response.ok) {
-					const errorData = await response.json();
-					console.error('Error response from server:', errorData);
-					alert(`Failed to update avatar: ${JSON.stringify(errorData)}`);
-					throw new Error('Failed to update avatar');
-				}
-
-				const data = await response.json();
-
-				// Check if the avatar property exists in the response
-				if (!data.avatar) {
-					throw new Error('Avatar property is missing in the response');
-				}
-
-				// Update local state with new avatar URL
-				setProfile(prev => ({
-					...prev,
-					avatar: data.avatar.startsWith('/')
-						? `${BASE_URL}${data.avatar}`
-						: data.avatar
-				}));
+            setProfile(updatedProfile);
+		
 		} catch (err) {
 			console.error('Error updating avatar:', err);
 			alert(t('Failed to update avatar'));
