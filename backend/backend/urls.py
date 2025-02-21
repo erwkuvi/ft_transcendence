@@ -5,7 +5,7 @@ from django.urls import path, include
 from django.shortcuts import redirect
 #from .users import views
 from friends.views import UserListView
-from users.views import OTPLoginView, OAuth42LoginView, OAuth42CallbackView
+from users.views import OTPLoginView, OAuth42LoginView, OAuth42CallbackView, OAuth42MatchView, OAuth42CallbackMatchView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -29,7 +29,9 @@ urlpatterns = [
     path('user_management/', include('users.urls')),
     path('auth/', include('djoser.urls')),
     path('42-login/', OAuth42LoginView.as_view(), name='42-login'),
+    path('42-login-match/', OAuth42MatchView.as_view(), name='42-login-match'),
     path('42-callback/', OAuth42CallbackView.as_view(), name='42-callback'),
+    path('42-callback-match/', OAuth42CallbackMatchView.as_view(), name='42-callback-match'),
     path('mfa/', OTPLoginView.as_view(), name='mfa'),
     path('api/test/', include('notifications.urls')),
 ]
