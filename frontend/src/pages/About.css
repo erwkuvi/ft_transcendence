@@ -1,11 +1,7 @@
 .aboutPContainer {
-    /* border: 1px solid red; */
-    text-align:     center;
-    display:        flex;
-    flex-direction: column;
-    overflow-wrap:  anywhere;
-    /* width: 50%; */
-    padding-left:    20px;
-    padding-right:   20px;
-    max-width:      850px;
+    text-align:		center;
+    overflow-wrap:	anywhere;
+    padding-left:	20px;
+    padding-right:	20px;
+    max-width:		850px;
 }
