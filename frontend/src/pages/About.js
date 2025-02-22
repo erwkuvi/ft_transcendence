@@ -11,7 +11,7 @@ const About = () => {
 	return (
 		<div className="d-flex flex-column align-items-center aboutPContainer" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="pageHeadingH1Style1 m-0 mb-5">{t("AboutTitle")}</h1>
-			<div class=" mt-3">
+			<div className=" mt-3">
 				<p>
 					{t("AboutT1")}
 					{t("AboutT2")}

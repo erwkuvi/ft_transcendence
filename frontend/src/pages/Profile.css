@@ -9,6 +9,11 @@
 	background-color: var(--card-color);
 } */
 /*CLASSES  =======================================================================*/
+.profileHeading {
+	padding-right:	20px;
+	padding-left:	20px;
+}
+
 .profileCardHolder {
 	display:			flex;
 	flex-direction: 	row !important;
@@ -33,19 +38,6 @@
 	max-width:			800px;
 }
 
-.profileCardStyle2 {
-	color:				var(--text-color);
-	border-radius:		7px;
-	background-color:	var(--fill-color);
-	border:				1px solid var(--text-color);
-	padding:			2rem;
-	display:			flex;
-	flex-direction:		column;
-	width:				fit-content;
-	min-width:			400px;
-	max-width:			550px;
-}
-
 .cards{
 	display:			flex;
 	justify-content:	center;
@@ -54,8 +46,8 @@
 .profileButtonChangeNameSaveCancel {
 	border:				none;
 	/* width: 50%; */
-	padding-left:		4rem;
-	padding-right:		4rem;
+	padding-left:		2rem;
+	padding-right:		2rem;
 	line-height:		1.5rem;
 	font-size:			16px;
 	font-weight:		400;
@@ -106,17 +98,6 @@
 }
 
 /*IDS	==========================================================================*/
-#profilePanel1Panel2Holder {
-	/* border:				1px solid red; */
-	display:			flex;
-	justify-content:	center;
-	flex-direction:		row !important;
-	flex-wrap:			wrap;
-	gap:				2.5rem;
-	width: 				fit-content;
-	height:				100%;
-}
-
 #profilePageHolder {
 	overflow-wrap:	anywhere;
 }
@@ -133,10 +114,19 @@
 #profileBasicInfoInformationHolder p{
 	/* border:				1px solid red; */
 	display:			flex;
-	flex-wrap:			wrap;
-	gap: 				1rem;
+	flex-direction:		column;
+	gap: 				0.2rem;
 	justify-content:	space-between;
 }
+
+#profileBasicInfoInformationHolder p {
+	font-weight: 500;
+}
+
+#profileBasicInfoInformationHolder p span {
+	font-weight: 200;
+}
+
 
 #profilePenAndNameHolder {
 	/* border:			1px solid red; */
@@ -157,7 +147,6 @@
 	display:		flex;
 	flex-direction:	row;
 	flex-wrap:		wrap;
-	align-items:	center;
 }
 
 #profileEditDisplayNameButtonHolder {
@@ -186,15 +175,8 @@
 }
 
 @media (max-width: 960px) {
-	#profilePanel1Panel2Holder {
-		width:			fit-content !important;
-		align-items:	center;
-	}
 	.profileCardStyle1 h2 {
 		text-align:	center;
-	}
-	.profileCardStyle2:nth-child(2) h2 {
-		text-align: center;
 	}
 }
 
@@ -210,5 +192,65 @@
 	}
 	.profileCardStyle2 {
 		min-width:	100% !important;
+	}
+}
+
+@media (max-width: 424px) {
+	#profileBasicInfoInformationHolder {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+	}
+
+	#profileBasicInfoInformationHolder p{
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+		text-align: center;
+		width: 100%;
+	}
+
+	#profileEditDisplayNameButtonHolder {
+		justify-content: center;
+	}
+	.profileButtonChangeNameSaveCancel {
+		width: 100%;
+        /* max-width: 100%; */
+        padding-left: 2%;
+        padding-right: 2%;
+	}
+}
+
+@media (max-width: 230px) {
+	.profileCardStyle1 {
+		padding-top:	50px;
+		padding-bottom: 50px;
+		padding-left:	20px;
+		padding-right:	20px;
+		border-radius:	0;
+		width:			100% !important;
+		border-color:	transparent;
+	}
+
+	.profileCardHolder {
+		padding-right:	0px !important;
+		padding-left:	0px !important;
+		gap:			0px !important;
+	}
+
+	.profileCardStyle1:nth-child(2) {
+		background-color: transparent !important;
+	}
+
+	.profileCardStyle1 .edit-pic {
+		font-size:	30px;
+	}
+
+	.profileCardStyle1 .edit-avatar-button {
+		padding:	0;
+		margin-top: 0;
+		margin-bottom: 15px;
 	}
 }

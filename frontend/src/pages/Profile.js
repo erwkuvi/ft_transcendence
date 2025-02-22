@@ -294,8 +294,8 @@ const handleToggle2FA = async (password = null) => {
   if (!profile) return <p>No profile data available</p>;
 
 	return (
-		<div className="d-flex flex-column align-items-center w-100" id="profilePageHolder">
-			<h1 className="pageHeadingH1Style1 mb-5">{t("profile")}</h1>
+		<div className="d-flex flex-column align-items-center w-100 profilePageHolder" id="profilePageHolder">
+			<h1 className="pageHeadingH1Style1 profileHeading mb-5">{t("profile")}</h1>
 			<div className='profileCardHolder  mb-0 mt-3 w-100' style={{ fontSize: `${fontSize}px` }}>
 				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
@@ -376,7 +376,7 @@ const handleToggle2FA = async (password = null) => {
 								</>
 							)}
 						</p>
-						<p>{t("email")} <span><p>{profile.email}</p></span></p>
+						<p>{t("email")} <span>{profile.email}</span></p>
 					</div>
 			{/* 2FA Authentication section */}
 			{profile.auth_provider !== "42api" && (
@@ -402,15 +402,14 @@ const handleToggle2FA = async (password = null) => {
 					/>
 					{isOtpActive && <Otp onSuccess={() => setOtpActive(false)} />}
 				</div>
-				<div id="profilePanel1Panel2Holder">
-					<div className='profileCardStyle2' style={{ fontSize: `${fontSize}px` }}>
+					<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
 						<h2>{t("Stats")}</h2>
 						<div id="profileStatsInfoHolder">
 							<p>{t("Games played")} <span>{profile.matches_id.join(', ')}</span></p>
 							<p>{t("Wins")} <span>{profile.wins}</span></p>
 						</div>
 					</div>
-					<div className='profileCardStyle2' style={{ fontSize: `${fontSize}px` }}>
+					<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
 						<h2>{t("List of friends")}</h2>
 						<ListFriends friends={friends}/>
 						<Filter className="inputFieldStyle1" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
@@ -421,7 +420,6 @@ const handleToggle2FA = async (password = null) => {
 									personLoggedIn={personLoggedIn}/>
 					</div>
 				</div>
-			</div>
 		</div>
 	);
 };
