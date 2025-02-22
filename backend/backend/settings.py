@@ -43,13 +43,19 @@ DEBUG = True
 
 # Security settings
 SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
-SECURE_HSTS_SECONDS = 31536000  # Enable HTTP Strict Transport Security (HSTS)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
+
+
+#SECURE_HSTS_SECONDS = 31536000  # Enable HTTP Strict Transport Security (HSTS)
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 
 KEY_PATH = os.path.join(BASE_DIR, 'certs/privkey.key')
 CERT_PATH = os.path.join(BASE_DIR, 'certs/fullchain.crt')

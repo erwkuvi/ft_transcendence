@@ -1,4 +1,4 @@
-SSL=./backend/certs
+SSL=./nginx/certs
 
 createDir = mkdir -p $1
 
