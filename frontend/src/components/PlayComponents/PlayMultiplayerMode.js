@@ -10,23 +10,17 @@ const PlayMultiplayerMode = ({ scaleStyle }) => {
 
 	return (
 		<>
-			<div className="play-multiplayer" style={scaleStyle}>
-				<div className="play-content">
-					<div className="modes mt-0">
-						<div className="playCardHolderStyle"> {/*card basic mode"*/}
-							<h3 style={scaleStyle}>{t("PlayTitleMultiplayer")}</h3>
-							<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionMultiplayer")}</p>
-							<AuthUserForm scaleStyle={scaleStyle}/>
-							<button className="playButtonStyle2"
-									style={scaleStyle} 
-									onClick={() => setIsReadyToPlay("multiplayer")} 
-									disabled={!isOpponentAuthenticated}
-							>
-                            	{t("PlayMultiplayer")}
-                        </button>
-						</div>
-					</div>
-				</div>
+			<div className="playCardHolderStyle" style={scaleStyle}> {/*card basic mode"*/}
+				<h3 style={scaleStyle}>{t("PlayTitleMultiplayer")}</h3>
+				<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionMultiplayer")}</p>
+				<AuthUserForm scaleStyle={scaleStyle}/>
+				<button className="playButtonStyle2"
+						style={scaleStyle} 
+						onClick={() => setIsReadyToPlay("multiplayer")} 
+						disabled={!isOpponentAuthenticated}
+				>
+                	{t("PlayMultiplayer")}
+            	</button>
 			</div>
 		</>
 	);

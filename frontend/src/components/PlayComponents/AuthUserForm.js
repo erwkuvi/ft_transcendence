@@ -52,33 +52,33 @@ const AuthUserForm = ({scaleStyle}) => {
     };
 
     return (
-        <form onSubmit={handleAuthentication} className="auth-form" style={scaleStyle}>
+        <form onSubmit={handleAuthentication} className="auth-form d-flex flex-column" style={scaleStyle}>
 			<h4 style={scaleStyle}>
                 {t("Add a player")}
             </h4>
-            <p style={scaleStyle} className="AuthUser_and_TournamentFormInput_holder">
-				{t("Username")}
-                <input 	value={credentials.username} className="inputFieldStyle1"
-						style={scaleStyle}
-						onChange={(e) => setCredentials({ ...credentials, username: e.target.value })} 
-						required 
-				/>
-            </p>
-            <p style={scaleStyle}>
-                {t("Password")}
-                <input	type="password" className="inputFieldStyle1"
-						value={credentials.password} 
-						style={scaleStyle}
-						onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} 
-						required 
-				/>
+                <p style={scaleStyle} >
+                    {t("Username")}
+                    <input 	value={credentials.username} className="inputFieldStyle1"
+                            style={scaleStyle}
+                            onChange={(e) => setCredentials({ ...credentials, username: e.target.value })} 
+                            required 
+                    />
+                </p>
+                <p style={scaleStyle}>
+                    {t("Password")}
+                    <input	type="password" className="inputFieldStyle1"
+                            value={credentials.password} 
+                            style={scaleStyle}
+                            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} 
+                            required 
+                    />
+                 </p>
                 <button type="submit" 
-						className="buttonStyle1" /*btn button*/
-						style={scaleStyle}
-						disabled={isOpponentAuthenticated || isBeeingSubmitted}>
+					className="buttonStyle1" /*btn button*/
+					style={scaleStyle}
+					disabled={isOpponentAuthenticated || isBeeingSubmitted}>
                     {isOpponentAuthenticated ?  t("Ready")  : t("Submit")}
                 </button>
-            </p>
             {error && <p className="text-red-500" style={scaleStyle}>{error}</p>}
         </form>
     );

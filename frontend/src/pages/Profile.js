@@ -294,13 +294,13 @@ const handleToggle2FA = async (password = null) => {
   if (!profile) return <p>No profile data available</p>;
 
 	return (
-		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
-			<h1>{t("profile")}</h1>
-			<div className='profileCardHolder  mt-4' style={{ fontSize: `${fontSize}px` }}>
+		<div className="d-flex flex-column align-items-center w-100" id="profilePageHolder">
+			<h1 className="pageHeadingH1Style1 mb-5">{t("profile")}</h1>
+			<div className='profileCardHolder  mb-0 mt-3 w-100' style={{ fontSize: `${fontSize}px` }}>
 				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
 					{/* Avatar section with edit functionality */}
-					<div className="relative inline-block">
+					<div className="d-flex flex-row flex-wrap align-items-center justify-content-center">
 						<img 
 							src={profile.avatar} 
 							className='profilepic m-2' 
@@ -326,54 +326,58 @@ const handleToggle2FA = async (password = null) => {
 						</button>
 
 					</div>
-					<p > {t("Username")} <span>{profile.username}</span></p>
-					{/* Display name section with edit functionality */}
-					<p className="flex items-center gap-2">
-						{t("Display Name")} 
-						{isEditingDisplayName ? (
-							<>
-								{/* Input field for editing display name */}
-								<input
-									type="text"
-									value={newDisplayName}
-									onChange={(e) => setNewDisplayName(e.target.value)}
-									className="change-display-name-input"
-								/>
-								{/* Save button with check symbol */}
-								<div className="buttons-check-x">
-									<button
-										onClick={handleSaveDisplayName}
-										className="yes-no-button"
-										title="Save"
-									>
-										<span className="text-green-600">✓</span>
-									</button>
-									{/* Cancel button with X symbol */}
-									<button
-										onClick={handleCancelEdit}
-										className="yes-no-button"
-										title="Cancel"
-									>
-										<span className="text-red-600">✕</span>
-									</button>
-								</div>
-							</>
-						) : (
-							<>
-								{/* Display current display name */}
-								<span>{profile.display_name + ' '}</span>
-								{/* Edit button with pencil symbol */}
-								<button
-									onClick={handleEditDisplayName}
-									className="edit-display-name-button"
-									title="Edit display name"
-								>
-									<span className="write-symbol">✎</span>
-								</button>
-							</>
-						)}
-					</p>
-					<p>{t("email")} <span>{profile.email}</span></p>
+					<div id="profileBasicInfoInformationHolder">
+						<p > {t("Username")} <span>{profile.username}</span></p>
+						{/* Display name section with edit functionality */}
+						<p id="profileDisplayChangeName">
+							{t("Display Name")} 
+							{isEditingDisplayName ? (
+								<>
+									{/* Input field for editing display name */}
+									<input
+										type="text"
+										value={newDisplayName}
+										onChange={(e) => setNewDisplayName(e.target.value)}
+										className="change-display-name-input"
+									/>
+									{/* Save button with check symbol */}
+									<div id="profileEditDisplayNameButtonHolder">
+										<button
+											onClick={handleSaveDisplayName}
+											className="profileButtonChangeNameSaveCancel"
+											title="Save"
+										>
+											✓
+										</button>
+										{/* Cancel button with X symbol */}
+										<button
+											onClick={handleCancelEdit}
+											className="profileButtonChangeNameSaveCancel"
+											title="Cancel"
+										>
+											✕
+										</button>
+									</div>
+								</>
+							) : (
+								<>
+									<div id="profilePenAndNameHolder">
+										{/* Display current display name */}
+										<span>{profile.display_name + ' '}</span>
+										{/* Edit button with pencil symbol */}
+										<button
+											onClick={handleEditDisplayName}
+											id="profileEditDisplayNameButton"
+											title="Edit display name"
+										>
+											<span className="write-symbol">✎</span>
+										</button>
+									</div>
+								</>
+							)}
+						</p>
+						<p>{t("email")} <span><p>{profile.email}</p></span></p>
+					</div>
 			{/* 2FA Authentication section */}
 			{profile.auth_provider !== "42api" && (
 					<div className="mt-4">
@@ -382,7 +386,7 @@ const handleToggle2FA = async (password = null) => {
 							<button
 									onClick={handleInitiateToggle2FA}
 									disabled={isSaving2FA}
-									className="tfabutton btn button"
+									className="playButtonStyle2"
 							>
 									{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
 							</button>
@@ -398,22 +402,25 @@ const handleToggle2FA = async (password = null) => {
 					/>
 					{isOtpActive && <Otp onSuccess={() => setOtpActive(false)} />}
 				</div>
-				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
-					<h2>{t("Stats")}</h2>
-					<p>{t("Games played")} <span>{profile.matches_id.join(', ')}</span></p>
-					<p>{t("Wins")} <span>{profile.wins}</span></p>
+				<div id="profilePanel1Panel2Holder">
+					<div className='profileCardStyle2' style={{ fontSize: `${fontSize}px` }}>
+						<h2>{t("Stats")}</h2>
+						<div id="profileStatsInfoHolder">
+							<p>{t("Games played")} <span>{profile.matches_id.join(', ')}</span></p>
+							<p>{t("Wins")} <span>{profile.wins}</span></p>
+						</div>
+					</div>
+					<div className='profileCardStyle2' style={{ fontSize: `${fontSize}px` }}>
+						<h2>{t("List of friends")}</h2>
+						<ListFriends friends={friends}/>
+						<Filter className="inputFieldStyle1" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
+						<ListUsers	filterUsers={filterUsers}
+									setAllUsers={setAllUsers}
+									setFilterUsers={setFilterUsers}
+									setFriends={setFriends}
+									personLoggedIn={personLoggedIn}/>
+					</div>
 				</div>
-				<div className='card basic' style={{ fontSize: `${fontSize}px` }}>
-					<h2>{t("List of friends")}</h2>
-					<ListFriends friends={friends}/>
-					<Filter className="inputFieldStyle1" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
-					<ListUsers	filterUsers={filterUsers}
-								setAllUsers={setAllUsers}
-								setFilterUsers={setFilterUsers}
-								setFriends={setFriends}
-								personLoggedIn={personLoggedIn}/>
-				</div>
-
 			</div>
 		</div>
 	);

@@ -58,24 +58,18 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 
     return (
         <>
-            <div className="tournament-setup" style={scaleStyle}>
-				<div className="play-content">
-					<div className="modes mt-0">
-                    	<div className="playCardHolderStyle">
-                        	<h3 style={scaleStyle}>{t("PlayTitleTournament")}</h3>
-                        	<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionTournament")}</p>
-                        	<AuthTournamentForm scaleStyle={scaleStyle}/>
-                        	<button className="playButtonStyle2" 
-								style={scaleStyle} 
-								onClick={handleClick} 
-								disabled={!isTournamentReady}
-							>
-                            	{t("PlayTournament")}
-                        	</button>
-                   		</div>
-					</div>
-            	</div>
-			</div>
+            <div className="playCardHolderStyle" style={scaleStyle}>
+            	<h3 style={scaleStyle}>{t("PlayTitleTournament")}</h3>
+            	<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionTournament")}</p>
+            	<AuthTournamentForm scaleStyle={scaleStyle}/>
+            	<button className="playButtonStyle2" 
+					style={scaleStyle} 
+					onClick={handleClick} 
+					disabled={!isTournamentReady}
+				>
+                	{t("PlayTournament")}
+            	</button>
+            </div>
         </>
     );
 };

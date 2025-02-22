@@ -66,7 +66,7 @@ const AuthTournamentForm = ({scaleStyle}) => {
     }
 
     return (
-        <form onSubmit={handleAuthentication} className="auth-form" style={scaleStyle}>
+        <form onSubmit={handleAuthentication} className="auth-form d-flex flex-column" style={scaleStyle}>
             <h4 style={scaleStyle}>
                 {t("Player")} {currentPlayerNumber} {t("of")} 3
             </h4>
@@ -79,25 +79,26 @@ const AuthTournamentForm = ({scaleStyle}) => {
                     ))}
                 </div>
             )}
-            <p style={scaleStyle} class="AuthUser_and_TournamentFormInput_holder">
-                {t("Username")}
-                <input 
-					ref={usernameInputRef} className="inputFieldStyle1"
-                    value={credentials.username}
-                    style={scaleStyle}
-                    onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                    required
-                />
-            </p>
-            <p style={scaleStyle}>
-                {t("Password")}
-                <input
-                    type="password" className="inputFieldStyle1"
-                    value={credentials.password}
-                    style={scaleStyle}
-                    onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                    required
-                />
+                <p style={scaleStyle}>
+                    {t("Username")}
+                    <input 
+                        ref={usernameInputRef} className="inputFieldStyle1"
+                        value={credentials.username}
+                        style={scaleStyle}
+                        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                        required
+                    />
+                </p>
+                <p style={scaleStyle}>
+                    {t("Password")}
+                    <input
+                        type="password" className="inputFieldStyle1"
+                        value={credentials.password}
+                        style={scaleStyle}
+                        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                        required
+                    />
+                </p>
                 <button 
                     type="submit"
                     className="buttonStyle1"
@@ -106,7 +107,6 @@ const AuthTournamentForm = ({scaleStyle}) => {
                 >
                     {t("Submit")}
                 </button>
-            </p>
             {error && <p className="text-red-500" style={scaleStyle}>{error}</p>}
         </form>
     );

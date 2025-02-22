@@ -51,21 +51,19 @@ const Play = () => {
 		)
 	}else {
 		return (
-			<div className="page-content play" id="pageContentID">
+			<div className="d-flex flex-column playPageHolder" id="pageContentID">
 				{isReadyToPlay ? (
 					<GameScreen scaleStyle={scaleStyle} />
 				) : !personLoggedIn ? (
 					<PlayNotLoggedIn scaleStyle={scaleStyle} />
 				) : (
-					<div className="play-wrapper">
-						<div className="title-container">
-							<h1 className="title mt-0 mb-0">{t("PlayTitle")}</h1>
-						</div>
-						<div className="play-modes-wrapper mt-5">
+					<>
+						<h1 className="pageHeadingH1Style1 mb-5">{t("PlayTitle")}</h1>
+						<div className="d-flex flex-row flex-wrap playPageCardWrapper m-0 mt-3">
 							<PlayMultiplayerMode scaleStyle={scaleStyle} />
 							<PlayTournamentSetup scaleStyle={scaleStyle} />
 						</div>
-					</div>
+					</>
 				)}
 			</div>
 		);

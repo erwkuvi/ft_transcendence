@@ -19,18 +19,14 @@ const Header = () => {
 	return (
 		<div>
 			<nav className="navbar header mt-0 p-0" id="navbarID">
-				<div className="container-fluid p-0">
-					<nav className="d-flex flex-wrap menu">
+					<nav className="d-flex flex-wrap menu ">
 						<Link style={{ fontSize: `${fontSize}px` }} to="/">{t("HeaderHome")}</Link>
 						<Link style={{ fontSize: `${fontSize}px` }} to="/play">{t("HeaderPlay")}</Link>
 						<Link style={{ fontSize: `${fontSize}px` }} to="/profile">{t("HeaderProfile")}</Link>
 						<Link style={{ fontSize: `${fontSize}px` }} to="/about">{t("HeaderAbout")}</Link>
 					</nav>
-					<nav className="menu right-menu">
+					<nav className="d-flex flex-wrap menu">
 						<TextSizeControls/>
-						<div className="notif" >
-		{/*/<NotifMenu/>/*/}
-						</div>
 						{isLoggedIn ? (
                             <LogoutButton />
                         ) : (
@@ -39,7 +35,6 @@ const Header = () => {
                             </Link>
                         )}
 					</nav>
-				</div>
 			</nav>
 		</div>
 	);

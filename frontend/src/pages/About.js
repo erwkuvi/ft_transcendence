@@ -10,8 +10,8 @@ const About = () => {
 
 	return (
 		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
-			<h1 className='mt-0' style={{marginBottom: "3rem"}}>{t("AboutTitle")}</h1>
-			<div class="aboutPContainer">
+			<h1 className="pageHeadingH1Style1 m-0 mb-5">{t("AboutTitle")}</h1>
+			<div class="aboutPContainer mt-3">
 				<p>
 					{t("AboutT1")}
 					{t("AboutT2")}

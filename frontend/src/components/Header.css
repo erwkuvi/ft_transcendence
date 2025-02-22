@@ -10,25 +10,16 @@
 	backdrop-filter: blur(10px);
 }
 
-.menu, .right-menu {
-	display: flex;
+@media (max-width: 560px) {
+	.menu {
+		justify-content: center;
+		width:		100%;
+	}
 }
 
-.right-menu {
-	margin-left: auto;
-	align-items: center;
-	padding: 0;
-	margin: 0;
-}
-
-.right-menu .login {
+/* .right-menu .login {
 	width: fit-content;
-}
-
-.notif {
-	right: 2px;
-	z-index: 3;
-}
+} */
 
 .header a, .header .btn {
 	color: var(--text-color);
@@ -46,11 +37,4 @@
 
 .menu a:hover {
 	background-color: rgba(255, 255, 255, 0.137);
-}
-
-@media (max-width: 592px) {
-	.custom-menu {
-		margin-left: 0 !important;
-		text-align: center;
-	}
 }
