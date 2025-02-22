@@ -9,9 +9,9 @@ const About = () => {
 	const { fontSize } = useContext(AccessibilityContext); 
 
 	return (
-		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
+		<div className="d-flex flex-column align-items-center aboutPContainer" style={{ fontSize: `${fontSize}px` }}>
 			<h1 className="pageHeadingH1Style1 m-0 mb-5">{t("AboutTitle")}</h1>
-			<div class="aboutPContainer mt-3">
+			<div class=" mt-3">
 				<p>
 					{t("AboutT1")}
 					{t("AboutT2")}
