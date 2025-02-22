@@ -52,13 +52,13 @@ const Play = () => {
 	}else {
 		return (
 			<div className="d-flex flex-column playPageHolder" id="pageContentID">
+				<h1 className="pageHeadingH1Style1 typicalPadding mb-5" id="pongHeading">{t("PlayTitle")}</h1>
 				{isReadyToPlay ? (
 					<GameScreen scaleStyle={scaleStyle} />
 				) : !personLoggedIn ? (
 					<PlayNotLoggedIn scaleStyle={scaleStyle} />
 				) : (
 					<>
-						<h1 className="pageHeadingH1Style1 mb-5">{t("PlayTitle")}</h1>
 						<div className="d-flex flex-row flex-wrap playPageCardWrapper m-0 mt-3">
 							<PlayMultiplayerMode scaleStyle={scaleStyle} />
 							<PlayTournamentSetup scaleStyle={scaleStyle} />

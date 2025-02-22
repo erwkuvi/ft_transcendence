@@ -6,7 +6,7 @@ const GameScreen = ({ scaleStyle }) => {
     return (
         <div>
             <Pong className="focus-pong " />
-            <BackButton scaleStyle={scaleStyle} />
+            {/* <BackButton scaleStyle={scaleStyle} /> */}
         </div>
     );
 };

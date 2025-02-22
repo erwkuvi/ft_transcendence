@@ -25,7 +25,7 @@ const Header = () => {
 						<Link style={{ fontSize: `${fontSize}px` }} to="/profile">{t("HeaderProfile")}</Link>
 						<Link style={{ fontSize: `${fontSize}px` }} to="/about">{t("HeaderAbout")}</Link>
 					</nav>
-					<nav className="d-flex flex-wrap menu">
+					<nav className="d-flex flex-wrap menu navLogingButtonHolder">
 						<TextSizeControls/>
 						{isLoggedIn ? (
                             <LogoutButton />

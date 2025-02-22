@@ -432,7 +432,9 @@ function WinningScreen({player, score1, score2}) {
 
 function disableNavigationButtons() {
 	let pageContent = document.getElementById("pageContentID");
+	let pongHeading = document.getElementById("pongHeading");
 
+	pongHeading.style.display = 'none';
 	pageContent.style.padding  = '0px';
 	pageContent.style.margin   = '0px';
 	pageContent.style.position = 'relative';
@@ -556,14 +558,14 @@ function Pong() {
 	}
 	if (gameStarted === false) {
 		console.log("Start of the game ball speed: ", BALL_SPEED);
-		return (<div id="pong-container" style={{ width: '100vw', height: '100vh', /*marginTop: '20px'*/}}>
+		return (<div id="pong-container" style={{ width: '100vw', height: '94vh', /*marginTop: '20px'*/}}>
 			<GameStartMenu onStartGame={handleStartGame} gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 		</div>);
 	}
 
 
 	return (
-	<div id="pong-container" style={{ width: '100vw', height: '100vh', /*marginTop: '50px',*/ zIndex:'2000'}}  >
+	<div id="pong-container" style={{ width: '100vw', height: '94vh', /*marginTop: '50px',*/ zIndex:'2000'}}  >
 
 		{/* <ControlPanel/> */}
 		<PlayerPanel scores={scores}/>

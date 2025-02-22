@@ -15,6 +15,9 @@
 		justify-content: center;
 		width:		100%;
 	}
+	.navLogingButtonHolder {
+		gap: 1rem;
+	}
 }
 
 /* .right-menu .login {

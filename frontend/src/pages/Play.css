@@ -1,9 +1,14 @@
+.typicalPadding {
+	padding-left:	20px !important;
+	padding-right:	20px !important;
+}
+
 .playPageHolder {
 	align-items:	center;
 	overflow-wrap:	anywhere;
 	width: 			100%;
-	padding-left:	20px !important;
-	padding-right:	20px !important;
+	/* padding-left:	20px !important;
+	padding-right:	20px !important; */
 }
 
 .playPageCardWrapper {
