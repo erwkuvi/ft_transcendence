@@ -130,8 +130,8 @@ const LogIn = () => {
 		}
 	};
 	return (
-		<div className="page-content login" style={{ fontSize: `${fontSize}px` }}>
-			<h1 className="login-title">
+		<div className="login" style={{ fontSize: `${fontSize}px` }}>
+			<h1 className="login-title pageHeadingH1Style1">
 				{t("LogInTitle")}
 			</h1>
 			<div className="loginCardHolderStyle"> {/*container login-box p-4 */}
