@@ -306,10 +306,11 @@ class OAuth42CallbackMatchView(views.APIView):
             return HttpResponseRedirect(redirect_url)
 
         except Exception as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            error_message = str(e)
+            frontend_url = "http://localhost:8081/play"
+    
+            return HttpResponseRedirect(f"{frontend_url}?error={error_message}")
+
 
 
 class OAuth42CallbackView(views.APIView):

@@ -37,6 +37,7 @@ function App() {
 		if (isLoggedIn && location.pathname === '/login') {
 			navigate('/profile');
 		}
+		
 	}, [isLoggedIn, navigate]);
 
 	return (

@@ -27,8 +27,15 @@ const AuthUserForm = ({ scaleStyle }) => {
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('user_id');
         const displayName = params.get('display_name');
+        const errorMessage = params.get('error');
 
-        if (userId && displayName) {
+		if (errorMessage) {
+			if (errorMessage ==='User not found'){
+				setError(t('User not found'));
+			} else 
+            	setError(decodeURIComponent(errorMessage));
+			navigate('/play');
+        } else if (userId && displayName) {
             // Set user context when returning from 42 OAuth
 			setPlayer1Id(personsLoggedInId);
 			setPlayer1DisplayName(personsLoggedInDisplayName);
@@ -37,9 +44,10 @@ const AuthUserForm = ({ scaleStyle }) => {
             setIsOpponentAuthenticated(true);
             // Redirect to the play page after authentication
             navigate('/play');
-        } else {
-            setError('Authentication failed or missing parameters');
-        }
+        }else if (window.location.search.includes('user_id') || window.location.search.includes('display_name')) {
+			// Only show error if the parameters exist but are invalid
+			setError(t('Authentication failed or missing parameters'));
+		}
     }, [navigate, setPlayer1Id, setPlayer1DisplayName, setIsOpponentAuthenticated]); // make sure to include navigate in the dependencies
 
     // Trigger the 42 login authentication flow
