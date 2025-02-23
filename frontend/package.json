@@ -5,7 +5,6 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "HTTPS=true SSL_CRT_FILE=/etc/nginx/certs/fullchain.crt SSL_KEY_FILE=/etc/nginx/certs/privkey.key react-scripts start",
-		// "start": "FAST_REFRESH=false CHOKIDAR_USEPOLLING=false WDS_SOCKET_PORT=0 DISABLE_WEBSOCKET=true GENERATE_SOURCEMAP=false react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
