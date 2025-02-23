@@ -70,7 +70,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
 						autoComplete="off"
 						style={scalestyle}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
+                        placeholder={t("Enter your password")}
                         className="tfa-input-password"
                         required
                     />

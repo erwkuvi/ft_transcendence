@@ -31,7 +31,7 @@ const OTPModal = ({ onSubmit, onClose }) => {
             className="otp-input"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter OTP code"
+            placeholder={t("Enter OTP code")}
             required
           />
           <button type="submit" className="otp-submit">

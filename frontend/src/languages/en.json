@@ -67,6 +67,7 @@
 	"Are you sure you want to leave?" : "Are you sure you want to leave?",
 	"This means you will officially lose the tournament match and you can't come back to this tournament.":
 		"This means you will officially lose the tournament match and you can't come back to this tournament.",
+	"This means you will officially end the tournament.": "This means you will officially end the tournament.",
 	"Leave": "Leave",
 	"Back to Mode Selection": "Back to Mode Selection",
 	"Play next game": "Play next game",
@@ -141,6 +142,8 @@
 	"2FA successfully deactivated": "2FA successfully deactivated",
 	"Failed to update avatar": "Failed to update avatar",
 	"Failed to update display name": "Failed to update display name",
+	"User not found": "User not found, you have to register first",
+	"Authentication failed or missing parameters": "Authentication failed or missing parameters",
 	"Username already exists. Please choose a different one.": "Username already exists. Please choose a different one.",
 	"Email was already used. Please choose a different one.": "Email was already used. Please choose a different one.",
 	"Sign up failed. Please try again.": "Sign up failed. Please try again.",
@@ -151,6 +154,17 @@
 	"Player 1": "Player 1",
 	"Player 2": "Player 2",
 	"Set count": "Set count",
+
+	"Confirm Password": "Confirm Password",
+	"Please enter your password to confirm this action": "Please enter your password to confirm this action",
+	"Enter your password": "Enter your password",
+	"Confirm": "Confirm",
+
+	"Enter OTP Code": "Enter OTP Code",
+	"Please enter the one-time password sent to your device.":
+		"Please enter the one-time password sent to your device.",
+	"Enter OTP code": "Enter OTP code",
+	"Verify OTP": "Verify OTP",
 
 	"Welcome to the game start menu": "Welcome to the game start menu",
 	"Choices": "Choices",
@@ -165,5 +179,6 @@
 
 	"Invalid credentials": "Invalid credentials",
 	"Authentication failed": "Authentication failed",
-	"You can not play pong with yourself": "You can not play pong with yourself"
+	"You can not play pong with yourself": "You can not play pong with yourself",
+	"Or authenticate a player with 42": "Or authenticate a player with 42"
 }
