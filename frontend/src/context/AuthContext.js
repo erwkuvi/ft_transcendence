@@ -18,8 +18,8 @@ export const AuthProvider = ({ children }) => {
                 console.error("Failed to fetch user profile", error);
             }
         };
-
-        fetchUserData(); 
+		if (isLoggedIn)
+       		fetchUserData(); 
         
     }, []);
 

@@ -54,8 +54,10 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 	
 			if (!success) {
 				console.error("Error creating tournament:", error);
+				localStorage.removeItem('tournamentPlayers');
 				setTournamentPlayers([]);  // Reset players if creation fails
 				alert(error);  // Show backend error message
+				window.location.reload();
 				return;
 			}
 	
@@ -69,11 +71,18 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				window.location.reload();
 			} else {
 				console.error("Unexpected response format:", data);
+				localStorage.removeItem('tournamentPlayers');
+				setTournamentPlayers([]);  // Reset players if creation fails
+				window.location.reload();
+
 			}
 		} catch (error) {
 			console.error("Error saving players to the tournament:", error);
 			setTournamentPlayers([]);
+			localStorage.removeItem('tournamentPlayers');
 			alert(error.message);
+			window.location.reload();
+
 		}
 	};
 

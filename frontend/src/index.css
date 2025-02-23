@@ -106,12 +106,22 @@ body {
     border-radius:    6px               !important;
 }
 
-.buttonStyle1:hover {
-	/* border:           1px solid var(--text-color)	!important; */
-	background-color: white					   !important;
-	font-weight:      500                       	!important; 
+/* Start: Me Ms Polska added this part */
+.buttonStyle1:not(:disabled):hover {
+	background-color: white !important;
+	font-weight:      500   !important; 
 	color:            var(--color-5);
 }
+
+
+.buttonStyle1:disabled {
+	cursor: not-allowed !important;
+	opacity: 0.6 !important;
+	background-color: var(--fill-color) !important; 
+	color: var(--text-color) !important;
+}
+
+/* Me Ms Polska added this part :End*/
 
 .inputFieldStyle1 {
 	width:            100%                        	!important;

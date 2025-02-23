@@ -18,6 +18,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
 from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, ScoreRetrieveSerializer, ExitMultiplayerSerializer, TournamentIdSerializer
 from .models import User, PlayerProfile, Match, Tournament
+from django.http import HttpResponseRedirect
+
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
 class ExitMultiplayerViewSet(viewsets.ViewSet):
@@ -244,7 +246,8 @@ class OAuth42CallbackMatchView(views.APIView):
             code = request.query_params.get('code')
             state = request.query_params.get('state')
             session_state = request.session.get('oauth_state')
-
+            redirect_uri = request.query_params.get('redirect_uri', 'http://localhost:8081')
+            
             if not code or not state:
                 raise AuthenticationFailed("Missing code or state in the callback response.")
             
@@ -294,18 +297,17 @@ class OAuth42CallbackMatchView(views.APIView):
             except PlayerProfile.DoesNotExist:
                 raise ValueError("Player profile does not exist")
 
-            # Return user_id, display_name, and username
-            return Response({
-                "user_id": user.id,
-                "display_name": player_profile.display_name,
-                "username": user.username
-            }, status=status.HTTP_200_OK)
+            redirect_url = f"{redirect_uri}/play/?user_id={user.id}&display_name={player_profile.display_name}"
+
+            # Return a redirect to the frontend URL
+            return HttpResponseRedirect(redirect_url)
 
         except Exception as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            error_message = str(e)
+            frontend_url = "http://localhost:8081/play"
+    
+            return HttpResponseRedirect(f"{frontend_url}?error={error_message}")
+
 
 
 class OAuth42CallbackView(views.APIView):

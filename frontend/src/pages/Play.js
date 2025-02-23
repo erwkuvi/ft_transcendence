@@ -38,8 +38,8 @@ const Play = () => {
 				console.log("Failed to get user profile", error);
             }
         };
-		
-        fetchProfile();
+		if (personLoggedIn)
+        	fetchProfile();
     }, [gameTournamentStarted]);
 	
 	const handleLeaveTournament = () => {
