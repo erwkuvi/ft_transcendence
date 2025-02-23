@@ -1,41 +1,54 @@
 services:
   nginx:
     container_name: reverse-proxy
-    image: nginx:latest
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile
+    # entrypoint: ["bin/sh", "-c", "/wait-for-react.sh"]
     ports:
       - "80:80"
       - "443:443"
-    expose:
-      - "443"
+      #expose:
+      #  - "443"
     networks:
       - transcend
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs
+      - ./nginx/certs:/etc/nginx/certs:ro
+      # - ./nginx/wait-for-react.sh:/wait-for-react.sh  # Mount the script
     depends_on:
       - django
       - react
-   
+      #healthcheck:
+      #  test: ["CMD", "sh", "-c", "test -f /etc/nginx/certs/fullchain.crt && curl -f -k https://localhost"]
+      #  interval: 30s
+      #  timeout: 10s
+      #  retries: 3
+      #  start_period: 10s
+    restart: always
+
   react:
     container_name: frontend
     build:
       context: ./frontend/
       dockerfile: Dockerfile.dev
     expose:
-      - "80"
-      #- "8081:80"
+      - "3000"
     networks:
       - transcend
     volumes:
       - ./frontend:/app
       - /app/node_modules
     depends_on:
-      - postgresql
-      - django
-    environment:
-      - CHOKIDAR_USEPOLLING=TRUE
-      - PORT=80
-    
+      postgresql:
+        condition: service_started
+      django:
+        condition: service_started
+        #environment:
+        #  - CHOKIDAR_USEPOLLING=TRUE
+      #- PORT=80
+      #restart: always
+
   django:
     container_name: backend
     build:
@@ -52,9 +65,9 @@ services:
       - ./backend/:/app
     depends_on:
       - postgresql
-  
+
   postgresql:
-    container_name: database
+    container_name: postgresql
     image: postgres:16
     ports:
       - "5432:5432"

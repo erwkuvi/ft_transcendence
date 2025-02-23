@@ -57,8 +57,8 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
 
-KEY_PATH = os.path.join(BASE_DIR, 'certs/privkey.key')
-CERT_PATH = os.path.join(BASE_DIR, 'certs/fullchain.crt')
+#KEY_PATH = os.path.join(BASE_DIR, 'certs/privkey.key')
+#CERT_PATH = os.path.join(BASE_DIR, 'certs/fullchain.crt')
 
 
 # Application definition

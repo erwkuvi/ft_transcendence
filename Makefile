@@ -28,6 +28,9 @@ prune:
 	@./backend/clean_migrations.sh
 	docker-compose down --rmi all --volumes --remove-orphans
 
+proxy:
+	
+
 .PHONY: up down prod re prune front backend
 
 cert:
