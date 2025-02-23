@@ -1,8 +1,11 @@
 import axiosInstance from './axiosInstance';
-
+import { useNavigate } from 'react-router-dom';
 const baseUrl = `http://localhost:8000/user_management/players/me/`;
 
 export const getUserProfile = async () => {
+
+	const navigate = useNavigate();
+
 	const token = localStorage.getItem('access_token');
 	if (!token) {
 		console.log("No access token found. Redirecting to login.");
@@ -19,8 +22,12 @@ export const getUserProfile = async () => {
         });
         return request.data;
     } catch (error) {
-        console.log("Error getting user profile:", error);
-        throw error; 
+        console.log('Error fetching profile:', error.response?.data || error.message);
+		if (error.response?.status === 401) {
+			navigate('/login');
+		} else {
+		}
+		throw error;  
     }
 };
 

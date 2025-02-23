@@ -7,7 +7,6 @@ const axiosInstance = axios.create({
     },
 });
 
-// Add interceptors to add the access token to every request
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('access_token');
@@ -21,38 +20,44 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-// add interceptors to response to refresh the access token if it's expired
+// Add interceptors to handle 401 errors and refresh token
 axiosInstance.interceptors.response.use(
     (response) => {
         return response;
     },
     async (error) => {
         const originalRequest = error.config;
+
+        // Check if the error response is 401 (Unauthorized) and not already retried
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-			if (window.location.pathname === '/login') {
-				// Prevent redirect loop by rejecting the error if we're on the login page
-				return Promise.reject(error);
-			}
+
+            // Prevent redirect loop if we're already on the login page
+            if (window.location.pathname === '/login') {
+                return Promise.reject(error);
+            }
+
             const refreshToken = localStorage.getItem('refresh_token');
-			if (!refreshToken) {
-				// If no refresh token is available, redirect to login
-				window.location.href = '/login';
-				return Promise.reject(error);
-			  }
+            if (!refreshToken) {
+                window.location.href = '/login'; // If no refresh token, go to login
+                return Promise.reject(error);
+            }
+
             try {
+                // Attempt to refresh the access token using the refresh token
                 const response = await axios.post('http://localhost:8000/api/token/refresh/', {
                     refresh: refreshToken,
                 });
-				localStorage.setItem('access_token', response.data.access);
+                localStorage.setItem('access_token', response.data.access);  // Store the new access token
 
+                // Update the Authorization header for the retried request
                 originalRequest.headers['Authorization'] = `JWT ${response.data.access}`;
-				return axios(originalRequest);
+                return axios(originalRequest);  // Retry the original request with the new token
             } catch (refreshError) {
-				// If refreshing the token fails, redirect to login
-				window.location.href = '/login';
-				return Promise.reject(refreshError);
-			  }
+                // Log out if refreshing the token fails
+                window.location.href = '/login';
+                return Promise.reject(refreshError);
+            }
         }
         return Promise.reject(error);
     }

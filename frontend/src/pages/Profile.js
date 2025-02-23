@@ -98,6 +98,13 @@ const Profile = () => {
 	const handleEditDisplayName = () => setIsEditingDisplayName(true);
 
 	const handleSaveDisplayName = async () => {
+
+		if (!newDisplayName || newDisplayName === profile.display_name) {
+			// If the display name is the same as the current one or is empty, avoid making unnecessary updates.
+			console.log("No change in display name");
+			return;
+		}
+		
 		try {
 			const updatedProfile = await updateUserProfile({ display_name: newDisplayName });
 
