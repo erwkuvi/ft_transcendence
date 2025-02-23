@@ -6,13 +6,16 @@ import './index.css';
 import './components/Scrollbar.css';
 import './i18n';
 import { AuthProvider } from './context/AuthContext';
+import { ErrorHandlerProvider } from './context/ErrorHandlerContext';
 
 const root = createRoot(document.getElementById('root'));
 
 root.render(
-	<AuthProvider>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
-	</AuthProvider>
+	<BrowserRouter>
+		<ErrorHandlerProvider>
+			<AuthProvider>
+				<App />
+			</AuthProvider>
+		</ErrorHandlerProvider>
+	</BrowserRouter>
 )

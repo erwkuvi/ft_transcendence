@@ -180,5 +180,18 @@
 	"Invalid credentials": "Nieprawidłowe dane uwierzytelniające",
 	"Authentication failed": "Uwierzytelnianie nie powiodło się",
 	"You can not play pong with yourself": "Nie możesz grać w ponga sam ze sobą",
-	"Or authenticate a player with 42": "Lub uwierzytelnij gracza za pomocą 42"
+	"Or authenticate a player with 42": "Lub uwierzytelnij gracza za pomocą 42",
+
+	"We couldn't find the page you're looking for. It may have been moved, or the URL might be incorrect. Please check the link or return to the homepage.":
+		"Nie możemy znaleźć strony, której szukasz. Może została przeniesiona lub URL jest nieprawidłowy. Sprawdź link lub wróć na stronę główną.",
+	"You are not authorized to access this page. Please log in with the correct credentials or contact support if you believe this is an error.":
+		"Nie masz uprawnień do dostępu do tej strony. Zaloguj się za pomocą prawidłowych danych uwierzytelniających lub skontaktuj się z pomocą techniczną, jeśli uważasz, że to błąd.",
+	"Oops! Something went wrong on our side. We’re working on it. Please try again later, or reach out to support if the issue persists.":
+		"Ups! Coś poszło nie tak po naszej stronie. Pracujemy nad tym. Spróbuj ponownie później lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał.",
+	"There's an issue with one of our servers. Please try again in a few moments. If the problem continues, contact support.":
+		"Jest problem z jednym z naszych serwerów. Spróbuj ponownie za kilka chwil. Jeśli problem będzie się powtarzał, skontaktuj się z pomocą techniczną.",
+	"The server took too long to respond. Please check your connection or try again later. If the problem persists, contact support." :
+		"Serwer zajął zbyt dużo czasu na odpowiedź. Sprawdź swoje połączenie lub spróbuj ponownie później. Jeśli problem będzie się powtarzał, skontaktuj się z pomocą techniczną.",
+	"The request took too long to process. Please check your internet connection or try submitting your request again. If this issue continues, please contact support.": 
+		"Żądanie zajęło zbyt dużo czasu na przetworzenie. Sprawdź swoje połączenie internetowe lub spróbuj ponownie przesłać swoje żądanie. Jeśli problem będzie się powtarzał, skontaktuj się z pomocą techniczną."
 }

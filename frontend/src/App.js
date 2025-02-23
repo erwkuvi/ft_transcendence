@@ -1,4 +1,5 @@
 //import React from 'react';
+import { NotFound, Unauthorized, ServerError, BadGateway, GatewayTimeout, RequestTimeout } from './pages/ErrorPages';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
 import { GameProvider } from "./context/GameContext"; 
@@ -11,11 +12,11 @@ import Play from './pages/Play';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import LogIn from './pages/LogIn';
-import Otp from './pages/Otp';
 import './App.css';
 import ScrollReset from './components/ScrollReset';
 import { AccessibilityProvider } from "./AccessibilityContext";
 import { AuthContext } from './context/AuthContext';
+import PrivateRoute from "./components/PrivateRoute";
 
 function ScrollToTop() {
 	const location = useLocation();
@@ -47,19 +48,22 @@ function App() {
 				<Main>
 					<ScrollReset>
 						<Routes>
+							{/* Error Pages */}
+							<Route path="*" element={<NotFound />} />
+							<Route path="/404" element={<NotFound />} />
+							<Route path="/401" element={<Unauthorized />} />
+							<Route path="/500" element={<ServerError />} />
+							<Route path="/502" element={<BadGateway />} />
+							<Route path="/504" element={<GatewayTimeout />} />
+							<Route path="/408" element={<RequestTimeout />} />
+
 							<Route path="/" element={<Home />} />
-							<Route 
-								path="/play" 
-								element={
-									<GameProvider>
-										<Play />
-									</GameProvider>
-								} 
-							/>
-							<Route path="/profile" element={isLoggedIn ? <Profile /> : <LogIn />} />
 							<Route path="/about" element={<About />} />
-							<Route path="/login"  element={isLoggedIn ? <Profile /> : <LogIn />} />
-							{/* <Route path="/otp" element={<Otp />} /> */}
+							<Route path="/login" element={isLoggedIn ? <Profile /> : <LogIn />} />
+							<Route path="/play" element={<GameProvider><Play /></GameProvider>} />
+
+							{/* 🔒 Protected Routes */}
+							<Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
 						</Routes>
 					</ScrollReset>
 				</Main>

@@ -180,5 +180,18 @@
 	"Invalid credentials": "Invalid credentials",
 	"Authentication failed": "Authentication failed",
 	"You can not play pong with yourself": "You can not play pong with yourself",
-	"Or authenticate a player with 42": "Or authenticate a player with 42"
+	"Or authenticate a player with 42": "Or authenticate a player with 42",
+
+	"We couldn't find the page you're looking for. It may have been moved, or the URL might be incorrect. Please check the link or return to the homepage.":
+		"We couldn't find the page you're looking for. It may have been moved, or the URL might be incorrect. Please check the link or return to the homepage.",
+	"You are not authorized to access this page. Please log in with the correct credentials or contact support if you believe this is an error.":
+		"You are not authorized to access this page. Please log in with the correct credentials or contact support if you believe this is an error.",
+	"Oops! Something went wrong on our side. We’re working on it. Please try again later, or reach out to support if the issue persists.":
+		"Oops! Something went wrong on our side. We’re working on it. Please try again later, or reach out to support if the issue persists.",
+	"There's an issue with one of our servers. Please try again in a few moments. If the problem continues, contact support.":
+		"There's an issue with one of our servers. Please try again in a few moments. If the problem continues, contact support.",
+	"The server took too long to respond. Please check your connection or try again later. If the problem persists, contact support." :
+		"The server took too long to respond. Please check your connection or try again later. If the problem persists, contact support.",
+	"The request took too long to process. Please check your internet connection or try submitting your request again. If this issue continues, please contact support.": 
+		"The request took too long to process. Please check your internet connection or try submitting your request again. If this issue continues, please contact support."
 }

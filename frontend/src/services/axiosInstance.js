@@ -28,24 +28,31 @@ axiosInstance.interceptors.response.use(
     },
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
+			if (window.location.pathname === '/login') {
+				// Prevent redirect loop by rejecting the error if we're on the login page
+				return Promise.reject(error);
+			}
             const refreshToken = localStorage.getItem('refresh_token');
+			if (!refreshToken) {
+				// If no refresh token is available, redirect to login
+				window.location.href = '/login';
+				return Promise.reject(error);
+			  }
             try {
                 const response = await axios.post('http://localhost:8000/api/token/refresh/', {
                     refresh: refreshToken,
                 });
-                const { access } = response.data;
-                localStorage.setItem('access_token', access);
-                axiosInstance.defaults.headers.common['Authorization'] = `JWT ${access}`;
-                originalRequest.headers['Authorization'] = `JWT ${access}`;
-                return axiosInstance(originalRequest);
-            } catch (err) {
-                console.error('Refresh token is expired', err);
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('refresh_token');
-                //window.location.href = '/login'; 
-            }
+				localStorage.setItem('access_token', response.data.access);
+
+                originalRequest.headers['Authorization'] = `JWT ${response.data.access}`;
+				return axios(originalRequest);
+            } catch (refreshError) {
+				// If refreshing the token fails, redirect to login
+				window.location.href = '/login';
+				return Promise.reject(refreshError);
+			  }
         }
         return Promise.reject(error);
     }
