@@ -3,7 +3,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
 import { GameProvider } from "./context/GameContext"; 
 import { AuthGuard } from './guards/authGuard';
-import { IntraPlayerGuard } from './guards/intraPlayerGuard';
+import { OAuth42CallbackHandler } from './guards/intraPlayerGuard';
 import Header from './components/Header';
 import Footer from './components/Footer'
 import Main from './components/Main';
@@ -54,7 +54,7 @@ function App() {
 								path="/play" 
 								element={
 									<GameProvider>
-										<IntraPlayerGuard/>
+										<OAuth42CallbackHandler/>
 										<Play />
 									</GameProvider>
 								} 

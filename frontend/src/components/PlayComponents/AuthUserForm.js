@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { GameContext } from "../../context/GameContext";
 import { useTranslation } from "react-i18next";
 import { authenticateUser } from '../../services/postAuthenticateUser';
+import  handle42Authentication  from '../../services/auth42callback';
 import './AuthUserForm.css';
 
 const AuthUserForm = ({ scaleStyle }) => {
@@ -14,49 +15,35 @@ const AuthUserForm = ({ scaleStyle }) => {
         setPlayer2DisplayName,
         setPlayer2Id,
         setPlayer1DisplayName,
-        setPlayer1Id
+        setPlayer1Id,
+		// setMode
     } = useContext(GameContext);
 
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [isBeingSubmitted, setIsBeingSubmitted] = useState(false);
     const [error, setError] = useState('');
 
-    useEffect(() => {
-		const personsLoggedInId = Number(localStorage.getItem('user_id'));
-        const personsLoggedInDisplayName = localStorage.getItem('display_name');
-        const params = new URLSearchParams(window.location.search);
-        const userId = params.get('user_id');
-        const displayName = params.get('display_name');
-        const errorMessage = params.get('error');
+	useEffect(() => {
+        const storedError = localStorage.getItem('urlError');
+        if (storedError) {
+			if (storedError === 'User not found'){
+				setError(t('User not found'))
+			}else if(storedError === 'You cannot play against yourself'){
+				setError(t('You cannot play against yourself'))
+			}else
+				setError('')
+			
+            localStorage.removeItem('urlError'); // Remove after showing it
+        }
+    }, []);
 
-		if (errorMessage) {
-			if (errorMessage ==='User not found'){
-				setError(t('User not found'));
-			} else 
-            	setError(decodeURIComponent(errorMessage));
-			navigate('/play');
-        } else if (userId && displayName) {
-            // Set user context when returning from 42 OAuth
-			setPlayer1Id(personsLoggedInId);
-			setPlayer1DisplayName(personsLoggedInDisplayName);
-            setPlayer2Id(userId);
-            setPlayer2DisplayName(displayName);
-            setIsOpponentAuthenticated(true);
-            // Redirect to the play page after authentication
-            navigate('/play');
-        }else if (window.location.search.includes('user_id') || window.location.search.includes('display_name')) {
-			// Only show error if the parameters exist but are invalid
-			setError(t('Authentication failed or missing parameters'));
-		}
-    }, [navigate, setPlayer1Id, setPlayer1DisplayName, setIsOpponentAuthenticated]); // make sure to include navigate in the dependencies
+    const handle42AuthClick = () => {
+		setError('')
+		sessionStorage.setItem('mode', 'match');
 
-    // Trigger the 42 login authentication flow
-    const handle42Authentication = () => {
-        const returnUrl = `${window.location.origin}/42-callback-match`;  // Adjust this URL
-        window.location.href = `http://localhost:8000/42-login-match/?redirect_uri=${encodeURIComponent(returnUrl)}`;
+        handle42Authentication();
     };
-
-    // Handle standard user authentication
+	
     const handleAuthentication = async (e) => {
         e.preventDefault();
         setIsBeingSubmitted(true);
@@ -78,7 +65,7 @@ const AuthUserForm = ({ scaleStyle }) => {
                     setPlayer2DisplayName(data.display_name);
                     setPlayer1Id(personsLoggedInId);
                     setPlayer1DisplayName(personsLoggedInDisplayName);
-                    navigate('/play'); // Redirect after successful authentication
+                    navigate('/play'); 
                 }
             } else {
                 setError(t('Invalid credentials'));
@@ -119,24 +106,24 @@ const AuthUserForm = ({ scaleStyle }) => {
                     onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                     required
                 />
-                <button
-                    type="button"
-                    className="buttonStyle1"
-                    style={scaleStyle}
-                    disabled={isOpponentAuthenticated || isBeingSubmitted}
-                    onClick={handle42Authentication}
-                >
-                    {t("Or authenticate a player with 42")}
-                </button>
-                <button
-                    type="submit"
-                    className="buttonStyle1"
-                    style={scaleStyle}
-                    disabled={isOpponentAuthenticated || isBeingSubmitted}
-                >
-                    {isOpponentAuthenticated ? t("Ready") : t("Submit")}
-                </button>
-            </p>
+			</p>
+            <button
+                type="button"
+                className="buttonStyle1"
+                style={scaleStyle}
+                disabled={isOpponentAuthenticated || isBeingSubmitted}
+                onClick={handle42AuthClick}
+            >
+                {t("Or authenticate a player with 42")}
+            </button>
+            <button
+                type="submit"
+                className="buttonStyle1"
+                style={scaleStyle}
+                disabled={isOpponentAuthenticated || isBeingSubmitted}
+            >
+                {isOpponentAuthenticated ? t("Ready") : t("Submit")}
+            </button>
             {error && <p className="text-red-500" style={scaleStyle}>{error}</p>}
         </form>
     );

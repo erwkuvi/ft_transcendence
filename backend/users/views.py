@@ -242,7 +242,8 @@ class OAuth42CallbackMatchView(views.APIView):
             code = request.query_params.get('code')
             state = request.query_params.get('state')
             session_state = request.session.get('oauth_state')
-
+            redirect_uri = request.query_params.get('redirect_uri', 'http://localhost:8081')
+            
             if not code or not state:
                 raise AuthenticationFailed("Missing code or state in the callback response.")
             
@@ -292,15 +293,7 @@ class OAuth42CallbackMatchView(views.APIView):
             except PlayerProfile.DoesNotExist:
                 raise ValueError("Player profile does not exist")
 
-            # Return user_id, display_name, and username
-            # return Response({
-            #     "user_id": user.id,
-            #     "display_name": player_profile.display_name,
-            #     "username": user.username
-            # }, status=status.HTTP_200_OK)
-             # Prepare the redirect URL (the frontend URL to return to)
-            URL = "http://localhost:8081"
-            redirect_url = f"{URL}/play/?user_id={user.id}&display_name={player_profile.display_name}"
+            redirect_url = f"{redirect_uri}/play/?user_id={user.id}&display_name={player_profile.display_name}"
 
             # Return a redirect to the frontend URL
             return HttpResponseRedirect(redirect_url)

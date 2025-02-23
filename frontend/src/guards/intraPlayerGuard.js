@@ -1,114 +1,103 @@
-import { useEffect, useState, useContext } from 'react';
-import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
-import { GameContext } from "../context/GameContext";
-import { useTranslation } from "react-i18next";
+import { useEffect, useContext } from 'react';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { GameContext } from '../context/GameContext';
 
-export const IntraPlayerGuard = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { t } = useTranslation();
-  const {
-    setIsOpponentAuthenticated,
-    setPlayer2Id,
-    setPlayer2DisplayName,
-    setPlayer1Id,
-    setPlayer1DisplayName
-  } = useContext(GameContext);
-  const [error, setError] = useState(null);
+export const OAuth42CallbackHandler = () => {
+	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
+	const location = useLocation();
+	const {
+		setPlayer1Id,
+		setPlayer1DisplayName,
+		setPlayer2Id,
+		setPlayer2DisplayName,
+		setIsOpponentAuthenticated
+	} = useContext(GameContext);
 
-  useEffect(() => {
-    // Only run guard if we're on the callback URL (e.g., '/42-callback-match')
-    if (location.pathname === "/42-callback-match") {
-      const userId = searchParams.get('user_id');
-      const displayName = searchParams.get('display_name');
+	const handleError = (message) => {
+		const mode = sessionStorage.getItem('mode');
+		if (mode === 'tournament')
+			localStorage.setItem('urlTournamentError', message);
+		else
+        	localStorage.setItem('urlError', message);
+        navigate('/play', { replace: true });
+    };
 
-      if (userId && displayName) {
-        // Handle successful authentication and set the game state
-        const personsLoggedInId = Number(localStorage.getItem('user_id'));
-        const personsLoggedInDisplayName = localStorage.getItem('display_name');
+	useEffect(() => {
+		
+		const handleCallback = () => {
 
-        if (Number(userId) === personsLoggedInId) {
-          // Prevent player from playing against themselves
-          setError(t('You cannot play against yourself'));
-          setIsOpponentAuthenticated(false);
-        } else {
-          setIsOpponentAuthenticated(true);
-          setPlayer2Id(userId);
-          setPlayer2DisplayName(displayName);
-          setPlayer1Id(personsLoggedInId);
-          setPlayer1DisplayName(personsLoggedInDisplayName);
+		const urlError = searchParams.get('error');
+		if (urlError) {
+			handleError(decodeURIComponent(urlError));
+			return;
+		}
+		   
+		
+		const urlId = searchParams.get('user_id');
+		const urlDisplayName = searchParams.get('display_name');
+				
+		if (!urlId || !urlDisplayName) {
+			handleError('Authentication failed: Missing user data');
+			return;
+		}
+		
 
-          // Redirect to the game page after authentication
-          navigate('/play');
-        }
-      } else {
-        // Handle missing parameters in the callback
-        setError(t('Authentication failed'));
-        setIsOpponentAuthenticated(false);
-      }
-    }
-  }, [location, searchParams, setIsOpponentAuthenticated, setPlayer2Id, setPlayer2DisplayName, setPlayer1Id, setPlayer1DisplayName, t, navigate]);
+		const personsLoggedInId = Number(localStorage.getItem('user_id'));
+		const personsLoggedInDisplayName = localStorage.getItem('display_name');
 
-  return error ? <p className="text-red-500 text-center mt-4">{error}</p> : null;
-};
 
-// export const IntraPlayerGuard = () => {
-//     const location = useLocation();
-//     const { t } = useTranslation();
-//     const { setIsOpponentAuthenticated, 
-// 			setPlayer2Id, 
-// 			setPlayer2DisplayName, 
-// 			setPlayer1Id, 
-// 			setPlayer1DisplayName } = useContext(GameContext);
+		console.log("userId", urlId, "displayname", urlDisplayName, "error", urlError)
+		// Early return if we don't have the necessary data
+		if (!personsLoggedInId || !personsLoggedInDisplayName){
+			handleError('User session not found');
+			return;
+		}
 
-//     const [authError, setAuthError] = useState(null);
-//     const [isChecking, setIsChecking] = useState(true);
+		
 
-//     useEffect(() => {
-//         if (location.pathname === "/play") {
-//             const fetchUserInfo = async () => {
-//                 try {
-//                     const response = await fetch("http://localhost:8000/42-callback-match/", {
-//                         method: "GET",
-//                         headers: { "Content-Type": "application/json" },
-//                     });
+		// Convert urlId to number for consistent comparison
+		const numericUrlId = Number(urlId);
 
-//                     if (!response.ok) throw new Error(t("Authentication failed"));
+		if (numericUrlId === personsLoggedInId) {
+			handleError('You cannot play against yourself');
+			return;
+		}
+		
+		const mode = sessionStorage.getItem('mode');
+		if (mode === 'tournament') {
 
-//                     const data = await response.json();
+			const savedTournamentPlayers = JSON.parse(localStorage.getItem('tournamentPlayers') || '[]');
+			
+			if (savedTournamentPlayers.some(player => player.id === numericUrlId)){
+				handleError('This player is already in the tournament');
+				return;
+			}
+		
 
-//                     if (data?.user_id && data?.display_name) {
-//                         setIsOpponentAuthenticated(true);
-//                         setPlayer2Id(data.user_id);
-//                         setPlayer2DisplayName(data.display_name);
+			const newPlayers = [...savedTournamentPlayers, { 
+			id: numericUrlId, 
+			display_name: urlDisplayName 
+			}];
+			
+			localStorage.setItem('tournamentPlayers', JSON.stringify(newPlayers));
 
-//                         const personsLoggedInId = Number(localStorage.getItem("user_id"));
-//                         setPlayer1Id(personsLoggedInId);
-//                         setPlayer1DisplayName(localStorage.getItem("display_name"));
+		}if (mode === 'match'){
+			setPlayer1Id(personsLoggedInId);
+			setPlayer1DisplayName(personsLoggedInDisplayName);
+			setPlayer2Id(numericUrlId);
+			setPlayer2DisplayName(urlDisplayName);
+			setIsOpponentAuthenticated(true);
+		}
+		sessionStorage.removeItem('mode');
 
-//                         setIsChecking(false);
-//                     } else {
-//                         throw new Error(t("User not found"));
-//                     }
-//                 } catch (error) {
-//                     console.error("Auth error:", error);
-//                     setAuthError(t("Authentication failed"));
-//                     setIsChecking(false);
-//                 }
-//             };
+		navigate('/play', { replace: true });
+		};
 
-//             fetchUserInfo();
-//         }
-//     }, [location, t, setIsOpponentAuthenticated, setPlayer2Id, setPlayer2DisplayName, setPlayer1Id, setPlayer1DisplayName]);
+		handleCallback();
+	}, [searchParams, location.pathname, navigate]);
 
-//     if (isChecking) {
-//         return <p>{t("Checking authentication...")}</p>;
-//     }
+	return null;
+	};
 
-//     if (authError) {
-//         return <p className="text-red-500">{authError}</p>;
-//     }
-
-//     return null;
-// };
+	export default OAuth42CallbackHandler;

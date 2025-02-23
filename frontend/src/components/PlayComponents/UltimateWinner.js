@@ -4,7 +4,7 @@ import { GameContext } from "../../context/GameContext";
 
 const UltimateWinner = ({ player, scaleStyle }) => {
 	const {t} = useTranslation();
-	const { setgameTournamentStarted, setIsReadyToPlay, setIsOpponentAuthenticated } = useContext(GameContext);
+	const { setgameTournamentStarted, setIsReadyToPlay, setIsOpponentAuthenticated, setMatchIndex } = useContext(GameContext);
 
 	return (
 		<button
@@ -14,6 +14,7 @@ const UltimateWinner = ({ player, scaleStyle }) => {
 				setIsReadyToPlay(null);
 				setIsOpponentAuthenticated(false);
 				setgameTournamentStarted(false);
+				setMatchIndex(null);
 			}}
 		>
 			{t("Congrats to the Ultimate Winner")} {player} !
