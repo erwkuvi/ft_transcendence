@@ -273,7 +273,7 @@ const handleToggle2FA = async (password = null) => {
 									className="change-display-name-input"
 								/>
 								{/* Save button with check symbol */}
-								<div className="buttons-check-x">
+								<>
 									<button
 										onClick={handleSaveDisplayName}
 										className="yes-no-button"
@@ -289,7 +289,7 @@ const handleToggle2FA = async (password = null) => {
 									>
 										<span className="text-red-600">✕</span>
 									</button>
-								</div>
+								</>
 							</>
 						) : (
 							<>

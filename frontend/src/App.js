@@ -75,10 +75,18 @@ function App() {
 							<Route path="/" element={<Home />} />
 							<Route path="/about" element={<About />} />
 							<Route path="/login" element={isLoggedIn ? <Profile /> : <LogIn />} />
-							<Route path="/play" element={<GameProvider><Play /></GameProvider>} />
+							<Route 
+								path="/play" 
+								element={
+									<GameProvider>
+										<OAuth42CallbackHandler/>
+										<Play />
+									</GameProvider>
+								} 
+							/>
 
 							{/* 🔒 Protected Routes */}
-							<Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+							<Route path="/profile" element={isLoggedIn ? <Profile /> : <LogIn />} />
 						</Routes>
 					</ScrollReset>
 				</Main>
