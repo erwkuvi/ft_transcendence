@@ -342,7 +342,7 @@ const handleToggle2FA = async (password = null) => {
 				<StatisticsCard	losses={profile.losses}
 								wins={profile.wins}
 								fontSize={fontSize} />
-				<div className='card basic' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
+				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
 					<Filter className="inputFieldStyle1" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>

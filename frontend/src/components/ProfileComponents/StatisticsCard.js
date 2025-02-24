@@ -81,7 +81,7 @@ const StatisticsCard = ({ losses, wins, fontSize }) => {
 // </div>
 
   return (
-    <div className='card basic' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
+    <div className='profileCardStyle1' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
       <h2>{t("Stats")}</h2>
 
       <div>
@@ -94,14 +94,14 @@ const StatisticsCard = ({ losses, wins, fontSize }) => {
 	
       <div>
         <h3>{t("1v1 Games")}</h3>
-        <div style={{ maxHeight: '170px', overflowY: 'auto', border: '1px solid #ccc', padding: '8px' }}>
+        <div style={{ maxHeight: '170px', overflowY: 'auto', padding: '8px' }}>
           {oneVOneGames.length > 0 ? oneVOneGames.map(renderGameInfo) : <p>{t("No 1v1 games played")}</p>}
         </div>
       </div>
 
       <div>
         <h3>{t("Tournament Games")}</h3>
-        <div style={{ maxHeight: '170px', overflowY: 'auto', border: '1px solid #ccc', padding: '8px' }}>
+        <div style={{ maxHeight: '170px', overflowY: 'auto', padding: '8px' }}>
           {tournamentGames.length > 0 ? tournamentGames.map(renderGameInfo) : <p>{t("No tournament games played yet")}</p>}
         </div>
       </div>
