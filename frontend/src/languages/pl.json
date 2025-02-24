@@ -142,6 +142,7 @@
 	"2FA successfully deactivated": "2FA pomyślnie dezaktywowane",
 	"Failed to update avatar": "Nie udało się zaktualizować awatara",
 	"Failed to update display name": "Nie udało się zaktualizować pseudonimu",
+	"Display name must be at least 3 characters long." : "Pseudonim musi mieć przynajminej 3 znaki",
 	"User not found": "Użytkownik nie został znaleziony, musisz się najpierw zarejestrować",
 	"Authentication failed or missing parameters": "Uwierzytelnianie nie powiodło się lub brakuje parametrów",
 	"Username already exists. Please choose a different one.": "Nazwa użytkownika już istnieje. Proszę wybrać inną.",

@@ -1,8 +1,8 @@
+import React, { useState } from 'react';
 import { changeFriendStatus } from '../../services/friendService';
 import UserCard from './UserCard';
 import { fetchUsers } from '../../services/fetchUsers';
 import { getUserProfile } from '../../services/getProfile';
-import React, { useState } from 'react';
 
 const ListUsers = ({filterUsers, setAllUsers, setFilterUsers, setFriends, personLoggedIn}) => {
 	const [refreshKey, setRefreshKey] = useState(0);

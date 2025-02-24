@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { getUserProfile } from '../services/getProfile';
 import { useErrorHandler } from './ErrorHandlerContext';
+import { Navigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -17,25 +18,37 @@ export const AuthProvider = ({ children }) => {
                 if (userData.language) setLanguage(userData.language);
 				if (userData.mode !== undefined) setModeDarkLight(userData.mode);
             } catch (error) {
-                handleError(error.response?.status);
+				setIsLoggedIn(false);
+				console.log("Error:", error)
+				const status = error?.response?.status;
+                if (status) {
+					handleError(status);
+				} else {
+					// Handle the case where there's no status
+					console.error("Unexpected error: No status available");
+				}
             }
         };
 		if (isLoggedIn)
-        	fetchUserData(); 
-        
-    }, []);
+       		fetchUserData();
+    }, [isLoggedIn, handleError]);
 
-    useEffect(() => {
-        const handleStorageChange = () => {
-            setIsLoggedIn(!!localStorage.getItem('access_token'));
-        };
+    // useEffect(() => {
+    //     const handleStorageChange = () => {
+    //         setIsLoggedIn(!!localStorage.getItem('access_token'));
+    //     };
 
-        window.addEventListener('storage', handleStorageChange);
+    //     window.addEventListener('storage', handleStorageChange);
 
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
+    //     return () => {
+    //         window.removeEventListener('storage', handleStorageChange);
+    //     };
+    // }, []);
+
+	// if (!isLoggedIn) {
+    //     // If user is not logged in, redirect to login
+    //     return <Navigate to="/login" replace />;
+    // }
 
     return (
         <AuthContext.Provider value={{	isLoggedIn, 

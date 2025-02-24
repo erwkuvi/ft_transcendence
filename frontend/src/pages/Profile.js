@@ -1,11 +1,10 @@
-import './Profile.css';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { fetchUsers } from '../services/fetchUsers';
 import { getUserProfile } from '../services/getProfile';
 import { useTranslation } from 'react-i18next';
 import axiosInstance from '../services/axiosInstance';
 import { AccessibilityContext } from '../AccessibilityContext';
-import React, { useEffect, useState, useContext, useRef } from 'react';
 import ListUsers from '../components/ProfileComponents/ListUsers';
 import Filter from '../components/ProfileComponents/Filter';
 import ListFriends from '../components/ProfileComponents/ListFriends';
@@ -15,6 +14,7 @@ import StatisticsCard from '../components/ProfileComponents/StatisticsCard';
 import Otp from '../components/OTPActivationModal';
 import { AuthContext } from '../context/AuthContext';
 import { updateUserProfile } from '../services/patchUserProfile';
+import './Profile.css';
 
 const Profile = () => {
 	const {t} = useTranslation();
@@ -39,16 +39,19 @@ const Profile = () => {
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
 	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
+    const { isLoggedIn } = useContext(AuthContext);
 
 
 	useEffect(() => {
-		const token = localStorage.getItem('access_token');
-		if (!token) {
+		if (!isLoggedIn) {
 			navigate('/login'); 
 		}
-	}, [navigate]);
+	}, [navigate, isLoggedIn]);
 
-  
+	if (!isLoggedIn) {
+        return <p>Loading...</p>; 
+    }
+
   useEffect(() => {
 	const loadProfile = async () => {
 		try {
@@ -105,6 +108,12 @@ const Profile = () => {
 			return;
 		}
 		
+		if (newDisplayName.length < 3) {
+			console.log("Display name is too short");
+			alert(t('Display name must be at least 3 characters long.'));
+			return;
+		}
+
 		try {
 			const updatedProfile = await updateUserProfile({ display_name: newDisplayName });
 

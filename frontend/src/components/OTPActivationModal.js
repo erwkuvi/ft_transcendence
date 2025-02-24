@@ -1,5 +1,5 @@
-import axiosInstance from '../services/axiosInstance';
 import React, { useState, useContext } from 'react';
+import axiosInstance from '../services/axiosInstance';
 import { useTranslation } from 'react-i18next';
 import { AccessibilityContext } from '../AccessibilityContext';
 import './OTPActivationModal.css';

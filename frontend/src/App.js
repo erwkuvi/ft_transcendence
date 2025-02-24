@@ -1,9 +1,10 @@
 //import React from 'react';
-import { NotFound, Unauthorized, ServerError, BadGateway, GatewayTimeout, RequestTimeout } from './pages/ErrorPages';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { NotFound, Unauthorized, ServerError, BadGateway, GatewayTimeout, RequestTimeout } from './pages/ErrorPages';
 import { GameProvider } from "./context/GameContext"; 
 import { AuthGuard } from './guards/authGuard';
+import { OAuth42CallbackHandler } from './guards/intraPlayerGuard';
 import Header from './components/Header';
 import Footer from './components/Footer'
 import Main from './components/Main';
@@ -37,7 +38,21 @@ function App() {
 		if (isLoggedIn && location.pathname === '/login') {
 			navigate('/profile');
 		}
+		
 	}, [isLoggedIn, navigate]);
+
+	// useEffect(() => {
+	// 	handleGlobalError = (error) => {
+	// 		if (error.response && error.response.status === 401)
+	// 			navigate('/401')
+	// 	}
+
+	// 	window.addEventListener('unauthorized', handleGlobalError);
+
+	// 	return () => {
+	// 		window.removeEventListener('unauthorized', handleGlobalError);
+	// 	};
+	// }, [navigate])
 
 	return (
 		<AccessibilityProvider>

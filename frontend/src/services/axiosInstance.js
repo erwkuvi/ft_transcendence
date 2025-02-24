@@ -1,4 +1,14 @@
+import React, { useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth'
+
+export const logout = () => {
+	localStorage.removeItem('access_token');
+	localStorage.removeItem('refresh_token');
+	// window.location.href = '/login'; // Or use navigate() inside a component
+  };
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8000', // Adjust the base URL as needed
@@ -32,15 +42,10 @@ axiosInstance.interceptors.response.use(
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            // Prevent redirect loop if we're already on the login page
-            if (window.location.pathname === '/login') {
-                return Promise.reject(error);
-            }
-
             const refreshToken = localStorage.getItem('refresh_token');
             if (!refreshToken) {
-                window.location.href = '/login'; // If no refresh token, go to login
-                return Promise.reject(error);
+                logout();
+				return Promise.reject(error);
             }
 
             try {
@@ -54,8 +59,8 @@ axiosInstance.interceptors.response.use(
                 originalRequest.headers['Authorization'] = `JWT ${response.data.access}`;
                 return axios(originalRequest);  // Retry the original request with the new token
             } catch (refreshError) {
-                // Log out if refreshing the token fails
-                window.location.href = '/login';
+				console.error('Error refreshing token:', refreshError);  // Log the error for the refresh attempt
+                logout();
                 return Promise.reject(refreshError);
             }
         }

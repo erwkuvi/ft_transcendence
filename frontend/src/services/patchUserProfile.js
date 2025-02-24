@@ -26,27 +26,33 @@ export const updateUserProfile = async (data) => {
         Object.keys(updatedProfile).forEach((key) => {
             let value = updatedProfile[key];
 
-			if (value === undefined || value === null) {
-                return;
-            }
-			
-            if (key === "avatar") {
+			if (key === "avatar") {
                 if (value instanceof File) {
-                    formData.append(key, value); 
+                    formData.append(key, value);
+                } else if (typeof value === "string") {
+                    formData.append(key, value);
                 }
-            }else if (key === "avatar" && typeof value === "string") {
-                formData.append(key, value); 
-            } else if (["curr_match", "matches_id", "tournament"].includes(key)) {
+            } else if (key === "matches_id" && Array.isArray(value)) {
+                // If matches_id is an array, append each value separately
+                value.forEach((id) => {
+                    formData.append(key, id);
+                });
+            } else if (["curr_match", "tournament"].includes(key)) {
+                // Ensure these are numbers
                 if (value && !isNaN(value)) {
-                    formData.append(key, Number(value)); 
+                    formData.append(key, Number(value));
                 }
             } else if (typeof value === "boolean") {
-                formData.append(key, value ? "true" : "false"); 
+                formData.append(key, value ? "true" : "false");
             } else {
                 formData.append(key, value);
             }
         });
 
+		for (let [key, value] of formData.entries()) {
+			console.log(key, value); // Logs all form data key-value pairs
+		}
+		
         const response = await axiosInstance.patch(baseUrl, formData, {
             headers: {
                 Authorization: "JWT " + localStorage.getItem("access_token"),

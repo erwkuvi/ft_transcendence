@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import OTPModal from '../components/OTPModal';
 import { AccessibilityContext } from '../AccessibilityContext';
 import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth'
 
 const baseUrl = `http://localhost:8000/`;
 
@@ -15,6 +16,7 @@ const LogIn = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	const { setIsLoggedIn } = useContext(AuthContext); 
+	const { handleLogout } = useAuth();
 
 	const navigate = useNavigate();
 	const [isSignUp, setIsSignUp] = useState(false);
@@ -31,6 +33,14 @@ const LogIn = () => {
 	const handleCheckboxChange = () => {
 		setIsSignUp(prevState => !prevState);
 	}
+
+	useEffect(() => {
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            handleLogout();  // Ensure the user is logged out if no valid token
+            // navigate('/login');
+        }
+    }, [navigate, handleLogout]);
 
   const handleOTPSubmit = async (otp) => {
     try {

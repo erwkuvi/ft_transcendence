@@ -1,14 +1,14 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client'; 
 import { BrowserRouter } from 'react-router-dom';
+import { ErrorHandlerProvider } from './context/ErrorHandlerContext';
+import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import './index.css';
 import './components/Scrollbar.css';
 import './i18n';
-import { AuthProvider } from './context/AuthContext';
-import { ErrorHandlerProvider } from './context/ErrorHandlerContext';
 
-const root = createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
 	<BrowserRouter>

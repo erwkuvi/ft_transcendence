@@ -142,6 +142,7 @@
 	"2FA successfully deactivated": "2FA successfully deactivated",
 	"Failed to update avatar": "Failed to update avatar",
 	"Failed to update display name": "Failed to update display name",
+	"Display name must be at least 3 characters long." : "Display name must be at least 3 characters long.",
 	"User not found": "User not found, you have to register first",
 	"Authentication failed or missing parameters": "Authentication failed or missing parameters",
 	"Username already exists. Please choose a different one.": "Username already exists. Please choose a different one.",
