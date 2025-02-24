@@ -40,6 +40,8 @@ const Profile = () => {
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
 
 	const [status, setStatus] = useState(''); //for online-status
+  const user_id = localStorage.getItem('user_id');
+
 
 	useEffect(() => {
 		const token = localStorage.getItem('access_token');
@@ -86,15 +88,19 @@ const Profile = () => {
 
 	useEffect(() => {
 		const token = localStorage.getItem('access_token'); // Assuming JWT or similar token
-		const user_id = localStorage.getItem('user_id');
+		if (!user_id) {
+			return;
+		}
 
 		console.log('User IDDD:', user_id); // Print the user_id to the console
 		// Construct the WebSocket URL with the token as a query parameter
+		//const wsUrl = `wss://localhost/ws/online-status/?user_id=${user_id}&token=${token}`;
 		const wsUrl = `ws://localhost:8000/ws/online-status/?user_id=${user_id}&token=${token}`;
+		//const wsUrl = `ws://localhost:8000/ws/online-status/`;
 
 		// Create a new WebSocket instance
 		const ws = new WebSocket(wsUrl);
-		ws.onopen = () => console.log('WebSocket for game connection established');
+		ws.onopen = () => console.log('-----------------------------------------WebSocket for user-status connection established');
 
 		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data);
@@ -111,7 +117,7 @@ const Profile = () => {
 		return () => {
 			ws.close();
 		};
-	}, [status]);
+	}, [status, user_id]);
 
 	const handleSearch = (event) => {
 		const currFiltered = event.target.value

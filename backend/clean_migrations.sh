@@ -10,3 +10,7 @@ echo "Migration files removed."
 find backend/media/avatars -type f -name "*" ! -name "avatar.png" -delete
 
 echo "Profile pictures removed."
+
+rm -rf backend/media/qrcode/*
+
+echo "QR code images removed."
