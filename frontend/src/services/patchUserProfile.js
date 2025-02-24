@@ -32,7 +32,7 @@ export const updateUserProfile = async (data) => {
                 } else if (typeof value === "string") {
                     formData.append(key, value);
                 }
-            } else if (key === "matches_id" && Array.isArray(value)) {
+			}else if (key === "matches_id" && Array.isArray(value)) {
                 // If matches_id is an array, append each value separately
                 value.forEach((id) => {
                     formData.append(key, id);
@@ -44,10 +44,14 @@ export const updateUserProfile = async (data) => {
                 }
             } else if (typeof value === "boolean") {
                 formData.append(key, value ? "true" : "false");
-            } else {
+				
+            }else if (typeof value === "string") {
+				formData.append(key, value);
+			}else {
                 formData.append(key, value);
             }
-        });
+		
+       	 });
 
 		for (let [key, value] of formData.entries()) {
 			console.log(key, value); // Logs all form data key-value pairs
