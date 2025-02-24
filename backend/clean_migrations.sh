@@ -10,3 +10,7 @@ echo "Migration files removed."
 find backend/media/avatars -type f -name "*" ! -name "avatar.png" -delete
 
 echo "Profile pictures removed."
+
+
+rm -rf nginx/certs/
+echo "Self-signed certifications removed. "

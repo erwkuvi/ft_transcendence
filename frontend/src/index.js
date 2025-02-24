@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client'; 
+import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ErrorHandlerProvider } from './context/ErrorHandlerContext';
 import { AuthProvider } from './context/AuthContext';

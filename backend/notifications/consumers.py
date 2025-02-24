@@ -1,5 +1,4 @@
 import json
-import httpx
 from django.conf import settings
 from django.core.handlers.asgi import ASGIRequest, ASGIHandler
 from channels.db import database_sync_to_async

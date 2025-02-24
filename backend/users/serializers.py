@@ -478,7 +478,7 @@ class ExitMultiplayerSerializer(serializers.Serializer):
             "player2": player2.id,
             "winner": player2.id,
             "score_player1": 0,
-            "score_player2": score_player2 + 1
+            "score_player2": 1
         }
 
         match_serializer = MatchSerializer(data=match_data)

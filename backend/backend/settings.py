@@ -23,6 +23,8 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# For https connection 
+BASE_URL_SCHEME = 'https'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -39,7 +41,24 @@ HOST_IP = 'localhost'
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# Security settings
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
+
+
+#SECURE_HSTS_SECONDS = 31536000  # Enable HTTP Strict Transport Security (HSTS)
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+
+#KEY_PATH = os.path.join(BASE_DIR, 'certs/privkey.key')
+#CERT_PATH = os.path.join(BASE_DIR, 'certs/fullchain.crt')
 
 
 # Application definition
@@ -53,6 +72,7 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',# Toolkit for building Web APIs
+    #'django_extensions',
     'djoser',# JWT authentication for DRF
 	'rest_framework_simplejwt.token_blacklist', # Blacklist JWT tokens
     'corsheaders',# Handle CORS headers
