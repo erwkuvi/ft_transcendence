@@ -17,33 +17,33 @@ export const GameProvider = ({ children }) => {
 	const [ player1Id, setPlayer1Id ] = useState(null);
 	const [ player2DisplayName, setPlayer2DisplayName ] = useState(null);
 	const [ player2Id, setPlayer2Id ] = useState(null);
+	const [ iDTournamentGame, setIDTournamentGame ] = useState(null);
+	const [ gameTournamentStarted, setgameTournamentStarted ] = useState(false);
+	const [ matchIndex, setMatchIndex ] = useState(null);
+	const [ tournamentMatchID, setTournamentMatchID ] = useState(null);
+	const [ urlError, setUrlError ] = useState('')
+	const [ mode, setMode ] = useState(null);
+
 
     return (
-        <GameContext.Provider value={{	isSubmitting,
-										setIsSubmitting,
-										isReadyToPlay, 
-										setIsReadyToPlay, 
-										isOpponentAuthenticated, 
-										setIsOpponentAuthenticated,
-										opponentsId,
-										setOpponentsId,
-										tournamentPlayers,
-										setTournamentPlayers,
-										isTournamentReady,
-										setIsTournamentReady,
-										startTheTournament,
-										setStartTheTournament,
-										opponentsDisplayName,
-										setOpponentsDisplayName,
-										player1DisplayName,
-										setPlayer1DisplayName,
-										player1Id,
-										setPlayer1Id,
-										player2DisplayName,
-										setPlayer2DisplayName,
-										player2Id,
-										setPlayer2Id
-									}}
+        <GameContext.Provider value={{	isSubmitting, setIsSubmitting,
+										isReadyToPlay, setIsReadyToPlay, 
+										isOpponentAuthenticated, setIsOpponentAuthenticated,
+										opponentsId, setOpponentsId,
+										tournamentPlayers, setTournamentPlayers,
+										isTournamentReady, setIsTournamentReady,
+										startTheTournament, setStartTheTournament,
+										opponentsDisplayName, setOpponentsDisplayName,
+										player1DisplayName, setPlayer1DisplayName,
+										player1Id, setPlayer1Id,
+										player2DisplayName, setPlayer2DisplayName,
+										player2Id, setPlayer2Id,
+										matchIndex, setMatchIndex,
+										iDTournamentGame, setIDTournamentGame,
+										gameTournamentStarted, setgameTournamentStarted,
+										tournamentMatchID, setTournamentMatchID,
+										urlError, setUrlError,
+										mode, setMode }}
 		>
             {children}
         </GameContext.Provider>

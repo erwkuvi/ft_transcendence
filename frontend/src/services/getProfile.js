@@ -1,15 +1,29 @@
 import axiosInstance from './axiosInstance';
-
 const baseUrl = `http://localhost:8000/user_management/players/me/`;
 
 export const getUserProfile = async () => {
+	const token = localStorage.getItem('access_token');
+	if (!token) {
+		// console.log("No access token found. Redirecting to login.");
+		throw new Error('No access token');
+	}
+
     try {
-        const request = await axiosInstance.get(baseUrl);
+        const request = await axiosInstance.get(baseUrl, {
+            headers: {
+                'Content-Type': 'application/json',  
+                'Authorization': 'JWT ' + localStorage.getItem('access_token'),
+            },
+        });
         return request.data;
     } catch (error) {
-        console.log("Error getting user profile:", error);
-        throw error;
+		if (error.response && error.response.status === 401) {
+            // console.log("Unauthorized access, redirecting to login...");
+            throw new Error('Unauthorized access');
+        }
+        console.error('Error fetching profile:', error.response?.data || error.message);
+		throw error;  
     }
 };
 
-export default { getUserProfile }
+export default { getUserProfile };

@@ -1,8 +1,10 @@
 //import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { NotFound, Unauthorized, ServerError, BadGateway, GatewayTimeout, RequestTimeout } from './pages/ErrorPages';
 import { GameProvider } from "./context/GameContext"; 
-import axiosInstance from './services/axiosInstance';
 import { AuthGuard } from './guards/authGuard';
+import { OAuth42CallbackHandler } from './guards/intraPlayerGuard';
 import Header from './components/Header';
 import Footer from './components/Footer'
 import Main from './components/Main';
@@ -11,43 +13,86 @@ import Play from './pages/Play';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import LogIn from './pages/LogIn';
-import Otp from './pages/Otp';
 import './App.css';
 import ScrollReset from './components/ScrollReset';
 import { AccessibilityProvider } from "./AccessibilityContext";
-import { AuthProvider } from './context/AuthContext';
+import { AuthContext } from './context/AuthContext';
+import PrivateRoute from "./components/PrivateRoute";
 
+function ScrollToTop() {
+	const location = useLocation();
+	
+	React.useEffect(() => {
+	  window.scrollTo(0, 0);
+	}, [location.pathname]);
+	
+	return null;
+  }
+  
 
 function App() {
+	const { isLoggedIn } = useContext(AuthContext);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (isLoggedIn && location.pathname === '/login') {
+			navigate('/profile');
+		}
+		
+	}, [isLoggedIn, navigate]);
+
+	// useEffect(() => {
+	// 	handleGlobalError = (error) => {
+	// 		if (error.response && error.response.status === 401)
+	// 			navigate('/401')
+	// 	}
+
+	// 	window.addEventListener('unauthorized', handleGlobalError);
+
+	// 	return () => {
+	// 		window.removeEventListener('unauthorized', handleGlobalError);
+	// 	};
+	// }, [navigate])
+
 	return (
-		<AuthProvider>
-			<AccessibilityProvider>
-				<Header />
-				<div className="App">
-					<AuthGuard />
-					<Main>
-						<ScrollReset>
-							<Routes>
-								<Route path="/" element={<Home />} />
-								<Route 
-									path="/play" 
-									element={
-										<GameProvider>
-											<Play />
-										</GameProvider>
-									} 
-								/>
-								<Route path="/profile" element={<Profile />} />
-								<Route path="/about" element={<About />} />
-								<Route path="/login" element={<LogIn />} />
-								<Route path="/otp" element={<Otp />} />
-							</Routes>
-						</ScrollReset>
-					</Main>
-				</div>
-				<Footer />
-			</AccessibilityProvider>
-		</AuthProvider>
+		<AccessibilityProvider>
+			<ScrollToTop />
+			<Header />
+			<div className="App">
+				<AuthGuard />
+				<Main>
+					<ScrollReset>
+						<Routes>
+							{/* Error Pages */}
+							<Route path="*" element={<NotFound />} />
+							<Route path="/404" element={<NotFound />} />
+							<Route path="/401" element={<Unauthorized />} />
+							<Route path="/500" element={<ServerError />} />
+							<Route path="/502" element={<BadGateway />} />
+							<Route path="/504" element={<GatewayTimeout />} />
+							<Route path="/408" element={<RequestTimeout />} />
+
+							<Route path="/" element={<Home />} />
+							<Route path="/about" element={<About />} />
+							<Route path="/login" element={isLoggedIn ? <Profile /> : <LogIn />} />
+							<Route 
+								path="/play" 
+								element={
+									<GameProvider>
+										<OAuth42CallbackHandler/>
+										<Play />
+									</GameProvider>
+								} 
+							/>
+
+							{/* 🔒 Protected Routes */}
+							<Route path="/profile" element={isLoggedIn ? <Profile /> : <LogIn />} />
+						</Routes>
+					</ScrollReset>
+				</Main>
+			</div>
+			<Footer />
+		</AccessibilityProvider>
 	);
 }
 

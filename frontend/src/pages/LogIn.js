@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import OTPModal from '../components/OTPModal';
 import { AccessibilityContext } from '../AccessibilityContext';
 import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth'
 
 import useWindowDimensions from '../components/userWindowDimensions';
 
@@ -17,6 +18,7 @@ const LogIn = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	const { setIsLoggedIn } = useContext(AuthContext); 
+	const { handleLogout } = useAuth();
 
 	const navigate = useNavigate();
 	const [isSignUp, setIsSignUp] = useState(false);
@@ -36,6 +38,14 @@ const LogIn = () => {
 		setIsSignUp(prevState => !prevState);
 	}
 
+	useEffect(() => {
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            handleLogout();  // Ensure the user is logged out if no valid token
+            // navigate('/login');
+        }
+    }, [navigate, handleLogout]);
+
   const handleOTPSubmit = async (otp) => {
     try {
       //console.log('Sending OTP verification request with the following data:');
@@ -53,7 +63,7 @@ const LogIn = () => {
       const { access, refresh } = response.data;
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
-      console.log('Log in successful:', localStorage);
+    //   console.log('Log in successful:', localStorage);
       // Mark OTP as successfully submitted
       setShowOTPModal(false);
 			// Update AuthContext state
@@ -63,7 +73,7 @@ const LogIn = () => {
 			navigate('/profile');
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      console.log('Error verifying OTP:', error);
+    //   console.log('Error verifying OTP:', error);
 			setOtp('');
       //alert('Invalid OTP code. Please try again.');
     }
@@ -76,14 +86,14 @@ const LogIn = () => {
 		const login_url = baseUrl + 'mfa/' //api for user login
 
 		//debugging purposes begin
-		console.log('Form submitted with values:');
-		console.log('Username:', username);
-		console.log('Password:', password);
+		// console.log('Form submitted with values:');
+		// console.log('Username:', username);
+		// console.log('Password:', password);
 		if (isSignUp) {
-			console.log('Email:', email);
-			console.log('First Name:', firstName);
-			console.log('Last Name:', lastName);
-			console.log('Confirm Password:', confirmPassword);
+			// console.log('Email:', email);
+			// console.log('First Name:', firstName);
+			// console.log('Last Name:', lastName);
+			// console.log('Confirm Password:', confirmPassword);
 		}
 		//debugging purposes end
 
@@ -95,44 +105,56 @@ const LogIn = () => {
 					email,
 					password,
 				});
-				console.log('Sign up successful:', response.data);
+				// console.log('Sign up successful:', response.data);
 				setIsSignUp(false);
 			} catch (error) {
-				console.error('Error signing up:', error);
+				if (error.response) {
+					console.error('Error signing up:', error.response.data);
+					
+					if (error.response.data.username) {
+						alert(t('Username already exists. Please choose a different one.'));
+					}else if(error.response.data.email){
+						alert(t('Email was already used. Please choose a different one.'));
+					} else {
+						alert(t('Sign up failed. Please try again.'));
+					}
+				}
 			}
 		} else {
       // Handle login with potential two-factor authentication
-      try {
-        // Create credentials object for the initial login attempt
-        const credentials = { username, password };
-        const response = await axiosInstance.post(login_url, credentials);
-        
-        // If no OTP is required, proceed with normal login
-        const { access, refresh } = response.data;
-        localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refresh);
+				try {
+					// Create credentials object for the initial login attempt
+					const credentials = { username, password };
+					const response = await axiosInstance.post(login_url, credentials);
+					
+					// If no OTP is required, proceed with normal login
+					const { access, refresh } = response.data;
+					localStorage.setItem('access_token', access);
+					localStorage.setItem('refresh_token', refresh);
 
-        console.log('Log in successful:', localStorage);
+					// console.log('Log in successful:', localStorage);
 
-				// Update AuthContext state
-				setIsLoggedIn(true);
-				navigate('/profile');
-				
-      } catch (error) {
-        if (error.response && 
-            error.response.status === 401 && 
-            error.response.data.detail === "OTP code is required.") {
+							// Update AuthContext state
+							setIsLoggedIn(true);
+							navigate('/profile');
+							window.location.reload();
+							
+				} catch (error) {
+					if (error.response && 
+						error.response.status === 401 && 
+						error.response.data.detail === "OTP code is required.") {
 
-          setLoginCredentials({ username, password });
-          setShowOTPModal(true);
-        } else {
-          // Handle other types of login errors
-          console.error('Error logging in:', error);
-          alert('Login failed. Please check your credentials.');
-        }
-      }
+					setLoginCredentials({ username, password });
+					setShowOTPModal(true);
+					} else {
+					// Handle other types of login errors
+					console.error('Error logging in:', error);
+					alert(t("Login failed. Please check your credentials."));
+					}
+				}
+			}	
 		}
-	};
+
 	return (
 		<div className="login" style={{ fontSize: `${fontSize}px`, height: `${height - 90}px` }}>
 			<div className="loginContentWrapper">
@@ -184,6 +206,7 @@ const LogIn = () => {
 								<input
 									className="inputFieldStyle1"
 									type="password"
+									autoComplete="off"
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									required
@@ -196,6 +219,7 @@ const LogIn = () => {
 										<input 
 											className="inputFieldStyle1" /*text-field form-control*/
 											type="password"
+											autoComplete="off"
 											value={confirmPassword}
 											onChange={(e) => setConfirmPassword(e.target.value)}
 											required
@@ -204,7 +228,7 @@ const LogIn = () => {
 									)
 							}
 							<div>
-								<button type="submit" className="buttonStyle1" onClick={() => console.log('Submit button clicked')}> {/*btn button login-button py-2 px-5*/}
+								<button type="submit" className="buttonStyle1"> {/*btn button login-button py-2 px-5*/}
 									{isSignUp ? t("LogInText2") : t("LogInText")}
 								</button>
 								<LogInButton/>
@@ -225,4 +249,3 @@ const LogIn = () => {
 };
 
 export default LogIn;
-

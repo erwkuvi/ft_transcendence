@@ -1,62 +1,198 @@
 {
 	"": "",
 	"miniPong": "małyPong",
+
 	"HeaderHome": "Strona Główna",
 	"HeaderPlay": "Graj",
 	"HeaderProfile": "Profil",
 	"HeaderAbout": "O nas",
 	"HeaderLogIn": "Zaloguj się",
-	"HomeText": "pls translate Available to play vs CPU, Local Versus and Online",
+
+	"HeaderLogOut": "Wyloguj się",
+
+	"HomeText": "Dostępny już teraz do gry z CPU, Lokalnie i Online",
+
 	"HomeButton": "GRAJ TERAZ",
-	"LogInTitle": "ZALOGUJ SIĘ",
-	"LogInText": "pls translate You will be redirected to login with 42.",
+
+	"LogInTitle": "Zaloguj się",
+	"LogInText": "ZALOGUJ SIĘ",
+	"LogInText2": "ZAREJESTRUJ SIĘ",
+	"LogInText3": "Nazwa użytkownika",
+	"LogInText4": "Hasło",
+	"LogInText5": "Potwierdź hasło",
+	"LogInText6": "Email",
+
 	"LogInButton": "ZALOGUJ SIĘ Z 42",
 	
+	"You are currently in a tournament.": "Jesteś obecnie w trakcie trwania turnieju.",
 	"AboutTitle": "o nas",
-	"AboutT1": "This website is the result of the final project in the common core at 42 school, ft_transcendence. ",
-	"AboutT2": "It is built using HTML/CSS, Bootstrap, React, Django, and PostgreSQL.",
-	"AboutT3": "The source code for this website is available on ;",
+	"AboutT1": "Ta strona internetowa jest wynikiem projektu końcowego w ramach podstawowego bloku na szkole 42, ft_transcendence.",
+	"AboutT2": "Została zbudowana przy użyciu HTML/CSS, Bootstrap, React, Django i PostgreSQL.",
+	"AboutT3": "Kod źródłowy tej strony jest dostępny na ",
 
 	"PlayTitle": "zagraj",
-	"PlaySH1": "Singleplayer",
-	"PlayT1": "Go head-to-head with our cutting-edge minipongAI, powered by Django and sheer willpower.",
-	"PlayB1": "Play vs AI",
-	"PlaySH2": "Multiplayer Local",
-	"PlayT2": "Grab a friend, pull up a chair, and decide who's the better miniponger once and for all.",
-	"PlayB2": "Play local",
-	"PlaySH3": "Multiplayer Online",
-	"PlayT3": "Play minipong with anyone, from anywhere, at any time.",
-	"PlayB3": "Play online",
-	"PlaySH4": "Tournament",
-	"PlayT4": "Create a tournament with up to X players and battle it out to find the ultimate champion.",
-	"PlayB4": "Host a tournament",
+	"PlayTitleNotLoggedIn": "Multiplayer",
+	"PlayDescriptionNotLoggedIn": "Złap przyjaciela, przysiądźcie i zdecydujcie, kto jest lepszy w miniponga.",
+	"PlayNotLoggedIn": "Zacznij grę",
+	"AdditionalTextNotLoggedIn": "Jeśli chcesz zagrać w turniej lub prowadzić statystyki, musisz się zalogować lub utworzyć profil.",
+
+	"PlayTitleMultiplayer": "Multiplayer Lokalny",
+	"PlayDescriptionMultiplayer": "Złap przyjaciela, przysiądźcie i zdecydujcie, kto jest lepszy w miniponga.",
+	"PlayMultiplayer": "Zagraj lokalnie",
+	"AdditionalTextMultiplayer": "Możesz sprawdzić swoje statystyki na swoim profilu.",
+
+	"PlayTitleTournament": "Turniej",
+	"PlayDescriptionTournament": "Utwórz turniej z łączną liczbą 4 graczy i walcz, aby ustalić kto jest mistrzem.",
+	"PlayTournament": "Rozpocznij turniej",
+	"AdditionalTextTournament": "Znajdź 3 osoby i sprawdź, kto jest najlepszy w ponga.",
+
+	"StartTheTournament": "Rozpocznij turniej",
+	"Password": "Hasło:",
+	"Player": "Gracz",
+	"of": "z",
+	"alias name": "Nazwa gracza:",
+	"Add a player": "Dodaj gracza",
+	"Ready": "Gotowy",
+	"Submit": "ZATWIERDŹ",
+
+	"Cancel": "Anuluj",
+	"Yes, Leave": "Tak, Opuść",
+
+	"TournamentBracket": "Rozkład turnieju",
+	"Match": "Mecz",
+	"StartMatch": "Rozpocznij mecz",
+	"FinalMatch": "Finał",
+	"leave the tournament": "opuść turniej",
+
+	"Are you sure you want to leave?" : "Czy na pewno chcesz opuścić turniej?",
+	"This means you will officially lose the tournament match and you can't come back to this tournament.":
+		"Oznacza to, że oficjalnie przegrasz mecz turniejowy i nie będziesz mógł wrócić do tego turnieju.",
+	"This means you will officially end the tournament." : "Oznacza to, że oficjalnie i ostatecznie przerwiesz turniej.",
+	"Leave": "Opuść",
+	"Back to Mode Selection": "Powrót do wyboru trybu",
+	"Play next game": "Zagraj w następną grę",
+	"Congrats to the Ultimate Winner": "Gratulacje dla Ostatecznego Zwycięzcy:",
+
 	"About 42": "O 42",
+
 	"PROFILE": "PROFIL",
 	"Basic Information": "Podstawowe informacje",
-	"Username": "Nazwa użytkownika:",
-	"Display Name": "Display Name: ",
-	"email": "Email:",
+	"Username": "Nazwa użytkownika: ",
+	"Display Name": "Pseudonim: ",
+
+	"Saving..." : "Zapisywanie...",
+	"Disable 2FA": "Wyłącz 2FA",
+	"Enable 2FA": "Włącz 2FA",
+
+	"email": "Email: ",
+
 	"Stats": "Statystyki",
-	"Games played:": "Gry zagrane:",
+	"Overall Record": "Ogólne wyniki",
+	"Won": "Wygrana",
+	"Lost": "Przegrana",
 	"Wins": "Wygrane:",
+	"Losses": "Przegrane:",
+	"1v1 Games": "Gry 1 na 1",
+	"No 1v1 games played": "Nie rozegrano jeszcze gier 1 na 1",
+	"Tournament Games": "Gry turniejowe",
+	"No tournament games played yet": "Nie rozegrano jeszcze gier turniejowych",
+
 	"List of friends": "Lista przyjaciół",
 	"List of users": "Lista użytkowników",
 	"Search for users": "Szukaj użytkowników",
 	"Friends list": "Lista przyjaciół",
 	"Send Message": "Wyślij wiadomość",
 	"message placeholder": "Wpisz wiadomość",
+
 	"Invite": "Zaproś",
 	"Accept": "Zaakceptuj",
 	"Reject": "Odrzuć",
 	"Unfriend": "Wyrzuć ze znajomych",
 	"Block": "Zablokuj",
 	"Unblock": "Odblokuj",
+
 	"CurrentStatus": "Obecny status:",
 	"blockedMessage": "Zostałeś zablokowany",
 	"SelectOption": "Wybierz opcję",
+
 	"pending": "wysłano zaproszenie",
 	"invited": "jesteś zaproszony",
     "accepted": "jesteście znajomymi",
 	"unblocked": "odblokowany",
-	"unblock": "odblokuj"
+	"unblock": "odblokuj",
+
+	"Select language": "Wybierz język",
+	"currently": "obecnie",
+	"Language changed to": "Zmieniono język na",
+
+	"2FA Activation": "Aktywacja 2FA",
+	"You need to set up Mobile Authenticator to activate your account.":
+		"Musisz skonfigurować autoryzację mobilną, aby aktywować swoje konto.",
+	"Install one of the following applications on your mobile:":
+		"Zainstaluj jedną z następujących aplikacji na swoim telefonie:",
+	"FreeOTP": "FreeOTP",
+	"Google Authenticator": "Google Authenticator",
+	"Microsoft Authenticator": "Microsoft Authenticator",
+	"Open the application and scan the barcode:" : "Otwórz aplikację i zeskanuj kod kreskowy:",
+	"Enter the one-time code provided by the application and click Submit to finish the setup.":
+		"Wprowadź kod jednorazowy dostarczony przez aplikację i kliknij przycisk Zatwierdź, aby zakończyć konfigurację.",
+	"Enter OTP Code:" : "Wprowadź kod OTP:",
+
+	"2FA successfully activated": "2FA pomyślnie aktywowane",
+	"2FA successfully deactivated": "2FA pomyślnie dezaktywowane",
+	"Failed to update avatar": "Nie udało się zaktualizować awatara",
+	"Failed to update display name": "Nie udało się zaktualizować pseudonimu",
+	"Display name must be at least 3 characters long." : "Pseudonim musi mieć przynajminej 3 znaki",
+	"User not found": "Użytkownik nie został znaleziony, musisz się najpierw zarejestrować",
+	"Authentication failed or missing parameters": "Uwierzytelnianie nie powiodło się lub brakuje parametrów",
+	"Username already exists. Please choose a different one.": "Nazwa użytkownika już istnieje. Proszę wybrać inną.",
+	"Email was already used. Please choose a different one.": "Email był już używany. Proszę wybrać inny.",
+	"Sign up failed. Please try again.": "Rejestracja nie powiodła się. Spróbuj ponownie.",
+	"Login failed. Please check your credentials." : "Logowanie nie powiodło się. Sprawdź swoje dane uwierzytelniające.",
+
+	"Winner": "Zwycięzca",
+	"score": "wynik",
+	"Player 1": "Gracz 1",
+	"Player 2": "Gracz 2",
+	"Set count": "Liczba setów",
+
+	"Confirm Password": "Potwierdź hasło",
+	"Please enter your password to confirm this action": "Wprowadź swoje hasło, aby potwierdzić tę akcję",
+	"Enter your password": "Wprowadź swoje hasło",
+	"Confirm": "Potwierdź",
+
+	"Enter OTP Code": "Wprowadź kod OTP",
+	"Please enter the one-time password sent to your device.":
+		"Proszę wprowadzić jednorazowy kod dostarczony na Twoje urządzenie.",
+	"Enter OTP code": "Wprowadź kod OTP",
+	"Verify OTP": "Zweryfikuj OTP",
+
+	"Welcome to the game start menu": "Witaj w menu startowym gry",
+	"Choices": "Wybory",
+	"Map": "Mapa",
+	"Styles": "Style",
+	"normal": "normalny",
+	"wide": "szeroki",
+	"narrow": "wąski",
+	"option2": "opcja2",
+	"Keyboard Controls": "Sterowanie klawiaturą",
+	"Start Game": "Rozpocznij grę",
+
+	"Invalid credentials": "Nieprawidłowe dane uwierzytelniające",
+	"Authentication failed": "Uwierzytelnianie nie powiodło się",
+	"You can not play pong with yourself": "Nie możesz grać w ponga sam ze sobą",
+	"Or authenticate a player with 42": "Lub uwierzytelnij gracza za pomocą 42",
+
+	"We couldn't find the page you're looking for. It may have been moved, or the URL might be incorrect. Please check the link or return to the homepage.":
+		"Nie możemy znaleźć strony, której szukasz. Może została przeniesiona lub URL jest nieprawidłowy. Sprawdź link lub wróć na stronę główną.",
+	"You are not authorized to access this page. Please log in with the correct credentials or contact support if you believe this is an error.":
+		"Nie masz uprawnień do dostępu do tej strony. Zaloguj się za pomocą prawidłowych danych uwierzytelniających lub skontaktuj się z pomocą techniczną, jeśli uważasz, że to błąd.",
+	"Oops! Something went wrong on our side. We’re working on it. Please try again later, or reach out to support if the issue persists.":
+		"Ups! Coś poszło nie tak po naszej stronie. Pracujemy nad tym. Spróbuj ponownie później lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał.",
+	"There's an issue with one of our servers. Please try again in a few moments. If the problem continues, contact support.":
+		"Jest problem z jednym z naszych serwerów. Spróbuj ponownie za kilka chwil. Jeśli problem będzie się powtarzał, skontaktuj się z pomocą techniczną.",
+	"The server took too long to respond. Please check your connection or try again later. If the problem persists, contact support." :
+		"Serwer zajął zbyt dużo czasu na odpowiedź. Sprawdź swoje połączenie lub spróbuj ponownie później. Jeśli problem będzie się powtarzał, skontaktuj się z pomocą techniczną.",
+	"The request took too long to process. Please check your internet connection or try submitting your request again. If this issue continues, please contact support.": 
+		"Żądanie zajęło zbyt dużo czasu na przetworzenie. Sprawdź swoje połączenie internetowe lub spróbuj ponownie przesłać swoje żądanie. Jeśli problem będzie się powtarzał, skontaktuj się z pomocą techniczną."
 }

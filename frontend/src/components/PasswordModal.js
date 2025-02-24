@@ -41,7 +41,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
             }
 
             const data = await response.json();
-            console.log('Success:', data);
+            // console.log('Success:', data);
             localStorage.setItem('qr_code_url', data.qr_code_url);
             onSubmit(password);
 
@@ -67,9 +67,10 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
                     <input
                         type="password"
                         value={password}
+						autoComplete="off"
 						style={scalestyle}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
+                        placeholder={t("Enter your password")}
                         className="tfa-input-password"
                         required
                     />

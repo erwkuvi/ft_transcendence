@@ -35,10 +35,10 @@ class PlayerProfile(models.Model):
     )
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    #game_alias = models.CharField(max_length=50, null=True, blank=True)
     friends = models.ManyToManyField("self", blank=True)
     in_tournament = models.BooleanField(default=False)
     is_host = models.BooleanField(default=False)
+    tournament = models.ForeignKey('Tournament', related_name='player_profiles', on_delete=models.SET_NULL, null=True, blank=True)
     language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='en')
     mode = models.BooleanField(default=True)#True would be dark mode on frontend, False would be light mode
     curr_match = models.ForeignKey(
@@ -65,12 +65,12 @@ class Match(models.Model):
         ('regular', 'Regular'),
         ('tournament', 'Tournament'),
     ]
+    tournament = models.ForeignKey(Tournament, related_name='matches', on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     mode = models.CharField(max_length=50, choices=MATCH_MODE_CHOICES, default='regular')
     idx = models.IntegerField(default=0)
     level = models.IntegerField(default=0)
     finished = models.BooleanField(default=False)
-    tournament = models.ForeignKey(Tournament, related_name='tournament', on_delete=models.CASCADE, null=True, blank=True)
     player1 = models.ForeignKey(
         PlayerProfile, related_name='player1_matches',
         on_delete=models.CASCADE)

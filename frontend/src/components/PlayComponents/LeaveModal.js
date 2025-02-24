@@ -4,10 +4,9 @@ import "./LeaveModal.css";
 
 const LeaveModal = ({ isOpen, title, message, scaleStyle, onConfirm, onCancel }) => {
 	const { t } = useTranslation();
-
-	console.log("Is it open", isOpen);
-    if (!isOpen) return null; // Don't render if modal is closed
-
+	// const userLoggedInID = localStorage.getItem('user_id');
+	if (!isOpen) return null
+	
     return (
 		<div className="tfa-modal" style={scaleStyle}>
 			<div className="modal-overlay" role="dialog" aria-modal="true">

@@ -1,8 +1,8 @@
 const UserList = ({ friends }) => {
 	return (
 	  <>
-		{friends.map(user => (
-		  <div> {user.username}</div>
+		{friends.map((user, index) => (
+  			<div key={index}> {user.username}</div>
 		))}
 	  </>
 	);

@@ -1,5 +1,5 @@
-import axiosInstance from '../services/axiosInstance';
 import React, { useState, useContext } from 'react';
+import axiosInstance from '../services/axiosInstance';
 import { useTranslation } from 'react-i18next';
 import { AccessibilityContext } from '../AccessibilityContext';
 import './OTPActivationModal.css';
@@ -39,10 +39,10 @@ const Otp = ({ onSuccess }) => { // Accept onSuccess prop
 				}
 			);
 			// Handle successful response
-			console.log('Response:', response.data);
+			// console.log('Response:', response.data);
 			// Remove qr_code_url from local storage
 			localStorage.removeItem('qr_code_url');
-			alert('2FA successfully activated');
+			alert(t('2FA successfully activated'));
 			if (onSuccess) onSuccess(); // Call onSuccess callback
 		} catch (error) {
 			console.error('Error:', error);

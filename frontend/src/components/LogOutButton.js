@@ -1,9 +1,13 @@
 import React, {useContext} from 'react';
 import { useTranslation } from "react-i18next";
 import axiosInstance from '../services/axiosInstance';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LogoutButton = () => {
     const { t } = useTranslation();
+	const { setIsLoggedIn } = useContext(AuthContext); 
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
@@ -12,10 +16,13 @@ const LogoutButton = () => {
                 refresh_token: refresh
             });
             localStorage.clear();
-            window.location.href = '/login';
+			setIsLoggedIn(false); 
+            navigate('/login');
         } catch (error) {
             console.error('Logout failed:', error);
             localStorage.clear();
+			setIsLoggedIn(false);
+            navigate('/login');
         }
     };
 

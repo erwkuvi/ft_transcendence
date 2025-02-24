@@ -24,6 +24,7 @@
 
 	"LogInButton": "LOG IN WITH 42",
 
+	"You are currently in a tournament.": "You are currently in a tournament.",
 	"AboutTitle": "about",
 	"AboutT1": "This website is the result of the final project in the common core at 42 school, ft_transcendence. ",
 	"AboutT2": "It is built using HTML/CSS, Bootstrap, React, Django, and PostgreSQL.",
@@ -66,8 +67,11 @@
 	"Are you sure you want to leave?" : "Are you sure you want to leave?",
 	"This means you will officially lose the tournament match and you can't come back to this tournament.":
 		"This means you will officially lose the tournament match and you can't come back to this tournament.",
+	"This means you will officially end the tournament.": "This means you will officially end the tournament.",
 	"Leave": "Leave",
 	"Back to Mode Selection": "Back to Mode Selection",
+	"Play next game": "Play next game",
+	"Congrats to the Ultimate Winner": "Congrats to the Ultimate Winner:",
 
 	"About 42": "About 42",
 
@@ -81,9 +85,18 @@
 	"Enable 2FA": "Enable 2FA",
 
 	"email": "Email: ",
+
 	"Stats": "Stats",
-	"Games played": "Games played:",
+	"Overall Record": "Overall Record",
+	"Won": "Won",
+	"Lost": "Lost",
 	"Wins": "Wins:",
+	"Losses": "Losses:",
+	"1v1 Games": "1v1 Games",
+	"No 1v1 games played": "No 1v1 games played",
+	"Tournament Games": "Tournament Games",
+	"No tournament games played yet": "No tournament games played yet",
+
 	"List of friends": "List of friends",
 	"List of users": "List of users",
 	"Search for users": "Search for users",
@@ -123,5 +136,63 @@
 	"Open the application and scan the barcode:" : "Open the application and scan the barcode:",
 	"Enter the one-time code provided by the application and click Submit to finish the setup.":
 		"Enter the one-time code provided by the application and click Submit to finish the setup.",
-	"Enter OTP Code:" : "Enter OTP Code:"
+	"Enter OTP Code:" : "Enter OTP Code:",
+
+	"2FA successfully activated": "2FA successfully activated",
+	"2FA successfully deactivated": "2FA successfully deactivated",
+	"Failed to update avatar": "Failed to update avatar",
+	"Failed to update display name": "Failed to update display name",
+	"Display name must be at least 3 characters long." : "Display name must be at least 3 characters long.",
+	"User not found": "User not found, you have to register first",
+	"Authentication failed or missing parameters": "Authentication failed or missing parameters",
+	"Username already exists. Please choose a different one.": "Username already exists. Please choose a different one.",
+	"Email was already used. Please choose a different one.": "Email was already used. Please choose a different one.",
+	"Sign up failed. Please try again.": "Sign up failed. Please try again.",
+	"Login failed. Please check your credentials." : "Login failed. Please check your credentials.",
+
+	"Winner": "Winner",
+	"score": "score",
+	"Player 1": "Player 1",
+	"Player 2": "Player 2",
+	"Set count": "Set count",
+
+	"Confirm Password": "Confirm Password",
+	"Please enter your password to confirm this action": "Please enter your password to confirm this action",
+	"Enter your password": "Enter your password",
+	"Confirm": "Confirm",
+
+	"Enter OTP Code": "Enter OTP Code",
+	"Please enter the one-time password sent to your device.":
+		"Please enter the one-time password sent to your device.",
+	"Enter OTP code": "Enter OTP code",
+	"Verify OTP": "Verify OTP",
+
+	"Welcome to the game start menu": "Welcome to the game start menu",
+	"Choices": "Choices",
+	"Map": "Map",
+	"Styles": "Styles",
+	"normal": "normal",
+	"wide": "wide",
+	"narrow": "narrow",
+	"option2": "option2",
+	"Keyboard Controls": "Keyboard Controls",
+	"Start Game": "Start Game",
+
+	"Invalid credentials": "Invalid credentials",
+	"Authentication failed": "Authentication failed",
+	"You can not play pong with yourself": "You can not play pong with yourself",
+	"Or authenticate a player with 42": "Or authenticate a player with 42",
+
+	"We couldn't find the page you're looking for. It may have been moved, or the URL might be incorrect. Please check the link or return to the homepage.":
+		"We couldn't find the page you're looking for. It may have been moved, or the URL might be incorrect. Please check the link or return to the homepage.",
+	"You are not authorized to access this page. Please log in with the correct credentials or contact support if you believe this is an error.":
+		"You are not authorized to access this page. Please log in with the correct credentials or contact support if you believe this is an error.",
+	"Oops! Something went wrong on our side. We’re working on it. Please try again later, or reach out to support if the issue persists.":
+		"Oops! Something went wrong on our side. We’re working on it. Please try again later, or reach out to support if the issue persists.",
+	"There's an issue with one of our servers. Please try again in a few moments. If the problem continues, contact support.":
+		"There's an issue with one of our servers. Please try again in a few moments. If the problem continues, contact support.",
+	"The server took too long to respond. Please check your connection or try again later. If the problem persists, contact support." :
+		"The server took too long to respond. Please check your connection or try again later. If the problem persists, contact support.",
+	"The request took too long to process. Please check your internet connection or try submitting your request again. If this issue continues, please contact support.": 
+		"The request took too long to process. Please check your internet connection or try submitting your request again. If this issue continues, please contact support."
 }

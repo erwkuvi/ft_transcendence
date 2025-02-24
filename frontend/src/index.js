@@ -1,18 +1,21 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client'; 
 import { BrowserRouter } from 'react-router-dom';
+import { ErrorHandlerProvider } from './context/ErrorHandlerContext';
+import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import './index.css';
 import './components/Scrollbar.css';
 import './i18n';
 
-
-const root = createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-	//<React.StrictMode>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
-	//</React.StrictMode>
+	<BrowserRouter>
+		<ErrorHandlerProvider>
+			<AuthProvider>
+				<App />
+			</AuthProvider>
+		</ErrorHandlerProvider>
+	</BrowserRouter>
 )

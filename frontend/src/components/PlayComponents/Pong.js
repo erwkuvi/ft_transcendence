@@ -2,9 +2,14 @@
 import React, { useRef, useState, useEffect, forwardRef, useContext } from 'react';
 import { Canvas, useFrame, useLoader} from '@react-three/fiber';
 import { OrbitControls, Edges, RoundedBox } from '@react-three/drei';
+import { useTranslation } from "react-i18next";
+import { AccessibilityContext } from '../../AccessibilityContext';
+import { postMatchResults } from '../../services/postMatchResults';
 import { GameContext } from "../../context/GameContext";
 import '../game/controlPanel.css'
 import '../game/gameStartMenu.css'
+import WinningScreen from './WinningScreen';
+import { t } from 'i18next';
 
 let 	FIELD_WIDTH         = 26;
 let 	FIELD_LEN           = 32;
@@ -60,7 +65,7 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 		if (BALL_SPEED <= MAX_BALL_SPEED) {
 			BALL_SPEED += 0.01;
 		}
-		console.log("BALL SPEED NORMALLY: ", BALL_SPEED);
+		// console.log("BALL SPEED NORMALLY: ", BALL_SPEED);
 	};
 
 
@@ -250,8 +255,9 @@ function PlayerPanel({scores}) {
 
 function GameStartMapMenu() {
 	const [selectedOption, setSelectedOption] = useState("normal");
+	const { t } = useTranslation();
 
-    const options = ["normal", "wide", "narrow"];
+    const options = [t("normal"), t("wide"), t("narrow")];
 
 	if (selectedOption === "normal") {
 		FIELD_WIDTH = 26;
@@ -273,11 +279,10 @@ function GameStartMapMenu() {
     return (
         <div id="menu">
             {options.map((option) => (
-                <div className="menuChoiceElement"
-                    key={option}
-                    className={`option ${selectedOption === option ? "selected" : ""}`}
-                    onClick={() => setSelectedOption(option)}
-                    style={{ fontWeight: selectedOption === option ? "bold" : "normal", cursor: "pointer" }}
+                <div	key={option}
+						className={`menuChoiceElement option ${selectedOption === option ? "selected" : ""}`}
+						onClick={() => setSelectedOption(option)}
+						style={{ fontWeight: selectedOption === option ? "bold" : "normal", cursor: "pointer" }}
                 >
                     <p>{selectedOption === option ? "→ " : ""}{option}</p>
                 </div>
@@ -288,17 +293,17 @@ function GameStartMapMenu() {
 
 function GameStartStylesMenu({gameFieldStyle, setGameStyle}) {
 	// const [selectedOption, setSelectedOption] = useState("normal");
+	const { t } = useTranslation();
 
-    const options = ["normal", "option2"];
+    const options = [t("normal"), t("option2")];
 
     return (
         <div id="menu">
             {options.map((option) => (
-                <div className="menuChoiceElement"
-                    key={option}
-                    className={`option ${gameFieldStyle === option ? "selected" : ""}`}
-                    onClick={() => setGameStyle(option)}
-                    style={{ fontWeight: gameFieldStyle === option ? "bold" : "normal", cursor: "pointer" }}
+                <div	key={option}
+						className={`menuChoiceElement option ${gameFieldStyle === option ? "selected" : ""}`}
+						onClick={() => setGameStyle(option)}
+						style={{ fontWeight: gameFieldStyle === option ? "bold" : "normal", cursor: "pointer" }}
                 >
                     <p>{gameFieldStyle === option ? "→ " : ""}{option}</p>
                 </div>
@@ -308,26 +313,27 @@ function GameStartStylesMenu({gameFieldStyle, setGameStyle}) {
 }
 
 function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
+	const { t } = useTranslation();
+
 	return (
 		<div id="gameStartMenu">
-			<div id="gameStartMenuWrapper">
-			<h2 id="gameMenuMainHeader">Welcome to the game start menu</h2>
+			<h2>{t("Welcome to the game start menu")}</h2>
 			<div id="gameMenuArea1">
 					<div id="choiceArea">
-						<h2 className="gameStartMenuH2">Choices</h2>
+						<h2 className="gameStartMenuH2">{t("Choices")}</h2>
 						<div className="choiceAreaSections">
 							<div>
-								<h3 className="gameStartMenuH3">Map</h3>
+								<h3 className="gameStartMenuH3">{t("Map")}</h3>
 								<GameStartMapMenu/>
 							</div>
 							<div>
-								<h3 className="gameStartMenuH3">Styles</h3>
+								<h3 className="gameStartMenuH3">{t("Styles")}</h3>
 								<GameStartStylesMenu gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 							</div>
 						</div>
 					</div>
 					<div id="controlsArea">
-						<h2 className="gameStartMenuH2">Keyboard Controls</h2>
+						<h2 className="gameStartMenuH2">{t("Keyboard Controls")}</h2>
 						<div id="p1Controls">
 							<h3 className="gameStartMenuH3">P1</h3>
 							<div className="pControlsWrapper">
@@ -342,55 +348,21 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 						</div>
 					</div>
 			</div>
-			<button className="btn button" onClick={onStartGame}>Start Game</button>
-			</div>
+			<button className="btn button" onClick={onStartGame}>{t("Start Game")}</button>
 		</div>
 	);
-}
-
-function WinningScreen({player, score1, score2}) {
-	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
-
-	const displayName1 = player1DisplayName || "Player 1";
-	const displayName2 = player2DisplayName || "Player 2";
-
-	return (
-		<div id="winningScreen">
-			<h2>Winner {player}</h2>
-			<p>{displayName1} score: {score1}</p>
-			<p>{displayName2} score: {score2}</p>
-		</div>
-	);
-}
-
-function disableNavigationButtons() {
-	let pageContent = document.getElementById("pageContentID");
-	let pongHeading = document.getElementById("pongHeading");
-
-	pongHeading.style.display = 'none';
-	pageContent.style.padding  = '0px';
-	pageContent.style.margin   = '0px';
-	pageContent.style.position = 'relative';
-	pageContent.style.zIndex   = '1000';
-
-	let navbar = document.getElementById("navbarID");
-
-	navbar.style.position      = 'absolute';
-
-	let	footer = document.getElementById("footerID");
-	footer.style.display = "none";
-
-	let	header =  document.getElementById("navbarID");
-	header.style.display = "none";
 }
 
 function Pong() {
-	disableNavigationButtons();
+	// disableNavigationButtons();
 // Declare refs inside the Canvas component
 	const { player1Id,
-			player2Id } = useContext(GameContext);
+			player2Id,
+			iDTournamentGame,
+			player1DisplayName, 
+			player2DisplayName } = useContext(GameContext);
 
-
+	const { t } = useTranslation();
 	const player1Ref = useRef();
 	const player2Ref = useRef();
 	const [gameStarted, setGameStarted] = useState(false);
@@ -398,7 +370,7 @@ function Pong() {
 	const [winner, setWinner] = useState(null);
 	BALL_SPEED = STARTING_BALL_SPEED;
 
-
+// console.log("match Id rn: ", iDTournamentGame);
 	const [scores, setScores] = useState({
 		p1_f_score: 0,
 		p2_f_score: 0,
@@ -407,46 +379,7 @@ function Pong() {
 		p1_won_set_count: 0,
 		p2_won_set_count: 0,
 	});
-
-
-	const postMatchResults = async (winnerId, scores) => {
-		const isGeustMode = !player1Id || !player2Id;
-		if (isGeustMode) {
-			console.log("Guest mode, skipping posting match results.");
-			return;
-		}
-
-		const matchData = {
-			mode: "regular",
-			player1: player1Id, 
-			player2: player2Id,
-			winner: winnerId,       
-			score_player1: scores.p1_f_score,
-			score_player2: scores.p2_f_score,
-		};
-
-		try {
-			const response = await fetch('http://localhost:8000/user_management/matches/', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'JWT ' + localStorage.getItem('access_token') 
-				},
-				body: JSON.stringify(matchData)
-			});
-			const textResponse = await response.text();  // Get raw text response
-			console.log("Raw response:", textResponse);
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error("Failed to post match results:", errorData);
-			} else {
-				console.log("Match results successfully saved.");
-			}
-		} catch (error) {
-			console.error("Error posting match results:", error);
-		}
-	};
-
+	
 	const handleScore = (player) => {
 		setScores((prev) => {
 		  const updatedScores = { ...prev };
@@ -459,8 +392,8 @@ function Pong() {
 				if (updatedScores.p1_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 1 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
-					postMatchResults(player1Id, updatedScores);
-					setWinner("Player1");
+					postMatchResults(player1Id, updatedScores, iDTournamentGame, player1Id, player2Id);
+					setWinner(player1DisplayName ? player1DisplayName : t("Player 1"));
 				}
 			}
 		  } else if (player === 2) {
@@ -472,8 +405,8 @@ function Pong() {
 				if (updatedScores.p2_won_set_count >= MAX_SET_COUNT) {
 					// alert('Player 2 has won the game!');
 					//SEND THE STATISTICAL DATA BACK TO THE DATABASE
-					postMatchResults(player2Id, updatedScores);
-					setWinner("Player2");
+					postMatchResults(player2Id, updatedScores, iDTournamentGame, player1Id, player2Id);
+					setWinner(player2DisplayName ? player2DisplayName : t("Player 2"));
 				}
 			}
 		  }
@@ -488,7 +421,7 @@ function Pong() {
             setTimeout(() => setGameStarted(true), 500); // Wait 0.5s before starting game
         } else {
             setGameStarted(true);
-			console.log("ERROR: in handleStartGame function !");
+			// console.log("ERROR: in handleStartGame function !");
         }
     };
 
