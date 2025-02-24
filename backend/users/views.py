@@ -94,6 +94,8 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
         elif request.method in ['PUT', 'PATCH']:
             serializer = PlayerProfileSerializer(
                 player_profile, data=request.data, context=self.get_serializer_context())
+            if not serializer.is_valid():
+                print(serializer.errors)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
