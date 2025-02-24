@@ -4,17 +4,11 @@ from django.core.handlers.asgi import ASGIRequest, ASGIHandler
 from channels.db import database_sync_to_async
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from channels.generic.websocket import AsyncWebsocketConsumer
-#from rest_framework_simplejwt.tokens import UntypedToken
-#from rest_framework.simplejwt.authentication import JWTAuthentication
-from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
+from django.db.models import F
 from django.http import HttpResponse
-
-def ws_message(message):
-    # ASGI WebSocket packet-received and send-packet message types
-    # both have a "text" key for their textual data.
-    message.reply_channel.send({
-        "text": message.content['text'],
-    })
+from django.contrib.auth import get_user_model
+from django.apps import apps
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):

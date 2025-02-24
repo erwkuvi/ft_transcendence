@@ -11,6 +11,6 @@ find backend/media/avatars -type f -name "*" ! -name "avatar.png" -delete
 
 echo "Profile pictures removed."
 
+rm -rf backend/media/qrcode/*
 
-rm -rf nginx/certs/
-echo "Self-signed certifications removed. "
+echo "QR code images removed."
