@@ -283,13 +283,13 @@ function ControlPanel() {
 		{/* <div style={{position: 'absolute', top: '50%', right: '5rem', border: '1px solid red', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '2rem'}}> */}
 			<div id="choiseMenu" style={{ fontSize: '18px', display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '4rem', justifyContent: 'center'}}>
 			{/* <div style={{border: '1px solid green', fontSize: '18px', display: 'flex', flexDirection: 'column', gap: '1.5rem'}}> */}
-				<button id="changeStyle" class="controlPanelButton" onClick={ChangeStyle}>
+				<button id="changeStyle" className="controlPanelButton" onClick={ChangeStyle}>
 					Change Style
 				</button>
-				<button id="keyboardControls" class="controlPanelButton" style={{}} onClick={KeyboardControls}>
+				<button id="keyboardControls" className="controlPanelButton" style={{}} onClick={KeyboardControls}>
 					Keyboard Controls
 				</button>
-				<button id="leaveGame" class="controlPanelButton" style={{}} onClick={LeaveGame}>
+				<button id="leaveGame" className="controlPanelButton" style={{}} onClick={LeaveGame}>
 					Leave Game
 				</button>
 			</div>
@@ -380,36 +380,36 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 			<div id="gameMenuArea1">
 				<div id="gameMenuElementWrapper">
 					<div id="choiceArea">
-						<h2 class="gameStartMenuH2">Choices</h2>
-						<div class="choiceAreaSections">
+						<h2 className="gameStartMenuH2">Choices</h2>
+						<div className="choiceAreaSections">
 							<div>
-								<h3 class="gameStartMenuH3">Map</h3>
+								<h3 className="gameStartMenuH3">Map</h3>
 								<GameStartMapMenu/>
 							</div>
 							<div>
-								<h3 class="gameStartMenuH3">Styles</h3>
+								<h3 className="gameStartMenuH3">Styles</h3>
 								<GameStartStylesMenu gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 							</div>
 						</div>
 					</div>
 					<div id="controlsArea">
-						<h2 class="gameStartMenuH2">Keyboard Controls</h2>
+						<h2 className="gameStartMenuH2">Keyboard Controls</h2>
 						<div id="p1Controls">
-							<h3 class="gameStartMenuH3">P1</h3>
-							<div class="pControlsWrapper">
-								<div class="p1Keys">A</div><div class="p1Keys"></div><div class="p1Keys">D</div>
+							<h3 className="gameStartMenuH3">P1</h3>
+							<div className="pControlsWrapper">
+								<div className="p1Keys">A</div><div className="p1Keys"></div><div className="p1Keys">D</div>
 							</div>
 						</div>
 						<div id="p2Controls">
-							<h3 class="gameStartMenuH3">P2</h3>
-							<div class="pControlsWrapper">
-								<div class="p2Keys">&lt;</div><div class="p2Keys"></div><div class="p2Keys">&gt;</div>
+							<h3 className="gameStartMenuH3">P2</h3>
+							<div className="pControlsWrapper">
+								<div className="p2Keys">&lt;</div><div className="p2Keys"></div><div className="p2Keys">&gt;</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<button class="btn button" onClick={onStartGame}>Start Game</button>
+			<button className="btn button" onClick={onStartGame}>Start Game</button>
 		</div>
 	);
 }

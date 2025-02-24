@@ -3,14 +3,16 @@ import PlayButton from '../components/PlayButton';
 import './Home.css'
 import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from '../AccessibilityContext';
-
+import useWindowDimensions from '../components/userWindowDimensions';
 
 const Home = () => {
 	const { t } = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
+	const { width, height } = useWindowDimensions();
+	console.log("width: ", width + " height: ", height);
 
 	return (
-		<div className="d-flex flex-wrap flex-row homePageHeaderHolder" style={{ fontSize: `${fontSize}px` }}>
+		<div className="d-flex flex-wrap justify-content-center align-items-center flex-row homePageHeaderHolder" style={{ fontSize: `${fontSize}px`, height: `${height - 90}px`}}>
 			<h1>
 				minipong
 				<i className="fa-solid fa-circle ball px-1" style={{ fontSize: `${fontSize}px` }}></i>

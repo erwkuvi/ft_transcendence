@@ -13,6 +13,8 @@ import PasswordModal from '../components/PasswordModal';
 import Otp from '../components/OTPActivationModal';
 import { AuthContext } from '../context/AuthContext';
 
+import useWindowDimensions from '../components/userWindowDimensions';
+
 const Profile = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
@@ -45,6 +47,8 @@ const Profile = () => {
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
 	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
 	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
+
+	const {width, height} = useWindowDimensions();
 
 	useEffect(() => {
 		const token = localStorage.getItem('access_token');
@@ -294,9 +298,9 @@ const handleToggle2FA = async (password = null) => {
   if (!profile) return <p>No profile data available</p>;
 
 	return (
-		<div className="d-flex flex-column align-items-center w-100 profilePageHolder" id="profilePageHolder">
-			<h1 className="pageHeadingH1Style1 profileHeading mb-5">{t("profile")}</h1>
-			<div className='profileCardHolder  mb-0 mt-3 w-100' style={{ fontSize: `${fontSize}px` }}>
+		<div className="d-flex flex-column align-items-center w-100 profilePageHolder" id="profilePageHolder" style={{height: `${height - 90}px`}}>
+			<h1 className="pageHeadingH1Style1 profileHeading">{t("profile")}</h1>
+			<div className='profileCardHolder  mb-0 w-100' style={{ fontSize: `${fontSize}px` }}>
 				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
 					{/* Avatar section with edit functionality */}

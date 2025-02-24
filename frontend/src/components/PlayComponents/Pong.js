@@ -25,7 +25,7 @@ const	MAX_BALL_SPEED      = 0.23;
 let		BALL_SPEED          = 0.12;
 const	BALL_RADIUS         = 0.7;
 
-const 	MAX_SCORE_COUNT     = 1000;
+const 	MAX_SCORE_COUNT     = 2;
 const 	MAX_SET_COUNT       = 3;
 
 
@@ -237,78 +237,11 @@ function Field({dimensions, borderColor, gameFieldStyle}) {
   	);
 }
 
-
-function ControlPanel() {
-	const ChangeStyle = () => {
-		// alert("Great Shot!");
-		let changeStyle = document.getElementById("changeStyle");
-		if (changeStyle.style.fontWeight === "200") {
-			changeStyle.style.fontWeight =  "400";
-		} else {
-			changeStyle.style.fontWeight = "200";
-		}
-	};
-	const KeyboardControls = () => {
-		// alert("1");
-		let keyboardControls = document.getElementById("keyboardControls");
-		if (keyboardControls.style.fontWeight === "200") {
-			keyboardControls.style.fontWeight =  "400";
-		} else {
-			keyboardControls.style.fontWeight = "200";
-		}
-	};
-	const LeaveGame = () => {
-		// alert("2");
-		let leaveGame = document.getElementById("leaveGame");
-		if (leaveGame.style.fontWeight === "200") {
-			leaveGame.style.fontWeight =  "400";
-		} else {
-			leaveGame.style.fontWeight = "200";
-		}
-	};
-
-	const ControlPanelMenu = () => {
-		console.log("Turn on the menu");
-		let choices = document.getElementById("choiseMenu");
-		if (choices.style.display !== "none") {
-			choices.style.display = "none";
-		} else {
-			choices.style.display = "flex";
-		}
-
-	}
-	return (
-		<div style={{position: 'absolute', top: '50%', right: '5rem', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '2.5rem', zIndex:100}}>
-		{/* <div style={{position: 'absolute', top: '50%', right: '5rem', border: '1px solid red', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '2rem'}}> */}
-			<div id="choiseMenu" style={{ fontSize: '18px', display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '4rem', justifyContent: 'center'}}>
-			{/* <div style={{border: '1px solid green', fontSize: '18px', display: 'flex', flexDirection: 'column', gap: '1.5rem'}}> */}
-				<button id="changeStyle" className="controlPanelButton" onClick={ChangeStyle}>
-					Change Style
-				</button>
-				<button id="keyboardControls" className="controlPanelButton" style={{}} onClick={KeyboardControls}>
-					Keyboard Controls
-				</button>
-				<button id="leaveGame" className="controlPanelButton" style={{}} onClick={LeaveGame}>
-					Leave Game
-				</button>
-			</div>
-			<div style={{ width: '2.2rem', height: '4rem', border:'1.5px solid white', display: 'flex', justifyContent: 'center', borderRadius: '18%'}} onClick={ControlPanelMenu}>
-				<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '0.4rem'}}>
-					<div style={{width: '0.4rem', height: '0.4rem', backgroundColor: 'white', borderRadius: '100%'}}></div>
-					<div style={{width: '0.4rem', height: '0.4rem', backgroundColor: 'white', borderRadius: '100%'}}></div>
-					<div style={{width: '0.4rem', height: '0.4rem', backgroundColor: 'white', borderRadius: '100%'}}></div>
-				</div>
-			</div>
-		</div>
-
-	);
-}
-
 function PlayerPanel({scores}) {
 	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
 
 	return (
-		<div style={{ position: 'absolute', top: '5rem', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
+		<div style={{ position: 'absolute', top: '80px', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }} id="playerScoreID">
 			{player1DisplayName}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {player2DisplayName}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
 		</div>
 	);
@@ -377,9 +310,9 @@ function GameStartStylesMenu({gameFieldStyle, setGameStyle}) {
 function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 	return (
 		<div id="gameStartMenu">
-			<h2>Welcome to the game start menu</h2>
+			<div id="gameStartMenuWrapper">
+			<h2 id="gameMenuMainHeader">Welcome to the game start menu</h2>
 			<div id="gameMenuArea1">
-				<div id="gameMenuElementWrapper">
 					<div id="choiceArea">
 						<h2 className="gameStartMenuH2">Choices</h2>
 						<div className="choiceAreaSections">
@@ -408,9 +341,9 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 							</div>
 						</div>
 					</div>
-				</div>
 			</div>
 			<button className="btn button" onClick={onStartGame}>Start Game</button>
+			</div>
 		</div>
 	);
 }
@@ -443,6 +376,12 @@ function disableNavigationButtons() {
 	let navbar = document.getElementById("navbarID");
 
 	navbar.style.position      = 'absolute';
+
+	let	footer = document.getElementById("footerID");
+	footer.style.display = "none";
+
+	let	header =  document.getElementById("navbarID");
+	header.style.display = "none";
 }
 
 function Pong() {

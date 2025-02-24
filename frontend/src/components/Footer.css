@@ -1,14 +1,17 @@
 .footer {
+	display:			flex;
 	flex-direction:		row;
 	flex-wrap:			wrap;
-	gap: 				1rem;
+	gap: 				26px;
 	justify-content:	space-between;
 	align-items: 		center;
 	position:			relative;
-	margin-top:			2rem;
+	margin-top:			32px;
 	padding-left: 		20px;
 	padding-right: 		20px;
 	width:				100%;
+	/* border:				1px solid yellow; Debugging purposes */
+	font-size:			18px;
 }
 
 @media (max-width: 560px) {
@@ -28,7 +31,7 @@
 	overflow-wrap:	anywhere;
 	flex-direction: row;
 	flex-wrap:		wrap;
-	gap:			1rem;
+	gap:			20px;
 }
 
 .footer a {

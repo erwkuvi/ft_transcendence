@@ -9,6 +9,8 @@ import OTPModal from '../components/OTPModal';
 import { AccessibilityContext } from '../AccessibilityContext';
 import { AuthContext } from '../context/AuthContext';
 
+import useWindowDimensions from '../components/userWindowDimensions';
+
 const baseUrl = `http://localhost:8000/`;
 
 const LogIn = () => {
@@ -18,8 +20,8 @@ const LogIn = () => {
 
 	const navigate = useNavigate();
 	const [isSignUp, setIsSignUp] = useState(false);
-  const [showOTPModal, setShowOTPModal] = useState(false);
-  const [loginCredentials, setLoginCredentials] = useState(null);
+	const [showOTPModal, setShowOTPModal] = useState(false);
+	const [loginCredentials, setLoginCredentials] = useState(null);
 
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -27,6 +29,8 @@ const LogIn = () => {
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+	//For responsivness
+	const { width, height } = useWindowDimensions();
 
 	const handleCheckboxChange = () => {
 		setIsSignUp(prevState => !prevState);
@@ -130,82 +134,84 @@ const LogIn = () => {
 		}
 	};
 	return (
-		<div className="login" style={{ fontSize: `${fontSize}px` }}>
-			<h1 className="login-title pageHeadingH1Style1">
-				{t("LogInTitle")}
-			</h1>
-			<div className="loginCardHolderStyle"> {/*container login-box p-4 */}
-				<div className="login-toggle">
-					<input
-						id="status"
-						type="checkbox"
-						name="status"
-						checked={isSignUp}
-						onChange={handleCheckboxChange}
-					/>
-					<label htmlFor="status" className="status-label m-0">
-						<div className="status-switch m-0 p-0">
-							<div className="highlight"></div>
-							<span className="text unchecked">{t("LogInText")}</span>
-							<span className="text checked">{t("LogInText2")}</span>
-						</div>
-					</label>
-				</div>
-				<form onSubmit={handleSubmit} className="w-100">
-					<div className="login-field">
-						<p className="field-name">
-							{t("LogInText3")}
-							<input
-								className="inputFieldStyle1"
-								value={username}
-								onChange={(e) => setUsername(e.target.value)}
-								required
-							/>
-						</p>
-						{isSignUp && (
+		<div className="login" style={{ fontSize: `${fontSize}px`, height: `${height - 90}px` }}>
+			<div className="loginContentWrapper">
+				<h1 className="login-title pageHeadingH1Style1">
+					{t("LogInTitle")}
+				</h1>
+				<div className="loginCardHolderStyle"> {/*container login-box p-4 */}
+					<div className="login-toggle">
+						<input
+							id="status"
+							type="checkbox"
+							name="status"
+							checked={isSignUp}
+							onChange={handleCheckboxChange}
+						/>
+						<label htmlFor="status" className="status-label m-0">
+							<div className="status-switch m-0 p-0">
+								<div className="highlight"></div>
+								<span className="text unchecked">{t("LogInText")}</span>
+								<span className="text checked">{t("LogInText2")}</span>
+							</div>
+						</label>
+					</div>
+					<form onSubmit={handleSubmit} className="w-100">
+						<div className="login-field">
 							<p className="field-name">
-								{t("LogInText6")}
+								{t("LogInText3")}
 								<input
 									className="inputFieldStyle1"
-									type="email"
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
+									value={username}
+									onChange={(e) => setUsername(e.target.value)}
 									required
 								/>
 							</p>
-						)}
-						<p className="field-name">
-							{t("LogInText4")}
-							<input
-								className="inputFieldStyle1"
-								type="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								required
-							/>
-						</p>
-						{
-							isSignUp && (
+							{isSignUp && (
 								<p className="field-name">
-									{t("LogInText5")}
-									<input 
-										className="inputFieldStyle1" /*text-field form-control*/
-										type="password"
-										value={confirmPassword}
-										onChange={(e) => setConfirmPassword(e.target.value)}
+									{t("LogInText6")}
+									<input
+										className="inputFieldStyle1"
+										type="email"
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
 										required
 									/>
 								</p>
-								)
-						}
-						<div>
-							<button type="submit" className="buttonStyle1" onClick={() => console.log('Submit button clicked')}> {/*btn button login-button py-2 px-5*/}
-								{isSignUp ? t("LogInText2") : t("LogInText")}
-							</button>
-							<LogInButton/>
+							)}
+							<p className="field-name">
+								{t("LogInText4")}
+								<input
+									className="inputFieldStyle1"
+									type="password"
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+									required
+								/>
+							</p>
+							{
+								isSignUp && (
+									<p className="field-name">
+										{t("LogInText5")}
+										<input 
+											className="inputFieldStyle1" /*text-field form-control*/
+											type="password"
+											value={confirmPassword}
+											onChange={(e) => setConfirmPassword(e.target.value)}
+											required
+										/>
+									</p>
+									)
+							}
+							<div>
+								<button type="submit" className="buttonStyle1" onClick={() => console.log('Submit button clicked')}> {/*btn button login-button py-2 px-5*/}
+									{isSignUp ? t("LogInText2") : t("LogInText")}
+								</button>
+								<LogInButton/>
+							</div>
 						</div>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
       {/* Render the OTP Modal component when two-factor authentication is required */}
       {showOTPModal && (

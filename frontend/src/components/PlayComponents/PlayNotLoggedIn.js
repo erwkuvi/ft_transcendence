@@ -9,7 +9,7 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
 
     return (
         <div className="playNotLoggedInCardHolderPadding">
-            <div className="playNotLoggedInCardHolderStyle mt-3" style={scaleStyle}>
+            <div className="playNotLoggedInCardHolderStyle" style={scaleStyle}>
                     <h3 style={scaleStyle}>{t("PlayTitleNotLoggedIn")}</h3>
                     <p style={scaleStyle}>{t("PlayDescriptionNotLoggedIn")}</p>
                     <button 

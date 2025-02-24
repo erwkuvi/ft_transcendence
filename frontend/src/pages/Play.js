@@ -9,6 +9,7 @@ import GameScreen from '../components/PlayComponents/GameScreen';
 import TournamentScreen from '../components/PlayComponents/TournamentScreen';
 import { GameContext } from "../context/GameContext";
 import { getUserProfile } from '../services/getProfile';
+import	useWindowDimensions from '../components/userWindowDimensions'
 
 
 const Play = () => {
@@ -16,6 +17,7 @@ const Play = () => {
     const { fontSize } = useContext(AccessibilityContext);
     const { isReadyToPlay, startTheTournament } = useContext(GameContext);
 	const [ isInTournament, setIsInTournament] = useState(false);
+	const { width, height } = useWindowDimensions();
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -51,15 +53,15 @@ const Play = () => {
 		)
 	}else {
 		return (
-			<div className="d-flex flex-column playPageHolder" id="pageContentID">
-				<h1 className="pageHeadingH1Style1 typicalPadding mb-5" id="pongHeading">{t("PlayTitle")}</h1>
+			<div className="d-flex flex-column playPageHolder" id="pageContentID" style={{height: `${height - 90}px` }}>
+				<h1 className="pageHeadingH1Style1 typicalPadding" id="pongHeading">{t("PlayTitle")}</h1>
 				{isReadyToPlay ? (
 					<GameScreen scaleStyle={scaleStyle} />
 				) : !personLoggedIn ? (
 					<PlayNotLoggedIn scaleStyle={scaleStyle} />
 				) : (
 					<>
-						<div className="d-flex flex-row flex-wrap playPageCardWrapper m-0 mt-3">
+						<div className="d-flex flex-row flex-wrap playPageCardWrapper m-0">
 							<PlayMultiplayerMode scaleStyle={scaleStyle} />
 							<PlayTournamentSetup scaleStyle={scaleStyle} />
 						</div>

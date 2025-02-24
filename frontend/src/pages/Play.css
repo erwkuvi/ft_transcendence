@@ -1,12 +1,17 @@
 .typicalPadding {
 	padding-left:	20px !important;
 	padding-right:	20px !important;
+	text-align: center;
 }
 
 .playPageHolder {
+	min-height: fit-content;
+	width:			100%;
 	align-items:	center;
 	overflow-wrap:	anywhere;
-	width: 			100%;
+	justify-content:	center;
+	align-content:		center;
+	/* border:			1px solid red; */
 	/* padding-left:	20px !important;
 	padding-right:	20px !important; */
 }
@@ -15,6 +20,8 @@
 	width:				100%;
 	gap: 				4rem;
 	justify-content:	center;
+	padding-left:		20px;
+	padding-right:		20px;
 }
 
 .playCardHolderStyle {
@@ -26,6 +33,7 @@
 	width:			    auto;
 	min-height:			380px;
 	max-width:			fit-content;
+	width:				100%;
     height:				auto;
     padding:   			3rem;
     display:   			flex;
@@ -36,9 +44,23 @@
 	color:				var(--text-color);
 }
 
+@media (max-width: 300px) {
+	.playCardHolderStyle {
+		border-left: none;
+		border-right: none;
+		border-radius: 0;
+		width: 100% !important;
+	}
+
+	.playPageCardWrapper {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+
 
 .playCardHolderStyle h3 {
-	font-size:		18px !important;
+	font-size:		18px;
 	text-align:		center;
 	margin-bottom:	0;
 }

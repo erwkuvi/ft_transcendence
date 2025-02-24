@@ -9,7 +9,7 @@ const Footer = () => {
 	const {t} = useTranslation();
 
 	return (
-		<footer className="footer d-flex ">
+		<footer className="footer" id="footerID">
 				<div className="d-flex footerItemHolders">
 					<a	href="https://github.com/LukasKava/ft_transcendence"
 						target="_blank" 

@@ -19,7 +19,7 @@
     width: auto;
     padding: 2px;
 	transition: all 0.2s ease-in-out;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 .play-not-logged-in .play-content {
@@ -28,7 +28,7 @@
 }
 
 .startGameBtn {
-    border: 1px solid red;
+    /* border: 1px solid red; */
     background-color: white;
 }
 

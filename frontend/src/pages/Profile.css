@@ -100,6 +100,10 @@
 /*IDS	==========================================================================*/
 #profilePageHolder {
 	overflow-wrap:	anywhere;
+	/* border: 1px solid red; Debugging purposes */
+	display: flex;
+	justify-content: center;
+	min-height: fit-content;
 }
 
 #profileStatsInfoHolder {
