@@ -3,6 +3,8 @@ import { getAllPlayers } from '../../services/getAllUsers';
 import { useTranslation } from 'react-i18next';
 
 const UserList = ({ friends }) => {
+	if (!friends || friends.length === 0 ) return null;
+
 	const [onlineStatuses, setOnlineStatuses] = useState({});
 	const { t } = useTranslation();
 	
@@ -26,13 +28,6 @@ const UserList = ({ friends }) => {
 
 	return (
 		<>
-			<button 
-				onMouseDown={handleCheckAllStatuses} 
-				onMouseUp={handleRelease}
-				onMouseLeave={handleRelease}
-			>
-				{t("Check Online Status")}
-			</button>
 
 			{friends.map(user => (
 				<div key={user.id} >
@@ -48,6 +43,14 @@ const UserList = ({ friends }) => {
 					)}
 				</div>
 			))}
+			<button 
+				className="buttonStyle1"
+				onMouseDown={handleCheckAllStatuses} 
+				onMouseUp={handleRelease}
+				onMouseLeave={handleRelease}
+			>
+				{t("Press To Check Online Statuses Of Your Friends")}
+			</button>
 		</>
 	);
 };
