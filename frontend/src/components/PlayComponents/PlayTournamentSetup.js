@@ -18,14 +18,14 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 	const [error, setError] = useState("");
 	const userLoggedInId = localStorage.getItem('user_id');
 	const userLoggedInDisplayName = localStorage.getItem('display_name');
-	console.log("print the players", tournamentPlayers);
-	console.log(tournamentPlayers.map(player => player.id));
+	// console.log("print the players", tournamentPlayers);
+	// console.log(tournamentPlayers.map(player => player.id));
 	
 
 	useEffect(() => {
         if (shouldReload && tournamentMatchID) {
             // Reset the flag first to prevent infinite reloads
-			console.log("Is match id even saved: ", tournamentMatchID)
+			// console.log("Is match id even saved: ", tournamentMatchID)
             setShouldReload(false);
             // Force a page refresh after the state has been updated
             window.location.reload();
@@ -61,10 +61,10 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				return;
 			}
 	
-			console.log("Tournament Data:", data);
+			// console.log("Tournament Data:", data);
 	
 			if (Array.isArray(data) && data.length > 0) {
-				console.log("Tournament created successfully:", data);
+				// console.log("Tournament created successfully:", data);
 				const tournamentId = data[0].tournament;
 				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);

@@ -21,7 +21,7 @@ const Play = () => {
 	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	
 	const personLoggedIn = localStorage.getItem('user_id');
-	console.log("person logged in is: ", personLoggedIn);
+	// console.log("person logged in is: ", personLoggedIn);
 
 	const scaleStyle = {
 		fontSize: `${fontSize}px`,
@@ -35,7 +35,7 @@ const Play = () => {
                 setIsInTournament(data.in_tournament);
 				setIsTheHost(data.is_host);
             } catch (error) {
-				console.log("Failed to get user profile", error);
+				console.error("Failed to get user profile", error);
             }
         };
 		if (personLoggedIn)
@@ -50,7 +50,7 @@ const Play = () => {
 		const userId = localStorage.getItem("user_id");
 		try {
 			await exitTournament(userId);
-			console.log("Successfully exited tournament");
+			// console.log("Successfully exited tournament");
 			setShowConfirmModal(false);
 			window.location.reload(); // Or another way to update state
 		} catch (error) {

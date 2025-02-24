@@ -12,7 +12,7 @@ export const getAllPlayers = async () => {
         });
         return request.data;
     } catch (error) {
-        console.log("Error getting players:", error);
+        console.error("Error getting players:", error);
         throw error; 
     }
 };

@@ -9,7 +9,7 @@ export const exitTournament = async (userId) => {
 
         if (!response.ok) throw new Error("Failed to exit tournament");
 
-        console.log("Successfully exited tournament");
+        // console.log("Successfully exited tournament");
     } catch (error) {
         console.error("Error exiting tournament:", error);
         throw error;  

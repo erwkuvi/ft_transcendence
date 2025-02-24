@@ -4,7 +4,7 @@ const baseUrl = `http://localhost:8000/user_management/players/me/`;
 export const getUserProfile = async () => {
 	const token = localStorage.getItem('access_token');
 	if (!token) {
-		console.log("No access token found. Redirecting to login.");
+		// console.log("No access token found. Redirecting to login.");
 		throw new Error('No access token');
 	}
 
@@ -18,10 +18,10 @@ export const getUserProfile = async () => {
         return request.data;
     } catch (error) {
 		if (error.response && error.response.status === 401) {
-            console.log("Unauthorized access, redirecting to login...");
+            // console.log("Unauthorized access, redirecting to login...");
             throw new Error('Unauthorized access');
         }
-        console.log('Error fetching profile:', error.response?.data || error.message);
+        console.error('Error fetching profile:', error.response?.data || error.message);
 		throw error;  
     }
 };

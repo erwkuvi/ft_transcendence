@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 				if (userData.mode !== undefined) setModeDarkLight(userData.mode);
             } catch (error) {
 				setIsLoggedIn(false);
-				console.log("Error:", error)
+				console.error("Error:", error)
 				const status = error?.response?.status;
                 if (status) {
 					handleError(status);

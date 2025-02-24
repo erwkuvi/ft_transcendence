@@ -65,7 +65,7 @@ function Ball({player1Ref, player2Ref, handleScore}) {
 		if (BALL_SPEED <= MAX_BALL_SPEED) {
 			BALL_SPEED += 0.01;
 		}
-		console.log("BALL SPEED NORMALLY: ", BALL_SPEED);
+		// console.log("BALL SPEED NORMALLY: ", BALL_SPEED);
 	};
 
 
@@ -273,7 +273,7 @@ function ControlPanel() {
 	};
 
 	const ControlPanelMenu = () => {
-		console.log("Turn on the menu");
+		// console.log("Turn on the menu");
 		let choices = document.getElementById("choiseMenu");
 		if (choices.style.display !== "none") {
 			choices.style.display = "none";
@@ -439,7 +439,7 @@ function Pong() {
 	const [winner, setWinner] = useState(null);
 	BALL_SPEED = STARTING_BALL_SPEED;
 
-console.log("match Id rn: ", iDTournamentGame);
+// console.log("match Id rn: ", iDTournamentGame);
 	const [scores, setScores] = useState({
 		p1_f_score: 0,
 		p2_f_score: 0,
@@ -490,7 +490,7 @@ console.log("match Id rn: ", iDTournamentGame);
             setTimeout(() => setGameStarted(true), 500); // Wait 0.5s before starting game
         } else {
             setGameStarted(true);
-			console.log("ERROR: in handleStartGame function !");
+			// console.log("ERROR: in handleStartGame function !");
         }
     };
 
@@ -498,7 +498,7 @@ console.log("match Id rn: ", iDTournamentGame);
 		return <WinningScreen player={winner} score1={scores.p1_f_score} score2={scores.p2_f_score}/>
 	}
 	if (gameStarted === false) {
-		console.log("Start of the game ball speed: ", BALL_SPEED);
+		// console.log("Start of the game ball speed: ", BALL_SPEED);
 		return (<div id="pong-container" style={{ width: '100vw', height: '100vh', /*marginTop: '20px'*/}}>
 			<GameStartMenu onStartGame={handleStartGame} gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 		</div>);

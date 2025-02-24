@@ -41,7 +41,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
             }
 
             const data = await response.json();
-            console.log('Success:', data);
+            // console.log('Success:', data);
             localStorage.setItem('qr_code_url', data.qr_code_url);
             onSubmit(password);
 

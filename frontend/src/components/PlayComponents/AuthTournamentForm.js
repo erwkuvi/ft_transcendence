@@ -34,7 +34,7 @@ const AuthTournamentForm = ({ scaleStyle }) => {
 		}
 
 		const storedError = localStorage.getItem('urlTournamentError');
-		console.log("stored reero: ", storedError)
+		// console.log("stored reero: ", storedError)
 
         if (storedError) {
 			if (storedError === 'User not found'){

@@ -47,7 +47,7 @@ export const OAuth42CallbackHandler = () => {
 		const personsLoggedInDisplayName = localStorage.getItem('display_name');
 
 
-		console.log("userId", urlId, "displayname", urlDisplayName, "error", urlError)
+		// console.log("userId", urlId, "displayname", urlDisplayName, "error", urlError)
 		// Early return if we don't have the necessary data
 		if (!personsLoggedInId || !personsLoggedInDisplayName){
 			handleError('User session not found');

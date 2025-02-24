@@ -34,7 +34,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 			try {
 				const players = await getAllPlayers();
 
-				console.log("Players data", players);
+				// console.log("Players data", players);
 
 				setPlayersData(players)
 				const loggedInUserId = parseInt(localStorage.getItem("user_id"), 10);
@@ -44,7 +44,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 					setTournamentMatchID(tournamentId);
 				  }
 			} catch (error){
-				console.log("Failed to get players of the tournament", error);
+				console.error("Failed to get players of the tournament", error);
 			}
 		}
 		fetchPlayersData();
@@ -73,7 +73,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 	}, [playersData]);
 
 	const tournamentData = useMemo(() => {
-		console.log("Computing tournamentData from fetchedTournamentData:", fetchedTournamentData);
+		// console.log("Computing tournamentData from fetchedTournamentData:", fetchedTournamentData);
 		
 		let players = new Set();  
 		let matches = [];         
@@ -101,7 +101,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 			matchWinners,                 
 		};
 	
-		console.log("Computed tournamentData:", result);
+		// console.log("Computed tournamentData:", result);
 		return result;
 	}, [fetchedTournamentData]);	
 	
@@ -110,8 +110,8 @@ const TournamentScreen = ({ scaleStyle }) => {
     };
 
 	const handleStartMatch = ( player1DisplayName, player1Id, player2DisplayName, player2Id, matchIndex, matchId) => {
-		console.log("Starting match between:", player1DisplayName, player1Id, "and", player2DisplayName, player2Id);
-		console.log("Index of match", matchIndex, "and id of match", matchId)
+		// console.log("Starting match between:", player1DisplayName, player1Id, "and", player2DisplayName, player2Id);
+		// console.log("Index of match", matchIndex, "and id of match", matchId)
 		setPlayer1DisplayName(player1DisplayName);
 		setPlayer1Id(player1Id);
 		setPlayer2DisplayName(player2DisplayName);

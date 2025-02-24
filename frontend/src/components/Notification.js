@@ -13,7 +13,7 @@ const [isAuthenticated, setIsAuthenticated] = useState(false);
 		// Check if the user is authenticated
 		if (user_id) {
 			setIsAuthenticated(true);
-			console.log('user_id found: ', user_id);
+			// console.log('user_id found: ', user_id);
 		} else {
 			setIsAuthenticated(false);
 		}

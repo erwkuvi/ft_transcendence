@@ -35,11 +35,11 @@ export const postRegularMatchResults = async (matchData) => {
 };
 
 export const postMatchResults = async (winnerId, scores, iDTournamentGame, player1Id, player2Id) => {
-	console.log('Saving match results...');
-    console.log({ winnerId, scores, iDTournamentGame, player1Id, player2Id });
+	// console.log('Saving match results...');
+    // console.log({ winnerId, scores, iDTournamentGame, player1Id, player2Id });
     const isGuestMode = !player1Id || !player2Id;
     if (isGuestMode) {
-        console.log("Guest mode, skipping posting match results.");
+        // console.log("Guest mode, skipping posting match results.");
         return;
     }
 

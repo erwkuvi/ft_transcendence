@@ -59,7 +59,7 @@ const LogIn = () => {
       const { access, refresh } = response.data;
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
-      console.log('Log in successful:', localStorage);
+    //   console.log('Log in successful:', localStorage);
       // Mark OTP as successfully submitted
       setShowOTPModal(false);
 			// Update AuthContext state
@@ -69,7 +69,7 @@ const LogIn = () => {
 			navigate('/profile');
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      console.log('Error verifying OTP:', error);
+    //   console.log('Error verifying OTP:', error);
 			setOtp('');
       //alert('Invalid OTP code. Please try again.');
     }
@@ -82,14 +82,14 @@ const LogIn = () => {
 		const login_url = baseUrl + 'mfa/' //api for user login
 
 		//debugging purposes begin
-		console.log('Form submitted with values:');
-		console.log('Username:', username);
-		console.log('Password:', password);
+		// console.log('Form submitted with values:');
+		// console.log('Username:', username);
+		// console.log('Password:', password);
 		if (isSignUp) {
-			console.log('Email:', email);
-			console.log('First Name:', firstName);
-			console.log('Last Name:', lastName);
-			console.log('Confirm Password:', confirmPassword);
+			// console.log('Email:', email);
+			// console.log('First Name:', firstName);
+			// console.log('Last Name:', lastName);
+			// console.log('Confirm Password:', confirmPassword);
 		}
 		//debugging purposes end
 
@@ -101,7 +101,7 @@ const LogIn = () => {
 					email,
 					password,
 				});
-				console.log('Sign up successful:', response.data);
+				// console.log('Sign up successful:', response.data);
 				setIsSignUp(false);
 			} catch (error) {
 				if (error.response) {
@@ -128,7 +128,7 @@ const LogIn = () => {
 					localStorage.setItem('access_token', access);
 					localStorage.setItem('refresh_token', refresh);
 
-					console.log('Log in successful:', localStorage);
+					// console.log('Log in successful:', localStorage);
 
 							// Update AuthContext state
 							setIsLoggedIn(true);
@@ -224,7 +224,7 @@ const LogIn = () => {
 								)
 						}
 						<div>
-							<button type="submit" className="buttonStyle1" onClick={() => console.log('Submit button clicked')}> {/*btn button login-button py-2 px-5*/}
+							<button type="submit" className="buttonStyle1" > {/*btn button login-button py-2 px-5*/}
 								{isSignUp ? t("LogInText2") : t("LogInText")}
 							</button>
 							<LogInButton/>

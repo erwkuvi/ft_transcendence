@@ -104,12 +104,12 @@ const Profile = () => {
 
 		if (!newDisplayName || newDisplayName === profile.display_name) {
 			// If the display name is the same as the current one or is empty, avoid making unnecessary updates.
-			console.log("No change in display name");
+			// console.log("No change in display name");
 			return;
 		}
 		
 		if (newDisplayName.length < 3) {
-			console.log("Display name is too short");
+			// console.log("Display name is too short");
 			alert(t('Display name must be at least 3 characters long.'));
 			return;
 		}
@@ -158,11 +158,11 @@ const Profile = () => {
 	// Function to handle successful password authentication
 	const handlePasswordSuccess = () => {
 
-			console.log('Password successfully authenticated (handlePasswordSuccess)');
+			// console.log('Password successfully authenticated (handlePasswordSuccess)');
 
 			setPasswordModalOpen(false);
 			setOtpActive(true); 
-			console.log('after closing the passwordmodal.');
+			// console.log('after closing the passwordmodal.');
 
 			// Optionally, you can call handleToggle2FA here if needed
 			//handleToggle2FA();
@@ -181,7 +181,7 @@ const Profile = () => {
 	// Makes a PATCH request to update the otp_active status
 	// Updates local state to reflect the change
 const handleToggle2FA = async (password = null) => {
-	console.log('in active to false.');
+	// console.log('in active to false.');
 	setIsSaving2FA(true);
 	const userId = localStorage.getItem('user_id');
 	const token = localStorage.getItem('access_token');
@@ -199,7 +199,7 @@ const handleToggle2FA = async (password = null) => {
 				}
 			}
 		);
-		console.log('Response:', response.data);
+		// console.log('Response:', response.data);
 		alert(t('2FA successfully deactivated'))
 
 		// Update local state with new 2FA status

@@ -12,7 +12,7 @@ export const getInfoTournament = async () => {
         });
         return request.data;
     } catch (error) {
-        console.log("Error getting tournament info:", error);
+        console.error("Error getting tournament info:", error);
         throw error; 
     }
 };

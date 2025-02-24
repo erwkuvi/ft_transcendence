@@ -33,7 +33,7 @@ const Otp = () => {
 				}
 			);
 			// Handle successful response
-			console.log('Response:', response.data);
+			// console.log('Response:', response.data);
 			// Remove qr_code_url from local storage
 			localStorage.removeItem('qr_code_url');
 			alert(t("2FA successfully activated"));
