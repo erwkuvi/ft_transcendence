@@ -31,7 +31,7 @@ let		BALL_SPEED          = 0.12;
 const	BALL_RADIUS         = 0.7;
 
 const 	MAX_SCORE_COUNT     = 3;
-const 	MAX_SET_COUNT       = 0; //dev
+const 	MAX_SET_COUNT       = 4; //dev
 
 
 function Ball({player1Ref, player2Ref, handleScore}) {

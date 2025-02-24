@@ -38,8 +38,8 @@ const Profile = () => {
 	// State for password confirmation modal
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
 	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
-	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
-    const { isLoggedIn } = useContext(AuthContext);
+	const BASE_URL = process.env.REACT_APP_BACKEND_URL; // Base URL for the backend
+	const { isLoggedIn } = useContext(AuthContext);
 
 	const [status, setStatus] = useState(''); //for online-status
   const user_id = localStorage.getItem('user_id');

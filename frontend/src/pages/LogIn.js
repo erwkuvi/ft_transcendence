@@ -10,7 +10,8 @@ import { AccessibilityContext } from '../AccessibilityContext';
 import { AuthContext } from '../context/AuthContext';
 import { useAuth } from '../hooks/useAuth'
 
-const baseUrl = `http://localhost:8000/`;
+//const baseUrl = `http://localhost:8000/`;
+const baseUrl = `https://localhost/`;
 
 const LogIn = () => {
 	const {t} = useTranslation();

@@ -19,6 +19,7 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateMod
 from .serializers import UserSerializer, PlayerProfileSerializer, MatchSerializer, UserCreateSerializer, OTPLoginSerializer, OTPActivateSerializer, OTPActiveToTrueSerializer, OTPDeactivateSerializer, SimpleLoginSerializer, TournamentSerializer, ExitTournamentSerializer, MatchTournamentSerializer, ScoreRetrieveSerializer, ExitMultiplayerSerializer, TournamentIdSerializer
 from .models import User, PlayerProfile, Match, Tournament
 from django.http import HttpResponseRedirect
+from django.conf import settings  # Ensure this import is correct
 
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
@@ -248,7 +249,7 @@ class OAuth42CallbackMatchView(views.APIView):
             code = request.query_params.get('code')
             state = request.query_params.get('state')
             session_state = request.session.get('oauth_state')
-            redirect_uri = request.query_params.get('redirect_uri', 'http://localhost:8081')
+            redirect_uri = request.query_params.get('redirect_uri', 'FRONTEND_URL')
             
             if not code or not state:
                 raise AuthenticationFailed("Missing code or state in the callback response.")
@@ -306,7 +307,7 @@ class OAuth42CallbackMatchView(views.APIView):
 
         except Exception as e:
             error_message = str(e)
-            frontend_url = "http://localhost:8081/play"
+            frontend_url = settings.FRONTEND_URL + "/play"
     
             return HttpResponseRedirect(f"{frontend_url}?error={error_message}")
 
@@ -463,7 +464,7 @@ class OAuth42CallbackView(views.APIView):
             'refresh': str(refresh)
         }
         frontend_url = (
-                f"http://localhost:8081/login/callback?"
+                f"{settings.FRONTEND_URL}/login/callback?"
                 f"access={tokens['access']}&"
                 f"refresh={tokens['refresh']}"
         )

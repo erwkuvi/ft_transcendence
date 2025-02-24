@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import './Notification.css'
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const Notification = ({ userIdChanged, onConfirm, onReject }) => {
 const [notification, setNotification] = useState(null);
 const [socket, setSocket] = useState(null);
@@ -18,11 +19,10 @@ const [isAuthenticated, setIsAuthenticated] = useState(false);
 			setIsAuthenticated(false);
 		}
 	}, [userIdChanged]);
-
 	useEffect(() => {
 		if (isAuthenticated) {
 			const user_id = localStorage.getItem('user_id');
-			const ws = new WebSocket(`ws://localhost:8000/ws/notifications/?user_id=${user_id}`);
+			const ws = new WebSocket(`ws://${backendUrl}/ws/notifications/?user_id=${user_id}`);
 			ws.onopen = () => console.log('WebSocket for game connection established');
 
 			setSocket(ws);

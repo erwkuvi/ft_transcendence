@@ -36,6 +36,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
 # SECRET_KEY = os.environ['SECRET_KEY', 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM']
 HOST_IP = 'localhost'
+FRONTEND_URL = env('FRONTEND_URL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -120,9 +121,11 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
 	"http://localhost:80",
 	"http://127.0.0.1:80",
-	"http://localhost:8081",
+    env('FRONTEND_URL'),
 	"http://127.0.0.1:8081",
 ]
+
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -258,7 +261,6 @@ LOGGING = {
     },
 }
 
-FRONTEND_URL = 'http://localhost:8081'
 
 # ----------------- OAUTH 2.0 - 42 INTRA SETTINGS -----------------:
 # 42 Intra auth URL
@@ -272,7 +274,7 @@ API_42_REDIRECT_URI_MATCH = f'http://{HOST_IP}:8000/42-callback-match/'
 # 42 Intra entrypoint URL
 API_42_INTRA_ENTRYPOINT_URL = 'https://api.intra.42.fr/v2/me'
 # 42 Intra frontend callback URL
-API_42_FRONTEND_CALLBACK_URL = f'http://{HOST_IP}:8081/auth-success'
+API_42_FRONTEND_CALLBACK_URL = f'http://{FRONTEND_URL}/auth-success'
 # one-time code lifetime in seconds
 EXCHANGE_CODE_TIMEOUT = 30
 # API CLIENT ID

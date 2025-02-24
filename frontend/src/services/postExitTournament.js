@@ -1,7 +1,9 @@
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 export const exitTournament = async (userId) => {
     try {
-        const response = await fetch("http://localhost:8000/user_management/exit-tournament/", {
+				const response = await fetch(`${backendUrl}/user_management/exit-tournament/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user_id: userId }),  
