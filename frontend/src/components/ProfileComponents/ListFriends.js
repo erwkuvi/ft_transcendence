@@ -1,39 +1,51 @@
+import { useState } from 'react';
 import { getAllPlayers } from '../../services/getAllUsers';
+import { useTranslation } from 'react-i18next';
 
 const UserList = ({ friends }) => {
-	const handlePress = (user) => {
-		console.log(`Button pressed for ${user.username}`);
-		const fetchPlayersstatus = async() => {
-			try{
-				const userId = user.id
-				const allPlayers = await getAllPlayers()
-				const friend_id = allPlayers.find(player => player.user_id === userId);
-				console.log('test', friend_id.online)
-				console.log('testtttttttt', allPlayers)
-			}
-			catch{
-
-			}
+	const [onlineStatuses, setOnlineStatuses] = useState({});
+	const { t } = useTranslation();
+	
+	const handleCheckAllStatuses = async () => {
+		try {
+			const allPlayers = await getAllPlayers();
+			const statuses = friends.reduce((acc, user) => {
+				const friend = allPlayers.find(player => player.user_id === user.id);
+				acc[user.id] = friend ? friend.online : false;
+				return acc;
+			}, {});
+			setOnlineStatuses(statuses);
+		} catch (error) {
+			console.error('Error fetching all statuses:', error);
 		}
-		fetchPlayersstatus()
 	};
 
-	//	const handleRelease = (user) => {
-	//		console.log(`Button released for ${user.username}`);
-	//		// Add your logic for onRelease here
-	//	};
+	const handleRelease = () => {
+		setOnlineStatuses({});
+	};
 
 	return (
 		<>
+			<button 
+				onMouseDown={handleCheckAllStatuses} 
+				onMouseUp={handleRelease}
+				onMouseLeave={handleRelease}
+			>
+				{t("Check Online Status")}
+			</button>
+
 			{friends.map(user => (
-				<div key={user.id}>
+				<div key={user.id} >
 					{user.username}
-					<button
-						onMouseDown={() => handlePress(user)}
-						//onMouseUp={() => handleRelease(user)}
-					>
-						Action
-					</button>
+					{onlineStatuses[user.id] && (
+						<span style={{
+							width: '10px',
+							height: '10px',
+							backgroundColor: 'green',
+							borderRadius: '50%',
+							display: 'inline-block'
+						}}></span>
+					)}
 				</div>
 			))}
 		</>
@@ -41,3 +53,4 @@ const UserList = ({ friends }) => {
 };
 
 export default UserList;
+
