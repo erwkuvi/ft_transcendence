@@ -11,6 +11,7 @@ import { GameContext } from "../context/GameContext";
 import { getUserProfile } from '../services/getProfile';
 import LeaveModal from '../components/PlayComponents/LeaveModal';
 import { exitTournament } from '../services/postExitTournament';  
+import { AuthContext } from '../context/AuthContext';
 
 const Play = () => {
 	const { t } = useTranslation();
@@ -19,14 +20,25 @@ const Play = () => {
 	const [ isInTournament, setIsInTournament] = useState(false);
 	const [ isTheHost, setIsTheHost ] = useState(false);
 	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
-	
+	const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 	const personLoggedIn = localStorage.getItem('user_id');
-	// console.log("person logged in is: ", personLoggedIn);
 
 	const scaleStyle = {
 		fontSize: `${fontSize}px`,
 		lineHeight: '1.5'
 	};
+
+	useEffect(() => {
+        const checkLoginStatus = () => {
+            const storedUser = localStorage.getItem('access_token'); 
+            setIsLoggedIn(!!storedUser); // Update AuthContext when localStorage changes
+        };
+
+        window.addEventListener('storage', checkLoginStatus);
+        return () => {
+            window.removeEventListener('storage', checkLoginStatus);
+        };
+    }, [setIsLoggedIn]);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -40,7 +52,7 @@ const Play = () => {
         };
 		if (personLoggedIn)
         	fetchProfile();
-    }, [gameTournamentStarted]);
+    }, [isLoggedIn, gameTournamentStarted]);
 	
 	const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
@@ -58,13 +70,6 @@ const Play = () => {
 		}
 	};
 	
-
-	// console.log("in tournament", isInTournament)
-	// console.log("is the host", isTheHost)
-
-
-
-
 	if (isTheHost){
 		return (
 			<>

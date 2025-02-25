@@ -102,7 +102,7 @@ const Profile = () => {
 
 		// Create a new WebSocket instance
 		const ws = new WebSocket(wsUrl);
-		ws.onopen = () => console.log('-----------------------------------------WebSocket for user-status connection established');
+		// ws.onopen = () => console.log('-----------------------------------------WebSocket for user-status connection established');
 
 		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data);
