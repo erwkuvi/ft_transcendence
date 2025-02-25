@@ -1,4 +1,5 @@
 # serializers.py
+import re
 import math
 import random
 import datetime
@@ -60,10 +61,17 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "qr_code": {"read_only": True},
         }
 
+    def validate_username(self, value):
+        if not re.match(r'^[a-zA-Z0-9._-]{3,30}$', value):
+            raise serializers.ValidationError("Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods.")
+        
+        return value
+
     def validate(self, attrs: dict):
         email = attrs.get("email").lower().strip()
         if User.objects.filter(email__iexact=email).exists():
             raise serializers.ValidationError({"email": "Email already exists!"})
+        self.validate_username(attrs.get("username"))
         return super().validate(attrs)
 
     def create(self, validated_data: dict):
@@ -111,7 +119,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = ['user_id', 'username', 'display_name', 'avatar',
-                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode', 'tournament'] # 'online_status'
+                  'wins', 'losses', 'profile_id', 'friends', 'matches_id', 'email', 'otp_active', 'auth_provider', 'in_tournament', 'curr_match', 'is_host', 'language', 'mode', 'tournament', 'online'] # 'online_status'
         read_only_fields = ['user_id', 'username', 'profile_id', 'email', 'auth_provider']
 
     def update(self, instance, validated_data):

@@ -33,23 +33,6 @@ export const AuthProvider = ({ children }) => {
        		fetchUserData();
     }, [isLoggedIn, handleError]);
 
-    // useEffect(() => {
-    //     const handleStorageChange = () => {
-    //         setIsLoggedIn(!!localStorage.getItem('access_token'));
-    //     };
-
-    //     window.addEventListener('storage', handleStorageChange);
-
-    //     return () => {
-    //         window.removeEventListener('storage', handleStorageChange);
-    //     };
-    // }, []);
-
-	// if (!isLoggedIn) {
-    //     // If user is not logged in, redirect to login
-    //     return <Navigate to="/login" replace />;
-    // }
-
     return (
         <AuthContext.Provider value={{	isLoggedIn, 
 										setIsLoggedIn, 
