@@ -80,7 +80,9 @@ const UserCard = ({ user, personLoggedIn, handleInvite, refreshKey }) => {
 	  <div>
 		<div>{user.username} - {t("CurrentStatus")} {getStatusLabel()}</div>
             {userState.status === 'blocked' ? (
-                <div>{t("blockedMessage")}</div>
+                <div aria-live="polite" role="status">
+					{t("blockedMessage")}
+				</div>
             ) : (
                 <select
                     value={selectedOption}
@@ -88,7 +90,9 @@ const UserCard = ({ user, personLoggedIn, handleInvite, refreshKey }) => {
                         const option = e.target.value;
                         setSelectedOption(option);
                         handleOptionChange(option);
-                    }}>
+                    }}
+					aria-label={t("SelectOption")}
+				>
                     <option value="" disabled>{t("SelectOption")}</option>
                     {getOptions().map((option) => (
                         <option key={option.key} value={option.key}>

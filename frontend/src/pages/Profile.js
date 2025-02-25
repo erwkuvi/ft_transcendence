@@ -35,14 +35,12 @@ const Profile = () => {
 	const [newDisplayName, setNewDisplayName] = useState('');
 
 	const [isSaving2FA, setIsSaving2FA] = useState(false);
-	// State for password confirmation modal
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
-	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
-	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
+	const [isOtpActive, setOtpActive] = useState(false); 
+	const BASE_URL = 'http://localhost:8000'; 
     const { isLoggedIn } = useContext(AuthContext);
-
-	const [status, setStatus] = useState(''); //for online-status
-  const user_id = localStorage.getItem('user_id');
+	const [status, setStatus] = useState(''); 
+  	const user_id = localStorage.getItem('user_id');
 
 
 	useEffect(() => {
@@ -269,7 +267,6 @@ const handleToggle2FA = async (password = null) => {
 			<div className='container-fluid cards mt-4' style={{ fontSize: `${fontSize}px` }}>
 				<div className='card basic user-info ' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
-					{/* Avatar section with edit functionality */}
 					<div className="relative inline-block">
 						<img 
 							src={profile.avatar} 
@@ -284,13 +281,14 @@ const handleToggle2FA = async (password = null) => {
 							accept="image/*"
 							className="sr-only"
 							style={{ display: 'none' }}
+							aria-label={t("Upload avatar image")}
 						/>
 						{/* Edit avatar button */}
 						<button
 							onClick={handleEditAvatar}
 							className="edit-avatar-button"
 							title="Edit avatar"
-							aria-label="Edit avatar"
+							aria-label={t("Edit avatar")}
 						>
 							<span className="edit-pic">📷</span>
 						</button>
@@ -308,12 +306,15 @@ const handleToggle2FA = async (password = null) => {
 									value={newDisplayName}
 									onChange={(e) => setNewDisplayName(e.target.value)}
 									className="change-display-name-input"
+									aria-label={t("Edit display name")}
+
 								/>
 								{/* Save button with check symbol */}
 								<>
 									<button
 										onClick={handleSaveDisplayName}
 										className="yes-no-button"
+										aria-label={t("Save display name")}
 										title="Save"
 									>
 										<span className="text-green-600">✓</span>
@@ -322,6 +323,7 @@ const handleToggle2FA = async (password = null) => {
 									<button
 										onClick={handleCancelEdit}
 										className="yes-no-button"
+										aria-label={t("Cancel display name edit")}
 										title="Cancel"
 									>
 										<span className="text-red-600">✕</span>
@@ -337,6 +339,7 @@ const handleToggle2FA = async (password = null) => {
 									onClick={handleEditDisplayName}
 									className="edit-display-name-button"
 									title="Edit display name"
+									aria-label={t("Edit display name")}
 								>
 									<span className="write-symbol">✎</span>
 								</button>
@@ -353,6 +356,7 @@ const handleToggle2FA = async (password = null) => {
 									onClick={handleInitiateToggle2FA}
 									disabled={isSaving2FA}
 									className="tfabutton btn button"
+									aria-label={profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
 							>
 									{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
 							</button>
@@ -374,7 +378,13 @@ const handleToggle2FA = async (password = null) => {
 				<div className='card basic' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
-					<Filter className="inputFieldStyle1" placeholder={t("Search for users")} type="text" value={query} onChange={handleSearch}/>
+					<Filter className="inputFieldStyle1" 
+							placeholder={t("Search for users")} 
+							type="text" 
+							value={query} 
+							onChange={handleSearch}
+							aria-label={t("Search for users")}
+					/>
 					<ListUsers	filterUsers={filterUsers}
 								setAllUsers={setAllUsers}
 								setFilterUsers={setFilterUsers}

@@ -26,6 +26,7 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
 									setPlayer2DisplayName("Player 2");
 									setIsReadyToPlay("playNotLoggedIn");
 								}}
+								aria-label={t("Start game button for not logged in users")}
                             >
                                 {t("PlayNotLoggedIn")}
                             </button>

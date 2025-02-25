@@ -1,9 +1,7 @@
 import React, { createContext, useState, useContext} from "react";
 export const GameContext = createContext();
-// import { AuthContext } from './AuthContext';
 
 export const GameProvider = ({ children }) => {
-	// const { personLoggedIn } = useContext(AuthContext);
 	const [isSubmitting, setIsSubmitting] = useState(false);
     const [isReadyToPlay, setIsReadyToPlay] = useState(null);
     const [isOpponentAuthenticated, setIsOpponentAuthenticated] = useState(false);

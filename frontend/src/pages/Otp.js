@@ -8,8 +8,8 @@ const Otp = () => {
 	const {t} = useTranslation();
 	const navigate = useNavigate();
 	const qr_code_url = localStorage.getItem('qr_code_url');
-	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
-	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; // Construct the image URL
+	const BASE_URL = 'http://localhost:8000'; 
+	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; 
 
 	const [otpCode, setOtpCode] = useState('');
 
@@ -32,21 +32,17 @@ const Otp = () => {
 					}
 				}
 			);
-			// Handle successful response
-			// console.log('Response:', response.data);
-			// Remove qr_code_url from local storage
 			localStorage.removeItem('qr_code_url');
 			alert(t("2FA successfully activated"));
 			navigate('/profile');
 		} catch (error) {
 			console.error('Error:', error);
-			// Handle error response
 		}
 	};
 
 	return (
 		<div className="page-content">
-			<h1>{t("2FA Activation")}</h1>
+			<h1 aria-live="polite">{t("2FA Activation")}</h1>
 			<div className='container-fluid cards mt-4' >
 				<div className='card basic' style={{ height: '800px'}}>
 					<div className="mt-4">
@@ -62,7 +58,10 @@ const Otp = () => {
 							<li>{t("Open the application and scan the barcode:")}
 								<ul>
 									<li>
-										<img src={qrCodeImageUrl} alt="QR Code" style={{ maxWidth: '200px', minWidth: '120px' }} />
+										<img 	src={qrCodeImageUrl} 
+												alt={t("QR Code for Mobile Authenticator Setup")} 
+												style={{ maxWidth: '200px', minWidth: '120px' }} 
+										/>
 									</li>
 								</ul>
 							</li>
@@ -80,7 +79,12 @@ const Otp = () => {
 									required
 								/>
 							</div>
-							<button type="submit" className="btn btn-primary mt-2">{t("Submit")}</button>
+							<button type="submit" 
+									className="btn btn-primary mt-2"
+									aria-label={t("Submit OTP Code")}
+							>
+								{t("Submit")}
+							</button>
 						</form>
 					</div>
 				</div>

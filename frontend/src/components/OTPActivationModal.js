@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { AccessibilityContext } from '../AccessibilityContext';
 import './OTPActivationModal.css';
 
-const Otp = ({ onSuccess }) => { // Accept onSuccess prop
+const Otp = ({ onSuccess }) => { 
 	const { t } = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext);
 
 	const qr_code_url = localStorage.getItem('qr_code_url');
-	const BASE_URL = 'http://localhost:8000'; // Base URL for the backend
-	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; // Construct the image URL
+	const BASE_URL = 'http://localhost:8000'; 
+	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; 
 
 	const [otpCode, setOtpCode] = useState('');
 
@@ -38,15 +38,11 @@ const Otp = ({ onSuccess }) => { // Accept onSuccess prop
 					}
 				}
 			);
-			// Handle successful response
-			// console.log('Response:', response.data);
-			// Remove qr_code_url from local storage
 			localStorage.removeItem('qr_code_url');
 			alert(t('2FA successfully activated'));
-			if (onSuccess) onSuccess(); // Call onSuccess callback
+			if (onSuccess) onSuccess();
 		} catch (error) {
 			console.error('Error:', error);
-			// Handle error response
 		}
 	};
 
@@ -82,6 +78,8 @@ const Otp = ({ onSuccess }) => { // Accept onSuccess prop
 									value={otpCode}
 									onChange={(e) => setOtpCode(e.target.value)}
 									required
+									aria-describedby="otpCodeHelp"
+                                    aria-label={t("Enter OTP code to activate 2FA")}
 								/>
 							</div>
 							<button type="submit" className="otp-input" style={scalestyle}>{t("Submit")}</button>

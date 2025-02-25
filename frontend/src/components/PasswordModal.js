@@ -33,7 +33,6 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
             if (!response.ok) {
                 const errorData = await response.json();
                 if (response.status === 400 && errorData.non_field_errors && errorData.non_field_errors.includes("OTP is already activated for this user.")) {
-                    // Call the onPasswordSuccess callback if the specific error is encountered
                     if (onPasswordSuccess) onPasswordSuccess();
                     return;
                 }
@@ -41,11 +40,9 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
             }
 
             const data = await response.json();
-            // console.log('Success:', data);
             localStorage.setItem('qr_code_url', data.qr_code_url);
             onSubmit(password);
 
-            // Call the onPasswordSuccess callback
             if (onPasswordSuccess) onPasswordSuccess();
         } catch (error) {
             console.error('Error:', error);
@@ -73,6 +70,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
                         placeholder={t("Enter your password")}
                         className="tfa-input-password"
                         required
+						aria-label={t("Enter your password")}
                     />
                     <div className="tfa-buttons" style={scalestyle}>
                         <button
@@ -80,6 +78,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
 							style={scalestyle}
                             onClick={onClose}
                             className="tfa-button"
+							aria-label={t("Cancel")}
                         >
                             {t("Cancel")}
                         </button>
@@ -87,6 +86,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
                             type="submit"
 							style={scalestyle}
                             className="tfa-button"
+							aria-label={t("Confirm")}
                         >
                             {t("Confirm")}
                         </button>

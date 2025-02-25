@@ -10,8 +10,7 @@ import { exitTournament } from '../../services/postExitTournament';
 
 const TournamentScreen = ({ scaleStyle }) => {
     const { t } = useTranslation();
-    const { tournamentPlayers, 
-			setTournamentPlayers, 
+    const { setTournamentPlayers, 
 			setStartTheTournament, 
 			setIsReadyToPlay, 
 			setPlayer1DisplayName, 
@@ -33,8 +32,6 @@ const TournamentScreen = ({ scaleStyle }) => {
 		const fetchPlayersData = async () => {
 			try {
 				const players = await getAllPlayers();
-
-				// console.log("Players data", players);
 
 				setPlayersData(players)
 				const loggedInUserId = parseInt(localStorage.getItem("user_id"), 10);
@@ -73,7 +70,6 @@ const TournamentScreen = ({ scaleStyle }) => {
 	}, [playersData]);
 
 	const tournamentData = useMemo(() => {
-		// console.log("Computing tournamentData from fetchedTournamentData:", fetchedTournamentData);
 		
 		let players = new Set();  
 		let matches = [];         
@@ -101,7 +97,6 @@ const TournamentScreen = ({ scaleStyle }) => {
 			matchWinners,                 
 		};
 	
-		// console.log("Computed tournamentData:", result);
 		return result;
 	}, [fetchedTournamentData]);	
 	
@@ -110,8 +105,6 @@ const TournamentScreen = ({ scaleStyle }) => {
     };
 
 	const handleStartMatch = ( player1DisplayName, player1Id, player2DisplayName, player2Id, matchIndex, matchId) => {
-		// console.log("Starting match between:", player1DisplayName, player1Id, "and", player2DisplayName, player2Id);
-		// console.log("Index of match", matchIndex, "and id of match", matchId)
 		setPlayer1DisplayName(player1DisplayName);
 		setPlayer1Id(player1Id);
 		setPlayer2DisplayName(player2DisplayName);
@@ -130,7 +123,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setStartTheTournament(false);
 			setTournamentPlayers([]);
 			setShowConfirmModal(false);
-			window.location.reload(); // Or another way to update state
+			window.location.reload();
 		} catch (error) {
 			console.error("Error exiting tournament:", error);
 		}
@@ -167,6 +160,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 										tournamentData.matches[0].id
                                     )
                                 }
+								aria-label={t("Start Match 1")}
 						>
                             {t("StartMatch")}
                         </button>
@@ -192,6 +186,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 										tournamentData.matches[1].id
                                     )
                                 }
+								aria-label={t("Start Match 2")}
 						>
                             {t("StartMatch")}
                         </button>
@@ -233,6 +228,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 										);
 									}
 								}}
+								aria-label={t("Start Final Match")}
 						>
 							{t("StartMatch")}
 						</button>
@@ -243,7 +239,11 @@ const TournamentScreen = ({ scaleStyle }) => {
             </div>
 
             <div>
-                <button className="btn button mt-4" style={scaleStyle} onClick={handleLeaveTournament}>
+                <button className="btn button mt-4" 
+						style={scaleStyle} 
+						onClick={handleLeaveTournament}
+						aria-label={t("Leave Tournament")}
+				>
                     {t("leave the tournament")}
                 </button>
             </div>

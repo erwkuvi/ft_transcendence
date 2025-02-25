@@ -47,6 +47,8 @@ const UserList = ({ friends }) => {
 				onMouseDown={handleCheckAllStatuses} 
 				onMouseUp={handleRelease}
 				onMouseLeave={handleRelease}
+				aria-label={t("Press To Check Online Statuses Of Your Friends")}
+
 			>
 				{t("Press To Check Online Statuses Of Your Friends")}
 			</button>

@@ -18,8 +18,14 @@ const About = () => {
 				</p>
 				<p>
 					{t("AboutT3")}
-					<a href="https://github.com/LukasKava/ft_transcendence" className="footer-link"
-					target="_blank" rel="noopener noreferrer">Github</a>.
+					<a href="https://github.com/LukasKava/ft_transcendence" 
+						className="footer-link"
+						target="_blank" 
+						rel="noopener noreferrer"
+						aria-label={t("GitHubLinkDescription")}
+					>
+						Github
+					</a>.
 				</p>
 			</div>
 		</div>

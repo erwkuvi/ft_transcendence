@@ -15,19 +15,12 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			tournamentMatchID,
 			setTournamentMatchID } = useContext(GameContext);
 	const [shouldReload, setShouldReload] = useState(false);
-	const [error, setError] = useState("");
 	const userLoggedInId = localStorage.getItem('user_id');
 	const userLoggedInDisplayName = localStorage.getItem('display_name');
-	// console.log("print the players", tournamentPlayers);
-	// console.log(tournamentPlayers.map(player => player.id));
-	
 
 	useEffect(() => {
         if (shouldReload && tournamentMatchID) {
-            // Reset the flag first to prevent infinite reloads
-			// console.log("Is match id even saved: ", tournamentMatchID)
             setShouldReload(false);
-            // Force a page refresh after the state has been updated
             window.location.reload();
         }
     }, [shouldReload, tournamentMatchID]);
@@ -55,16 +48,14 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			if (!success) {
 				console.error("Error creating tournament:", error);
 				localStorage.removeItem('tournamentPlayers');
-				setTournamentPlayers([]);  // Reset players if creation fails
-				alert(error);  // Show backend error message
+				setTournamentPlayers([]);
+				alert(error);
 				window.location.reload();
 				return;
 			}
 	
-			// console.log("Tournament Data:", data);
 	
 			if (Array.isArray(data) && data.length > 0) {
-				// console.log("Tournament created successfully:", data);
 				const tournamentId = data[0].tournament;
 				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);
@@ -72,7 +63,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			} else {
 				console.error("Unexpected response format:", data);
 				localStorage.removeItem('tournamentPlayers');
-				setTournamentPlayers([]);  // Reset players if creation fails
+				setTournamentPlayers([]);
 				window.location.reload();
 
 			}
@@ -99,6 +90,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 								style={scaleStyle} 
 								onClick={handleClick} 
 								disabled={!isTournamentReady}
+								aria-label={t("Start tournament button")}
 							>
                             	{t("PlayTournament")}
                         	</button>

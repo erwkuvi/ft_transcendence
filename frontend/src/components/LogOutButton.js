@@ -27,7 +27,10 @@ const LogoutButton = () => {
     };
 
     return (
-        <button className="btn login-button" onClick={handleLogout}>
+        <button className="btn login-button" 
+				onClick={handleLogout}
+				aria-label={t("HeaderLogOut")} 
+		>
             {t("HeaderLogOut")}
         </button>
     );

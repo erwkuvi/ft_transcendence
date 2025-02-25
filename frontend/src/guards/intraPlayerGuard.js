@@ -42,21 +42,14 @@ export const OAuth42CallbackHandler = () => {
 			return;
 		}
 		
-
 		const personsLoggedInId = Number(localStorage.getItem('user_id'));
 		const personsLoggedInDisplayName = localStorage.getItem('display_name');
 
-
-		// console.log("userId", urlId, "displayname", urlDisplayName, "error", urlError)
-		// Early return if we don't have the necessary data
 		if (!personsLoggedInId || !personsLoggedInDisplayName){
 			handleError('User session not found');
 			return;
 		}
 
-		
-
-		// Convert urlId to number for consistent comparison
 		const numericUrlId = Number(urlId);
 
 		if (numericUrlId === personsLoggedInId) {
@@ -74,7 +67,6 @@ export const OAuth42CallbackHandler = () => {
 				return;
 			}
 		
-
 			const newPlayers = [...savedTournamentPlayers, { 
 			id: numericUrlId, 
 			display_name: urlDisplayName 

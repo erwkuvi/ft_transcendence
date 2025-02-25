@@ -19,7 +19,6 @@ function WinningScreen({ player, score1, score2 }) {
     const defaultDisplayName1 = t("Player 1");
     const defaultDisplayName2 = t("Player 2");
     
-    // Check if user is logged in (i.e., player names are not default values)
     const isLoggedIn = player1DisplayName !== defaultDisplayName1 && player2DisplayName !== defaultDisplayName2;
 
     return (
@@ -28,7 +27,6 @@ function WinningScreen({ player, score1, score2 }) {
             <p>{player1DisplayName || defaultDisplayName1} {t("score")} {score1}</p>
             <p>{player2DisplayName || defaultDisplayName2} {t("score")} {score2}</p>
 
-            {/* Logic based on login status */}
             {isLoggedIn ? (
                 matchIndex === 1 ? (
                     <PlayNextGame scaleStyle={scaleStyle} />

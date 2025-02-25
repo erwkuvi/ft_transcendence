@@ -13,7 +13,7 @@ const PlayMultiplayerMode = ({ scaleStyle }) => {
 			<div className="play-multiplayer" style={scaleStyle}>
 				<div className="play-content">
 					<div className="modes mt-0">
-						<div className="playCardHolderStyle"> {/*card basic mode"*/}
+						<div className="playCardHolderStyle"> 
 							<h3 style={scaleStyle}>{t("PlayTitleMultiplayer")}</h3>
 							<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionMultiplayer")}</p>
 							<AuthUserForm scaleStyle={scaleStyle}/>
@@ -21,6 +21,7 @@ const PlayMultiplayerMode = ({ scaleStyle }) => {
 									style={scaleStyle} 
 									onClick={() => setIsReadyToPlay("multiplayer")} 
 									disabled={!isOpponentAuthenticated}
+									aria-label={t("Start multiplayer game button")}
 							>
                             	{t("PlayMultiplayer")}
                         </button>

@@ -20,11 +20,11 @@ const Header = () => {
 		<div>
 			<nav className="navbar header mt-0 p-0" id="navbarID">
 				<div className="container-fluid p-0">
-					<nav className="d-flex flex-wrap menu">
-						<Link style={{ fontSize: `${fontSize}px` }} to="/">{t("HeaderHome")}</Link>
-						<Link style={{ fontSize: `${fontSize}px` }} to="/play">{t("HeaderPlay")}</Link>
-						<Link style={{ fontSize: `${fontSize}px` }} to="/profile">{t("HeaderProfile")}</Link>
-						<Link style={{ fontSize: `${fontSize}px` }} to="/about">{t("HeaderAbout")}</Link>
+					<nav className="d-flex flex-wrap menu" aria-label={t("Main Navigation")}>
+						<Link style={{ fontSize: `${fontSize}px` }} aria-label={t("HeaderHome")} to="/" >{t("HeaderHome")}</Link>
+						<Link style={{ fontSize: `${fontSize}px` }} aria-label={t("HeaderPlay")} to="/play">{t("HeaderPlay")}</Link>
+						<Link style={{ fontSize: `${fontSize}px` }} aria-label={t("HeaderProfile")} to="/profile">{t("HeaderProfile")}</Link>
+						<Link style={{ fontSize: `${fontSize}px` }} aria-label={t("HeaderAbout")} to="/about">{t("HeaderAbout")}</Link>
 					</nav>
 					<nav className="menu right-menu">
 						<TextSizeControls/>
@@ -34,7 +34,11 @@ const Header = () => {
 						{isLoggedIn ? (
                             <LogoutButton />
                         ) : (
-                            <Link to="/login" className="login" style={{ fontSize: `${fontSize}px` }}>
+                            <Link 	to="/login" 
+									className="login" 
+									style={{ fontSize: `${fontSize}px` }}
+									aria-label={t("HeaderLogIn")}
+							>
                                 {t("HeaderLogIn")}
                             </Link>
                         )}

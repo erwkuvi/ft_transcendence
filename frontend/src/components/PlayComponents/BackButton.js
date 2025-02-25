@@ -17,6 +17,7 @@ const BackButton = ({ scaleStyle }) => {
                 setIsOpponentAuthenticated(false);
 				setIsSubmitting(false);
             }}
+			aria-label={t("Go back to mode selection")}
         >
             {t("Back to Mode Selection")}
         </button>

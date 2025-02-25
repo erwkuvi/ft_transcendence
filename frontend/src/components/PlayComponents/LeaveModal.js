@@ -4,7 +4,6 @@ import "./LeaveModal.css";
 
 const LeaveModal = ({ isOpen, title, message, scaleStyle, onConfirm, onCancel }) => {
 	const { t } = useTranslation();
-	// const userLoggedInID = localStorage.getItem('user_id');
 	if (!isOpen) return null
 	
     return (
@@ -14,10 +13,21 @@ const LeaveModal = ({ isOpen, title, message, scaleStyle, onConfirm, onCancel })
 					<h3 className="title" style={scaleStyle}>{title}</h3>
 					<p className="message" style={scaleStyle}>{message}</p>
 					<div className="modal-buttons">
-						<button type="button" style={scaleStyle} className="btn cancel" onClick={onCancel}>
+						<button 
+							type="button" 
+							style={scaleStyle} 
+							className="btn cancel" 
+							onClick={onCancel}
+							aria-label={t("Cancel button")}
+						>
 							{t("Cancel")}
 						</button>
-						<button type="submit" style={scaleStyle} className="btn confirm">
+						<button 
+							type="submit" 
+							style={scaleStyle} 
+							className="btn confirm"
+							aria-label={t("Confirm button")}
+						>
 							{t("Yes, Leave")}
 						</button>
 					</div>

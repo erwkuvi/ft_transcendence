@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }) => {
                 if (status) {
 					handleError(status);
 				} else {
-					// Handle the case where there's no status
 					console.error("Unexpected error: No status available");
 				}
             }
@@ -32,6 +31,18 @@ export const AuthProvider = ({ children }) => {
 		if (isLoggedIn)
        		fetchUserData();
     }, [isLoggedIn, handleError]);
+
+	useEffect(() => {
+        const handleStorageChange = () => {
+            setIsLoggedIn(!!localStorage.getItem('access_token'));
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
 
     return (
         <AuthContext.Provider value={{	isLoggedIn, 

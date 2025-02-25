@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
 import { AccessibilityContext } from '../AccessibilityContext';
 
-// Make sure the hooks are used inside function components
 const NotFound = () => {
   const { t } = useTranslation();
   const { fontSize } = useContext(AccessibilityContext); 

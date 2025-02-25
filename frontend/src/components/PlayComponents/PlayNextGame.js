@@ -15,6 +15,7 @@ const PlayNextGame = ({ scaleStyle }) => {
 				setIsOpponentAuthenticated(false);
 				setgameTournamentStarted(false);
 			}}
+			aria-label={t("Play next game button")}
 		>
 			{t("Play next game")}
 		</button>
