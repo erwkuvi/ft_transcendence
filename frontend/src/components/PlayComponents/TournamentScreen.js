@@ -143,7 +143,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 			<div className="tournament-matches" style={scaleStyle}>
             <h2 className="tournament-title" style={scaleStyle}>{t("TournamentBracket")}</h2>
             
-            <div className="tournament-bracket">
+            <div className="tournament-bracket d-flex flex-row flex-wrap">
                 <div className="round round-1">
 					{tournamentData.matches.length >= 2 && ( <>
 					
