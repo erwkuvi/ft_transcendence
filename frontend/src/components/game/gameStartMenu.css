@@ -26,6 +26,18 @@
 	/* background-color: var(--fill-color); */
 }
 
+@media (max-width: 300px) {
+	#gameStartMenu {
+		min-width: 100%;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	#gameMenuArea1 {
+		width: 100% !important;
+	}
+}
+
 #gameMenuMainHeader {
 	margin-bottom:	30px;
 	text-align:		center;

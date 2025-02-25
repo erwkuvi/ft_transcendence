@@ -317,7 +317,7 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 
 	return (
 		<div id="gameStartMenu">
-			<h2>{t("Welcome to the game start menu")}</h2>
+			<h2 style={{textAlign: "center"}}>{t("Welcome to the game start menu")}</h2>
 			<div id="gameMenuArea1">
 					<div id="choiceArea">
 						<h2 className="gameStartMenuH2">{t("Choices")}</h2>
@@ -353,9 +353,32 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 	);
 }
 
+function disableNavigationButtons() {
+	let pageContent = document.getElementById("pageContentID");
+	let pongHeading = document.getElementById("pongHeading");
+
+	pongHeading.style.display = 'none';
+	pageContent.style.padding  = '0px';
+	pageContent.style.margin   = '0px';
+	pageContent.style.position = 'relative';
+	pageContent.style.zIndex   = '1000';
+
+	let navbar = document.getElementById("navbarID");
+
+	navbar.style.display = 'none';
+
+	let footer = document.getElementById("footerID");
+	footer.style.display = 'none';
+}
+
 function Pong() {
-	// disableNavigationButtons();
+	disableNavigationButtons();
 // Declare refs inside the Canvas component
+	// const [windowSize, setWindowSize] = useState({
+	// 	width: window.innerWidth,
+	// 	height: window.innerHeight,
+	// });
+
 	const { player1Id,
 			player2Id,
 			iDTournamentGame,
@@ -380,6 +403,20 @@ function Pong() {
 		p2_won_set_count: 0,
 	});
 	
+	// useEffect(() => {
+	// 	const handleResize = () => {
+	// 	  setWindowSize({
+	// 		width: window.innerWidth,
+	// 		height: window.innerHeight,
+	// 	  });
+	// 	};
+	
+	// 	window.addEventListener("resize", handleResize);
+	// 	return () => {
+	// 	  window.removeEventListener("resize", handleResize);
+	// 	};
+	// }, []);
+
 	const handleScore = (player) => {
 		setScores((prev) => {
 		  const updatedScores = { ...prev };
