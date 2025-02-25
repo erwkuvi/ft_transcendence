@@ -35,7 +35,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
 # SECRET_KEY = os.environ['SECRET_KEY', 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM']
-HOST_IP = 'localhost'
+HOST_IP = env('HOST_IP')
 FRONTEND_URL = env('FRONTEND_URL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -268,8 +268,8 @@ API_42_AUTH_URL = 'https://api.intra.42.fr/oauth/authorize'
 # 42 Intra access token endpoint
 API_42_ACCESS_TOKEN_ENDPOINT = 'https://api.intra.42.fr/oauth/token'
 # 42 Intra redirect URI
-API_42_REDIRECT_URI = f'http://{HOST_IP}:8000/42-callback/'
-API_42_REDIRECT_URI_MATCH = f'http://{HOST_IP}:8000/42-callback-match/'
+API_42_REDIRECT_URI = f'http://{HOST_IP}/42-callback/'
+API_42_REDIRECT_URI_MATCH = f'http://{HOST_IP}/42-callback-match/'
 # 42 Intra entrypoint URL
 API_42_INTRA_ENTRYPOINT_URL = 'https://api.intra.42.fr/v2/me'
 # 42 Intra frontend callback URL
