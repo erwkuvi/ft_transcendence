@@ -92,6 +92,19 @@ class UserSerializer(BaseUserSerializer):
         model = User
         fields = ['id', 'username',
                   'email', 'qr_code', 'password', 'otp_active', 'auth_provider']
+
+
+
+
+
+
+
+
+
+
+
+
+
         extra_kwargs = {
             "password": {"write_only": True},
             "qr_code": {"read_only": False},
