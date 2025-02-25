@@ -6,6 +6,18 @@ import UltimateWinner from './UltimateWinner';
 import BackButton from './BackButton';
 import { useTranslation } from "react-i18next";
 
+function turnOnFooterNavbar() {
+    let footer = document.getElementById("footerID");
+    if (footer) {
+        footer.style.display = "flex";
+    }
+
+    let navbar = document.getElementById("navbarID");
+    if (navbar) {
+        navbar.style.display = "flex";
+    }
+}
+
 function WinningScreen({ player, score1, score2 }) {
     const { t } = useTranslation();
     const { player1DisplayName, player2DisplayName, matchIndex } = useContext(GameContext);
@@ -21,7 +33,7 @@ function WinningScreen({ player, score1, score2 }) {
     
     // Check if user is logged in (i.e., player names are not default values)
     const isLoggedIn = player1DisplayName !== defaultDisplayName1 && player2DisplayName !== defaultDisplayName2;
-
+    turnOnFooterNavbar();
     return (
         <div id="winningScreen">
             <h2>{t("Winner")} {player}</h2>
