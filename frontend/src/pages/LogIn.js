@@ -43,31 +43,16 @@ const LogIn = () => {
 
   const handleOTPSubmit = async (otp) => {
     try {
-      //console.log('Sending OTP verification request with the following data:');
-      //console.log('Username:', loginCredentials.username);
-      //console.log('Password:', loginCredentials.password);
+      	const response = await axiosInstance.post(baseUrl + '/mfa/', {
+			username: loginCredentials.username, // Include the stored username
+			password: loginCredentials.password, // Include the stored password
+			otp: otp // Add the OTP code provided by the user
+      	});
 
-      // Send a new request with both the original credentials and the OTP code
-      const response = await axiosInstance.post(baseUrl + '/mfa/', {
-        username: loginCredentials.username, // Include the stored username
-        password: loginCredentials.password, // Include the stored password
-        otp: otp // Add the OTP code provided by the user
-      });
-
-      // If OTP verification is successful, store the authentication tokens
-      const { access, refresh } = response.data;
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
-    //   console.log('Log in successful:', localStorage);
-      // Mark OTP as successfully submitted
-      setShowOTPModal(false);
-			// Update AuthContext state
-			setIsLoggedIn(true);
-			
-			const { access, refresh } = response.data;
-			localStorage.setItem('access_token', access);
-			localStorage.setItem('refresh_token', refresh);
-			
+		const { access, refresh } = response.data;
+		localStorage.setItem('access_token', access);
+		localStorage.setItem('refresh_token', refresh);
+    
 			setShowOTPModal(false);
 			setIsLoggedIn(true);
 				

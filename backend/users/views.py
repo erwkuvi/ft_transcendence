@@ -83,7 +83,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
     def get_serializer_context(self):
         return {'request': self.request}
 
-    @action(detail=False, methods=['GET', 'PUT', 'PATCH'])
+    @action(detail=False, methods=['GET', 'PATCH'])
     def me(self, request):  # This method is called an custom action
         player_profile = PlayerProfile.objects.get(
             user_id=request.user.id)
@@ -92,7 +92,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
             data = serializer.data
             data['username'] = request.user.username
             return Response(data)
-        elif request.method in ['PUT', 'PATCH']:
+        elif request.method == 'PATCH':
             serializer = PlayerProfileSerializer(
                 player_profile, data=request.data, context=self.get_serializer_context())
             if not serializer.is_valid():
