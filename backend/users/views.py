@@ -84,7 +84,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
         return {'request': self.request}
 
     @action(detail=False, methods=['GET', 'PATCH'])
-    def me(self, request):  # This method is called an custom action
+    def me(self, request):  # This method is called a custom action
         player_profile = PlayerProfile.objects.get(
             user_id=request.user.id)
         if request.method == 'GET':
@@ -94,7 +94,7 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
             return Response(data)
         elif request.method == 'PATCH':
             serializer = PlayerProfileSerializer(
-                player_profile, data=request.data, context=self.get_serializer_context())
+                player_profile, data=request.data, context=self.get_serializer_context(), partial=True)  # Ensure partial updates
             if not serializer.is_valid():
                 print(serializer.errors)
             serializer.is_valid(raise_exception=True)
@@ -249,7 +249,7 @@ class OAuth42CallbackMatchView(views.APIView):
             code = request.query_params.get('code')
             state = request.query_params.get('state')
             session_state = request.session.get('oauth_state')
-            redirect_uri = request.query_params.get('redirect_uri', 'FRONTEND_URL')
+            redirect_uri = request.query_params.get('redirect_uri', settings.FRONTEND_URL)
             
             if not code or not state:
                 raise AuthenticationFailed("Missing code or state in the callback response.")
