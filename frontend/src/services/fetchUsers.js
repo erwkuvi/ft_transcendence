@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
 
-const URL = `http://localhost:8000/api/users/`;
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+const URL = `${baseUrl}/api/users/`;
 
 export const fetchUsers = async () => {
     try {

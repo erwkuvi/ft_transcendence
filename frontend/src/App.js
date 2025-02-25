@@ -126,7 +126,7 @@ export default App;
 //    const fetchProfile = async () => {
 //      try {
 //        // Make the GET request to the Django API
-//        const response = await axios.get('http://localhost:8000/users/players/1/');
+//        const response = await axios.get(`${baseUrl}/users/players/1/`);
 //        
 //        // Set the fetched profile data in the state
 //        setProfile(response.data);

@@ -13,8 +13,6 @@ User = get_user_model()
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # Extract user_id and token from the query string
-        print("we are at the consumer")  # Print the scope for debugging
-        print("Scope at the beginning of connect:", self.scope)  # Print the scope for debugging
         query_string = self.scope['query_string'].decode()
         query_params = dict(param.split('=') for param in query_string.split('&'))
         user_id = query_params.get('user_id')

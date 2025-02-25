@@ -10,8 +10,7 @@ import { AccessibilityContext } from '../AccessibilityContext';
 import { AuthContext } from '../context/AuthContext';
 import { useAuth } from '../hooks/useAuth'
 
-//const baseUrl = `http://localhost:8000/`;
-const baseUrl = `https://localhost/`;
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 const LogIn = () => {
 	const {t} = useTranslation();
@@ -50,7 +49,7 @@ const LogIn = () => {
       //console.log('Password:', loginCredentials.password);
 
       // Send a new request with both the original credentials and the OTP code
-      const response = await axiosInstance.post(baseUrl + 'mfa/', {
+      const response = await axiosInstance.post(baseUrl + '/mfa/', {
         username: loginCredentials.username, // Include the stored username
         password: loginCredentials.password, // Include the stored password
         otp: otp // Add the OTP code provided by the user
@@ -79,8 +78,8 @@ const LogIn = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		const signup_url = baseUrl + 'auth/users/' //api for new user registration
-		const login_url = baseUrl + 'mfa/' //api for user login
+		const signup_url = baseUrl + '/auth/users/' //api for new user registration
+		const login_url = baseUrl + '/mfa/' //api for user login
 
 		//debugging purposes begin
 		// console.log('Form submitted with values:');

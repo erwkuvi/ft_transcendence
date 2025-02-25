@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { AccessibilityContext } from '../AccessibilityContext';
 import './PasswordModal.css';
 
+const baseUrl = process.env.REACT_APP_BACKEND_URL; // Base URL for the backend
 const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
     const [password, setPassword] = useState('');
 	const { t } = useTranslation();
@@ -18,7 +19,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
         const userId = localStorage.getItem('user_id');
 
         try {
-            const response = await fetch('http://localhost:8000/user_management/otp-activate/', {
+						const response = await fetch(`${baseUrl}/user_management/otp-activate/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -27,6 +27,5 @@ python3 manage.py collectstatic --noinput
 python3 manage.py runserver 0.0.0.0:8000
 #python manage.py runsslserver --use_ssl
 #python3 manage.py runserver_plus --cert-file /certs/fullchain.crt --key-file /certs/privkey.key 8000
-#python3 manage.py runserver_plus --key-file selftest-key --cert-file selftest-cert localhost:8000
 
 #daphne backend.asgi:application -b 0.0.0.0 -p 8000

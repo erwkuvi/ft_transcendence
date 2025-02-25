@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
 
-const authUrl = `http://localhost:8000/user_management/simple-auth/`;
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+const authUrl = `${baseUrl}/user_management/simple-auth/`;
 
 export const authenticateUser = async (credentials) => {
     try {
