@@ -10,8 +10,10 @@ export const logout = () => {
 	// window.location.href = '/login'; // Or use navigate() inside a component
   };
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000', // Adjust the base URL as needed
+    baseURL: backendUrl, // Adjust the base URL as needed
     headers: {
         'Content-Type': 'application/json',
     },
@@ -50,7 +52,7 @@ axiosInstance.interceptors.response.use(
 
             try {
                 // Attempt to refresh the access token using the refresh token
-                const response = await axios.post('http://localhost:8000/api/token/refresh/', {
+								const response = await axios.post(`${backendUrl}/api/token/refresh/`, {
                     refresh: refreshToken,
                 });
                 localStorage.setItem('access_token', response.data.access);  // Store the new access token

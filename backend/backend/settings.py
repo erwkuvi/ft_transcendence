@@ -23,6 +23,8 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# For https connection 
+BASE_URL_SCHEME = 'https'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -33,13 +35,31 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
 # SECRET_KEY = os.environ['SECRET_KEY', 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM']
-HOST_IP = 'localhost'
+HOST_IP = env('HOST_IP')
+FRONTEND_URL = env('FRONTEND_URL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# Security settings
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
+
+
+#SECURE_HSTS_SECONDS = 31536000  # Enable HTTP Strict Transport Security (HSTS)
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+
+#KEY_PATH = os.path.join(BASE_DIR, 'certs/privkey.key')
+#CERT_PATH = os.path.join(BASE_DIR, 'certs/fullchain.crt')
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = False
@@ -62,6 +82,7 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',# Toolkit for building Web APIs
+    #'django_extensions',
     'djoser',# JWT authentication for DRF
 	'rest_framework_simplejwt.token_blacklist', # Blacklist JWT tokens
     'corsheaders',# Handle CORS headers
@@ -100,9 +121,11 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
 	"http://localhost:80",
 	"http://127.0.0.1:80",
-	"http://localhost:8081",
+    env('FRONTEND_URL'),
 	"http://127.0.0.1:8081",
 ]
+
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -238,7 +261,6 @@ LOGGING = {
     },
 }
 
-FRONTEND_URL = 'http://localhost:8081'
 
 # ----------------- OAUTH 2.0 - 42 INTRA SETTINGS -----------------:
 # 42 Intra auth URL
@@ -246,13 +268,12 @@ API_42_AUTH_URL = 'https://api.intra.42.fr/oauth/authorize'
 # 42 Intra access token endpoint
 API_42_ACCESS_TOKEN_ENDPOINT = 'https://api.intra.42.fr/oauth/token'
 # 42 Intra redirect URI
-API_42_REDIRECT_URI = f'http://{HOST_IP}:8000/42-callback/'
-API_42_REDIRECT_URI_MATCH = f'http://{HOST_IP}:8000/42-callback-match/'
-#API_42_REDIRECT_URI = 'http://localhost:8000/auth/42/callback/'
+API_42_REDIRECT_URI = f'http://{HOST_IP}/42-callback/'
+API_42_REDIRECT_URI_MATCH = f'http://{HOST_IP}/42-callback-match/'
 # 42 Intra entrypoint URL
 API_42_INTRA_ENTRYPOINT_URL = 'https://api.intra.42.fr/v2/me'
 # 42 Intra frontend callback URL
-API_42_FRONTEND_CALLBACK_URL = f'http://{HOST_IP}:8081/auth-success'
+API_42_FRONTEND_CALLBACK_URL = f'http://{FRONTEND_URL}/auth-success'
 # one-time code lifetime in seconds
 EXCHANGE_CODE_TIMEOUT = 30
 # API CLIENT ID

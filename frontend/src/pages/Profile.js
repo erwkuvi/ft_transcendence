@@ -36,11 +36,13 @@ const Profile = () => {
 
 	const [isSaving2FA, setIsSaving2FA] = useState(false);
 	const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
-	const [isOtpActive, setOtpActive] = useState(false); 
-	const BASE_URL = 'http://localhost:8000'; 
-    const { isLoggedIn } = useContext(AuthContext);
-	const [status, setStatus] = useState(''); 
-  	const user_id = localStorage.getItem('user_id');
+	const [isOtpActive, setOtpActive] = useState(false); // State for OTP activation
+	const wsBaseUrl = process.env.REACT_APP_BACKEND_WS;
+	const BASE_URL = process.env.REACT_APP_BACKEND_URL; // Base URL for the backend
+	const { isLoggedIn } = useContext(AuthContext);
+
+	const [status, setStatus] = useState(''); //for online-status
+  const user_id = localStorage.getItem('user_id');
 
 
 	useEffect(() => {
@@ -57,7 +59,6 @@ const Profile = () => {
 	const loadProfile = async () => {
 		try {
 			const profileData = await getUserProfile();
-			// console.log('User ID:', profileData.user_id); // Print the user_id to the console
 			localStorage.setItem('user_id', profileData.user_id);
 			localStorage.setItem('display_name', profileData.display_name);
 
@@ -92,31 +93,22 @@ const Profile = () => {
 			return;
 		}
 
-		// console.log('User IDDD:', user_id); // Print the user_id to the console
 		// Construct the WebSocket URL with the token as a query parameter
 		//const wsUrl = `wss://localhost/ws/online-status/?user_id=${user_id}&token=${token}`;
-		const wsUrl = `ws://localhost:8000/ws/online-status/?user_id=${user_id}&token=${token}`;
-		//const wsUrl = `ws://localhost:8000/ws/online-status/`;
+		const wsUrl = `${wsBaseUrl}/ws/online-status/?user_id=${user_id}&token=${token}`;
 
 		// Create a new WebSocket instance
 		const ws = new WebSocket(wsUrl);
-		// ws.onopen = () => console.log('-----------------------------------------WebSocket for user-status connection established');
+	//	ws.onopen = () => console.log('WebSocket connection established');
 
-		ws.onmessage = (event) => {
-			const data = JSON.parse(event.data);
-			console.log('Data:', data);
-			if (data.type === 'notification') {
-				setNotification(data);
-			}
-		};
+	//	ws.onmessage = (event) => {
+	//		const data = JSON.parse(event.data);
+	//		console.log('Data received:', data);
+	//	};
 
-		ws.onerror = (error) => {
-			console.error('WebSocket error:', error);
-		};
+	//	ws.onerror = (error) => console.error('WebSocket error:', error);
+	//	ws.onclose = () => console.log('WebSocket connection closed');
 
-		return () => {
-			ws.close();
-		};
 	}, [status, user_id]);
 
 	const handleSearch = (event) => {

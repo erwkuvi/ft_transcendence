@@ -1,7 +1,8 @@
 import axiosInstance from './axiosInstance';
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 export const postTournamentMatchResults = async (tournamentMatchData) => {
-    const endpoint = 'http://localhost:8000/user_management/score-upload/';
+    const endpoint = `${baseUrl}/user_management/score-upload/`;
     
     try {
         const response = await axiosInstance.post(endpoint, tournamentMatchData, {
@@ -18,7 +19,7 @@ export const postTournamentMatchResults = async (tournamentMatchData) => {
 };
 
 export const postRegularMatchResults = async (matchData) => {
-    const endpoint = 'http://localhost:8000/user_management/matches/';
+    const endpoint = `${baseUrl}/user_management/matches/`;
     
     try {
         const response = await axiosInstance.post(endpoint, matchData, {

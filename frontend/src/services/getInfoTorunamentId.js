@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
 
-const URL = (tournamentMatchID) => `http://localhost:8000/user_management/tournaments/${tournamentMatchID}/`;
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+const URL = (tournamentMatchID) => `${baseUrl}/user_management/tournaments/${tournamentMatchID}/`;
 
 export const getTournamentData = async (tournamentMatchID) => {
     try {

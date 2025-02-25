@@ -1,5 +1,6 @@
 import axiosInstance from './axiosInstance';
-const baseUrl = `http://localhost:8000/user_management/players/me/`;
+const ogUrl = process.env.REACT_APP_BACKEND_URL;
+const baseUrl = `${ogUrl}/user_management/players/me/`;
 
 export const getUserProfile = async () => {
 	const token = localStorage.getItem('access_token');

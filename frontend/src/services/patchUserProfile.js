@@ -1,7 +1,8 @@
 import axiosInstance from "./axiosInstance";
 import { getUserProfile } from "./getProfile";
 
-const baseUrl = `http://localhost:8000/user_management/players/me/`;
+const ogUrl = process.env.REACT_APP_BACKEND_URL;
+const baseUrl = `${ogUrl}/user_management/players/me/`;
 
 /**
  * Update user profile dynamically using FormData.

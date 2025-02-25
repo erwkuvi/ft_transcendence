@@ -2,10 +2,11 @@
 
 // import './Notification.css'
 
-// const Notification = ({ userIdChanged, onConfirm, onReject }) => {
-// const [notification, setNotification] = useState(null);
-// const [socket, setSocket] = useState(null);
-// const [isAuthenticated, setIsAuthenticated] = useState(false);
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const Notification = ({ userIdChanged, onConfirm, onReject }) => {
+const [notification, setNotification] = useState(null);
+const [socket, setSocket] = useState(null);
+const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 // 	useEffect(() => {
 // 		const user_id = localStorage.getItem('user_id'); // Get the user_id from localStorage

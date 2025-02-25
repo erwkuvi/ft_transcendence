@@ -9,8 +9,8 @@ const Otp = ({ onSuccess }) => {
 	const { fontSize } = useContext(AccessibilityContext);
 
 	const qr_code_url = localStorage.getItem('qr_code_url');
-	const BASE_URL = 'http://localhost:8000'; 
-	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; 
+	const BASE_URL = process.env.REACT_APP_BACKEND_URL; // Base URL for the backend
+	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; // Construct the image URL
 
 	const [otpCode, setOtpCode] = useState('');
 

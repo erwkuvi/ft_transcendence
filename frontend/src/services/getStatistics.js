@@ -1,6 +1,9 @@
 import axiosInstance from './axiosInstance';
 
-const GAME_URL = `http://localhost:8000/user_management/matches/`;
+
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+const GAME_URL = `${baseUrl}/user_management/matches/`;
+
 
 export const fetchGames = async () => {
     try {

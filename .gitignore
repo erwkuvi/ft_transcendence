@@ -4,5 +4,4 @@ staticfiles/
 frontend/node_modules/
 migrations/
 backend/media/qrcode/
-certs/
-*.pem
+nginx/certs/*

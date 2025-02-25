@@ -10,7 +10,7 @@ import { AccessibilityContext } from '../AccessibilityContext';
 import { AuthContext } from '../context/AuthContext';
 import { useAuth } from '../hooks/useAuth'
 
-const baseUrl = `http://localhost:8000/`;
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 const LogIn = () => {
 	const {t} = useTranslation();
@@ -41,14 +41,28 @@ const LogIn = () => {
         }
     }, [navigate, handleLogout]);
 
-  	const handleOTPSubmit = async (otp) => {
-		try {
-		
-			const response = await axiosInstance.post(baseUrl + 'mfa/', {
-				username: loginCredentials.username, 
-				password: loginCredentials.password, 
-				otp: otp 
-			});
+  const handleOTPSubmit = async (otp) => {
+    try {
+      //console.log('Sending OTP verification request with the following data:');
+      //console.log('Username:', loginCredentials.username);
+      //console.log('Password:', loginCredentials.password);
+
+      // Send a new request with both the original credentials and the OTP code
+      const response = await axiosInstance.post(baseUrl + '/mfa/', {
+        username: loginCredentials.username, // Include the stored username
+        password: loginCredentials.password, // Include the stored password
+        otp: otp // Add the OTP code provided by the user
+      });
+
+      // If OTP verification is successful, store the authentication tokens
+      const { access, refresh } = response.data;
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+    //   console.log('Log in successful:', localStorage);
+      // Mark OTP as successfully submitted
+      setShowOTPModal(false);
+			// Update AuthContext state
+			setIsLoggedIn(true);
 			
 			const { access, refresh } = response.data;
 			localStorage.setItem('access_token', access);
@@ -66,8 +80,21 @@ const LogIn = () => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const signup_url = baseUrl + 'auth/users/' 
-		const login_url = baseUrl + 'mfa/' 
+
+		const signup_url = baseUrl + '/auth/users/' //api for new user registration
+		const login_url = baseUrl + '/mfa/' //api for user login
+
+		//debugging purposes begin
+		// console.log('Form submitted with values:');
+		// console.log('Username:', username);
+		// console.log('Password:', password);
+		if (isSignUp) {
+			// console.log('Email:', email);
+			// console.log('First Name:', firstName);
+			// console.log('Last Name:', lastName);
+			// console.log('Confirm Password:', confirmPassword);
+		}
+		//debugging purposes end
 
 		if (isSignUp) {
 			

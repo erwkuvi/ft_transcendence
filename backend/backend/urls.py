@@ -27,13 +27,13 @@ urlpatterns = [
          name='token_refresh'),
     path('', lambda request: redirect('/api/admin/')),
     path('user_management/', include('users.urls')),
-    path('auth/', include('djoser.urls')),
+    #path('auth/', include('djoser.urls')),
     path('42-login/', OAuth42LoginView.as_view(), name='42-login'),
     path('42-login-match/', OAuth42MatchView.as_view(), name='42-login-match'),
     path('42-callback/', OAuth42CallbackView.as_view(), name='42-callback'),
     path('42-callback-match/', OAuth42CallbackMatchView.as_view(), name='42-callback-match'),
     path('mfa/', OTPLoginView.as_view(), name='mfa'),
-    path('api/test/', include('notifications.urls')),
+    #path('api/test/', include('notifications.urls')),
 ]
 
 if settings.DEBUG:
