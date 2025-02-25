@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
 import { AccessibilityContext } from "../AccessibilityContext";
 import './TextSizeControls.css';
+import { useTranslation } from "react-i18next";
 
 const TextSizeControls = () => {
     const { fontSize, setFontSize } = useContext(AccessibilityContext);
     const [intervalId, setIntervalId] = useState(null);
+	const { t } = useTranslation();
 
     const handleMouseDownIncrease = () => {
         const id = setInterval(() => {
