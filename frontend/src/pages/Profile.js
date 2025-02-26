@@ -59,7 +59,6 @@ const Profile = () => {
         return <p>Loading...</p>; 
     }
 
-  useEffect(() => {
 	const loadProfile = async () => {
 		try {
 			const profileData = await getUserProfile();
@@ -72,24 +71,25 @@ const Profile = () => {
 			const users = await fetchUsers();
 			const loggedInUser = users.find(user => user.username === profileData.username);
 			setPersonLoggedIn(loggedInUser);
-
+			
 			const otherUsers = users.filter(user => user.username !== profileData.username);
 			setAllUsers(otherUsers);
-
+			
 			const friendsList = otherUsers.filter(user =>
 				profileData.friends.includes(user.id)
 			);
 			setFriends(friendsList);
-
+			
 		} catch (err) {
 			setError(err.message || 'An error occurred');
 		} finally {
 			setLoading(false);
 		}
 	};
-
-	loadProfile();
-}, []);
+	
+	useEffect(() => {
+		loadProfile();
+	}, []);
 
 	useEffect(() => {
 		const token = localStorage.getItem('access_token'); // Assuming JWT or similar token
@@ -151,6 +151,7 @@ const Profile = () => {
             setProfile(updatedProfile);
             localStorage.setItem('display_name', newDisplayName);
 			setIsEditingDisplayName(false);
+			await loadProfile();
 	
 		} catch (err) {
 			console.error('Error updating display name:', err);
@@ -179,6 +180,7 @@ const Profile = () => {
             const updatedProfile = await updateUserProfile({ avatar: file });
 
             setProfile(updatedProfile);
+			await loadProfile();
 		
 		} catch (err) {
 			console.error('Error updating avatar:', err);
