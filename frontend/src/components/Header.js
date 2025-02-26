@@ -42,7 +42,6 @@ const Header = () => {
 
 	// Get window dimensions from the custom hook
 	const { width, height } = useWindowDimensions();
-	console.log("width: ", width + " height: ", height);
 	if (width >= 700) {
 		resetMenuOptionHolder();
 	} else if (width < 700) {
@@ -50,7 +49,6 @@ const Header = () => {
 	}
 
 	const displayHamburgerMenu = () => {
-		console.log("HAAALOOO!");
 		let menuOptionHolder = document.getElementById("menuOptionHolderID");
 		if (menuOptionHolder.style.display === "none") {
 			menuOptionHolder.style.display="flex";
@@ -62,8 +60,6 @@ const Header = () => {
 			firstPartOfMenu.style.display="flex";
 			firstPartOfMenu.style.flexDirection="column";
 			firstPartOfMenu.style.justifyContent="top";
-	
-			console.log("CHECK: ", firstPartOfMenu);
 	
 			let	secondPartOfMenu = document.getElementById("menuSecondPart");
 			secondPartOfMenu.style.display="flex";

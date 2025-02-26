@@ -37,9 +37,7 @@ function disableNavigationButtons() {
 }
 
 function turnOnFooterNavbar() {
-	console.log("IN the function");
     let footer = document.getElementById("footerID");
-	console.log(footer);
     if (footer && footer.style.display === "none") {
         footer.style.display = "flex";
     }
@@ -56,7 +54,7 @@ function turnOnFooterNavbar() {
 }
 
 
-const TournamentScreen = ({ setForceUpdat }) => {
+const TournamentScreen = ({ setForceUpdate }) => {
 	disableNavigationButtons();
     const { t } = useTranslation();
 	const navigate = useNavigate();

@@ -1,12 +1,15 @@
 /* Modal overlay that covers the entire screen with a semi-transparent background */
 .otp-modal-overlay {
-  position: fixed;
+  overflow-wrap: anywhere;
+  padding: 20px;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 1035.73px;
+  /* height: 1035.73px; */
   transform: translate(0px, 64.6667px);
   height: 100vh;
+  min-height: fit-content;
   background-color: var(--fill-color);
   display: flex;
   justify-content: center;
@@ -15,21 +18,25 @@
 
 }
 
-.otp-modal {
-    position: fixed;
-    background-color: var(--background);
+.ofp-input-password {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
 
-    /* Allow it to resize dynamically */
-    width: 80vw;
-	min-width: 1200px;
+
+.otp-modal {
+    position: relative;
+    background-color: var(--background);
 	max-width: 200vw;
-	min-height: 800px;
-	max-height: 800px;
+	min-height: fit-content;
     display: flex;
-    justify-content: flex-start;
-	align-items: flex-start;
+    justify-content: center;
+	align-items: center;
     flex-direction: row; 
-    align-items: flex-start; 
 	overflow: auto;
     word-wrap: break-word;
     border-radius: 10px;
@@ -38,10 +45,19 @@
     z-index: 999;
 }
 
+@media (max-width: 840px) {
+  .otp-modal {
+    min-width: 100%;
+    border-radius: 0px;
+    border-left: none;
+    border-right: none;
+  }
+}
+
 .otp-modal-content {
     width: 100%;
-    height: 100%;
-    overflow: auto; /* Enables full scrolling */
+    height: fit-content;
+    /* overflow: auto; Enables full scrolling */
     padding: 10px;
 }
 
@@ -54,8 +70,8 @@
 
     /* Keep modal within the parent */
     width: 100%;
-    height: 100%;
-    height: auto;
+    /* height: 100%; */
+    /* min-height: fit-content; */
 
     background-color: var(--color-4);
     color: var(--text-color);
@@ -63,16 +79,14 @@
     border-radius: 10px;
 
     /* Ensure it doesn't break out */
-    overflow: auto;
     word-wrap: break-word;
 
-    /* Enable scrolling inside modal */
-    flex-grow: 1;
-    overflow: auto;
-    word-wrap: break-word;
-    /* Smooth transition */
-    transition: opacity 0.3s ease-in-out;
+    max-height: 450px;
+    overflow-y: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
+
 /* Submit button styling */
 .otp-submit {
   width: 100%;
@@ -92,7 +106,13 @@
 
 .otp-image {
   max-width: 200px;
-  min-width: 120px;
+  width: 100%;
+  min-width: 50px;
   display: block;
-  margin-left: 35px;
+}
+
+@media (max-width: 240px) {
+  .otp-image {
+    width: 120px;
+  }
 }

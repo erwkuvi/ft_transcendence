@@ -386,9 +386,7 @@ function disableNavigationButtons() {
 }
 
 function turnOnFooterNavbar() {
-	console.log("IN the function");
     let footer = document.getElementById("footerID");
-	console.log(footer);
     if (footer.style.display === "none") {
         footer.style.display = "flex";
     }
@@ -437,7 +435,6 @@ function Pong() {
 	});
 
 	window.addEventListener('popstate', () => {
-		console.log('User clicked back button');
 		turnOnFooterNavbar();
 	});
 
@@ -490,7 +487,6 @@ function Pong() {
 		return <WinningScreen player={winner} score1={scores.p1_f_score} score2={scores.p2_f_score}/>
 	}
 	if (gameStarted === false) {
-		console.log("Start of the game ball speed: ", BALL_SPEED);
 		return (<div id="pong-container" style={{ width: '100vw', height: '94vh', /*marginTop: '20px'*/}}>
 			<GameStartMenu onStartGame={handleStartGame} gameFieldStyle={gameFieldStyle} setGameStyle={setGameStyle}/>
 		</div>);

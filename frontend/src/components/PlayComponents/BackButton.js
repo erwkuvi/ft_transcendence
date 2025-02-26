@@ -5,9 +5,7 @@ import { GameContext } from "../../context/GameContext";
 
 
 function turnOnFooterNavbar() {
-	console.log("IN the function");
     let footer = document.getElementById("footerID");
-	console.log(footer);
     if (footer.style.display === "none") {
         footer.style.display = "flex";
     }
