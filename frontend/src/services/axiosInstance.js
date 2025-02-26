@@ -7,7 +7,6 @@ import { useAuth } from '../hooks/useAuth'
 export const logout = () => {
 	localStorage.removeItem('access_token');
 	localStorage.removeItem('refresh_token');
-	// window.location.href = '/login'; // Or use navigate() inside a component
   };
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
