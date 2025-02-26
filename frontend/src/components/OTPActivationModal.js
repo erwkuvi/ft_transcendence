@@ -3,6 +3,7 @@ import axiosInstance from '../services/axiosInstance';
 import { useTranslation } from 'react-i18next';
 import { AccessibilityContext } from '../AccessibilityContext';
 import './OTPActivationModal.css';
+import useWindowDimensions from '../components/userWindowDimensions';
 
 const Otp = ({ onSuccess }) => { 
 	const { t } = useTranslation();
@@ -10,7 +11,8 @@ const Otp = ({ onSuccess }) => {
 
 	const qr_code_url = localStorage.getItem('qr_code_url');
 	const BASE_URL = 'http://localhost:8000'; 
-	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`; 
+	const qrCodeImageUrl = `${BASE_URL}${qr_code_url}`;
+	const { width, height } = useWindowDimensions();
 
 	const [otpCode, setOtpCode] = useState('');
 
@@ -47,7 +49,7 @@ const Otp = ({ onSuccess }) => {
 	};
 
 	return (
-		<div className="otp-modal-overlay" style={scalestyle}>
+		<div className="otp-modal-overlay" style={{height: `${height - 90}px`}}>
 			<div className="otp-modal" style={scalestyle}>
 				<div className="modal" style={scalestyle}>
 					<h2 className="text-xl font-bold mb-4" style={scalestyle}>{t("2FA Activation")}</h2>
@@ -73,7 +75,7 @@ const Otp = ({ onSuccess }) => {
 								<input
 									type="text"
 									id="otpCode"
-									className="form-control"
+									className="ofp-input-password"
 									style={scalestyle}
 									value={otpCode}
 									onChange={(e) => setOtpCode(e.target.value)}

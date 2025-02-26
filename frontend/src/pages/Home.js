@@ -10,7 +10,6 @@ const Home = () => {
 	const { t } = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
 	const { width, height } = useWindowDimensions();
-	console.log("width: ", width + " height: ", height);
 
 	return (
 		<div className="d-flex flex-wrap justify-content-center align-items-center flex-row homePageHeaderHolder" style={{ fontSize: `${fontSize}px`, height: `${height - 90}px`}}>
