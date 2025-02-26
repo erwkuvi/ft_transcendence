@@ -62,4 +62,4 @@ env:
 # 		@echo "REACT_APP_BACKEND_URL=https://$(shell hostname -i)" >> .env.test
 # 		@echo "\n" >> .env
 # 		@echo "REACT_APP_BACKEND_WS=https://$(shell hostname -i)" >> .env.test
-
+#
