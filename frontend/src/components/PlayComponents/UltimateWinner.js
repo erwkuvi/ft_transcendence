@@ -4,18 +4,22 @@ import { GameContext } from "../../context/GameContext";
 
 const UltimateWinner = ({ player, scaleStyle }) => {
 	const {t} = useTranslation();
-	const { setgameTournamentStarted, setIsReadyToPlay, setIsOpponentAuthenticated, setMatchIndex } = useContext(GameContext);
+	const { setgameTournamentStarted, 
+			setIsReadyToPlay, 
+			setIsOpponentAuthenticated, 
+			setMatchIndex } = useContext(GameContext);
 
 	return (
 		<button
-			className="btn button mt-4"
-			style={scaleStyle}
+			id="tournamentButtonStyle"
 			onClick={() => {
 				setIsReadyToPlay(null);
 				setIsOpponentAuthenticated(false);
 				setgameTournamentStarted(false);
 				setMatchIndex(null);
 			}}
+			aria-label={`${t("Congrats to the Ultimate Winner")} ${player}`}
+
 		>
 			{t("Congrats to the Ultimate Winner")} {player} !
 		</button>

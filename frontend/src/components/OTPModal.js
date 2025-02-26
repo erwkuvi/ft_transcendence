@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './OTPModal.css';
 
-// OTPModal component that handles the OTP input
-// Props:
-// - onSubmit: callback function to handle OTP submission
-// - onClose: callback function to close the modal
 const OTPModal = ({ onSubmit, onClose }) => {
-  // State to store the OTP input value
   const { t } = useTranslation();
   const [otp, setOtp] = useState('');
-	//console.log('I am in otpmodal')
-  // Handle form submission
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(otp);
@@ -33,8 +27,10 @@ const OTPModal = ({ onSubmit, onClose }) => {
             onChange={(e) => setOtp(e.target.value)}
             placeholder={t("Enter OTP code")}
             required
+			aria-describedby="otpError"
+            aria-label={t("Enter the OTP code sent to your device")}
           />
-          <button type="submit" className="otp-submit">
+          <button type="submit" className="otp-submit" aria-label={t("Verify OTP")}>
             {t("Verify OTP")}
           </button>
         </form>

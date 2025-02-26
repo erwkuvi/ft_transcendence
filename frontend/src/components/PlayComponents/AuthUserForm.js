@@ -16,7 +16,6 @@ const AuthUserForm = ({ scaleStyle }) => {
         setPlayer2Id,
         setPlayer1DisplayName,
         setPlayer1Id,
-		// setMode
     } = useContext(GameContext);
 
     const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -33,7 +32,7 @@ const AuthUserForm = ({ scaleStyle }) => {
 			}else
 				setError('')
 			
-            localStorage.removeItem('urlError'); // Remove after showing it
+            localStorage.removeItem('urlError');
         }
     }, []);
 
@@ -80,11 +79,11 @@ const AuthUserForm = ({ scaleStyle }) => {
     };
 
     return (
-        <form onSubmit={handleAuthentication} className="auth-form" style={scaleStyle}>
+        <form onSubmit={handleAuthentication} className="auth-form d-flex flex-column" style={scaleStyle}>
             <h4 style={scaleStyle}>
                 {t("Add a player")}
             </h4>
-            <p style={scaleStyle} className="AuthUser_and_TournamentFormInput_holder">
+            <label style={scaleStyle} className="AuthUser_and_TournamentFormInput_holder">
                 {t("Username")}
                 <input
                     value={credentials.username}
@@ -92,10 +91,11 @@ const AuthUserForm = ({ scaleStyle }) => {
                     autoComplete="off"
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+					aria-label={t("Enter your username")}
                     required
                 />
-            </p>
-            <p style={scaleStyle}>
+            </label>
+            <label style={scaleStyle}>
                 {t("Password")}
                 <input
                     type="password"
@@ -104,15 +104,18 @@ const AuthUserForm = ({ scaleStyle }) => {
                     value={credentials.password}
                     style={scaleStyle}
                     onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+					aria-label={t("Enter your password")}
                     required
                 />
-			</p>
+			</label>
             <button
                 type="button"
                 className="buttonStyle1"
                 style={scaleStyle}
                 disabled={isOpponentAuthenticated || isBeingSubmitted}
                 onClick={handle42AuthClick}
+				aria-label={t("Authenticate with 42")}
+
             >
                 {t("Or authenticate a player with 42")}
             </button>
@@ -121,6 +124,7 @@ const AuthUserForm = ({ scaleStyle }) => {
                 className="buttonStyle1"
                 style={scaleStyle}
                 disabled={isOpponentAuthenticated || isBeingSubmitted}
+				aria-label={isOpponentAuthenticated ? t("Player is ready") : t("Submit credentials")}
             >
                 {isOpponentAuthenticated ? t("Ready") : t("Submit")}
             </button>

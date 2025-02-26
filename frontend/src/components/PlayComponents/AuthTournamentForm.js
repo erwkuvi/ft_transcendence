@@ -12,14 +12,11 @@ const AuthTournamentForm = ({ scaleStyle }) => {
     const [isBeingSubmitted, setIsBeingSubmitted] = useState(false);
     const [errorTrnm, setErrorTrnm] = useState('');
     const usernameInputRef = useRef(null);
-    // const [is42AuthTriggered, setIs42AuthTriggered] = useState(false);
     const [localStoragePlayers, setLocalStoragePlayers] = useState([]);
 
     const currentPlayerNumber = (localStoragePlayers.length + tournamentPlayers.length) + 1;
 
-    // Load players from localStorage when the component mounts
     useEffect(() => {
-
 		const savedPlayers = JSON.parse(localStorage.getItem('tournamentPlayers')) || [];
 		setLocalStoragePlayers(savedPlayers);
 
@@ -34,8 +31,6 @@ const AuthTournamentForm = ({ scaleStyle }) => {
 		}
 
 		const storedError = localStorage.getItem('urlTournamentError');
-		// console.log("stored reero: ", storedError)
-
         if (storedError) {
 			if (storedError === 'User not found'){
 				setErrorTrnm(t('User not found'))
@@ -66,7 +61,6 @@ const AuthTournamentForm = ({ scaleStyle }) => {
             const data = await authenticateUser(credentials);
             
             if (typeof data.user_id === 'number') {
-                // Add player to localStorage
                 const newPlayers = [...localStoragePlayers, { id: data.user_id, display_name: data.display_name }];
                 setLocalStoragePlayers(newPlayers);
                 localStorage.setItem('tournamentPlayers', JSON.stringify(newPlayers));
@@ -75,7 +69,6 @@ const AuthTournamentForm = ({ scaleStyle }) => {
 
                 if (currentPlayerNumber === 3) {
                     setIsTournamentReady(true);
-                    // Once we have all 3 players, move to useState and clear localStorage
                     setTournamentPlayers(newPlayers);
                     localStorage.removeItem('tournamentPlayers');
                 }
@@ -94,7 +87,7 @@ const AuthTournamentForm = ({ scaleStyle }) => {
 
     if (tournamentPlayers.length >= 3) {
         return (
-            <div className="auth-form" style={scaleStyle}>
+            <div className="auth-form d-flex flex-column" style={scaleStyle}>
                 <h4 style={scaleStyle}>{t("StartTheTournament")}</h4>
                 <div className="players-list">
                     {tournamentPlayers.map((player, index) => (
@@ -112,7 +105,6 @@ const AuthTournamentForm = ({ scaleStyle }) => {
             <h4 style={scaleStyle}>
                 {t("Player")} {currentPlayerNumber} {t("of")} 3
             </h4>
-            {/* Display players from localStorage while still authenticating */}
             {localStoragePlayers.length > 0 && (
                 <div className="authenticated-players" style={scaleStyle}>
                     {localStoragePlayers.map((player, index) => (
@@ -122,7 +114,7 @@ const AuthTournamentForm = ({ scaleStyle }) => {
                     ))}
                 </div>
             )}
-            <p style={scaleStyle} className="AuthUser_and_TournamentFormInput_holder">
+            <label style={scaleStyle} className="AuthUser_and_TournamentFormInput_holder">
                 {t("Username")}
                 <input 
                     ref={usernameInputRef} className="inputFieldStyle1"
@@ -132,8 +124,8 @@ const AuthTournamentForm = ({ scaleStyle }) => {
                     onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
                     required
                 />
-            </p>
-            <p style={scaleStyle}>
+            </label>
+            <label style={scaleStyle}>
                 {t("Password")}
                 <input
                     type="password" className="inputFieldStyle1"
@@ -143,13 +135,14 @@ const AuthTournamentForm = ({ scaleStyle }) => {
                     onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                     required
                 />
-            </p>
+            </label>
             <button
                 type="button"
                 className="buttonStyle1"
                 style={scaleStyle}
                 onClick={handle42AuthClick}
                 disabled={isBeingSubmitted}
+				aria-label={t("Authenticate with 42")}
             >
                 {t("Or authenticate a player with 42")}
             </button>
@@ -158,6 +151,7 @@ const AuthTournamentForm = ({ scaleStyle }) => {
                 className="buttonStyle1"
                 style={scaleStyle}
                 disabled={isBeingSubmitted}
+				aria-label={t("Submit authentication form")}
             >
                 {t("Submit")}
             </button>

@@ -1,47 +1,58 @@
 .tournament-matches {
-    width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
+    border: 1px solid red;
+    align-items: center;
+    justify-content: center;
     /* padding: 20px; */
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    min-height: fit-content;
+    overflow-wrap: anywhere;
 }
 
 .tournament-title {
     text-align: center;
+    font-size: 32px !important;
     margin-bottom: 40px;
     color: var(--text-color);
 }
 
 .tournament-bracket {
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     gap: 60px;
-    position: relative;
+    /* position: relative; */
 }
 
 .round {
-    display: flex;
-    flex-direction: column;
     gap: 40px;
-    flex: 1;
+    min-width: 500px;
+    /* flex: 1; */
 }
 
-.round-1 {
-    flex: 2;
-}
-
-.round-2 {
-    flex: 1;
-    justify-content: center;
-}
 
 .match-box {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
     gap: 16px;
 }
+
+@media (max-width: 1500px) {
+    .round {
+        min-width: 500px;
+    }
+}
+
+@media (max-width: 600px) {
+    .round {
+        min-width: 100%;
+    }
+}
+
 
 .match-box h3 {
     margin: 0;
@@ -50,12 +61,11 @@
 }
 
 .players {
-    display: flex;
-    flex-direction: column;
     gap: 8px;
     padding: 12px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 6px;
+    width: 100%;
 }
 
 .player {
@@ -64,6 +74,7 @@
     border-radius: 4px;
     text-align: center;
     color: var(--text-color);
+    width: 100%;
 }
 
 .vs {
@@ -71,22 +82,6 @@
     color: var(--accent-color, #4a90e2);
     font-weight: bold;
     font-size: 0.9em;
-}
-
-.btn.button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 6px;
-    /* background: var(--accent-color, #4a90e2); */
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.btn.button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 .final {
@@ -103,4 +98,3 @@
     /* background: var(--accent-color, #4a90e2); */
     opacity: 0.5;
 }
-

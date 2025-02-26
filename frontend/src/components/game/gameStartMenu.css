@@ -7,7 +7,7 @@
 }
 
 #gameStartMenu {
-	border: 1px solid red;
+	/* border: 1px solid red; */
 	overflow-wrap: anywhere;
 	width:		100%;
 	min-width: fit-content;
@@ -44,7 +44,7 @@
 }
 
 #gameStartMenuWrapper {
-	border:				1px solid pink;
+	/* border:				1px solid pink; */
 	display:			flex;
 	flex-direction:		column;
 	justify-content:	center;
@@ -65,13 +65,13 @@
 }
 
 #gameMenuArea1 {
-	border: 1px solid yellow;
+	/* border: 1px solid yellow; */
 	width: 80%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	/* align-items: center; */
-	margin-bottom: 2rem;
+	margin-bottom: 32px;
 }
 
 /* #gameMenuElementWrapper {
@@ -82,7 +82,7 @@
 } */
 
 #choiceArea {
-	border: 1px solid red;
+	/* border: 1px solid red; */
 	display: flex;
 	flex-direction: column;
 	font-size: 20px;	
@@ -94,7 +94,7 @@
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 32px;
-	border: 1px solid turquoise;
+	/* border: 1px solid turquoise; */
 }
 
 .menuChoiceElement {
@@ -110,7 +110,7 @@
 
 #menu {
 	/* border: 1px solid white; */
-	width: 8rem;
+	width: 130px;
 }
 
 #p1Controls {
@@ -143,6 +143,7 @@
 	border: 1px solid white;
 	display: flex;
 	justify-content: center;
+	font-size:		32px;
 	align-items: center;
 	border-radius: 10px;
 	width: 64px;
@@ -155,6 +156,7 @@
 	justify-content: center;
 	align-items: center;
 	border-radius: 10px;
+	font-size: 32px;
 	width: 64px;
 	height: 64px;
 }
@@ -171,4 +173,20 @@
 	.pControlsWrapper .p2Keys:nth-child(2) {
 		display: none;
 	}
+}
+
+.startGameMenuButton {
+	border: none;
+    width: fit-content;
+    line-height: 20px;
+    font-size: 16px;
+    font-weight: 400;
+    align-items: center;
+    margin-top: 30px;
+    padding: 20px;
+    padding-left: 10%;
+    padding-right: 10%;
+    cursor: pointer;
+    background-color: var(--fill-color);
+    border-radius: 6px;
 }

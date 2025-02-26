@@ -41,71 +41,47 @@ const LogIn = () => {
 	useEffect(() => {
         const accessToken = localStorage.getItem('access_token');
         if (!accessToken) {
-            handleLogout();  // Ensure the user is logged out if no valid token
-            // navigate('/login');
+            handleLogout();  
         }
     }, [navigate, handleLogout]);
 
-  const handleOTPSubmit = async (otp) => {
-    try {
-      //console.log('Sending OTP verification request with the following data:');
-      //console.log('Username:', loginCredentials.username);
-      //console.log('Password:', loginCredentials.password);
-
-      // Send a new request with both the original credentials and the OTP code
-      const response = await axiosInstance.post(baseUrl + 'mfa/', {
-        username: loginCredentials.username, // Include the stored username
-        password: loginCredentials.password, // Include the stored password
-        otp: otp // Add the OTP code provided by the user
-      });
-
-      // If OTP verification is successful, store the authentication tokens
-      const { access, refresh } = response.data;
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
-    //   console.log('Log in successful:', localStorage);
-      // Mark OTP as successfully submitted
-      setShowOTPModal(false);
-			// Update AuthContext state
-			setIsLoggedIn(true);
+  	const handleOTPSubmit = async (otp) => {
+		try {
+		
+			const response = await axiosInstance.post(baseUrl + 'mfa/', {
+				username: loginCredentials.username, 
+				password: loginCredentials.password, 
+				otp: otp 
+			});
 			
-      // Redirect to the profile page after successful authentication
+			const { access, refresh } = response.data;
+			localStorage.setItem('access_token', access);
+			localStorage.setItem('refresh_token', refresh);
+			
+			setShowOTPModal(false);
+			setIsLoggedIn(true);
+				
 			navigate('/profile');
-    } catch (error) {
-      console.error('Error verifying OTP:', error);
-    //   console.log('Error verifying OTP:', error);
+		} catch (error) {
+			console.error('Error verifying OTP:', error);
 			setOtp('');
-      //alert('Invalid OTP code. Please try again.');
-    }
-  };
+		}
+  	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-
-		const signup_url = baseUrl + 'auth/users/' //api for new user registration
-		const login_url = baseUrl + 'mfa/' //api for user login
-
-		//debugging purposes begin
-		// console.log('Form submitted with values:');
-		// console.log('Username:', username);
-		// console.log('Password:', password);
-		if (isSignUp) {
-			// console.log('Email:', email);
-			// console.log('First Name:', firstName);
-			// console.log('Last Name:', lastName);
-			// console.log('Confirm Password:', confirmPassword);
-		}
-		//debugging purposes end
+		const signup_url = baseUrl + 'auth/users/' 
+		const login_url = baseUrl + 'mfa/' 
 
 		if (isSignUp) {
-			// Sign up
+			
 			try {
 				const response = await axiosInstance.post(signup_url, {
 					username,
 					email,
 					password,
 				});
-				// console.log('Sign up successful:', response.data);
+				
 				setIsSignUp(false);
 			} catch (error) {
 				if (error.response) {
@@ -121,23 +97,17 @@ const LogIn = () => {
 				}
 			}
 		} else {
-      // Handle login with potential two-factor authentication
 				try {
-					// Create credentials object for the initial login attempt
 					const credentials = { username, password };
 					const response = await axiosInstance.post(login_url, credentials);
 					
-					// If no OTP is required, proceed with normal login
 					const { access, refresh } = response.data;
 					localStorage.setItem('access_token', access);
 					localStorage.setItem('refresh_token', refresh);
 
-					// console.log('Log in successful:', localStorage);
-
-							// Update AuthContext state
-							setIsLoggedIn(true);
-							navigate('/profile');
-							window.location.reload();
+					setIsLoggedIn(true);
+					navigate('/profile');
+					window.location.reload();
 							
 				} catch (error) {
 					if (error.response && 
@@ -147,7 +117,6 @@ const LogIn = () => {
 					setLoginCredentials({ username, password });
 					setShowOTPModal(true);
 					} else {
-					// Handle other types of login errors
 					console.error('Error logging in:', error);
 					alert(t("Login failed. Please check your credentials."));
 					}
@@ -228,7 +197,7 @@ const LogIn = () => {
 									)
 							}
 							<div>
-								<button type="submit" className="buttonStyle1"> {/*btn button login-button py-2 px-5*/}
+								<button type="submit" className="buttonStyle1" aria-label={isSignUp ? t("SignUpButton") : t("LogInButton")} > {/*btn button login-button py-2 px-5*/}
 									{isSignUp ? t("LogInText2") : t("LogInText")}
 								</button>
 								<LogInButton/>

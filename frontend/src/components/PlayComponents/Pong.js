@@ -317,7 +317,7 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 
 	return (
 		<div id="gameStartMenu">
-			<h2 style={{textAlign: "center"}}>{t("Welcome to the game start menu")}</h2>
+			<h2 style={{textAlign: "center", fontSize: "36px"}}>{t("Welcome to the game start menu")}</h2>
 			<div id="gameMenuArea1">
 					<div id="choiceArea">
 						<h2 className="gameStartMenuH2">{t("Choices")}</h2>
@@ -348,7 +348,7 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 						</div>
 					</div>
 			</div>
-			<button className="btn button" onClick={onStartGame}>{t("Start Game")}</button>
+			<button className="startGameMenuButton" onClick={onStartGame}>{t("Start Game")}</button>
 		</div>
 	);
 }
@@ -357,18 +357,49 @@ function disableNavigationButtons() {
 	let pageContent = document.getElementById("pageContentID");
 	let pongHeading = document.getElementById("pongHeading");
 
-	pongHeading.style.display = 'none';
-	pageContent.style.padding  = '0px';
-	pageContent.style.margin   = '0px';
-	pageContent.style.position = 'relative';
-	pageContent.style.zIndex   = '1000';
+
+	if (pongHeading) {
+		pongHeading.style.display = 'none';
+	}
+
+	if (pageContent) {
+		pageContent.style.padding  = '0px';
+		pageContent.style.margin   = '0px';
+		pageContent.style.position = 'relative';
+		pageContent.style.zIndex   = '1000';
+	}
 
 	let navbar = document.getElementById("navbarID");
 
-	navbar.style.display = 'none';
+	if (navbar) {
+		navbar.style.display = 'none';
+	}
+
 
 	let footer = document.getElementById("footerID");
-	footer.style.display = 'none';
+
+	if (footer) {
+		footer.style.display = 'none';
+	}
+}
+
+function turnOnFooterNavbar() {
+	console.log("IN the function");
+    let footer = document.getElementById("footerID");
+	console.log(footer);
+    if (footer.style.display === "none") {
+        footer.style.display = "flex";
+    }
+
+    let navbar = document.getElementById("navbarID");
+    if (navbar.style.display === "none") {
+        navbar.style.display = "flex";
+    }
+
+	let ponHeading  = document.getElementById("pongHeading");
+	if (ponHeading.style.display === "none") {
+		ponHeading.style.display = "flex";
+	}
 }
 
 function Pong() {
@@ -402,20 +433,11 @@ function Pong() {
 		p1_won_set_count: 0,
 		p2_won_set_count: 0,
 	});
-	
-	// useEffect(() => {
-	// 	const handleResize = () => {
-	// 	  setWindowSize({
-	// 		width: window.innerWidth,
-	// 		height: window.innerHeight,
-	// 	  });
-	// 	};
-	
-	// 	window.addEventListener("resize", handleResize);
-	// 	return () => {
-	// 	  window.removeEventListener("resize", handleResize);
-	// 	};
-	// }, []);
+
+	window.addEventListener('popstate', () => {
+		console.log('User clicked back button');
+		turnOnFooterNavbar();
+	});
 
 	const handleScore = (player) => {
 		setScores((prev) => {

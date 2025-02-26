@@ -18,6 +18,7 @@ const PlayMultiplayerMode = ({ scaleStyle }) => {
 						style={scaleStyle} 
 						onClick={() => setIsReadyToPlay("multiplayer")} 
 						disabled={!isOpponentAuthenticated}
+						aria-label={t("Start multiplayer game button")}
 				>
                 	{t("PlayMultiplayer")}
             	</button>

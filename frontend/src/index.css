@@ -145,3 +145,32 @@ body {
 	margin-top:       7px							!important;
 	font-family:      inherit						!important;
 }
+
+#tournamentButtonStyle {
+    border: none !important;
+    width: fit-content;
+    line-height: 24px !important;
+    /* font-size: 16px !important; */
+    font-weight: 400 !important;
+    align-items: center !important;
+    margin-top: 36px !important;
+    padding: 20px !important;
+    cursor: pointer !important;
+    background-color: var(--fill-color) !important;
+    border-radius: 6px !important;
+}
+
+/* Start: Me Ms Polska added this part */
+#tournamentButtonStyle:not(:disabled):hover {
+	background-color: white !important;
+	font-weight:      500   !important; 
+	color:            var(--color-5);
+}
+
+
+#tournamentButtonStyle:disabled {
+	cursor: not-allowed !important;
+	opacity: 0.6 !important;
+	background-color: var(--fill-color) !important; 
+	color: var(--text-color) !important;
+}

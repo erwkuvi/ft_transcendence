@@ -8,13 +8,13 @@ const PlayNextGame = ({ scaleStyle }) => {
 
 	return (
 		<button
-			className="btn button mt-4"
-			style={scaleStyle}
+			className="buttonStyle1"
 			onClick={() => {
 				setIsReadyToPlay(null);
 				setIsOpponentAuthenticated(false);
 				setgameTournamentStarted(false);
 			}}
+			aria-label={t("Play next game button")}
 		>
 			{t("Play next game")}
 		</button>
