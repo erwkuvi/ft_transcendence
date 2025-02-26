@@ -9,7 +9,7 @@ import { getTournamentData } from '../../services/getInfoTorunamentId';
 import { getAllPlayers } from '../../services/getAllUsers';
 import { exitTournament } from '../../services/postExitTournament';  
 
-const TournamentScreen = ({ scaleStyle }) => {
+const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
     const { t } = useTranslation();
 	const navigate = useNavigate();
     const { setTournamentPlayers, 
@@ -126,7 +126,7 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setTournamentPlayers([]);
 			setShowConfirmModal(false);
 			navigate("/play")
-            // window.location.reload(); //changed
+			setForceUpdate(prev => prev + 1);
 		} catch (error) {
 			console.error("Error exiting tournament:", error);
 		}

@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import "./PlayTournamentSetup.css";
 import { createTournament } from '../../services/postCreateTournament'; 
 
-const PlayTournamentSetup = ({ scaleStyle }) => {
+const PlayTournamentSetup = ({ setForceUpdate, scaleStyle }) => {
     const { t } = useTranslation();
 	const navigate = useNavigate();
 	const { isTournamentReady, 
@@ -24,7 +24,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
         if (shouldReload && tournamentMatchID) {
             setShouldReload(false);
 			navigate("/play")
-            // window.location.reload(); //changed
+			setForceUpdate(prev => prev + 1);
         }
     }, [shouldReload, tournamentMatchID]);
 
@@ -54,7 +54,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				setTournamentPlayers([]);
 				alert(error);
 				navigate("/play")
-            // window.location.reload(); //changed
+				setForceUpdate(prev => prev + 1);
 				return;
 			}
 	
@@ -64,14 +64,13 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);
 				navigate("/play")
-            // window.location.reload(); //changed
+				setForceUpdate(prev => prev + 1);
 			} else {
 				console.error("Unexpected response format:", data);
 				localStorage.removeItem('tournamentPlayers');
 				setTournamentPlayers([]);
 				navigate("/play")
-            // window.location.reload(); //changed
-
+				setForceUpdate(prev => prev + 1);
 			}
 		} catch (error) {
 			console.error("Error saving players to the tournament:", error);
@@ -79,8 +78,7 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			localStorage.removeItem('tournamentPlayers');
 			alert(error.message);
 			navigate("/play")
-            // window.location.reload(); //changed
-
+			setForceUpdate(prev => prev + 1);
 		}
 	};
 

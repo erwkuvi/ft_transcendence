@@ -23,6 +23,8 @@ const Play = () => {
 	const [ isTheHost, setIsTheHost ] = useState(false);
 	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+	const [forceUpdate, setForceUpdate] = useState(0);
+
 	const [loading, setLoading] = useState(true);
 
 	const personLoggedIn = localStorage.getItem('user_id');
@@ -55,7 +57,7 @@ const Play = () => {
         };
 
         fetchProfile();
-    }, [isLoggedIn, gameTournamentStarted]);
+    }, [isLoggedIn, gameTournamentStarted, navigate, forceUpdate]);
 	
 	const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
@@ -65,10 +67,9 @@ const Play = () => {
 		const userId = localStorage.getItem("user_id");
 		try {
 			await exitTournament(userId);
-			// console.log("Successfully exited tournament");
 			setShowConfirmModal(false);
 			navigate("/play")
-            // window.location.reload(); //changed
+			setForceUpdate(prev => prev + 1);
 		} catch (error) {
 			console.error("Error exiting tournament:", error);
 		}
@@ -81,7 +82,7 @@ const Play = () => {
 	if (isTheHost){
 		return (
 			<>
-				<TournamentScreen scaleStyle={scaleStyle} />
+				<TournamentScreen setForceUpdate={setForceUpdate} scaleStyle={scaleStyle} />
 			</>
 		)
 	}else if (!isTheHost && isInTournament){
@@ -119,7 +120,7 @@ const Play = () => {
 						</div>
 						<div className="play-modes-wrapper mt-5">
 							<PlayMultiplayerMode scaleStyle={scaleStyle} />
-							<PlayTournamentSetup scaleStyle={scaleStyle} />
+							<PlayTournamentSetup setForceUpdate={setForceUpdate} scaleStyle={scaleStyle} />
 						</div>
 					</div>
 				)}
