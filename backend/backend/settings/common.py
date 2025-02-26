@@ -1,3 +1,4 @@
+
 """settin
 Django settings for backend project.
 
@@ -32,21 +33,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
 # SECRET_KEY = os.environ['SECRET_KEY', 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM']
 HOST_IP = env('HOST_IP')
 FRONTEND_URL = env('FRONTEND_URL')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 # DEBUG = False
 
 # Security settings
 SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
 
 
@@ -118,16 +114,9 @@ MIDDLEWARE = [
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-	"http://localhost:80",
-	"http://127.0.0.1:80",
-    env('FRONTEND_URL'),
-	"http://127.0.0.1:8081",
-]
 
 
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
@@ -140,17 +129,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-#'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), #After development this line should be valid 
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
-    #'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # This is for development
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM'
-    }
 
 
 ROOT_URLCONF = 'backend.urls'
@@ -189,23 +167,6 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
-#AUTH_PASSWORD_VALIDATORS = [
-#	{
-#		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#	},
-#	{
-#		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#	},
-#	{
-#		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#	},
-#	{
-#		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#	},
-#]
 
 
 # Internationalization
