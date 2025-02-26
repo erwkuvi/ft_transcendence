@@ -314,8 +314,7 @@ class OAuth42CallbackMatchView(views.APIView):
 
 
 class OAuth42CallbackView(views.APIView):
-
-    permission_classes = [AllowAny]  # Allow any user to access this view
+    permission_classes = [AllowAny]
 
     def post(self, request):
         try:
@@ -325,150 +324,138 @@ class OAuth42CallbackView(views.APIView):
                 raise ValueError("No authorization code provided")
 
             # 2. Exchange code for access token
-            token_response = requests.post(
-                'https://api.intra.42.fr/oauth/token',
-                data={
-                    'grant_type': 'authorization_code',
-                    'client_id': settings.INTRA_UID_42,
-                    'client_secret': settings.INTRA_SECRET_42,
-                    'code': code,
-                    'redirect_uri': settings.API_42_REDIRECT_URI
-                }
-            )
-            
-            if token_response.status_code != 200:
-                raise ValueError("Failed to exchange code for token")
-            
-            token_data = token_response.json()
+            token_data = self.get_access_token(code)
             access_token = token_data['access_token']
 
             # 3. Fetch user information
-            user_info_response = requests.get(
-                'https://api.intra.42.fr/v2/me',
-                headers={'Authorization': f'Bearer {access_token}'}
-            )
-            
-            if user_info_response.status_code != 200:
-                raise ValueError("Failed to retrieve user information")
-            
-            user_info = user_info_response.json()
+            user_info = self.get_user_info(access_token)
 
-            avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
             # 4. Create or get user
             user, created = User.objects.get_or_create(
                 email=user_info.get('email'),
                 defaults={
                     'username': user_info.get('login'),
-                    'displayname': user_info.get("displayname"),
-                    'provider': "42api"
+                    'auth_provider': "42api"
                 },
             )
 
+            # Only set displayname & avatar if the user is new
+            if created:
+                user.displayname = user_info.get("displayname")
+                user.save()
+
             player_profile, profile_created = PlayerProfile.objects.get_or_create(
                 user=user,
-                display_name=user_info.get("displayname"),
+                defaults={'display_name': user_info.get("displayname")}
             )
-            # function for downloading the image from 42api and storing it in the avatar dir.
-            if avatar_url:
+
+            # Save avatar only if the user is new or the profile is new
+            avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
+            if avatar_url and (created or profile_created):
                 save_avatar_locally(avatar_url, player_profile, user)
 
             # 5. Generate JWT tokens
-            refresh = RefreshToken.for_user(user)
-            tokens = {
-                'access_token': str(refresh.access_token),
-                'refresh_token': str(refresh),
-                'user': {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email,
-                    'auth_provider': user.auth_provider,
-                    'displayname': player_profile.display_name,
-                }
-            }
+            return Response(self.generate_tokens(user, player_profile), status=status.HTTP_200_OK)
 
-            return Response(tokens, status=status.HTTP_200_OK)
-        
         except Exception as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        code = request.query_params.get('code')
-        state = request.query_params.get('state')
-        session_state = request.session.get('oauth_state')
+        try:
+            code = request.query_params.get('code')
+            state = request.query_params.get('state')
+            session_state = request.session.get('oauth_state')
 
-        if not code or not state:
-            raise AuthenticationFailed("Missing code or state in theh callback response.")
-#Validate state parameter
-        if state != session_state:
-            raise AuthenticationFailed("Invalid state parameter.")
-# exchange code for access token
-        token_response = requests.post(
-                'https://api.intra.42.fr/oauth/token',
-                data={
-                    'grant_type': 'authorization_code',
-                    'client_id': settings.INTRA_UID_42,
-                    'client_secret': settings.INTRA_SECRET_42,
-                    'code': code,
-                    'redirect_uri': settings.API_42_REDIRECT_URI,
-                    }
+            if not code or not state:
+                raise AuthenticationFailed("Missing code or state in the callback response.")
+
+            # Validate state parameter
+            if state != session_state:
+                raise AuthenticationFailed("Invalid state parameter.")
+
+            # Exchange code for access token
+            token_data = self.get_access_token(code)
+            access_token = token_data.get('access_token')
+
+            # Fetch user info
+            user_info = self.get_user_info(access_token)
+
+            # Get user data
+            email = user_info.get("email")
+            username = user_info.get("login")
+            displayname = user_info.get("displayname")
+            avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
+
+            # Check if user exists, if not, create them
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={'username': username, 'auth_provider': "42api"}
+            )
+
+            # Only update displayname if the user is newly created
+            if created:
+                user.displayname = displayname
+                user.save()
+
+            player_profile, profile_created = PlayerProfile.objects.get_or_create(
+                user=user,
+                defaults={'display_name': displayname}
+            )
+
+            # Save avatar only if the user is new or profile is new
+            if avatar_url and (created or profile_created):
+                save_avatar_locally(avatar_url, player_profile, user)
+
+            # Generate JWT token
+            tokens = self.generate_tokens(user, player_profile)
+            frontend_url = f"{settings.FRONTEND_URL}/login/callback?access={tokens['access']}&refresh={tokens['refresh']}"
+
+            return redirect(frontend_url)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_access_token(self, code):
+        """Exchange authorization code for an access token."""
+        response = requests.post(
+            'https://api.intra.42.fr/oauth/token',
+            data={
+                'grant_type': 'authorization_code',
+                'client_id': settings.INTRA_UID_42,
+                'client_secret': settings.INTRA_SECRET_42,
+                'code': code,
+                'redirect_uri': settings.API_42_REDIRECT_URI
+            }
         )
-
-        if token_response.status_code != 200:
+        if response.status_code != 200:
             raise AuthenticationFailed("Failed to obtain access token.")
+        return response.json()
 
-        token_data = token_response.json()
-        access_token = token_data.get('access_token')
-
-#fetch user info from 42 api
-        user_info_response = requests.get(
+    def get_user_info(self, access_token):
+        """Fetch user info from 42 API."""
+        response = requests.get(
             'https://api.intra.42.fr/v2/me',
             headers={'Authorization': f'Bearer {access_token}'}
         )
-        if user_info_response.status_code != 200:
+        if response.status_code != 200:
             raise AuthenticationFailed("Failed to obtain user information.")
-        
-        user_info = user_info_response.json()
-        #return JsonResponse(user_info)
+        return response.json()
 
-#get user's data
-        email = user_info.get("email")
-        username = user_info.get("login")
-        #avatar = user_info.get("image", {}).get("link")
-        avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
-        displayname = user_info.get("displayname")
-        provider = "42api"
-
-#check if user exists or should be created
-        user, created = User.objects.get_or_create(
-                email=email,
-                username=username,
-                auth_provider=provider,)
-        
-#create the player profile and store corresponding info from 42 profile.
-        player_profile, profile_created = PlayerProfile.objects.get_or_create(
-                user=user,
-                #avatar=avatar,
-                display_name=displayname,
-        )
-# function for downloading the image from 42api and storing it in the avatar dir.
-        if avatar_url:
-            save_avatar_locally(avatar_url, player_profile, user)
-
-#Generate JWT token
+    def generate_tokens(self, user, player_profile):
+        """Generate JWT access and refresh tokens."""
         refresh = RefreshToken.for_user(user)
-        tokens = {
+        return {
             'access': str(refresh.access_token),
-            'refresh': str(refresh)
+            'refresh': str(refresh),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'auth_provider': user.auth_provider,
+                'displayname': player_profile.display_name,
+            }
         }
-        frontend_url = (
-                f"{settings.FRONTEND_URL}/login/callback?"
-                f"access={tokens['access']}&"
-                f"refresh={tokens['refresh']}"
-        )
-        return redirect(frontend_url)
+
 
 
 # ---------------End of OAuth 42 API------------------------------------------------------------------------------------

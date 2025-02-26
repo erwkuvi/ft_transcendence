@@ -45,12 +45,12 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def update_user_incr(self, user):
         PlayerProfile.objects.filter(user=user).update(online=True)
-        print("PlayerProfile online status set to True")
+        #print("PlayerProfile online status set to True")
 
     @database_sync_to_async
     def update_user_decr(self, user):
         PlayerProfile.objects.filter(user=user).update(online=False)
-        print("PlayerProfile online status set to False")
+        #print("PlayerProfile online status set to False")
 
 
 #class OnlineStatusConsumer(AsyncWebsocketConsumer):
