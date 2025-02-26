@@ -400,20 +400,25 @@ class OAuth42CallbackView(views.APIView):
         session_state = request.session.get('oauth_state')
 
         if not code or not state:
-            raise AuthenticationFailed("Missing code or state in theh callback response.")
-#Validate state parameter
+            raise AuthenticationFailed("Missing code or state.")
+
+        # Validate state (CSRF protection)
         if state != session_state:
             raise AuthenticationFailed("Invalid state parameter.")
-# exchange code for access token
+
+        # Remove state from session to prevent replay attacks
+        del request.session['oauth_state']
+
+        # Exchange code for access token
         token_response = requests.post(
-                'https://api.intra.42.fr/oauth/token',
-                data={
-                    'grant_type': 'authorization_code',
-                    'client_id': settings.INTRA_UID_42,
-                    'client_secret': settings.INTRA_SECRET_42,
-                    'code': code,
-                    'redirect_uri': settings.API_42_REDIRECT_URI,
-                    }
+            'https://api.intra.42.fr/oauth/token',
+            data={
+                'grant_type': 'authorization_code',
+                'client_id': settings.INTRA_UID_42,
+                'client_secret': settings.INTRA_SECRET_42,
+                'code': code,
+                'redirect_uri': settings.API_42_REDIRECT_URI,
+            }
         )
 
         if token_response.status_code != 200:
@@ -422,53 +427,40 @@ class OAuth42CallbackView(views.APIView):
         token_data = token_response.json()
         access_token = token_data.get('access_token')
 
-#fetch user info from 42 api
+        # Fetch user info from 42 API
         user_info_response = requests.get(
             'https://api.intra.42.fr/v2/me',
             headers={'Authorization': f'Bearer {access_token}'}
         )
         if user_info_response.status_code != 200:
             raise AuthenticationFailed("Failed to obtain user information.")
-        
-        user_info = user_info_response.json()
-        #return JsonResponse(user_info)
 
-#get user's data
+        user_info = user_info_response.json()
+
+        # Extract user data
         email = user_info.get("email")
         username = user_info.get("login")
-        #avatar = user_info.get("image", {}).get("link")
-        avatar_url = user_info.get("image", {}).get("versions", {}).get("medium")
         displayname = user_info.get("displayname")
         provider = "42api"
 
-#check if user exists or should be created
+        # Create or get user
         user, created = User.objects.get_or_create(
-                email=email,
-                username=username,
-                auth_provider=provider,)
-        
-#create the player profile and store corresponding info from 42 profile.
-        player_profile, profile_created = PlayerProfile.objects.get_or_create(
-                user=user,
-                #avatar=avatar,
-                display_name=displayname,
+            email=email,
+            defaults={
+                "username": username,
+                "auth_provider": provider,
+            },
         )
-# function for downloading the image from 42api and storing it in the avatar dir.
-        if avatar_url:
-            save_avatar_locally(avatar_url, player_profile, user)
 
-#Generate JWT token
+        # Generate JWT tokens
         refresh = RefreshToken.for_user(user)
         tokens = {
-            'access': str(refresh.access_token),
-            'refresh': str(refresh)
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
         }
-        frontend_url = (
-                f"{settings.FRONTEND_URL}/login/callback?"
-                f"access={tokens['access']}&"
-                f"refresh={tokens['refresh']}"
-        )
-        return redirect(frontend_url)
+
+        # Return tokens in response body (not in the URL)
+        return Response(tokens, status=status.HTTP_200_OK)
 
 
 # ---------------End of OAuth 42 API------------------------------------------------------------------------------------

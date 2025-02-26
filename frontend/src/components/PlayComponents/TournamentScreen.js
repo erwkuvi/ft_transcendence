@@ -7,8 +7,10 @@ import Pong from './Pong'
 import { getTournamentData } from '../../services/getInfoTorunamentId';
 import { getAllPlayers } from '../../services/getAllUsers';
 import { exitTournament } from '../../services/postExitTournament';  
+import { useNavigate } from 'react-router-dom';
 
 const TournamentScreen = ({ scaleStyle }) => {
+	const navigate = useNavigate();
     const { t } = useTranslation();
     const { setTournamentPlayers, 
 			setStartTheTournament, 
@@ -123,7 +125,8 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setStartTheTournament(false);
 			setTournamentPlayers([]);
 			setShowConfirmModal(false);
-			window.location.reload();
+			navigate(0);
+            // window.location.reload(); //changed
 		} catch (error) {
 			console.error("Error exiting tournament:", error);
 		}

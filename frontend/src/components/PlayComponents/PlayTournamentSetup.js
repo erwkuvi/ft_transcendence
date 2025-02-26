@@ -2,11 +2,13 @@ import React, {useContext, useState, useEffect} from 'react';
 import { useTranslation } from "react-i18next";
 import AuthTournamentForm from './AuthTournamentForm';
 import { GameContext } from "../../context/GameContext";
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import "./PlayTournamentSetup.css";
 import { createTournament } from '../../services/postCreateTournament'; 
 
 const PlayTournamentSetup = ({ scaleStyle }) => {
+	const navigate = useNavigate();
     const { t } = useTranslation();
 	const { isTournamentReady, 
 			setStartTheTournament, 
@@ -21,7 +23,8 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 	useEffect(() => {
         if (shouldReload && tournamentMatchID) {
             setShouldReload(false);
-            window.location.reload();
+			navigate(0);
+            // window.location.reload(); //changed
         }
     }, [shouldReload, tournamentMatchID]);
 
@@ -50,7 +53,8 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				localStorage.removeItem('tournamentPlayers');
 				setTournamentPlayers([]);
 				alert(error);
-				window.location.reload();
+				navigate(0);
+            // window.location.reload(); //changed
 				return;
 			}
 	
@@ -59,12 +63,14 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				const tournamentId = data[0].tournament;
 				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);
-				window.location.reload();
+				navigate(0);
+            // window.location.reload(); //changed
 			} else {
 				console.error("Unexpected response format:", data);
 				localStorage.removeItem('tournamentPlayers');
 				setTournamentPlayers([]);
-				window.location.reload();
+				navigate(0);
+            // window.location.reload(); //changed
 
 			}
 		} catch (error) {
@@ -72,7 +78,8 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 			setTournamentPlayers([]);
 			localStorage.removeItem('tournamentPlayers');
 			alert(error.message);
-			window.location.reload();
+			navigate(0);
+            // window.location.reload(); //changed
 
 		}
 	};

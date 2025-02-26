@@ -52,14 +52,14 @@ axiosInstance.interceptors.response.use(
 
             try {
                 // Attempt to refresh the access token using the refresh token
-								const response = await axios.post(`${backendUrl}/api/token/refresh/`, {
+					const response = await axios.post(`${backendUrl}/api/token/refresh/`, {
                     refresh: refreshToken,
                 });
                 localStorage.setItem('access_token', response.data.access);  // Store the new access token
-
-                // Update the Authorization header for the retried request
+				axiosInstance.defaults.headers.common['Authorization'] = `JWT ${response.data.access}`;
                 originalRequest.headers['Authorization'] = `JWT ${response.data.access}`;
-                return axios(originalRequest);  // Retry the original request with the new token
+				
+                return axiosInstance(originalRequest);  // Retry the original request with the new token
             } catch (refreshError) {
 				console.error('Error refreshing token:', refreshError);  // Log the error for the refresh attempt
                 logout();

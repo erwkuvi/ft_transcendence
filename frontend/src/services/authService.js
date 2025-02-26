@@ -1,22 +1,33 @@
 import axiosInstance from './axiosInstance';
 
-export const handleOAuthCallback = async () => {
+export const handleOAuthCallback = async (navigate, location) => {
     try {
-        const params = new URLSearchParams(window.location.search);
-        const access = params.get('access');
-        const refresh = params.get('refresh');
+        const params = new URLSearchParams(location.search);
+        const code = params.get('code');
+        const state = params.get('state');
 
-        if (!access || !refresh) {
-            throw new Error('Authentication failed');
+        // The backend will handle the OAuth flow and return tokens
+        const response = await axiosInstance.get(`/42-callback?code=${code}&state=${state}`);
+        
+        if (!response.data.access || !response.data.refresh) {
+            throw new Error('Missing authentication tokens in response');
         }
+		console.log("access tokens", response.data.access, response.data.refresh)
+        // Store tokens
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
 
-        localStorage.setItem('refresh_token', refresh);
-        localStorage.setItem('access_token', access);
-        axiosInstance.defaults.headers.common['Authorization'] = `JWT ${access}`;
+        // Set authorization header
+        axiosInstance.defaults.headers.common['Authorization'] = `JWT ${response.data.access}`;
 
-        window.location.href = '/profile'
-    } catch (err) {
+        return true;
+    } catch (error) {
+        console.error('OAuth callback handling failed:', error);
         localStorage.clear();
-        throw err;
+        return false;
     }
+};
+
+export const isAuthenticated = () => {
+    return !!localStorage.getItem('access_token');
 };

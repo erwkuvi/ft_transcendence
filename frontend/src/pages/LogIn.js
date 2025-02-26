@@ -115,7 +115,7 @@ const LogIn = () => {
 
 					setIsLoggedIn(true);
 					navigate('/profile');
-					window.location.reload();
+					// window.location.reload(); //changed
 							
 				} catch (error) {
 					if (error.response && 

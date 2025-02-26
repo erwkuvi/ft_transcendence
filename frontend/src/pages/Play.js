@@ -12,8 +12,10 @@ import { getUserProfile } from '../services/getProfile';
 import LeaveModal from '../components/PlayComponents/LeaveModal';
 import { exitTournament } from '../services/postExitTournament';  
 import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Play = () => {
+	const navigate = useNavigate();
 	const { t } = useTranslation();
     const { fontSize } = useContext(AccessibilityContext);
     const { isReadyToPlay, gameTournamentStarted } = useContext(GameContext);
@@ -65,7 +67,8 @@ const Play = () => {
 			await exitTournament(userId);
 			// console.log("Successfully exited tournament");
 			setShowConfirmModal(false);
-			window.location.reload(); // Or another way to update state
+			navigate(0);
+            // window.location.reload(); //changed
 		} catch (error) {
 			console.error("Error exiting tournament:", error);
 		}
