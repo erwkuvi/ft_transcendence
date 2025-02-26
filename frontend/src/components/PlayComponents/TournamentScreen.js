@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { useTranslation } from "react-i18next";
+import { useNavigate } from 'react-router-dom';
 import { GameContext } from "../../context/GameContext";
 import LeaveModal from './LeaveModal'
 import "./TournamentScreen.css";
@@ -8,8 +9,9 @@ import { getTournamentData } from '../../services/getInfoTorunamentId';
 import { getAllPlayers } from '../../services/getAllUsers';
 import { exitTournament } from '../../services/postExitTournament';  
 
-const TournamentScreen = ({ scaleStyle }) => {
+const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
     const { t } = useTranslation();
+	const navigate = useNavigate();
     const { setTournamentPlayers, 
 			setStartTheTournament, 
 			setIsReadyToPlay, 
@@ -123,7 +125,8 @@ const TournamentScreen = ({ scaleStyle }) => {
 			setStartTheTournament(false);
 			setTournamentPlayers([]);
 			setShowConfirmModal(false);
-			window.location.reload();
+			navigate("/play")
+			setForceUpdate(prev => prev + 1);
 		} catch (error) {
 			console.error("Error exiting tournament:", error);
 		}

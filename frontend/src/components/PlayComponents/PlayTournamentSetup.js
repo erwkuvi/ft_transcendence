@@ -1,4 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import AuthTournamentForm from './AuthTournamentForm';
 import { GameContext } from "../../context/GameContext";
@@ -6,8 +7,9 @@ import { AuthContext } from "../../context/AuthContext";
 import "./PlayTournamentSetup.css";
 import { createTournament } from '../../services/postCreateTournament'; 
 
-const PlayTournamentSetup = ({ scaleStyle }) => {
+const PlayTournamentSetup = ({ setForceUpdate, scaleStyle }) => {
     const { t } = useTranslation();
+	const navigate = useNavigate();
 	const { isTournamentReady, 
 			setStartTheTournament, 
 			tournamentPlayers, 
@@ -21,7 +23,8 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 	useEffect(() => {
         if (shouldReload && tournamentMatchID) {
             setShouldReload(false);
-            window.location.reload();
+			navigate("/play")
+			setForceUpdate(prev => prev + 1);
         }
     }, [shouldReload, tournamentMatchID]);
 
@@ -50,7 +53,8 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				localStorage.removeItem('tournamentPlayers');
 				setTournamentPlayers([]);
 				alert(error);
-				window.location.reload();
+				navigate("/play")
+				setForceUpdate(prev => prev + 1);
 				return;
 			}
 	
@@ -59,21 +63,22 @@ const PlayTournamentSetup = ({ scaleStyle }) => {
 				const tournamentId = data[0].tournament;
 				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);
-				window.location.reload();
+				navigate("/play")
+				setForceUpdate(prev => prev + 1);
 			} else {
 				console.error("Unexpected response format:", data);
 				localStorage.removeItem('tournamentPlayers');
 				setTournamentPlayers([]);
-				window.location.reload();
-
+				navigate("/play")
+				setForceUpdate(prev => prev + 1);
 			}
 		} catch (error) {
 			console.error("Error saving players to the tournament:", error);
 			setTournamentPlayers([]);
 			localStorage.removeItem('tournamentPlayers');
 			alert(error.message);
-			window.location.reload();
-
+			navigate("/play")
+			setForceUpdate(prev => prev + 1);
 		}
 	};
 
