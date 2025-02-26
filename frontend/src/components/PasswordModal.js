@@ -2,12 +2,14 @@ import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessibilityContext } from '../AccessibilityContext';
 import './PasswordModal.css';
+import useWindowDimensions from '../components/userWindowDimensions';
 
 const baseUrl = process.env.REACT_APP_BACKEND_URL; // Base URL for the backend
 const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
     const [password, setPassword] = useState('');
 	const { t } = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext);
+    const { width, height } = useWindowDimensions();
 
 	const scalestyle = {
         fontSize: `${fontSize}px`,
@@ -55,8 +57,8 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="tfa-box" style={scalestyle}>
-            <div className="tfa-box-overlay" style={scalestyle}>
+        <div className="tfa-box d-flex align-items-center justify-content-center" style={{height: `${height - 90}px`}}>
+            <div className="tfa-box-overlay align-items-center justify-content-center flex-column" style={scalestyle}>
                 <h2 className="tfa-title" style={scalestyle}>{t("Confirm Password")}</h2>
                 <p className="tfa-message" style={scalestyle}>
                     {t("Please enter your password to confirm this action")}
@@ -73,7 +75,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
                         required
 						aria-label={t("Enter your password")}
                     />
-                    <div className="tfa-buttons" style={scalestyle}>
+                    <div className="tfa-buttons d-flex flex-column-reverse" style={scalestyle}>
                         <button
                             type="button"
 							style={scalestyle}

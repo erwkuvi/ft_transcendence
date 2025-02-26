@@ -8,38 +8,27 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
     const { setIsReadyToPlay, setPlayer1DisplayName, setPlayer2DisplayName} = useContext(GameContext);
 
     return (
-        <>
-            <div className="title-container">
-                <h1 className="title mt-0">{t("PlayTitle")}</h1>
-            </div>
-            <div className="play-not-logged-in" style={scaleStyle}>
-                <div className="play-content">
-                    <div className="modes mt-4">
-                        <div className="mode" >
-                            <h3 style={scaleStyle}>{t("PlayTitleNotLoggedIn")}</h3>
-                            <p style={scaleStyle}>{t("PlayDescriptionNotLoggedIn")}</p>
-                            <button 
-                                className="buttonStyle1"
-                                style={scaleStyle} 
-                                onClick={() => {
-									setPlayer1DisplayName("Player 1");
-									setPlayer2DisplayName("Player 2");
-									setIsReadyToPlay("playNotLoggedIn");
-								}}
-								aria-label={t("Start game button for not logged in users")}
-                            >
-                                {t("PlayNotLoggedIn")}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="extra-text">
+        <div className="playNotLoggedInCardHolderPadding">
+            <div className="playNotLoggedInCardHolderStyle" style={scaleStyle}>
+                    <h3 style={scaleStyle}>{t("PlayTitleNotLoggedIn")}</h3>
+                    <p style={scaleStyle}>{t("PlayDescriptionNotLoggedIn")}</p>
+                    <button 
+                        className="playButtonStyle1"
+                        style={scaleStyle} 
+                        onClick={() => {
+							setPlayer1DisplayName("Player 1");
+							setPlayer2DisplayName("Player 2");
+							setIsReadyToPlay("playNotLoggedIn");
+						}}
+                        aria-label={t("Start game button for not logged in users")}
+                    >
+                        {t("PlayNotLoggedIn")}
+                    </button>
                     <p style={scaleStyle}> 
                         {t("AdditionalTextNotLoggedIn")}
                     </p>
-                </div>
             </div>
-        </>
+        </div>
     );
 };
 

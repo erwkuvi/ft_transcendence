@@ -1,30 +1,61 @@
-.home {
+/* .home {
 	margin: 0;
 	display: flex;
 	flex-direction: column;
 	position: relative;
+} */
+
+.homePageHeaderHolder {
+	overflow-wrap:	anywhere;
+	padding-left:	20px !important;
+	padding-right:	20px !important;
+	/* border:			1px solid red; */
+	width:			100%;
+	min-height:		fit-content;
 }
 
-.home .title {
+.homePageHeaderHolder h1 {
 	text-align: center;
-	margin: 0;
-	/* position: absolute; */
-	/* top: 30%;
-	left: 50%;
-	transform: translate(-50%, -50%); */
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	gap: 16px;
 }
 
+@media (max-width: 725px) {
+	.homePageHeaderHolder h1 i {
+		animation: none !important;
+	}
+}
+
+
+@media (max-width: 768px) {
+	.homePageHeaderHolder h1 {
+		font-size: 2.5em;
+		justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+	}
+}
+
+@media (min-width: 768px) {
+	.homePageHeaderHolder h1 {
+		font-size: 4em;
+	}
+}
+
+/* 
 .home .stuff {
 	margin-top: 100vh;
 	margin-bottom: 10%;
 	padding: 20px;
 	text-align: center;
 	line-height: 1.6;
-}
+} */
 
-.home .ball {
+.homePageHeaderHolder .ball {
 	color: var(--text-color); 
-	padding: 15% 10vw 10vh;
+	/* padding: 15% 10vw 10vh; */
 	font-size: 0.2em;
 	animation-timing-function: cubic-bezier(1, 0, 0.3, 1); /* More natural movement */
 

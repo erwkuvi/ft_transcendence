@@ -9,10 +9,14 @@ import Pong from '../components/PlayComponents/Pong'
 import TournamentScreen from '../components/PlayComponents/TournamentScreen';
 import { GameContext } from "../context/GameContext";
 import { getUserProfile } from '../services/getProfile';
+import	useWindowDimensions from '../components/userWindowDimensions'
+
 import LeaveModal from '../components/PlayComponents/LeaveModal';
 import { exitTournament } from '../services/postExitTournament';  
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
+
 
 const Play = () => {
 	const { t } = useTranslation();
@@ -20,6 +24,7 @@ const Play = () => {
     const { fontSize } = useContext(AccessibilityContext);
     const { isReadyToPlay, gameTournamentStarted } = useContext(GameContext);
 	const [ isInTournament, setIsInTournament] = useState(false);
+	const { width, height } = useWindowDimensions();
 	const [ isTheHost, setIsTheHost ] = useState(false);
 	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -108,21 +113,19 @@ const Play = () => {
 		)
 	}else {
 		return (
-			<div className="page-content play" id="pageContentID">
+			<div className="d-flex flex-column playPageHolder" id="pageContentID" style={{height: `${height - 90}px` }}>
+				<h1 className="pageHeadingH1Style1 typicalPadding" id="pongHeading">{t("PlayTitle")}</h1>
 				{isReadyToPlay ? (
 					<Pong className="focus-pong" />
 				) : !isLoggedIn ? (
 					<PlayNotLoggedIn style={scaleStyle} />
 				) : (
-					<div className="play-wrapper">
-						<div className="title-container">
-							<h1 className="title mt-0 mb-0">{t("PlayTitle")}</h1>
-						</div>
-						<div className="play-modes-wrapper mt-5">
+					<>
+						<div className="d-flex flex-row flex-wrap playPageCardWrapper m-0">
 							<PlayMultiplayerMode scaleStyle={scaleStyle} />
-							<PlayTournamentSetup setForceUpdate={setForceUpdate} scaleStyle={scaleStyle} />
+							<PlayTournamentSetup setForceUpdate={setForceUpdate}/>
 						</div>
-					</div>
+					</>
 				)}
 			</div>
 		);

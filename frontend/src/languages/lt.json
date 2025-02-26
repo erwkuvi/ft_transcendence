@@ -230,5 +230,6 @@
 	"Edit avatar": "Redaguoti avatarą",
 	"Edit display name": "Redaguoti rodomą vardą",
 	"Save display name": "Išsaugoti rodomą vardą",
-	"Cancel display name edit": "Atšaukti rodomo vardo redagavimą"
+	"Cancel display name edit": "Atšaukti rodomo vardo redagavimą",
+	"You cannot play against yourself" : "Negali žaisti prieš save"
 }

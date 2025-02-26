@@ -230,5 +230,6 @@
 	"Edit avatar": "Editar avatar",
 	"Edit display name": "Editar nombre visible",
 	"Save display name": "Guardar nombre visible",
-	"Cancel display name edit": "Cancelar edición de nombre visible"
+	"Cancel display name edit": "Cancelar edición de nombre visible",
+	"You cannot play against yourself" : "No puedes jugar contra ti mismo"
 }

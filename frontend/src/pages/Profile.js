@@ -16,6 +16,8 @@ import { AuthContext } from '../context/AuthContext';
 import { updateUserProfile } from '../services/patchUserProfile';
 import './Profile.css';
 
+import useWindowDimensions from '../components/userWindowDimensions';
+
 const Profile = () => {
 	const {t} = useTranslation();
 	const { fontSize } = useContext(AccessibilityContext); 
@@ -44,6 +46,8 @@ const Profile = () => {
 	const [status, setStatus] = useState(''); //for online-status
   const user_id = localStorage.getItem('user_id');
 
+
+	const {width, height} = useWindowDimensions();
 
 	useEffect(() => {
 		if (!isLoggedIn) {
@@ -254,12 +258,13 @@ const handleToggle2FA = async (password = null) => {
   if (!profile) return <p>No profile data available</p>;
 
 	return (
-		<div className="page-content" style={{ fontSize: `${fontSize}px` }}>
-			<h1>{t("PROFILE")}</h1>
-			<div className='container-fluid cards mt-4' style={{ fontSize: `${fontSize}px` }}>
-				<div className='card basic user-info ' style={{ fontSize: `${fontSize}px` }}>
+		<div className="d-flex flex-column align-items-center w-100 profilePageHolder" id="profilePageHolder" style={{height: `${height - 90}px`}}>
+			<h1 className="pageHeadingH1Style1 profileHeading">{t("profile")}</h1>
+			<div className='profileCardHolder  mb-0 w-100' style={{ fontSize: `${fontSize}px` }}>
+				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
 					<h2>{t("Basic Information")}</h2>
-					<div className="relative inline-block">
+					{/* Avatar section with edit functionality */}
+					<div className="d-flex flex-row flex-wrap align-items-center justify-content-center">
 						<img 
 							src={profile.avatar} 
 							className='profilepic m-2' 
@@ -286,59 +291,61 @@ const handleToggle2FA = async (password = null) => {
 						</button>
 
 					</div>
-					<p > {t("Username")} <span>{profile.username}</span></p>
-					{/* Display name section with edit functionality */}
-					<p className="flex items-center gap-2">
-						{t("Display Name")} 
-						{isEditingDisplayName ? (
-							<>
-								{/* Input field for editing display name */}
-								<input
-									type="text"
-									value={newDisplayName}
-									onChange={(e) => setNewDisplayName(e.target.value)}
-									className="change-display-name-input"
-									aria-label={t("Edit display name")}
-
-								/>
-								{/* Save button with check symbol */}
+					<div id="profileBasicInfoInformationHolder">
+						<p > {t("Username")} <span>{profile.username}</span></p>
+						{/* Display name section with edit functionality */}
+						<p id="profileDisplayChangeName">
+							{t("Display Name")} 
+							{isEditingDisplayName ? (
 								<>
-									<button
-										onClick={handleSaveDisplayName}
-										className="yes-no-button"
-										aria-label={t("Save display name")}
-										title="Save"
-									>
-										<span className="text-green-600">✓</span>
-									</button>
-									{/* Cancel button with X symbol */}
-									<button
-										onClick={handleCancelEdit}
-										className="yes-no-button"
-										aria-label={t("Cancel display name edit")}
-										title="Cancel"
-									>
-										<span className="text-red-600">✕</span>
-									</button>
+									{/* Input field for editing display name */}
+									<input
+										type="text"
+										value={newDisplayName}
+										onChange={(e) => setNewDisplayName(e.target.value)}
+										className="change-display-name-input"
+										aria-label={t("Edit display name")}
+									/>
+									{/* Save button with check symbol */}
+									<div id="profileEditDisplayNameButtonHolder">
+										<button
+											onClick={handleSaveDisplayName}
+											className="profileButtonChangeNameSaveCancel"
+											title="Save"
+										>
+											<span className="text-green-600">✓</span>
+										</button>
+										{/* Cancel button with X symbol */}
+										<button
+											onClick={handleCancelEdit}
+											className="profileButtonChangeNameSaveCancel"
+											aria-label={t("Cancel display name edit")}
+											title="Cancel"
+										>
+											<span className="text-red-600">✕</span>
+										</button>
+									</div>
 								</>
-							</>
-						) : (
-							<>
-								{/* Display current display name */}
-								<span>{profile.display_name + ' '}</span>
-								{/* Edit button with pencil symbol */}
-								<button
-									onClick={handleEditDisplayName}
-									className="edit-display-name-button"
-									title="Edit display name"
-									aria-label={t("Edit display name")}
-								>
-									<span className="write-symbol">✎</span>
-								</button>
-							</>
-						)}
-					</p>
-					<p>{t("email")} <span>{profile.email}</span></p>
+							) : (
+								<>
+									<div id="profilePenAndNameHolder">
+										{/* Display current display name */}
+										<span>{profile.display_name + ' '}</span>
+										{/* Edit button with pencil symbol */}
+										<button
+											onClick={handleEditDisplayName}
+											id="profileEditDisplayNameButton"
+											title="Edit display name"
+											aria-label={t("Edit display name")}
+										>
+											<span className="write-symbol">✎</span>
+										</button>
+									</div>
+								</>
+							)}
+						</p>
+						<p>{t("email")} <span>{profile.email}</span></p>
+					</div>
 			{/* 2FA Authentication section */}
 			{profile.auth_provider !== "42api" && (
 					<div className="mt-4">
@@ -347,7 +354,7 @@ const handleToggle2FA = async (password = null) => {
 							<button
 									onClick={handleInitiateToggle2FA}
 									disabled={isSaving2FA}
-									className="tfabutton btn button"
+									className="playButtonStyle2"
 									aria-label={profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
 							>
 									{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
@@ -367,7 +374,7 @@ const handleToggle2FA = async (password = null) => {
 				<StatisticsCard	losses={profile.losses}
 								wins={profile.wins}
 								fontSize={fontSize} />
-				<div className='card basic' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
+				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px`, textAlign: 'center' }}>
 					<h2>{t("List of friends")}</h2>
 					<ListFriends friends={friends}/>
 					<Filter className="inputFieldStyle1" 

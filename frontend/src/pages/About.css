@@ -1,8 +1,19 @@
 .aboutPContainer {
     /* border: 1px solid red; */
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    /* width: 50%; */
-    max-width: 800px;
+    text-align:		center;
+    overflow-wrap:	anywhere;
+    padding-left:	20px;
+    padding-right:	20px;
+    height:         fit-content;
+    max-width:		fit-content !important;
+    /* padding-top:    20%; */
+    justify-content: center;
+    min-width:      100%;
+    max-width:      100%;
+}
+
+.aboutInfoHolder {
+	/* border:		1px solid yellow; */
+	max-width:	fit-content;
+	width:		800px;
 }

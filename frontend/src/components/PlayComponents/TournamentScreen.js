@@ -8,8 +8,56 @@ import Pong from './Pong'
 import { getTournamentData } from '../../services/getInfoTorunamentId';
 import { getAllPlayers } from '../../services/getAllUsers';
 import { exitTournament } from '../../services/postExitTournament';  
+import useWindowDimensions from '../userWindowDimensions';
 
-const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
+function disableNavigationButtons() {
+	let pageContent = document.getElementById("pageContentID");
+	let pongHeading = document.getElementById("pongHeading");
+
+	if (pongHeading) {
+		pongHeading.style.display = 'none';
+	}
+
+	if (pageContent) {
+		pageContent.style.padding  = '0px';
+		pageContent.style.margin   = '0px';
+		pageContent.style.position = 'relative';
+		pageContent.style.zIndex   = '1000';
+	}
+
+	let navbar = document.getElementById("navbarID");
+	if (navbar) {
+		navbar.style.display = 'none';
+	}
+
+	let footer = document.getElementById("footerID");
+	if (footer) {
+		footer.style.display = 'none';
+	}
+}
+
+function turnOnFooterNavbar() {
+	console.log("IN the function");
+    let footer = document.getElementById("footerID");
+	console.log(footer);
+    if (footer && footer.style.display === "none") {
+        footer.style.display = "flex";
+    }
+
+    let navbar = document.getElementById("navbarID");
+    if (navbar && navbar.style.display === "none") {
+        navbar.style.display = "flex";
+    }
+
+	let pongHeading  = document.getElementById("pongHeading");
+	if (pongHeading && pongHeading.style.display === "none") {
+		pongHeading.style.display = "flex";
+	}
+}
+
+
+const TournamentScreen = ({ setForceUpdat }) => {
+	disableNavigationButtons();
     const { t } = useTranslation();
 	const navigate = useNavigate();
     const { setTournamentPlayers, 
@@ -28,6 +76,7 @@ const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
 	const [ playersData, setPlayersData] = useState([]);
 	const [fetchedTournamentData, setFetchedTournamentData] = useState([]);
+	const { width, height } = useWindowDimensions();
 
 	
 	useEffect(()=>{
@@ -132,26 +181,30 @@ const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
 		}
 	};
 
+	window.addEventListener('popstate', () => {
+		console.log('User clicked back button');
+		turnOnFooterNavbar();
+	});
+
 	if (gameTournamentStarted) {
 			return <Pong className="focus-pong" />
 	}else{
 		return (
-			<div className="tournament-matches" style={scaleStyle}>
-            <h2 className="tournament-title" style={scaleStyle}>{t("TournamentBracket")}</h2>
+			<div className="tournament-matches d-flex flex-column w-100" style={{height: `${height - 90}px`}}>
+            <h2 className="tournament-title">{t("TournamentBracket")}</h2>
             
-            <div className="tournament-bracket">
-                <div className="round round-1">
+            <div className="tournament-bracket d-flex flex-row flex-wrap">
+                <div className="round d-flex flex-column">
 					{tournamentData.matches.length >= 2 && ( <>
 					
-                    <div className="match-box">
-                        <h3 style={scaleStyle}>{t("Match")} 1</h3>
-                        <div className="players">
+                    <div className="match-box d-flex flex-column justify-content-center align-items-center">
+                        <h3>{t("Match")} 1</h3>
+                        <div className="players d-flex flex-column">
                             <div className="player">{playerNameMap[tournamentData.matches[0].player1] || "Player 1"}</div>
                             <div className="vs">VS</div>
                             <div className="player">{playerNameMap[tournamentData.matches[0].player2] || "Player 2"}</div>
                         </div>
-                        <button className="btn button" 
-								style={scaleStyle} 
+                        <button id="tournamentButtonStyle"
 								disabled={tournamentData.matches[0].winner !== null}
 								onClick={() => 
 									handleStartMatch(
@@ -169,15 +222,14 @@ const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
                         </button>
                     </div>
 
-                    <div className="match-box">
-                        <h3 style={scaleStyle}>{t("Match")} 2</h3>
-                        <div className="players">
+                    <div className="match-box d-flex flex-column justify-content-center align-items-center">
+                        <h3>{t("Match")} 2</h3>
+                        <div className="players d-flex flex-column">
                             <div className="player">{playerNameMap[tournamentData.matches[1].player1] || "Player 3"}</div>
                             <div className="vs">VS</div>
                             <div className="player">{playerNameMap[tournamentData.matches[1].player2] || "Player 4"}</div>
                         </div>
-                        <button className="btn button " 
-								style={scaleStyle} 
+                        <button id="tournamentButtonStyle"  
 								disabled={tournamentData.matches[1].winner !== null}
 								onClick={() => 
 									handleStartMatch(
@@ -198,10 +250,10 @@ const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
 					)}
                 </div>
 
-				<div className="round round-2">
-					<div className="match-box final">
-						<h3 style={scaleStyle}>{t("FinalMatch")}</h3>
-						<div className="players">
+				<div className="round d-flex flex-column">
+					<div className="match-box final d-flex flex-column justify-content-center align-items-center">
+						<h3>{t("FinalMatch")}</h3>
+						<div className="players d-flex flex-column">
 							<div className="player">
 								{/* Ensure matches has 3 elements and that player1 is defined */}
 								{tournamentData.matches.length > 2 && tournamentData.matches[2] && tournamentData.matches[2].player1
@@ -216,8 +268,7 @@ const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
 									: "???"}
 							</div>
 						</div>
-						<button className="btn button" 
-								style={scaleStyle} 
+						<button id="tournamentButtonStyle"
 								disabled={!tournamentData.matches[2] || !tournamentData.matches[2].player1 || !tournamentData.matches[2].player2} 
 								onClick={() => {
 									if (tournamentData.matches[2] && tournamentData.matches[2].player1 && tournamentData.matches[2].player2) {
@@ -242,8 +293,7 @@ const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
             </div>
 
             <div>
-                <button className="btn button mt-4" 
-						style={scaleStyle} 
+                <button id="tournamentButtonStyle" 
 						onClick={handleLeaveTournament}
 						aria-label={t("Leave Tournament")}
 				>
@@ -255,7 +305,6 @@ const TournamentScreen = ({ setForceUpdate, scaleStyle }) => {
                 isOpen={showConfirmModal}
                 title={t("Are you sure you want to leave?")}
                 message={t("This means you will officially end the tournament.")}
-				style={scaleStyle}
                 onConfirm={confirmLeave}
                 onCancel={() => setShowConfirmModal(false)}
             />

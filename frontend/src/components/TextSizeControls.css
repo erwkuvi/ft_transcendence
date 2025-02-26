@@ -1,10 +1,18 @@
 .text-size-controls {
 	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 	width: auto;
-	margin-right: 10px;
     gap: 10px;
     align-items: center;
+    justify-content: center;
 	background-color: transparent;
+}
+
+@media (max-width: 568px) {
+    .text-size-controls {
+        /* padding-left: 20px !important; */
+    }
 }
 
 .accessibility-btn {

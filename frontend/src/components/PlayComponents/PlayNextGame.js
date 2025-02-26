@@ -8,8 +8,7 @@ const PlayNextGame = ({ scaleStyle }) => {
 
 	return (
 		<button
-			className="btn button mt-4"
-			style={scaleStyle}
+			className="buttonStyle1"
 			onClick={() => {
 				setIsReadyToPlay(null);
 				setIsOpponentAuthenticated(false);

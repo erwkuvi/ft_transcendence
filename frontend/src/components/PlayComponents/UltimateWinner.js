@@ -11,8 +11,7 @@ const UltimateWinner = ({ player, scaleStyle }) => {
 
 	return (
 		<button
-			className="btn button mt-4"
-			style={scaleStyle}
+			id="tournamentButtonStyle"
 			onClick={() => {
 				setIsReadyToPlay(null);
 				setIsOpponentAuthenticated(false);

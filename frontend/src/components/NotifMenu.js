@@ -18,34 +18,34 @@
 // 		setNotifications(updatedNotifications);
 // 	};
 
-	// -------------------------- Channels test -------------------------- //
+// 	// -------------------------- Channels test -------------------------- //
 	
-//		let url = 'ws://${window.location.host}/ws/socket-server/'
-//	 const notifSocket = new Websocket(url)
-//	 notifSocket.onmessage = function(e){
-//	 	let data = JSON.parse(e.data)
-//	 	console.log('Data:', data)
-//	 };
+// //		let url = 'ws://${window.location.host}/ws/socket-server/'
+// //	 const notifSocket = new Websocket(url)
+// //	 notifSocket.onmessage = function(e){
+// //	 	let data = JSON.parse(e.data)
+// //	 	console.log('Data:', data)
+// //	 };
 
 
 
-	// -------------------------- Channels test -------------------------- //
+// 	// -------------------------- Channels test -------------------------- //
 
-	//const addTestNotification = () => {
-	//	const newNotification = {
-	//		title: 'Test notification',
-	//		description: 'Lukas wants to be your friend',
-	//		read: false
-	//	};
-	//	setNotifications(prevNotifications => [...prevNotifications, newNotification]);
-	//};
+// 	//const addTestNotification = () => {
+// 	//	const newNotification = {
+// 	//		title: 'Test notification',
+// 	//		description: 'Lukas wants to be your friend',
+// 	//		read: false
+// 	//	};
+// 	//	setNotifications(prevNotifications => [...prevNotifications, newNotification]);
+// 	//};
 
-	//useEffect(() => {
-	//	// Add a test notification when the component mounts
- 	//	addTestNotification();
-//// 		addTestNotification();
+// 	//useEffect(() => {
+// 	//	// Add a test notification when the component mounts
+//  	//	addTestNotification();
+// //// 		addTestNotification();
 
-	//}, []);
+// 	//}, []);
 
 // 	return (
 // 		<div className="dropdown">

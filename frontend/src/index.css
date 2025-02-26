@@ -54,13 +54,13 @@ body {
 	background-color: var(--color-3);
 }
 
-.page-content {
-	/* font-size: 36px; */
+/* .page-content {
+	font-size: 36px; */
 	/* margin: 16px; */
-	padding: 16px;
+	/* padding: 16px; */
 	/* margin-bottom: 200px; */
-	/* flex: 1; */
-}
+	/* flex: 1;
+} */
 /* 
 @media (max-width: 864px) {
 	.page-content {
@@ -71,23 +71,35 @@ body {
 	}
 } */
 
+.pageHeadingH1Style1 {
+	font-size:2em;
+	margin-bottom: 50px;
+}
+
+
 @media (max-width: 720px) {
-	.page-content {
+	/* .page-content {
 		flex-direction: column;
-	}
+	} */
 	.login {
 		gap: 3rem;
 	}
 }
 
 @media (max-width: 768px) {
-	.page-content h1 {
+	/* .page-content h1 {
 		font-size: 2.5em;
+	} */
+	.pageHeadingH1Style1 {
+		font-size: 2.3em;
 	}
 }
 
 @media (min-width: 768px) {
-	.page-content h1 {
+	/* .page-content h1 {
+		font-size: 4em;
+	} */
+	.pageHeadingH1Style1 {
 		font-size: 4em;
 	}
 }
@@ -96,7 +108,7 @@ body {
     border:           none   			!important;
 	width:            100%   			!important;
 	line-height:      1.5rem 			!important;
-    font-size:        16px   			!important;  
+    /* font-size:        16px   			!important;   */
 	font-weight:      400    			!important;
     align-items:      center 			!important;
     margin-top:       1.5rem 			!important;
@@ -132,4 +144,33 @@ body {
 	outline:          none                        	!important;
 	margin-top:       7px							!important;
 	font-family:      inherit						!important;
+}
+
+#tournamentButtonStyle {
+    border: none !important;
+    width: fit-content;
+    line-height: 24px !important;
+    /* font-size: 16px !important; */
+    font-weight: 400 !important;
+    align-items: center !important;
+    margin-top: 36px !important;
+    padding: 20px !important;
+    cursor: pointer !important;
+    background-color: var(--fill-color) !important;
+    border-radius: 6px !important;
+}
+
+/* Start: Me Ms Polska added this part */
+#tournamentButtonStyle:not(:disabled):hover {
+	background-color: white !important;
+	font-weight:      500   !important; 
+	color:            var(--color-5);
+}
+
+
+#tournamentButtonStyle:disabled {
+	cursor: not-allowed !important;
+	opacity: 0.6 !important;
+	background-color: var(--fill-color) !important; 
+	color: var(--text-color) !important;
 }

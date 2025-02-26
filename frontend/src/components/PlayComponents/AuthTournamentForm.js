@@ -87,7 +87,7 @@ const AuthTournamentForm = ({ scaleStyle }) => {
 
     if (tournamentPlayers.length >= 3) {
         return (
-            <div className="auth-form" style={scaleStyle}>
+            <div className="auth-form d-flex flex-column" style={scaleStyle}>
                 <h4 style={scaleStyle}>{t("StartTheTournament")}</h4>
                 <div className="players-list">
                     {tournamentPlayers.map((player, index) => (
@@ -101,7 +101,7 @@ const AuthTournamentForm = ({ scaleStyle }) => {
     }
 
     return (
-        <form onSubmit={handleAuthentication} className="auth-form" style={scaleStyle}>
+        <form onSubmit={handleAuthentication} className="auth-form d-flex flex-column" style={scaleStyle}>
             <h4 style={scaleStyle}>
                 {t("Player")} {currentPlayerNumber} {t("of")} 3
             </h4>

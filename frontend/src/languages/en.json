@@ -230,5 +230,6 @@
 	"Edit avatar" : "Edit avatar",
 	"Edit display name" : "Edit display name",
 	"Save display name" : "Save display name",
-	"Cancel display name edit" : "Cancel display name edit"
+	"Cancel display name edit" : "Cancel display name edit",
+	"You cannot play against yourself" : "You cannot play against yourself"
 }

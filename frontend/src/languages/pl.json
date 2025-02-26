@@ -230,5 +230,6 @@
 	"Edit avatar" : "Edytuj awatar",
 	"Edit display name" : "Edytuj pseudonim",
 	"Save display name" : "Zapisz pseudonim",
-	"Cancel display name edit" : "Anuluj edycję pseudonimu"
+	"Cancel display name edit" : "Anuluj edycję pseudonimu",
+	"You cannot play against yourself" : "Nie możesz grać z samym sobą"
 }

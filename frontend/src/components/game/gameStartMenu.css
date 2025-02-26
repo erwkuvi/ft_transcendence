@@ -1,11 +1,23 @@
+#pong-container {
+	min-height: fit-content;
+}
+
+#playerScoreID {
+	text-align: center;
+}
+
 #gameStartMenu {
-	width: 80%;
+	/* border: 1px solid red; */
+	overflow-wrap: anywhere;
+	width:		100%;
+	min-width: fit-content;
+	min-height: fit-content;
 	/*height: 50%; */
-	border: 1px solid white;
+	/* border: 1px solid white; */
 	margin: 0;
-	padding: 2rem;
-	padding-top: 2rem;
-	gap: 2rem;
+	padding: 32px;
+	padding-top: 32px;
+	gap: 32px;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -14,44 +26,75 @@
 	/* background-color: var(--fill-color); */
 }
 
+@media (max-width: 300px) {
+	#gameStartMenu {
+		min-width: 100%;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	#gameMenuArea1 {
+		width: 100% !important;
+	}
+}
+
+#gameMenuMainHeader {
+	margin-bottom:	30px;
+	text-align:		center;
+}
+
+#gameStartMenuWrapper {
+	/* border:				1px solid pink; */
+	display:			flex;
+	flex-direction:		column;
+	justify-content:	center;
+	align-items:		center;
+}
+
 .gameStartMenuH2 {
-	font-size: 1.8rem;
-	margin-bottom: 1.5rem;
+	font-size: 30px;
+	font-weight: 300;
+	margin-bottom: 24px;
+	text-align: center;
 }
 
 .gameStartMenuH3 {
-	font-size: 1.5rem;
+	text-align: center;
+	font-size: 24px;
+	font-weight: 400;
 }
 
 #gameMenuArea1 {
 	/* border: 1px solid yellow; */
 	width: 80%;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
-	align-items: center;
-	margin-bottom: 2rem;
+	/* align-items: center; */
+	margin-bottom: 32px;
 }
 
-#gameMenuElementWrapper {
-	/* border: 1px solid cyan; */
+/* #gameMenuElementWrapper {
+	border: 1px solid cyan;
 	display: flex;
 	flex-direction: row;
 	gap: 10rem;
-}
+} */
 
 #choiceArea {
-	/* border: 1px solid pink; */
+	/* border: 1px solid red; */
 	display: flex;
 	flex-direction: column;
-	font-size: 1.2rem;	
+	font-size: 20px;	
 }
 
 .choiceAreaSections {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	gap: 6rem;
-	/* border: 1px solid red; */
+	justify-content: center;
+	gap: 32px;
+	/* border: 1px solid turquoise; */
 }
 
 .menuChoiceElement {
@@ -67,33 +110,44 @@
 
 #menu {
 	/* border: 1px solid white; */
-	width: 8rem;
+	width: 130px;
 }
 
 #p1Controls {
+	display:			flex;
+	flex-direction:		column;
+	justify-content:	center;
+	align-items:		center;
+	flex-wrap:			wrap;
 }
 
 #p2Controls {
-	margin-top: 1.5rem;
+	margin-top: 24px;
+	display:			flex;
+	flex-direction:		column;
+	justify-content:	center;
+	align-items:		center;
+	flex-wrap:			wrap;
 }
 
 .pControlsWrapper {
 	display: flex;
 	/* border: 1px solid red; */
 	flex-direction: row;
-	flex-wrap: nowrap;
-	gap: 1rem;
-	margin-top: 0.8rem;
+	flex-wrap:		wrap;
+	gap: 16px;
+	margin-top: 14px;
 }
 
 .p2Keys {
 	border: 1px solid white;
 	display: flex;
 	justify-content: center;
+	font-size:		32px;
 	align-items: center;
 	border-radius: 10px;
-	width: 4rem;
-	height: 4rem;
+	width: 64px;
+	height: 64px;
 }
 
 .p1Keys {
@@ -102,6 +156,37 @@
 	justify-content: center;
 	align-items: center;
 	border-radius: 10px;
-	width: 4rem;
-	height: 4rem;
+	font-size: 32px;
+	width: 64px;
+	height: 64px;
+}
+
+@media (max-width: 399px) {
+	.pControlsWrapper {
+		flex-direction: column;
+	}
+
+	.pControlsWrapper .p1Keys:nth-child(2) {
+		display: none;
+	}
+
+	.pControlsWrapper .p2Keys:nth-child(2) {
+		display: none;
+	}
+}
+
+.startGameMenuButton {
+	border: none;
+    width: fit-content;
+    line-height: 20px;
+    font-size: 16px;
+    font-weight: 400;
+    align-items: center;
+    margin-top: 30px;
+    padding: 20px;
+    padding-left: 10%;
+    padding-right: 10%;
+    cursor: pointer;
+    background-color: var(--fill-color);
+    border-radius: 6px;
 }

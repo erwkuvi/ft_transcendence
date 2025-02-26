@@ -35,7 +35,7 @@ const LanguageDropdown = () => {
 	];
 
 	return (
-		<div className="language-dropdown" style={{ fontSize: `${fontSize}px` }}>
+		<div className="language-dropdown">
 			<label id="language-label" htmlFor="language-select" className="sr-only">
 				{t("Select language")} ({t("currently")} {languages.find((l) => l.code === language)?.name})
 			</label>

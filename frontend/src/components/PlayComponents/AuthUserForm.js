@@ -79,7 +79,7 @@ const AuthUserForm = ({ scaleStyle }) => {
     };
 
     return (
-        <form onSubmit={handleAuthentication} className="auth-form" style={scaleStyle}>
+        <form onSubmit={handleAuthentication} className="auth-form d-flex flex-column" style={scaleStyle}>
             <h4 style={scaleStyle}>
                 {t("Add a player")}
             </h4>
