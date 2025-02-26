@@ -14,7 +14,7 @@ export const exitTournament = async (userId) => {
 			}
         );
 
-        if (!response.ok) throw new Error("Failed to exit tournament");
+        if (response.status !== 200) throw new Error("Failed to exit tournament");
 
         // console.log("Successfully exited tournament");
     } catch (error) {

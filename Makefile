@@ -51,15 +51,31 @@ env:
 # testCert:
 # 	@openssl x509 -in $(SSL)/fullchain.crt -text -noout
 
+# Check if the .env file exists before removing it
+env_prune:
+	@if [ -f backend/users/management/command/.env ]; then \
+	    rm backend/users/management/command/.env;
+	    echo "Env file at command removed.";
+	else
+	    echo "No .env file found at command.";
+	fi  # Added missing fi here
+	
+	@if [ -f ./frontend/.env ]; then
+	    rm ./frontend/.env
+	    echo "Env file at command removed.";
+	else
+	    echo "No .env file found at command.";
+	fi
 
-# create_env:
-# 	@if [ ! -L .env ]; then touch ./.env; else rm ./.env
-# 	  @echo .secrets >> .env.test
-# 		@echo "HOST_IP=$(shell hostname -i)" >> .env.test
-# 		@echo "\n" >> .env
-# 		@echo "FRONTEND_URL=https://$(shell hostname -i)" >> .env.test
-# 		@echo "\n" >> .env
-# 		@echo "REACT_APP_BACKEND_URL=https://$(shell hostname -i)" >> .env.test
-# 		@echo "\n" >> .env
-# 		@echo "REACT_APP_BACKEND_WS=https://$(shell hostname -i)" >> .env.test
-#
+
+create_env:
+	@if [ ! -L .env ]; then touch ./.env; else rm ./.env
+	  @echo ./secrets >> .env.test
+		@echo "HOST_IP=$(shell hostname -i)" >> .env.test
+		@echo "\n" >> .env
+		@echo "FRONTEND_URL=https://$(shell hostname -i)" >> .env.test
+		@echo "\n" >> .env
+		@echo "REACT_APP_BACKEND_URL=https://$(shell hostname -i)" >> .env.test
+		@echo "\n" >> .env
+		@echo "REACT_APP_BACKEND_WS=https://$(shell hostname -i)" >> .env.test
+
