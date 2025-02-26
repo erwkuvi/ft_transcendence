@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
 import { GameContext } from "../../context/GameContext";
+import { AuthContext } from '../../context/AuthContext';
 import "./PlayNotLoggedIn.css";
 
 const PlayNotLoggedIn = ({ scaleStyle }) => {
     const { t } = useTranslation();
+	const { setNavbarOff } = useContext(AuthContext);
     const { setIsReadyToPlay, setPlayer1DisplayName, setPlayer2DisplayName} = useContext(GameContext);
 
     return (
@@ -19,6 +21,7 @@ const PlayNotLoggedIn = ({ scaleStyle }) => {
 							setPlayer1DisplayName("Player 1");
 							setPlayer2DisplayName("Player 2");
 							setIsReadyToPlay("playNotLoggedIn");
+							setNavbarOff(true)
 						}}
                         aria-label={t("Start game button for not logged in users")}
                     >

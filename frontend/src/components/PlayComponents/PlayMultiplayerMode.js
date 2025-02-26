@@ -1,11 +1,13 @@
 import React, {useContext} from 'react';
 import { useTranslation } from "react-i18next";
 import AuthUserForm from './AuthUserForm';
+import { AuthContext } from '../../context/AuthContext';
 import { GameContext } from "../../context/GameContext";
 import	'./PlayMultiplayerMode.css'
 
 const PlayMultiplayerMode = ({ scaleStyle }) => {
     const { t } = useTranslation();
+	const { setNavbarOff } = useContext(AuthContext);
 	const { setIsReadyToPlay, isOpponentAuthenticated } = useContext(GameContext);
 
 	return (
@@ -16,7 +18,10 @@ const PlayMultiplayerMode = ({ scaleStyle }) => {
 				<AuthUserForm scaleStyle={scaleStyle}/>
 				<button className="playButtonStyle2"
 						style={scaleStyle} 
-						onClick={() => setIsReadyToPlay("multiplayer")} 
+						onClick={() => {
+							setNavbarOff(true);
+							setIsReadyToPlay("multiplayer")
+						}} 
 						disabled={!isOpponentAuthenticated}
 						aria-label={t("Start multiplayer game button")}
 				>

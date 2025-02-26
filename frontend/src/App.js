@@ -31,7 +31,7 @@ function ScrollToTop() {
   
 
 function App() {
-	const { isLoggedIn } = useContext(AuthContext);
+	const { isLoggedIn, navbarOff } = useContext(AuthContext);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -57,7 +57,7 @@ function App() {
 	return (
 		<AccessibilityProvider>
 			<ScrollToTop />
-			<Header />
+			{!navbarOff && <Header />}
 			<div className="App">
 				<AuthGuard />
 				<Main>
@@ -91,7 +91,7 @@ function App() {
 					</ScrollReset>
 				</Main>
 			</div>
-			<Footer />
+			{!navbarOff && <Footer />}
 		</AccessibilityProvider>
 	);
 }

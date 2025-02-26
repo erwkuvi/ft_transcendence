@@ -355,55 +355,55 @@ function GameStartMenu({onStartGame, gameFieldStyle, setGameStyle}) {
 	);
 }
 
-function disableNavigationButtons() {
-	let pageContent = document.getElementById("pageContentID");
-	let pongHeading = document.getElementById("pongHeading");
+// function disableNavigationButtons() {
+// 	let pageContent = document.getElementById("pageContentID");
+// 	let pongHeading = document.getElementById("pongHeading");
 
 
-	if (pongHeading) {
-		pongHeading.style.display = 'none';
-	}
+// 	if (pongHeading) {
+// 		pongHeading.style.display = 'none';
+// 	}
 
-	if (pageContent) {
-		pageContent.style.padding  = '0px';
-		pageContent.style.margin   = '0px';
-		pageContent.style.position = 'relative';
-		pageContent.style.zIndex   = '1000';
-	}
+// 	if (pageContent) {
+// 		pageContent.style.padding  = '0px';
+// 		pageContent.style.margin   = '0px';
+// 		pageContent.style.position = 'relative';
+// 		pageContent.style.zIndex   = '1000';
+// 	}
 
-	let navbar = document.getElementById("navbarID");
+// 	let navbar = document.getElementById("navbarID");
 
-	if (navbar) {
-		navbar.style.display = 'none';
-	}
+// 	if (navbar) {
+// 		navbar.style.display = 'none';
+// 	}
 
 
-	let footer = document.getElementById("footerID");
+// 	let footer = document.getElementById("footerID");
 
-	if (footer) {
-		footer.style.display = 'none';
-	}
-}
+// 	if (footer) {
+// 		footer.style.display = 'none';
+// 	}
+// }
 
-function turnOnFooterNavbar() {
-    let footer = document.getElementById("footerID");
-    if (footer.style.display === "none") {
-        footer.style.display = "flex";
-    }
+// function turnOnFooterNavbar() {
+//     let footer = document.getElementById("footerID");
+//     if (footer.style.display === "none") {
+//         footer.style.display = "flex";
+//     }
 
-    let navbar = document.getElementById("navbarID");
-    if (navbar.style.display === "none") {
-        navbar.style.display = "flex";
-    }
+//     let navbar = document.getElementById("navbarID");
+//     if (navbar.style.display === "none") {
+//         navbar.style.display = "flex";
+//     }
 
-	let ponHeading  = document.getElementById("pongHeading");
-	if (ponHeading.style.display === "none") {
-		ponHeading.style.display = "flex";
-	}
-}
+// 	let ponHeading  = document.getElementById("pongHeading");
+// 	if (ponHeading.style.display === "none") {
+// 		ponHeading.style.display = "flex";
+// 	}
+// }
 
 function Pong() {
-	disableNavigationButtons();
+	// disableNavigationButtons();
 // Declare refs inside the Canvas component
 	// const [windowSize, setWindowSize] = useState({
 	// 	width: window.innerWidth,
@@ -434,9 +434,9 @@ function Pong() {
 		p2_won_set_count: 0,
 	});
 
-	window.addEventListener('popstate', () => {
-		turnOnFooterNavbar();
-	});
+	// window.addEventListener('popstate', () => {
+	// 	turnOnFooterNavbar();
+	// });
 
 	const handleScore = (player) => {
 		setScores((prev) => {

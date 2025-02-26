@@ -22,12 +22,12 @@ const Play = () => {
 	const { t } = useTranslation();
 	const navigate = useNavigate()
     const { fontSize } = useContext(AccessibilityContext);
-    const { isReadyToPlay, gameTournamentStarted } = useContext(GameContext);
+    const { isReadyToPlay, gameTournamentStarted, matchIndex } = useContext(GameContext);
 	const [ isInTournament, setIsInTournament] = useState(false);
 	const { width, height } = useWindowDimensions();
 	const [ isTheHost, setIsTheHost ] = useState(false);
 	const [ showConfirmModal, setShowConfirmModal ] = useState(false);
-	const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+	const { isLoggedIn, navbarOff, setNavbarOff } = useContext(AuthContext);
 	const [forceUpdate, setForceUpdate] = useState(0);
 
 	const [loading, setLoading] = useState(true);
@@ -46,23 +46,32 @@ const Play = () => {
                 if (!isLoggedIn || !personLoggedIn) {
                     setIsInTournament(false);
                     setIsTheHost(false);
+					setNavbarOff(false);
+
                     return;
                 }else{
 					const data = await getUserProfile();
                 	setIsInTournament(data.in_tournament);
                 	setIsTheHost(data.is_host);
+					if (data.in_tournament === true)
+						setNavbarOff(true);
+					else if (data.in_tournament === false && data.is_host === true)
+						setNavbarOff(true);
+					else 
+						setNavbarOff(false);
 				}
             } catch (error) {
                 console.error("Failed to get user profile", error);
                 setIsInTournament(false);
                 setIsTheHost(false);
+				setNavbarOff(false);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProfile();
-    }, [isLoggedIn, gameTournamentStarted, navigate, forceUpdate]);
+    }, [isLoggedIn, gameTournamentStarted, navigate, forceUpdate, matchIndex]);
 	
 	const handleLeaveTournament = () => {
 		setShowConfirmModal(true);
@@ -73,6 +82,7 @@ const Play = () => {
 		try {
 			await exitTournament(userId);
 			setShowConfirmModal(false);
+			setNavbarOff(false);
 			navigate("/play")
 			setForceUpdate(prev => prev + 1);
 		} catch (error) {
@@ -113,8 +123,13 @@ const Play = () => {
 		)
 	}else {
 		return (
-			<div className="d-flex flex-column playPageHolder" id="pageContentID" style={{height: `${height - 90}px` }}>
-				<h1 className="pageHeadingH1Style1 typicalPadding" id="pongHeading">{t("PlayTitle")}</h1>
+			<div
+        		className=" flex-column playPageHolder"
+        		id="pageContentID"
+        		style={{height:`${height - 90}px`}}
+    		>
+			{/* <div className="d-flex flex-column playPageHolder" id="pageContentID" style={{height: `${height - 90}px` }}> */}
+				<h1 className="pageHeadingH1Style1 typicalPadding" id="pongHeading" style={{display: navbarOff ? "none" : "flex",}}>{t("PlayTitle")}</h1>
 				{isReadyToPlay ? (
 					<Pong className="focus-pong" />
 				) : !isLoggedIn ? (

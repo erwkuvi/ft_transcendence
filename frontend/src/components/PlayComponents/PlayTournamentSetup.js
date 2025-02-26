@@ -16,6 +16,7 @@ const PlayTournamentSetup = ({ setForceUpdate, scaleStyle }) => {
 			setTournamentPlayers,
 			tournamentMatchID,
 			setTournamentMatchID } = useContext(GameContext);
+	const { setNavbarOff } = useContext(AuthContext);
 	const [shouldReload, setShouldReload] = useState(false);
 	const userLoggedInId = localStorage.getItem('user_id');
 	const userLoggedInDisplayName = localStorage.getItem('display_name');
@@ -63,6 +64,7 @@ const PlayTournamentSetup = ({ setForceUpdate, scaleStyle }) => {
 				const tournamentId = data[0].tournament;
 				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);
+				setNavbarOff(true);
 				navigate("/play")
 				setForceUpdate(prev => prev + 1);
 			} else {

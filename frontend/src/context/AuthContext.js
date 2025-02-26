@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access_token'));
 	const [language, setLanguage] = useState('en');
 	const [modeDarkLight, setModeDarkLight] = useState(true);
+	const [navbarOff, setNavbarOff] = useState(false);
 
 	useEffect(() => {
         const fetchUserData = async () => {
@@ -50,7 +51,9 @@ export const AuthProvider = ({ children }) => {
 										language, 
 										setLanguage, 
 										modeDarkLight, 
-										setModeDarkLight }}>
+										setModeDarkLight,
+										navbarOff,
+										setNavbarOff }}>
             {children}
         </AuthContext.Provider>
     );

@@ -10,52 +10,52 @@ import { getAllPlayers } from '../../services/getAllUsers';
 import { exitTournament } from '../../services/postExitTournament';  
 import useWindowDimensions from '../userWindowDimensions';
 
-function disableNavigationButtons() {
-	let pageContent = document.getElementById("pageContentID");
-	let pongHeading = document.getElementById("pongHeading");
+// function disableNavigationButtons() {
+// 	let pageContent = document.getElementById("pageContentID");
+// 	let pongHeading = document.getElementById("pongHeading");
 
-	if (pongHeading) {
-		pongHeading.style.display = 'none';
-	}
+// 	if (pongHeading) {
+// 		pongHeading.style.display = 'none';
+// 	}
 
-	if (pageContent) {
-		pageContent.style.padding  = '0px';
-		pageContent.style.margin   = '0px';
-		pageContent.style.position = 'relative';
-		pageContent.style.zIndex   = '1000';
-	}
+// 	if (pageContent) {
+// 		pageContent.style.padding  = '0px';
+// 		pageContent.style.margin   = '0px';
+// 		pageContent.style.position = 'relative';
+// 		pageContent.style.zIndex   = '1000';
+// 	}
 
-	let navbar = document.getElementById("navbarID");
-	if (navbar) {
-		navbar.style.display = 'none';
-	}
+// 	let navbar = document.getElementById("navbarID");
+// 	if (navbar) {
+// 		navbar.style.display = 'none';
+// 	}
 
-	let footer = document.getElementById("footerID");
-	if (footer) {
-		footer.style.display = 'none';
-	}
-}
+// 	let footer = document.getElementById("footerID");
+// 	if (footer) {
+// 		footer.style.display = 'none';
+// 	}
+// }
 
-function turnOnFooterNavbar() {
-    let footer = document.getElementById("footerID");
-    if (footer && footer.style.display === "none") {
-        footer.style.display = "flex";
-    }
+// function turnOnFooterNavbar() {
+//     let footer = document.getElementById("footerID");
+//     if (footer && footer.style.display === "none") {
+//         footer.style.display = "flex";
+//     }
 
-    let navbar = document.getElementById("navbarID");
-    if (navbar && navbar.style.display === "none") {
-        navbar.style.display = "flex";
-    }
+//     let navbar = document.getElementById("navbarID");
+//     if (navbar && navbar.style.display === "none") {
+//         navbar.style.display = "flex";
+//     }
 
-	let pongHeading  = document.getElementById("pongHeading");
-	if (pongHeading && pongHeading.style.display === "none") {
-		pongHeading.style.display = "flex";
-	}
-}
+// 	let pongHeading  = document.getElementById("pongHeading");
+// 	if (pongHeading && pongHeading.style.display === "none") {
+// 		pongHeading.style.display = "flex";
+// 	}
+// }
 
 
 const TournamentScreen = ({ setForceUpdate }) => {
-	disableNavigationButtons();
+	// disableNavigationButtons();
     const { t } = useTranslation();
 	const navigate = useNavigate();
     const { setTournamentPlayers, 
@@ -172,17 +172,17 @@ const TournamentScreen = ({ setForceUpdate }) => {
 			setStartTheTournament(false);
 			setTournamentPlayers([]);
 			setShowConfirmModal(false);
-			navigate("/play")
 			setForceUpdate(prev => prev + 1);
+			// navigate("/play")
 		} catch (error) {
 			console.error("Error exiting tournament:", error);
 		}
 	};
 
-	window.addEventListener('popstate', () => {
-		console.log('User clicked back button');
-		turnOnFooterNavbar();
-	});
+	// window.addEventListener('popstate', () => {
+	// 	console.log('User clicked back button');
+	// 	turnOnFooterNavbar();
+	// });
 
 	if (gameTournamentStarted) {
 			return <Pong className="focus-pong" />
