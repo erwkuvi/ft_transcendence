@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   nginx:
     container_name: reverse-proxy
@@ -7,8 +9,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      #expose:
-      #  - "443"
     networks:
       - transcend
     env_file:
@@ -16,6 +16,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
+      - media_data:/app/media:ro
     depends_on:
       - django
       - react
@@ -28,8 +29,6 @@ services:
       dockerfile: Dockerfile
     networks:
       - transcend
-    # volumes:
-    #   - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - postgresql
       - django
@@ -49,9 +48,8 @@ services:
     depends_on:
       - postgresql
     volumes:
-      - ./backend/static:/app/static
-      - ./backend/media:/app/media
-
+      - static_data:/app/static
+      - media_data:/app/media
 
   postgresql:
     container_name: postgresql
@@ -71,12 +69,14 @@ services:
     volumes:
       - postgresql_data:/var/lib/postgresql/data
 
-
 volumes:
   postgresql_data:
   react_node_modules:
+  media_data:
+  static_data:
 
 networks:
   transcend:
     name: transcend
     driver: bridge
+
