@@ -3,19 +3,20 @@ HOSTNAME ?= $(shell hostname -i)
 
 createDir = mkdir -p $1
 
-up: cert create_env_dev cp_env
-	@echo "🔄 Starting development environment..."
-	@chmod +x backend/script.sh
-	@echo "✅ Script permissions set."
-	@echo "🚀 Bringing up development containers..."
-	docker-compose -f docker-compose.dev.yml up --build
 
-prod: cert create_env cp_env
+up: cert create_env cp_env
 	@echo "🔄 Starting production environment..."
 	@chmod +x backend/script.sh
 	@echo "✅ Script permissions set."
 	@echo "🚀 Bringing up production containers..."
 	docker-compose up --build
+
+dev: cert create_env_dev cp_env
+	@echo "🔄 Starting development environment..."
+	@chmod +x backend/script.sh
+	@echo "✅ Script permissions set."
+	@echo "🚀 Bringing up development containers..."
+	docker-compose -f docker-compose.dev.yml up --build
 
 front:
 	@echo "🚀 Starting frontend..."

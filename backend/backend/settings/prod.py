@@ -34,6 +34,19 @@ SIMPLE_JWT = {
     }
 
 
+REST_FRAMEWORK = {
+    'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # This is for development
+        # 'rest_framework.permissions.IsAuthenticated',  # by default
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.JSONRenderer',
+    ),
+}
 
 
 # Password validation
