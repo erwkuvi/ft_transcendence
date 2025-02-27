@@ -4,6 +4,7 @@
 
 #playerScoreID {
 	text-align: center;
+	color:              var(--text-color);
 }
 
 #gameStartMenu {
@@ -187,6 +188,13 @@
     padding-left: 10%;
     padding-right: 10%;
     cursor: pointer;
+	color:            var(--text-color);
     background-color: var(--fill-color);
     border-radius: 6px;
+}
+
+.startGameMenuButton:hover {
+	background-color: white !important;
+	font-weight:      500   !important; 
+	color:            var(--color-5);
 }

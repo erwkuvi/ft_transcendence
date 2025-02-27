@@ -86,3 +86,7 @@
 		padding-right:  1rem;
 	}
 }
+
+#currTournamentLeavePageID {
+	min-height: fit-content;
+}

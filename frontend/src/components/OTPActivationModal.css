@@ -63,10 +63,11 @@
 
 /* Content inside modal */
 .modal {
+    all: unset;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
 
     /* Keep modal within the parent */
     width: 100%;

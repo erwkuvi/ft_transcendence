@@ -25,12 +25,17 @@
     border:         	none;
 }
 
-.playButtonStyle2:hover {
-    background-color:	var(--text-color);
-    color:				var(--color-5);
+/* Start: Me Ms Polska added this part */
+.playButtonStyle2:not(:disabled):hover {
+	background-color: white !important;
+	font-weight:      500   !important; 
+	color:            var(--color-5);
 }
 
+
 .playButtonStyle2:disabled {
-    opacity:        0.5;
-    cursor:         not-allowed;
+	cursor: not-allowed !important;
+	opacity: 0.6 !important;
+	background-color: var(--fill-color) !important; 
+	color: var(--text-color) !important;
 }

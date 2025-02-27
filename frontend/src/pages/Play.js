@@ -92,12 +92,12 @@ const Play = () => {
 		)
 	}else if (!isTheHost && isInTournament){
 		return (
-			<div>
+			<div className="d-flex justify-content-center align-items-center flex-column" id="currTournamentLeavePageID" style={{minHeight: `${height - 90}px`, overflowWrap: "anywhere" }}>
 				<h3 className="page-content play" style={scaleStyle}>
 					{t("You are currently in a tournament.")}
 				</h3>
 				<div>
-					<button className="btn button mt-4" style={scaleStyle} onClick={handleLeaveTournament}>
+					<button className="buttonStyle1" style={scaleStyle} onClick={handleLeaveTournament}>
 						{t("leave the tournament")}
 					</button>
             	</div>
@@ -113,7 +113,7 @@ const Play = () => {
 		)
 	}else {
 		return (
-			<div className="d-flex flex-column playPageHolder" id="pageContentID" style={{height: `${height - 90}px` }}>
+			<div className="d-flex flex-column playPageHolder" id="pageContentID" style={{minHeight: `${height - 90}px` }}>
 				<h1 className="pageHeadingH1Style1 typicalPadding" id="pongHeading">{t("PlayTitle")}</h1>
 				{isReadyToPlay ? (
 					<Pong className="focus-pong" />
@@ -123,7 +123,7 @@ const Play = () => {
 					<>
 						<div className="d-flex flex-row flex-wrap playPageCardWrapper m-0">
 							<PlayMultiplayerMode scaleStyle={scaleStyle} />
-							<PlayTournamentSetup setForceUpdate={setForceUpdate}/>
+							<PlayTournamentSetup setForceUpdate={setForceUpdate} scaleStyle={scaleStyle}/>
 						</div>
 					</>
 				)}

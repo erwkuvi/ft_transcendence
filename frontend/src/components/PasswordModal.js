@@ -57,7 +57,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit, onPasswordSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="tfa-box d-flex align-items-center justify-content-center" style={{height: `${height - 90}px`}}>
+        <div className="tfa-box d-flex align-items-center justify-content-center" style={{minHeight: `${height - 90}px`}}>
             <div className="tfa-box-overlay align-items-center justify-content-center flex-column" style={scalestyle}>
                 <h2 className="tfa-title" style={scalestyle}>{t("Confirm Password")}</h2>
                 <p className="tfa-message" style={scalestyle}>
