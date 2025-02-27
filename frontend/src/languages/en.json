@@ -231,5 +231,6 @@
 	"Edit display name" : "Edit display name",
 	"Save display name" : "Save display name",
 	"Cancel display name edit" : "Cancel display name edit",
-	"You cannot play against yourself" : "You cannot play against yourself"
+	"You cannot play against yourself" : "You cannot play against yourself",
+	"Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods." : "Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods."
 }

@@ -231,5 +231,6 @@
 	"Edit display name": "Editar nombre visible",
 	"Save display name": "Guardar nombre visible",
 	"Cancel display name edit": "Cancelar edición de nombre visible",
-	"You cannot play against yourself" : "No puedes jugar contra ti mismo"
+	"You cannot play against yourself" : "No puedes jugar contra ti mismo",
+	"Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods." : "El nombre de usuario debe tener entre 3 y 30 caracteres y solo puede contener letras, números, guiones bajos, guiones y puntos."
 }

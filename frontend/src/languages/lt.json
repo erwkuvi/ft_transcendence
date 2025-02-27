@@ -231,5 +231,6 @@
 	"Edit display name": "Redaguoti rodomą vardą",
 	"Save display name": "Išsaugoti rodomą vardą",
 	"Cancel display name edit": "Atšaukti rodomo vardo redagavimą",
-	"You cannot play against yourself" : "Negali žaisti prieš save"
+	"You cannot play against yourself" : "Negali žaisti prieš save",
+	"Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods." : "Vartotojo vardas turi būti 3-30 simbolių ilgio ir gali būti sudarytas tik iš raidžių, skaičių, pabraukimo simbolių, brūkšnių ir taškų."
 }

@@ -31,8 +31,15 @@ function ScrollToTop() {
 
 
 function App() {
-	const { isLoggedIn, navbarOff } = useContext(AuthContext);
+	const { isLoggedIn, navbarOff, setNavbarOff } = useContext(AuthContext);
+	const location = useLocation();
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (location.pathname !== "/play" && navbarOff) {
+			setNavbarOff(false);
+		}
+	}, [location.pathname, navbarOff, setNavbarOff]);
 
 	useEffect(() => {
 		if (isLoggedIn && location.pathname === '/login') {
@@ -40,19 +47,6 @@ function App() {
 		}
 
 	}, [isLoggedIn, navigate]);
-
-	// useEffect(() => {
-	// 	handleGlobalError = (error) => {
-	// 		if (error.response && error.response.status === 401)
-	// 			navigate('/401')
-	// 	}
-
-	// 	window.addEventListener('unauthorized', handleGlobalError);
-
-	// 	return () => {
-	// 		window.removeEventListener('unauthorized', handleGlobalError);
-	// 	};
-	// }, [navigate])
 
 	return (
 		<AccessibilityProvider>

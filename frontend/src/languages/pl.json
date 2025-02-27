@@ -231,5 +231,6 @@
 	"Edit display name" : "Edytuj pseudonim",
 	"Save display name" : "Zapisz pseudonim",
 	"Cancel display name edit" : "Anuluj edycję pseudonimu",
-	"You cannot play against yourself" : "Nie możesz grać z samym sobą"
+	"You cannot play against yourself" : "Nie możesz grać z samym sobą",
+	"Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods." : "Nazwa użytkownika musi mieć od 3 do 30 znaków i może zawierać tylko litery, cyfry, podkreślenia, myślnika i kropki."
 }
