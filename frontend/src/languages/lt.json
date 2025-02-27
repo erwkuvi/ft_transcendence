@@ -232,5 +232,10 @@
 	"Save display name": "Išsaugoti rodomą vardą",
 	"Cancel display name edit": "Atšaukti rodomo vardo redagavimą",
 	"You cannot play against yourself" : "Negali žaisti prieš save",
-	"Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods." : "Vartotojo vardas turi būti 3-30 simbolių ilgio ir gali būti sudarytas tik iš raidžių, skaičių, pabraukimo simbolių, brūkšnių ir taškų."
+	"Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods." : "Vartotojo vardas turi būti 3-30 simbolių ilgio ir gali būti sudarytas tik iš raidžių, skaičių, pabraukimo simbolių, brūkšnių ir taškų.",
+	"Invalid format of the email." : "Neteisingas el. pašto formatas.",
+	"This password is too short. It must contain at least 8 characters." : "Šis slaptažodis yra per trumpas. Jis turi būti bent 8 simbolių ilgio.",
+	"This password is too common." : "Šis slaptažodis yra per dažnas.",
+	"This password is entirely numeric." : "Šis slaptažodis yra vien tik skaičiai.",
+	"Email must be in the format: example@domain.com" : "El. pašto adresas turi būti tokio formato: example@domain.com"
 }

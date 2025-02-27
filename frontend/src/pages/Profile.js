@@ -271,6 +271,7 @@ const handleToggle2FA = async (password = null) => {
 							src={profile.avatar} 
 							className='profilepic m-2' 
 							alt={`${profile.display_name}'s avatar`}
+							tabIndex="0"
 						/>
 						{/* Hidden file input - Fixed visibility */}
 						<input
