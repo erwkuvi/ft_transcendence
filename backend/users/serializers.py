@@ -51,7 +51,16 @@ class SimpleLoginSerializer(serializers.Serializer):
         }
         
 
+
 class UserCreateSerializer(BaseUserCreateSerializer):
+    email = serializers.EmailField(
+        validators=[
+            RegexValidator(
+                regex=r'^[\w\.-]+@[\w\.-]+\.\w+$',
+                message="Enter a valid email address."
+            )
+        ]
+    )
     username = serializers.CharField(
         validators=[
             RegexValidator(
@@ -72,16 +81,21 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         }
 
     def validate(self, attrs: dict):
-        email = attrs.get("email").lower().strip()
+        # Normalize and validate the email field.
+        email = attrs.get("email", "").lower().strip()
         if User.objects.filter(email__iexact=email).exists():
             raise serializers.ValidationError({"email": "Email already exists!"})
-        # Optionally, check for username uniqueness after regex validation:
+        
+        # Validate uniqueness of the username.
         username = attrs.get("username")
         if User.objects.filter(username__iexact=username).exists():
             raise serializers.ValidationError({"username": "Username already exists!"})
+        
+        # Call the parent class's validate method.
         return super().validate(attrs)
 
     def create(self, validated_data: dict):
+        # Create a new user instance with the provided data.
         email = validated_data.get("email")
         username = validated_data.get("username")
         user = User(
@@ -91,6 +105,8 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         user.set_password(validated_data.get("password"))
         user.save()
         return user
+
+
 #class UserCreateSerializer(BaseUserCreateSerializer):
 #
 #    class Meta(BaseUserCreateSerializer.Meta):
