@@ -7,7 +7,7 @@ import './AuthTournamentForm.css';
 
 const AuthTournamentForm = ({ scaleStyle }) => {
     const { t } = useTranslation();
-    const { tournamentPlayers, setTournamentPlayers, setIsTournamentReady, setMode } = useContext(GameContext);
+    const { tournamentPlayers, setTournamentPlayers, setIsTournamentReady } = useContext(GameContext);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [isBeingSubmitted, setIsBeingSubmitted] = useState(false);
     const [errorTrnm, setErrorTrnm] = useState('');
@@ -19,15 +19,10 @@ const AuthTournamentForm = ({ scaleStyle }) => {
     useEffect(() => {
 		const savedPlayers = JSON.parse(localStorage.getItem('tournamentPlayers')) || [];
 		setLocalStoragePlayers(savedPlayers);
-
-		if (currentPlayerNumber === 3) {
-			const personsLoggedInId = Number(localStorage.getItem('user_id'));
-			const personsLoggedInDisplayName = localStorage.getItem('display_name');
-
+		setTournamentPlayers(savedPlayers);
+		if (savedPlayers.length === 3) {
 			setIsTournamentReady(true);
-			const newPlayers = [...localStoragePlayers, { id: personsLoggedInId, display_name: personsLoggedInDisplayName }];
-			setTournamentPlayers(newPlayers);
-			localStorage.removeItem('tournamentPlayers');
+			setIsBeingSubmitted(false)
 		}
 
 		const storedError = localStorage.getItem('urlTournamentError');
@@ -48,6 +43,7 @@ const AuthTournamentForm = ({ scaleStyle }) => {
 
     const handle42AuthClick = () => {
 		setErrorTrnm('')
+		console.log("currentPlayerNumber", currentPlayerNumber)
 		sessionStorage.setItem('mode', 'tournament');
 		handle42Authentication();
 	};

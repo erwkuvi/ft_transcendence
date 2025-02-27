@@ -50,39 +50,28 @@ const PlayTournamentSetup = ({ setForceUpdate, scaleStyle }) => {
 		try {
 			const { success, data, error } = await createTournament(createTournamentData);
 	
+			localStorage.removeItem('tournamentPlayers');
+			setTournamentPlayers([]);
+
 			if (!success) {
 				console.error("Error creating tournament:", error);
-				localStorage.removeItem('tournamentPlayers');
-				setTournamentPlayers([]);
 				alert(error);
-				navigate("/play")
-				setForceUpdate(prev => prev + 1);
 				return;
 			}
-	
-	
 			if (Array.isArray(data) && data.length > 0) {
 				const tournamentId = data[0].tournament;
 				setTournamentMatchID(tournamentId);
 				setStartTheTournament(true);
 				setNavbarOff(true);
-				navigate("/play")
-				setForceUpdate(prev => prev + 1);
 			} else {
 				console.error("Unexpected response format:", data);
-				localStorage.removeItem('tournamentPlayers');
-				setTournamentPlayers([]);
-				navigate("/play")
-				setForceUpdate(prev => prev + 1);
 			}
 		} catch (error) {
 			console.error("Error saving players to the tournament:", error);
-			setTournamentPlayers([]);
-			localStorage.removeItem('tournamentPlayers');
 			alert(error.message);
-			navigate("/play")
-			setForceUpdate(prev => prev + 1);
 		}
+		navigate("/play");
+		setForceUpdate(prev => prev + 1);
 	};
 
     return (
