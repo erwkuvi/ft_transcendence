@@ -1,5 +1,6 @@
 .env
 .secrets.dev
+.secrets
 .idea/
 staticfiles/
 frontend/node_modules/
