@@ -49,7 +49,7 @@ const Otp = ({ onSuccess }) => {
 	};
 
 	return (
-		<div className="otp-modal-overlay" style={{height: `${height - 90}px`}}>
+		<div className="otp-modal-overlay" style={{minHeight: `${height - 90}px`}}>
 			<div className="otp-modal" style={scalestyle}>
 				<div className="modal" style={scalestyle}>
 					<h2 className="text-xl font-bold mb-4" style={scalestyle}>{t("2FA Activation")}</h2>

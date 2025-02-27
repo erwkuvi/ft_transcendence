@@ -63,10 +63,26 @@
 .profilepic {
 	min-width:		50px;
 	min-height:		50px;
+	width:			200px;
+	height:			200px;
 	max-width:		200px;
 	max-height:		200px;
     object-fit:		cover;
     border-radius:	50%; 
+}
+
+@media (max-width: 360px) {
+	.profilepic {
+		width: 150px;
+		height: 150px;
+	}
+}
+
+@media (max-width: 250px) {
+	.profilepic {
+		width: 100px;
+		height: 100px;
+	}
 }
 
 .edit-avatar-button{
@@ -143,7 +159,6 @@
 
 #profileEditDisplayNameButton {
 	background-color:	transparent;
-	color:				white;
 	border:				none;
 	cursor:				pointer;
 }

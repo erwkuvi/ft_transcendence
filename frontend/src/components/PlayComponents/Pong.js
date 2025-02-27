@@ -248,7 +248,7 @@ function PlayerPanel({scores}) {
 	const { player1DisplayName, player2DisplayName } = useContext(GameContext);
 
 	return (
-		<div style={{ position: 'absolute', top: '80px', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }} id="playerScoreID">
+		<div style={{ position: 'absolute', top: '80px', left: '50%', transform: 'translateX(-50%)', fontSize: '24px' }} id="playerScoreID">
 			{player1DisplayName}: {scores.p1_in_set_score} Set count: {scores.p1_won_set_count} | {player2DisplayName}: {scores.p2_in_set_score} Set count: {scores.p2_won_set_count}
 		</div>
 	);

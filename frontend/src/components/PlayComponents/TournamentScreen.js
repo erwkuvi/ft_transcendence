@@ -188,7 +188,7 @@ const TournamentScreen = ({ setForceUpdate }) => {
 			return <Pong className="focus-pong" />
 	}else{
 		return (
-			<div className="tournament-matches d-flex flex-column w-100" style={{height: `${height - 90}px`}}>
+			<div className="tournament-matches d-flex flex-column w-100" style={{minHeight: `${height - 90}px`}}>
             <h2 className="tournament-title">{t("TournamentBracket")}</h2>
             
             <div className="tournament-bracket d-flex flex-row flex-wrap">

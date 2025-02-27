@@ -260,7 +260,7 @@ const handleToggle2FA = async (password = null) => {
   if (!profile) return <p>No profile data available</p>;
 
 	return (
-		<div className="d-flex flex-column align-items-center w-100 profilePageHolder" id="profilePageHolder" style={{height: `${height - 90}px`}}>
+		<div className="d-flex flex-column align-items-center w-100 profilePageHolder" id="profilePageHolder" style={{minHeight: `${height - 90}px`}}>
 			<h1 className="pageHeadingH1Style1 profileHeading">{t("profile")}</h1>
 			<div className='profileCardHolder  mb-0 w-100' style={{ fontSize: `${fontSize}px` }}>
 				<div className='profileCardStyle1' style={{ fontSize: `${fontSize}px` }}>
@@ -356,7 +356,7 @@ const handleToggle2FA = async (password = null) => {
 							<button
 									onClick={handleInitiateToggle2FA}
 									disabled={isSaving2FA}
-									className="playButtonStyle2"
+									className="buttonStyle1"
 									aria-label={profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}
 							>
 									{isSaving2FA ? t("Saving...") : profile.otp_active ? t("Disable 2FA") : t("Enable 2FA")}

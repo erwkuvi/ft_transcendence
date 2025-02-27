@@ -5,6 +5,7 @@ import AuthTournamentForm from './AuthTournamentForm';
 import { GameContext } from "../../context/GameContext";
 import { AuthContext } from "../../context/AuthContext";
 import "./PlayTournamentSetup.css";
+import "../../pages/Play.css"
 import { createTournament } from '../../services/postCreateTournament'; 
 
 const PlayTournamentSetup = ({ setForceUpdate, scaleStyle }) => {
@@ -90,7 +91,7 @@ const PlayTournamentSetup = ({ setForceUpdate, scaleStyle }) => {
             	<h3 style={scaleStyle}>{t("PlayTitleTournament")}</h3>
             	<p style={scaleStyle} className="playCardDescription">{t("PlayDescriptionTournament")}</p>
             	<AuthTournamentForm scaleStyle={scaleStyle}/>
-            	<button className="playButtonStyle2" 
+            	<button className="buttonStyle1" 
 					style={scaleStyle} 
 					onClick={handleClick} 
 					disabled={!isTournamentReady}

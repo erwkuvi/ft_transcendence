@@ -17,7 +17,7 @@ function WinningScreen({ player, score1, score2 }) {
     
     const isLoggedIn = player1DisplayName !== defaultDisplayName1 && player2DisplayName !== defaultDisplayName2;
     return (
-        <div id="winningScreen" className="w-100 d-flex justify-content-center align-items-center" style={{height: `${height - 90}px`, overflowWrap: "anywhere", padding: "20px"}}>
+        <div id="winningScreen" className="w-100 d-flex justify-content-center align-items-center" style={{minHeight: `${height - 90}px`, overflowWrap: "anywhere", padding: "20px"}}>
             <div>
                 <h2 style={{fontSize: "36px"}}>{t("Winner")} {player}</h2>
                 <p style={{fontSize: "18px"}}>{player1DisplayName || defaultDisplayName1} {t("score")} {score1}</p>
