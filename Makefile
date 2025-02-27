@@ -34,7 +34,7 @@ re: down prune
 	docker-compose build --no-cache
 	docker-compose up
 
-prune: env_prune
+prune: env_prune avatar_prune
 	@echo "🧹 Cleaning up containers, images, and volumes..."
 	@./backend/clean_migrations.sh
 	docker-compose down --rmi all --volumes --remove-orphans
@@ -87,6 +87,15 @@ env_prune:
 		echo "⚠️  No frontend/.env file found."; \
 	fi
 
+avatar_prune:
+	@echo "🗑️  Removing profile pictures..."
+	@find backend/media/avatars/ -type f -name "*" ! -name "avatar.png" -delete
+	@echo "✅ Profile pictures removed."
+	@echo "🗑️  Removing QR code images..."
+	@rm -rf backend/media/qrcode/*
+	@echo "✅ QR code images removed."
+
+
 create_env:
 	@echo "📄 Creating production .env file..."
 	@if [ -f .env ]; then rm .env; echo "✅ Old .env removed."; fi
@@ -96,7 +105,7 @@ create_env:
 	@echo "HOST_IP=$(HOSTNAME)" 
 	@echo "FRONTEND_URL=https://$(HOSTNAME)" >> .env
 	@echo "REACT_APP_BACKEND_URL=https://$(HOSTNAME)" >> .env
-	@echo "REACT_APP_BACKEND_WS=https://$(HOSTNAME)" >> .env
+	@echo "REACT_APP_BACKEND_WS=wss://$(HOSTNAME)" >> .env
 	@echo "NGINX_SERVER_NAME=$(HOSTNAME)" >> .env
 	@echo "✅ Production .env file created."
 
@@ -109,7 +118,7 @@ create_env_dev:
 	@echo "HOST_IP=$(HOSTNAME)" 
 	@echo "FRONTEND_URL=https://$(HOSTNAME)" >> .env
 	@echo "REACT_APP_BACKEND_URL=https://$(HOSTNAME)" >> .env
-	@echo "REACT_APP_BACKEND_WS=https://$(HOSTNAME)" >> .env
+	@echo "REACT_APP_BACKEND_WS=wss://$(HOSTNAME)" >> .env
 	@echo "NGINX_SERVER_NAME=$(HOSTNAME)" >> .env
 	@echo "✅ Development .env file created."
 
