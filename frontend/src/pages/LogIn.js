@@ -100,7 +100,7 @@ const LogIn = () => {
 					if (error.response.data.username) {
 						if (error.response.data.username[0] === 'Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods.')
 							alert(t('Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods.'));
-						else if (error.response.data.username[0] === 'A user with that username already exists.')
+						else if (error.response.data.username[0] === 'Username already exists!')
 							alert(t('Username already exists. Please choose a different one.'));
 					}else if(error.response.data.email){
 						alert(t('Email was already used. Please choose a different one.'));
