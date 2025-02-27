@@ -71,8 +71,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
-    #permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny] # for development
+    permission_classes = [IsAuthenticated]
+    #permission_classes = [AllowAny] # for development
     parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
     def list(self, request, *args, **kwargs):
@@ -105,8 +105,8 @@ class PlayerProfileViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.Generi
 class MatchViewSet(viewsets.ModelViewSet):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
-    permission_classes = [AllowAny] # for development
-    #permission_classes = [IsAuthenticated]
+    #permission_classes = [AllowAny] # for development
+    permission_classes = [IsAuthenticated]
 
 #    def get_queryset(self):
 #        if self.request.user.is_staff:
@@ -533,7 +533,8 @@ class LogoutView(generics.GenericAPIView):
 # ---------------------- Tournament Endpoints ----------------
 class TournamentCreateViewSet(viewsets.GenericViewSet):
     serializer_class = TournamentSerializer
-    permission_classes = [AllowAny]
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Tournament.objects.all()
@@ -563,7 +564,8 @@ class TournamentCreateViewSet(viewsets.GenericViewSet):
 
 class ExitTournamentViewSet(viewsets.GenericViewSet):
     serializer_class = ExitTournamentSerializer
-    permission_classes = [AllowAny]
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -614,8 +616,8 @@ class MatchTournamentViewSet(viewsets.ModelViewSet):
 
 class ScoreRetrieveViewSet(viewsets.GenericViewSet):
     serializer_class = ScoreRetrieveSerializer
-    #permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    #permission_classes = [AllowAny]
 
 
     def create(self, request, *args, **kwargs):
@@ -630,7 +632,8 @@ class ScoreRetrieveViewSet(viewsets.GenericViewSet):
 
 
 class TournamentViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny]
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def retrieve(self, request, pk=None):
         serializer = TournamentIdSerializer(data={'tournament_id': pk})
         if serializer.is_valid():

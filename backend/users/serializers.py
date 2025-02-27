@@ -565,13 +565,11 @@ class ExitTournamentSerializer(serializers.Serializer):
 
         if player.is_host and match is None:
             ExitTournamentSerializer.delete_tournament_and_update_players(tournament.id)
-            #print(f'---------------------------------------- match is None --------------------------- ')
             return {"message": "Tournament has been destroyed due to the host destroying it"}
 
         final_match = Match.objects.filter(tournament=tournament, level=0).first()
 
         if player.is_host and match.level and final_match == None:
-            #print(f'---------------------------------------- match level is {match.level} --------------------------- ')
             ExitTournamentSerializer.delete_tournament_and_update_players(tournament.id)
             return {"message": "Tournament has been destroyed due to the host destroying it"}
 

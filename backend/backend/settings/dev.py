@@ -9,6 +9,7 @@ DEBUG = True
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
 
+ALLOWED_HOSTS = [HOST_IP, 'localhost', '127.0.0.1']
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
@@ -20,8 +21,8 @@ SIMPLE_JWT = {
     'SIGNING_KEY': 'hZBVwFTiEsVWavJqGiP2VCIdVUtfLjfLTCvbmYimmH3WxpIiaSZyaBJyIbIBVHUz4nM'
     }
 
-
-CORS_ORIGIN_ALLOW_ALL = True
+#When set to False something else has to be updated as I can get any images in prod
+CORS_ORIGIN_ALLOW_ALL = True 
 
 CORS_ALLOWED_ORIGINS = [
 	"http://localhost:80",

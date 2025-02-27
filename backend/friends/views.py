@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .serializers import FriendshipSerializer, BasicUserSerializer
 from .models import Friendship, FriendshipHistory
 from users.models import User
+from rest_framework.permissions import IsAuthenticated, AllowAny#, IsAdminUser
 from users.signals import friendship_created, friendship_destroyed
 from notifications.signals import friendship_request_created
 from django.conf import settings
@@ -18,12 +19,14 @@ from django.db.models import Q
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = BasicUserSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_context(self):
         return {'request': self.request}
 
 class ManageOtherUsers(viewsets.GenericViewSet):
     serializer_class = FriendshipSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_sender_and_receiver(self, request):
         data = request.data

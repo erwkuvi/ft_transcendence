@@ -1,65 +1,113 @@
 SSL=./nginx/certs
+HOSTNAME ?= $(shell hostname -i)
 
 createDir = mkdir -p $1
 
-first: cert env 
+up: cert create_env_dev cp_env
+	@echo "🔄 Starting development environment..."
 	@chmod +x backend/script.sh
+	@echo "✅ Script permissions set."
+	@echo "🚀 Bringing up development containers..."
 	docker-compose -f docker-compose.dev.yml up --build
 
-up: cert
+prod: cert create_env cp_env
+	@echo "🔄 Starting production environment..."
 	@chmod +x backend/script.sh
-	docker-compose -f docker-compose.dev.yml up --build
-
-prod:
-	@chmod +x backend/script.sh
+	@echo "✅ Script permissions set."
+	@echo "🚀 Bringing up production containers..."
 	docker-compose up --build
 
 front:
+	@echo "🚀 Starting frontend..."
 	docker-compose -f frontend/docker-compose.yml up --build
 
 back:
+	@echo "🚀 Starting backend..."
 	docker-compose -f backend/docker-compose.backend.yml up --build
 
 down:
+	@echo "🛑 Stopping all containers..."
 	docker-compose down --remove-orphans
 
 re: down prune
+	@echo "♻️  Rebuilding and restarting all containers..."
 	docker-compose build --no-cache
 	docker-compose up
 
-prune:
+prune: env_prune
+	@echo "🧹 Cleaning up containers, images, and volumes..."
 	@./backend/clean_migrations.sh
 	docker-compose down --rmi all --volumes --remove-orphans
 
 proxy:
-	
+
 
 .PHONY: up down prod re prune front backend
 
 cert:
+	@echo "🔍 Checking SSL certificates..."
 	$(call createDir,$(SSL))
 	@if [ -f $(SSL)/privkey.key ] && [ -f $(SSL)/fullchain.crt ]; then \
-		printf "$(LF)  🟢 $(P_BLUE)Certificates already exists $(P_NC)\n"; \
+		echo "🟢 Certificates already exist."; \
 	else \
-		docker run --rm --hostname localhost -v $(SSL):/certs -it alpine sh -c 'apk add --no-cache nss-tools curl && curl -JLO "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64" && mv mkcert-v1.4.4-linux-amd64 /usr/local/bin/mkcert && chmod +x /usr/local/bin/mkcert && mkcert -install && mkcert -key-file /certs/privkey.key -cert-file /certs/fullchain.crt localhost' ; \
+		echo "🔧 Generating new SSL certificates..."; \
+		docker run --rm --hostname $(HOSTNAME) -v $(SSL):/certs -it alpine sh -c 'apk add --no-cache nss-tools curl && curl -JLO "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64" && mv mkcert-v1.4.4-linux-amd64 /usr/local/bin/mkcert && chmod +x /usr/local/bin/mkcert && mkcert -install && mkcert -key-file /certs/privkey.key -cert-file /certs/fullchain.crt $(HOSTNAME)'; \
+		echo "✅ SSL certificates generated successfully."; \
 	fi
 
-env:
-	@if [ ! -L frontend/.env ]; then cp ./.env frontend/.env; else echo "Env file frontend/.env already exists"; fi
-	@if [ ! -L backend/users/management/commands/.env ]; then cp ./.env backend/users/management/commands/.env; else echo "Env File backend/users/management/commands/.env already exists"; fi
+cp_env:
+	@echo "🔄 Copying environment files..."
+	@if [ ! -L frontend/.env ]; then \
+		cp ./.env frontend/.env; \
+		echo "✅ Environment file copied to frontend."; \
+	else \
+		echo "⚠️  Env file frontend/.env already exists."; \
+	fi
 
-# testCert:
-# 	@openssl x509 -in $(SSL)/fullchain.crt -text -noout
+	@if [ ! -L backend/users/management/commands/.env ]; then \
+		cp ./.env backend/users/management/commands/.env; \
+		echo "✅ Environment file copied to backend."; \
+	else \
+		echo "⚠️  Env file backend/users/management/commands/.env already exists."; \
+	fi
 
+env_prune:
+	@echo "🗑️  Removing old environment files..."
+	@if [ -f backend/users/management/command/.env ]; then \
+		rm backend/users/management/command/.env; \
+		echo "✅ Env file at backend removed."; \
+	else \
+		echo "⚠️  No .env file found at backend."; \
+	fi
 
-# create_env:
-# 	@if [ ! -L .env ]; then touch ./.env; else rm ./.env
-# 	  @echo .secrets >> .env.test
-# 		@echo "HOST_IP=$(shell hostname -i)" >> .env.test
-# 		@echo "\n" >> .env
-# 		@echo "FRONTEND_URL=https://$(shell hostname -i)" >> .env.test
-# 		@echo "\n" >> .env
-# 		@echo "REACT_APP_BACKEND_URL=https://$(shell hostname -i)" >> .env.test
-# 		@echo "\n" >> .env
-# 		@echo "REACT_APP_BACKEND_WS=https://$(shell hostname -i)" >> .env.test
+	@if [ -f ./frontend/.env ]; then \
+		rm ./frontend/.env; \
+		echo "✅ Env file at frontend removed."; \
+	else \
+		echo "⚠️  No frontend/.env file found."; \
+	fi
+
+create_env:
+	@echo "📄 Creating production .env file..."
+	@if [ -f .env ]; then rm .env; echo "✅ Old .env removed."; fi
+	touch .env
+	@cat ./.secrets >> .env
+	@echo "HOST_IP=$(HOSTNAME)" >> .env
+	@echo "FRONTEND_URL=https://$(HOSTNAME)" >> .env
+	@echo "REACT_APP_BACKEND_URL=https://$(HOSTNAME)" >> .env
+	@echo "REACT_APP_BACKEND_WS=https://$(HOSTNAME)" >> .env
+	@echo "NGINX_SERVER_NAME=$(HOSTNAME)" >> .env
+	@echo "✅ Production .env file created."
+
+create_env_dev:
+	@echo "📄 Creating development .env file..."
+	@if [ -f .env ]; then rm .env; echo "✅ Old .env removed."; fi
+	touch .env
+	@cat ./.secrets.dev >> .env
+	@echo "HOST_IP=$(HOSTNAME)" >> .env
+	@echo "FRONTEND_URL=https://$(HOSTNAME)" >> .env
+	@echo "REACT_APP_BACKEND_URL=https://$(HOSTNAME)" >> .env
+	@echo "REACT_APP_BACKEND_WS=https://$(HOSTNAME)" >> .env
+	@echo "NGINX_SERVER_NAME=$(HOSTNAME)" >> .env
+	@echo "✅ Development .env file created."
 
