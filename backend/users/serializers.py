@@ -12,6 +12,7 @@ from django.utils.crypto import get_random_string
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from django.core.validators import RegexValidator
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .models import User, PlayerProfile, Match, PlayerMatch, Tournament
 from .signals import match_created
@@ -51,27 +52,33 @@ class SimpleLoginSerializer(serializers.Serializer):
         
 
 class UserCreateSerializer(BaseUserCreateSerializer):
+    username = serializers.CharField(
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Z0-9._-]{3,30}$',
+                message="Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods."
+            )
+        ]
+    )
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
-        fields = ['id', 'username',
-                  'email', 'qr_code', 'password']
+        fields = ['id', 'username', 'email', 'qr_code', 'password']
         extra_kwargs = {
             "password": {"write_only": True},
             "qr_code": {"read_only": True},
+            # Optionally, remove the default uniqueness validator if you want to handle it manually:
+            "username": {"validators": []},
         }
 
-    def validate_username(self, value):
-        if not re.match(r'^[a-zA-Z0-9._-]{3,30}$', value):
-            raise serializers.ValidationError("Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods.")
-        return value
-
     def validate(self, attrs: dict):
-        self.validate_username(attrs.get("username"))
         email = attrs.get("email").lower().strip()
         if User.objects.filter(email__iexact=email).exists():
             raise serializers.ValidationError({"email": "Email already exists!"})
-        self.validate_username(attrs.get("username"))
+        # Optionally, check for username uniqueness after regex validation:
+        username = attrs.get("username")
+        if User.objects.filter(username__iexact=username).exists():
+            raise serializers.ValidationError({"username": "Username already exists!"})
         return super().validate(attrs)
 
     def create(self, validated_data: dict):
@@ -79,12 +86,46 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         username = validated_data.get("username")
         user = User(
             email=email,
-            username=username,  # Inherited from AbstractUser
+            username=username,
         )
-        # Use set_password for proper password hashing
         user.set_password(validated_data.get("password"))
         user.save()
         return user
+#class UserCreateSerializer(BaseUserCreateSerializer):
+#
+#    class Meta(BaseUserCreateSerializer.Meta):
+#        model = User
+#        fields = ['id', 'username',
+#                  'email', 'qr_code', 'password']
+#        extra_kwargs = {
+#            "password": {"write_only": True},
+#            "qr_code": {"read_only": True},
+#        }
+#
+#    def validate_username(self, value):
+#        if not re.match(r'^[a-zA-Z0-9._-]{3,30}$', value):
+#            raise serializers.ValidationError("Username must be 3-30 characters long and can only contain letters, numbers, underscores, hyphens, and periods.")
+#        return value
+#
+#    def validate(self, attrs: dict):
+#        self.validate_username(attrs.get("username"))
+#        email = attrs.get("email").lower().strip()
+#        if User.objects.filter(email__iexact=email).exists():
+#            raise serializers.ValidationError({"email": "Email already exists!"})
+#        self.validate_username(attrs.get("username"))
+#        return super().validate(attrs)
+#
+#    def create(self, validated_data: dict):
+#        email = validated_data.get("email")
+#        username = validated_data.get("username")
+#        user = User(
+#            email=email,
+#            username=username,  # Inherited from AbstractUser
+#        )
+#        # Use set_password for proper password hashing
+#        user.set_password(validated_data.get("password"))
+#        user.save()
+#        return user
 
 # for the current user, which information is shown
 class UserSerializer(BaseUserSerializer):
@@ -92,19 +133,6 @@ class UserSerializer(BaseUserSerializer):
         model = User
         fields = ['id', 'username',
                   'email', 'qr_code', 'password', 'otp_active', 'auth_provider']
-
-
-
-
-
-
-
-
-
-
-
-
-
         extra_kwargs = {
             "password": {"write_only": True},
             "qr_code": {"read_only": False},
