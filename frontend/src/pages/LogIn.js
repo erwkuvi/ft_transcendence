@@ -103,7 +103,20 @@ const LogIn = () => {
 						else if (error.response.data.username[0] === 'Username already exists!')
 							alert(t('Username already exists. Please choose a different one.'));
 					}else if(error.response.data.email){
-						alert(t('Email was already used. Please choose a different one.'));
+						if (error.response.data.email[0] === 'Email already exists!')
+							alert(t('Email was already used. Please choose a different one.'));
+						else
+							alert(t('Invalid format of the email.'))
+					}else if (error.response.data.password){
+						if (error.response.data.password[0] === 'This password is too short. It must contain at least 8 characters.')
+							alert(t('This password is too short. It must contain at least 8 characters.'));
+						else if (error.response.data.password[0] === 'This password is too common.')
+							alert(t('This password is too common.'));
+						else if (error.response.data.password[0] === 'This password is entirely numeric.')
+							alert(t('This password is entirely numeric.'));
+						else 
+							alert(t('Email must be in the format: example@domain.com'));
+					
 					} else {
 						alert(t('Sign up failed. Please try again.'));
 					}
