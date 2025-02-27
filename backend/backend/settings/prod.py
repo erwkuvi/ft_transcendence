@@ -12,7 +12,12 @@ FRONTEND_URL = env('FRONTEND_URL')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [HOST_IP, 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    os.getenv("NGINX_SERVER_NAME"),
+    "localhost",
+    "127.0.0.1",
+    "django",
+]
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
@@ -54,6 +59,6 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 
 CORS_ALLOWED_ORIGINS = [
-	"http://{HOST_IP}:80",
-    env('FRONTEND_URL'),
+    FRONTEND_URL,
+	"https://localhost",
 ]

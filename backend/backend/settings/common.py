@@ -44,7 +44,7 @@ FRONTEND_URL = env('FRONTEND_URL')
 SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1", FRONTEND_URL]
 
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
@@ -74,7 +74,8 @@ SECURE_HSTS_PRELOAD = True
 INSTALLED_APPS = [
     'daphne',
     'channels',# WebSockets and more for Django
-	'django.contrib.admin', 'django.contrib.auth',
+	'django.contrib.admin',
+    'django.contrib.auth',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.messages',

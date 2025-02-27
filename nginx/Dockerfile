@@ -15,10 +15,10 @@
 
 #CMD ["nginx", "-g", "daemon off;"]
 
-FROM nginx:latest
+FROM nginx:stable-alpine
 
 # Install necessary tools including envsubst
-RUN apt-get update && apt-get install -y gettext-base netcat-openbsd iputils-ping && apt-get clean
+RUN apk update && apk add --no-cache gettext netcat-openbsd iputils
 
 # Copy the template nginx.conf (will contain variables like ${NGINX_SERVER_NAME})
 COPY ./nginx.conf /etc/nginx/nginx.template

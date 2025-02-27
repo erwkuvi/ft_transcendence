@@ -2,7 +2,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { NotFound, Unauthorized, ServerError, BadGateway, GatewayTimeout, RequestTimeout } from './pages/ErrorPages';
-import { GameProvider } from "./context/GameContext"; 
+import { GameProvider } from "./context/GameContext";
 import { AuthGuard } from './guards/authGuard';
 import { OAuth42CallbackHandler } from './guards/intraPlayerGuard';
 import Header from './components/Header';
@@ -21,14 +21,14 @@ import PrivateRoute from "./components/PrivateRoute";
 
 function ScrollToTop() {
 	const location = useLocation();
-	
+
 	React.useEffect(() => {
 	  window.scrollTo(0, 0);
 	}, [location.pathname]);
-	
+
 	return null;
   }
-  
+
 
 function App() {
 	const { isLoggedIn, navbarOff } = useContext(AuthContext);
@@ -38,7 +38,7 @@ function App() {
 		if (isLoggedIn && location.pathname === '/login') {
 			navigate('/profile');
 		}
-		
+
 	}, [isLoggedIn, navigate]);
 
 	// useEffect(() => {
@@ -75,14 +75,14 @@ function App() {
 							<Route path="/" element={<Home />} />
 							<Route path="/about" element={<About />} />
 							<Route path="/login" element={isLoggedIn ? <Profile /> : <LogIn />} />
-							<Route 
-								path="/play" 
+							<Route
+								path="/play"
 								element={
 									<GameProvider>
 										<OAuth42CallbackHandler/>
 										<Play />
 									</GameProvider>
-								} 
+								}
 							/>
 
 							{/* 🔒 Protected Routes */}
@@ -127,7 +127,7 @@ export default App;
 //      try {
 //        // Make the GET request to the Django API
 //        const response = await axios.get(`${baseUrl}/users/players/1/`);
-//        
+//
 //        // Set the fetched profile data in the state
 //        setProfile(response.data);
 //      } catch (err) {

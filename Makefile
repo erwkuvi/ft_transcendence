@@ -93,6 +93,7 @@ create_env:
 	touch .env
 	@cat ./.secrets >> .env
 	@echo "HOST_IP=$(HOSTNAME)" >> .env
+	@echo "HOST_IP=$(HOSTNAME)" 
 	@echo "FRONTEND_URL=https://$(HOSTNAME)" >> .env
 	@echo "REACT_APP_BACKEND_URL=https://$(HOSTNAME)" >> .env
 	@echo "REACT_APP_BACKEND_WS=https://$(HOSTNAME)" >> .env
@@ -105,6 +106,7 @@ create_env_dev:
 	touch .env
 	@cat ./.secrets.dev >> .env
 	@echo "HOST_IP=$(HOSTNAME)" >> .env
+	@echo "HOST_IP=$(HOSTNAME)" 
 	@echo "FRONTEND_URL=https://$(HOSTNAME)" >> .env
 	@echo "REACT_APP_BACKEND_URL=https://$(HOSTNAME)" >> .env
 	@echo "REACT_APP_BACKEND_WS=https://$(HOSTNAME)" >> .env

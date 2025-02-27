@@ -2,6 +2,15 @@
 from .common import *
 from datetime import timedelta
 
+import os
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
+HOST_IP = env('HOST_IP')
+FRONTEND_URL = env('FRONTEND_URL')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
