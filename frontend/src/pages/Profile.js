@@ -145,6 +145,7 @@ const Profile = () => {
 			return;
 		}
 
+		
 		try {
 			const updatedProfile = await updateUserProfile({ display_name: newDisplayName });
 
