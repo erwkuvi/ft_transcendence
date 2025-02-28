@@ -22,6 +22,11 @@ ALLOWED_HOSTS = [
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
+# django-sendfile is a package that abstracts the X-Accel-Redirect (for Nginx) and similar mechanisms for other web servers
+SENDFILE_BACKEND = 'sendfile.backends.nginx'
+SENDFILE_ROOT = '/media/'
+SENDFILE_URL = '/protected_media/'
+
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
@@ -41,11 +46,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',  # This is for development
-        # 'rest_framework.permissions.IsAuthenticated',  # by default
+         'rest_framework.permissions.IsAuthenticated',  # by default
     ),
-    'DEFAULT_RENDERER_CLASSES': (
-            'rest_framework.renderers.JSONRenderer',
-    ),
+    #'DEFAULT_RENDERER_CLASSES': (
+    #        'rest_framework.renderers.JSONRenderer',
+    #),
 }
 
 

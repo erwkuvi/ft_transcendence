@@ -1,4 +1,5 @@
 # serializers.py
+from django.urls import reverse
 import re
 import math
 import random
@@ -155,6 +156,7 @@ class UserSerializer(BaseUserSerializer):
         }
 
 # Serializer for Player
+
 class PlayerProfileSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     username = serializers.CharField(read_only=True)
@@ -165,6 +167,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     matches_id = serializers.PrimaryKeyRelatedField(many=True, queryset=Match.objects.all(), required=False, source='matches')
     email = serializers.SerializerMethodField()
     avatar = serializers.ImageField(required=False)  # Make avatar writable and optional
+    #avatar_url = serializers.SerializerMethodField()
     display_name = serializers.CharField(required=False)
     otp_active = serializers.SerializerMethodField()
     auth_provider= serializers.SerializerMethodField()
@@ -191,7 +194,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
                 instance.matches.add(match)
 
         return super().update(instance, validated_data)
-        
+
+
     def get_otp_active(self, obj):
         return obj.user.otp_active
 
@@ -206,6 +210,12 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_username(self, obj):
         return obj.user.username
 
+   # def get_avatar_url(self, obj):
+   #     request = self.context.get('request')
+   #     if request and obj.avatar:
+   #         protected_url = reverse('protected_media', kwargs={'file_path': obj.avatar.name})
+   #         return request.build_absolute_uri(protected_url)
+   #     return None
     def get_avatar(self, obj):
         request = self.context.get('request')
         if request and obj.avatar:

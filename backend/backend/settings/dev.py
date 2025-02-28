@@ -14,6 +14,9 @@ FRONTEND_URL = env('FRONTEND_URL')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SENDFILE_BACKEND = 'sendfile.backends.nginx'
+SENDFILE_ROOT = '/media/'
+SENDFILE_URL = '/protected_media/'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ('django-insecure-x1a#yw-&_gh&jvp06gn)m2x-d@_z06ghuygo$^!f5s8g+)_mql')
@@ -38,7 +41,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',  # This is for development
-        # 'rest_framework.permissions.IsAuthenticated',  # by default
     ),
     'DEFAULT_RENDERER_CLASSES': (
             'rest_framework.renderers.JSONRenderer',
