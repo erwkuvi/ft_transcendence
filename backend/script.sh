@@ -13,7 +13,7 @@ python3 manage.py makemigrations users
 python3 manage.py makemigrations
 python3 manage.py migrate --noinput --run-syncdb
 
-python3 manage.py create_users
+#python3 manage.py create_users
 
 python3 manage.py collectstatic --noinput
 
