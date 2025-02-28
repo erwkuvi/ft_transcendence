@@ -237,5 +237,6 @@
 	"This password is too short. It must contain at least 8 characters." : "Esta contraseña es demasiado corta. Debe contener al menos 8 caracteres.",
 	"This password is too common." : "Esta contraseña es demasiado común.",
 	"This password is entirely numeric." : "Esta contraseña es completamente numérica.",
-	"Email must be in the format: example@domain.com" : "El correo electrónico debe tener el formato: example@domain.com"
+	"Email must be in the format: example@domain.com" : "El correo electrónico debe tener el formato: example@domain.com",
+	"Display name must be not more than 15 characters long." : "El nombre visible no debe tener más de 15 caracteres."
 }

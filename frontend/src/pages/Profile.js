@@ -145,6 +145,12 @@ const Profile = () => {
 			return;
 		}
 
+		if (newDisplayName.length > 15) {
+			// console.log("Display name is too short");
+			alert(t('Display name must be not more than 15 characters long.'));
+			return;
+		}
+
 		try {
 			const updatedProfile = await updateUserProfile({ display_name: newDisplayName });
 

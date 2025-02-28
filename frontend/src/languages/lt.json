@@ -237,5 +237,6 @@
 	"This password is too short. It must contain at least 8 characters." : "Šis slaptažodis yra per trumpas. Jis turi būti bent 8 simbolių ilgio.",
 	"This password is too common." : "Šis slaptažodis yra per dažnas.",
 	"This password is entirely numeric." : "Šis slaptažodis yra vien tik skaičiai.",
-	"Email must be in the format: example@domain.com" : "El. pašto adresas turi būti tokio formato: example@domain.com"
+	"Email must be in the format: example@domain.com" : "El. pašto adresas turi būti tokio formato: example@domain.com",
+	"Display name must be not more than 15 characters long." : "Rodymo vardas turi būti ne ilgesnis nei 15 simbolių."
 }

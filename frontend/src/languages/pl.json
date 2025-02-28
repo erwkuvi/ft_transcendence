@@ -237,5 +237,6 @@
 	"This password is too short. It must contain at least 8 characters." : "To hasło jest za krótkie. Musi zawierać co najmniej 8 znaków.",
 	"This password is too common." : "To hasło jest zbyt popularne.",
 	"This password is entirely numeric." : "To hasło składa się wyłącznie z cyfr.",
-	"Email must be in the format: example@domain.com" : "Adres e-mail musi mieć format: example@domain.com"
+	"Email must be in the format: example@domain.com" : "Adres e-mail musi mieć format: example@domain.com",
+	"Display name must be not more than 15 characters long." : "Pseudonim nie może mieć więcej niż 15 znaków."
 }
