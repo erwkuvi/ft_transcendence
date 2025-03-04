@@ -1,7 +1,6 @@
 from django.urls import include, path
 #from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
-from .views import protected_media  # adjust the import as needed
 from . import views
 
 router = routers.DefaultRouter()
@@ -24,6 +23,5 @@ urlpatterns = [
         path('', include(router.urls)),
         #path('login/', views.OAuth42LoginView.as_view(), name='42-login'),
         path('logout/', views.LogoutView.as_view(), name='logout'),
-        #path('protected_media/<path:file_path>/', protected_media, name='protected_media'),
     ]
 

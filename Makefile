@@ -102,6 +102,7 @@ create_env:
 	@if [ -f .env ]; then rm .env; echo "✅ Old .env removed."; fi
 	touch .env
 	@cat ./.secrets >> .env
+	@echo  >> .env
 	@echo "HOST_IP=$(HOSTNAME)" >> .env
 	@echo "HOST_IP=$(HOSTNAME)" 
 	@echo "FRONTEND_URL=https://$(HOSTNAME)" >> .env

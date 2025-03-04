@@ -1,5 +1,4 @@
 import requests
-from django.urls import reverse
 import pyotp
 import secrets
 import string
@@ -19,7 +18,6 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin#CreateModelMixin
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from sendfile import sendfile
 from .models import User, PlayerProfile, Match, Tournament
 from django.http import HttpResponseRedirect
 from django.conf import settings  # Ensure this import is correct
@@ -29,16 +27,6 @@ import os
 #from .permissions import IsAdminOrReadOnly
 #from django.http import JsonResponse
 
-@login_required
-def protected_media(request, file_path):
-    media_root = '/media/'
-    full_path = os.path.join(media_root, file_path)
-    
-    if not os.path.exists(full_path):
-        raise Http404
-
-    # django-sendfile will handle the X-Accel-Redirect header for you
-    return sendfile(request, full_path)
 
 class ExitMultiplayerViewSet(viewsets.ViewSet):
     serializer_class = ExitMultiplayerSerializer
