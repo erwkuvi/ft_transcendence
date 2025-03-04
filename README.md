@@ -1,6 +1,6 @@
 ![Minipong banner](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/minipong_banner.png)
 
-FT_TRANSCENDENCE
+# ft_transcendence
 
 Designed and developed a full-stack web application, integrating modern web technologies and working across both front-end and back-end systems.
 
