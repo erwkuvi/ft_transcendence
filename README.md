@@ -1,6 +1,4 @@
-![42Wolfsburg](https://42wolfsburg.de/wp-content/uploads/2023/07/Warstwa_1-1.svg)
-
-![MiniPong](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/Screenshot%20from%202025-03-04%2015-56-09.png)
+![Minipong banner](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/minipong_banner.png)
 
 FT_TRANSCENDENCE
 
@@ -15,3 +13,4 @@ Database: PostgreSQL
 Reverse Proxy: Nginx
 Containerization: Docker (Docker Compose)
 
+![42Wolfsburg](https://42wolfsburg.de/wp-content/uploads/2023/07/Warstwa_1-1.svg)
