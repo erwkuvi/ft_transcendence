@@ -6,8 +6,6 @@ A full-stack web application, integrating modern web technologies and working ac
 
 This project is part of the core curriculum at 42 Schools and aims to familiarize students with common technologies used in full-stack development.
 
-This project was a team effort, I would like to thank my team members for their valuable contributions.  for creating the 3D Pong game and [Karolina Kwasny](https://github.com/karolinakwasny) for setting up Django and PostgreSQL and working on the frontend. They did an amazing work and without them the project wouldn't have been possible.
-
 This project was a team effort, and I would like to thank my team members for their valuable contributions. A special thanks to [Lukas Kavaliauskis](https://github.com/LukasKava) for creating the 3D Pong game, and to [Karolina Kwasny](https://github.com/karolinakwasny) for setting up Django and PostgreSQL, as well as working on the frontend. They did an amazing job, and without their contributions, this project wouldn't have been possible.
 
 ---
