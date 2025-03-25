@@ -115,3 +115,6 @@ This project was a team effort, and we are proud of the results.
 
 ![42Wolfsburg](https://42wolfsburg.de/wp-content/uploads/2023/07/Warstwa_1-1.svg)
 
+### Project online
+If you want to take a look how this project works: [ft_transcendence](https://react-sab2.onrender.com/)
+
