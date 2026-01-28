@@ -1,4 +1,5 @@
 SSL=./nginx/certs
+# HOSTNAME = 46.225.55.41
 HOSTNAME = localhost
 
 createDir = mkdir -p $1
