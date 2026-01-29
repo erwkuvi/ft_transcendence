@@ -16,7 +16,8 @@ prod: cert create_env cp_env
 	@chmod +x backend/script.sh
 	@echo "✅ Script permissions set."
 	@echo "🚀 Bringing up production containers..."
-	docker-compose up --build
+	docker compose up --build
+	# docker-compose up --build
 
 
 front:
@@ -53,7 +54,7 @@ cert:
 		echo "🟢 Certificates already exist."; \
 	else \
 		echo "🔧 Generating new SSL certificates..."; \
-		docker run --rm --hostname $(HOSTNAME) -v $(SSL):/certs -it alpine sh -c 'apk add --no-cache nss-tools curl && curl -JLO "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64" && mv mkcert-v1.4.4-linux-amd64 /usr/local/bin/mkcert && chmod +x /usr/local/bin/mkcert && mkcert -install && mkcert -key-file /certs/privkey.key -cert-file /certs/fullchain.crt $(HOSTNAME)'; \
+		docker run --rm --hostname $(HOSTNAME) -v $(SSL):/certs -i alpine sh -c 'apk add --no-cache nss-tools curl && curl -JLO "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64" && mv mkcert-v1.4.4-linux-amd64 /usr/local/bin/mkcert && chmod +x /usr/local/bin/mkcert && mkcert -install && mkcert -key-file /certs/privkey.key -cert-file /certs/fullchain.crt $(HOSTNAME)'; \
 		echo "✅ SSL certificates generated successfully."; \
 	fi
 
