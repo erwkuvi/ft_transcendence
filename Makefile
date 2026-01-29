@@ -49,14 +49,33 @@ proxy:
 
 cert:
 	@echo "🔍 Checking SSL certificates..."
+	mkdir -p $(SSL)
+	@if [ -f $(SSL)/privkey.key ] && [ -f $(SSL)/fullchain.crt ]; then \
+		echo "🟢 Certificates already exist."; \
+	else \
+		echo "🔧 Generating new SSL certificates..."; \
+		mkcert -key-file $(SSL)/privkey.key -cert-file $(SSL)/fullchain.crt $(HOSTNAME); \
+		echo "✅ SSL certificates generated successfully."; \
+	fi
+	@chmod 644 $(SSL)/fullchain.crt $(SSL)/privkey.key
+
+# cert:
+	@echo "🔍 Checking SSL certificates..."
 	$(call createDir,$(SSL))
 	@if [ -f $(SSL)/privkey.key ] && [ -f $(SSL)/fullchain.crt ]; then \
 		echo "🟢 Certificates already exist."; \
 	else \
 		echo "🔧 Generating new SSL certificates..."; \
-		docker run --rm --hostname $(HOSTNAME) -v $(SSL):/certs -i alpine sh -c 'apk add --no-cache nss-tools curl && curl -JLO "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64" && mv mkcert-v1.4.4-linux-amd64 /usr/local/bin/mkcert && chmod +x /usr/local/bin/mkcert && mkcert -install && mkcert -key-file /certs/privkey.key -cert-file /certs/fullchain.crt $(HOSTNAME)'; \
+		docker run --rm --hostname $(HOSTNAME) -v $(SSL):/certs alpine sh -c ' \
+		apk add --no-cache nss-tools curl && \
+		curl -L https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 -o /usr/local/bin/mkcert && \
+		chmod +x /usr/local/bin/mkcert && \
+		/usr/local/bin/mkcert -install && \
+		/usr/local/bin/mkcert -key-file /certs/privkey.key -cert-file /certs/fullchain.crt $(HOSTNAME)'; \
 		echo "✅ SSL certificates generated successfully."; \
 	fi
+	@# Only try to chmod if the files actually exist to avoid "No such file" errors
+	@if [ -f $(SSL)/fullchain.crt ]; then chmod 644 $(SSL)/fullchain.crt $(SSL)/privkey.key; fi
 
 cp_env:
 	@echo "🔄 Copying environment files..."
