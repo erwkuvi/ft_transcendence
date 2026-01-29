@@ -3,10 +3,12 @@ name: Remote build and deploy
 on:
   push:
     branches: ["main"]
-    paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
-      - '.gitignore'
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'nginx/**'
+      - 'docker-compose.yml'
+      - 'Makefile'
 
 jobs:
   build-and-push:
