@@ -3,7 +3,7 @@
 # ft-transcendence
 
 ### Live Demo
-You can visit the live project [here](https://46.225.55.41) (Note: Uses self-signed certificates via mkcert; proceed via Advanced if prompted.)
+You can visit the live project [here](https://46.225.55.41) 🚀 (Note: Uses self-signed certificates via mkcert; proceed via Advanced if prompted.)
 
 ## Overview
 A full-stack web applicationfeaturing a real-time 3D multiplayer Pong game. This project focuses on high-security standards, real-time data synchronization, and a seamless user experience. Developed as part of the core curriculum at 42 Wolfsburg.
@@ -112,6 +112,37 @@ The Makefile will handle the `.env` creation, volume setup, and container orches
 - Ensures a consistent user experience on desktops, laptops, tablets, and smartphones.
 
 ![Responsiveness](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/responsiveness.gif)
+
+---
+
+### Troubleshooting & FAQ
+
+1. SSL/Privacy Warning in Browser
+Since this project uses `mkcert` to generate locally-trusted certificates for development and demonstration, your browser may show a "Your connection is not private" warning.
+
+**Solution**: Click on Advanced -> Proceed to [IP/localhost]. In a production environment with a registered domain, this would be replaced by a CA-signed certificate from Let's Encrypt.
+
+2. Port Conflicts
+If you cannot start the containers because a port is already in use (e.g., 80, 443, or 5432):
+
+**Solution**: Identify the process using the port with sudo lsof -i :PORT and stop it, or change the port mapping in docker-compose.yml.
+
+3. "Exec format error" (Architecture Mismatch)
+If you are trying to run this on an x86 machine but the Makefile is configured for Arm64 (or vice versa):
+
+**Solution**: Ensure your mkcert binary and Docker base images match your host architecture. The project is currently optimized for Arm64 (Apple Silicon / Hetzner Ampere).
+
+4. Database Connection Issues
+If the backend fails to connect to PostgreSQL on the first boot:
+
+**Solution**: The database might still be initializing. Run make down and then make up again. The Docker Compose health checks are designed to mitigate this, but external network latency can occasionally interfere.
+
+5. Cleaning the Environment
+If you want to completely reset the project, including database volumes and images:
+
+**Command**: `make prune`
+
+**Warning**: This will delete all user data and uploaded avatars.
 
 ---
 
