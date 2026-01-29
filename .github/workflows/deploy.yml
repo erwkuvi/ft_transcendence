@@ -24,4 +24,4 @@ jobs:
 
             echo "${{ secrets.PROD_SECRETS }}" > .secrets
             chmod 600 .secrets
-            make prod
+            HOST_IP=${{ secrets.SSH_HOST }} make prod
