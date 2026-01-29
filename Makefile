@@ -1,5 +1,5 @@
 SSL=./nginx/certs
-HOSTNAME = $(shell grep HOST_IP .secrets | cut -d '=' -f2)
+HOSTNAME = $(if $(HOST_IP),$(HOST_IP),localhost)
 # HOSTNAME = localhost
 
 createDir = mkdir -p $1
