@@ -8,38 +8,38 @@ up: create_env_dev cp_env
 	@chmod +x backend/script.sh
 	@echo "✅ Script permissions set."
 	@echo "🚀 Bringing up development containers..."
-	docker-compose -f docker-compose.dev.yml up --build
+	docker compose -f docker-compose.dev.yml up --build
 
 prod: cert create_env cp_env
 	@echo "🔄 Starting production environment..."
 	@chmod +x backend/script.sh
 	@echo "✅ Script permissions set."
 	@echo "🚀 Bringing up production containers..."
-	docker-compose up --build
+	docker compose up --build
 	# docker-compose up --build
 
 
 front:
 	@echo "🚀 Starting frontend..."
-	docker-compose -f frontend/docker-compose.yml up --build
+	docker compose -f frontend/docker-compose.yml up --build
 
 back:
 	@echo "🚀 Starting backend..."
-	docker-compose -f backend/docker-compose.backend.yml up --build
+	docker compose -f backend/docker-compose.backend.yml up --build
 
 down:
 	@echo "🛑 Stopping all containers..."
-	docker-compose down --remove-orphans
+	docker compose down --remove-orphans
 
 re: down prune
 	@echo "♻️  Rebuilding and restarting all containers..."
-	docker-compose build --no-cache
-	docker-compose up
+	docker compose build --no-cache
+	docker compose up
 
 prune: env_prune avatar_prune
 	@echo "🧹 Cleaning up containers, images, and volumes..."
 	@./backend/clean_migrations.sh
-	docker-compose down --rmi all --volumes --remove-orphans
+	docker compose down --rmi all --volumes --remove-orphans
 
 proxy:
 
