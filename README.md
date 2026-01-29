@@ -1,6 +1,6 @@
 ![Minipong banner](https://github.com/erwkuvi/ft_transcendence/blob/main/minipong_banner.png)
 
-# ft_transcendence
+# ft-transcendence
 
 A full-stack web application, integrating modern web technologies and working across both front-end and back-end systems.
 
