@@ -2,106 +2,105 @@
 
 # ft-transcendence
 
+### Live Demo
+You can visit the live project [here](https://46.225.55.41) (Note: Uses self-signed certificates via mkcert; proceed via Advanced if prompted.)
 
-A full-stack web application, integrating modern web technologies and working across both front-end and back-end systems.
+## Overview
+A full-stack web applicationfeaturing a real-time 3D multiplayer Pong game. This project focuses on high-security standards, real-time data synchronization, and a seamless user experience. Developed as part of the core curriculum at 42 Wolfsburg.
 
-This project is part of the core curriculum at 42 Schools and aims to familiarize students with common technologies used in full-stack development.
-
-This project was a team effort, and I would like to thank my team members for their valuable contributions. A special thanks to [Lukas Kavaliauskis](https://github.com/LukasKava) for creating the 3D Pong game, and to [Karolina Kwasny](https://github.com/karolinakwasny) for setting up Django and PostgreSQL, as well as working on the frontend. They did an amazing job, and without their contributions, this project wouldn't have been possible.
+This project was a collaborative effort. MAssive thanks to: 
+- [Lukas Kavaliauskis](https://github.com/LukasKava): 3D Pong gameplay (Three.js).
+- [Karolina Kwasny](https://github.com/karolinakwasny) Deployment environment with Docker / Docker Compose, the 'Friend' service on backend and most of the Frontend UI.
 
 ---
 
 ## Technologies Used
 
-| System           | Technologies                   |
+| Layer           | Technology                   |
 |-----------------|--------------------------------|
 | **Backend**     | Django (REST Framework) - Python |
-| **Frontend**    | React - JavaScript             |
+| **Frontend**    | React - JavaScript            |
 | **Database**    | PostgreSQL                     |
 | **Reverse Proxy** | Nginx                        |
-| **Containerization** | Docker & Docker Compose |
+| **Containers** | Docker & Docker Compose |
+| **Cloud Hosting** | Hetzner Cloud (Germany) |
+| **Architecture** | Dockerized Monolith |
 
-This project was a team effort, and we are proud of the results.
-
----
-
-## My Role in This Project
-
-- Implemented user management and authentication systems.
-- Integrated remote authentication using the 42 API.
-- Developed Two-Factor Authentication (2FA) and JWT, including frontend integration.
-- Configured the reverse proxy for secure connections using self-signed TLS certificates.
 
 ---
 
-## Features
+## DevOps & Automation (My Core Contribution)
 
-### Standard User Management
-
-![Signup](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/signup-login.gif)
-
-- Users can securely register and log in.
-- Each user can select a unique display name for tournaments.
-- Users can update their profile and upload an avatar (default option available).
-- Users can add friends and view their online status.
-- Each profile displays match history, wins, and losses.
-
-![Update information](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/update-feat.gif)
+Beyond features, I was responsible for the System Architecture and CI/CD Pipeline.
+- **Automated Deployment**: Configured **GitHub Actions** to automate the deployment process. Every push to `main` triggers an SSH-based workflow that builds and updates the project on the server.
+- **Infrastructure a Code**: Managed the server environment on Hetzner Cloud (Arm64/Ampere), optimizing for price and performance in the EU region.
+- **Secure Secrets Management**: Implemented a secure pipeline where production secrets are stored in GitHub Encrypted Secrets and injected into the server at runtime, ensuring no sensitive data is committed to the repository.
+- **Automated SSL**: Created a Makefile orchestration system that handles SSL certificate generation via `mkcert` and configures the Nginx environment automatically.
 
 ---
 
-### Remote Authentication
+![2FA Authentication](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/otp-feat.gif)
 
-- Implemented secure remote authentication via the 42 API.
-- Ensured all credentials and permissions were properly handled.
-- Designed a user-friendly login and authorization flow.
+## Security Features (My Core Contribution)
+
+- **Authentication**: Integrated 42API OAuth 2.0 for secure remote login (for users with 42 Schools account).
+- **Two-Factor Authentication (2FA)**: Implement TOTP (Time-based One-Time Password) compatible with Google Authenticator.
+- **JWT Security**: Used JSON Web Tokens for stateless, secure session management.
+- **TLS/SSL**: Configured Nginx to force HTTPS and handle encrypted traffic.
 
 ![Remote Authentication](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/remote-auth.gif)
 
 ---
 
-### Two-Factor Authentication & JWT
+## Local Development
 
-- 2FA was implemented to enhance security alongside JWT tokens.
-- Users are required to provide a secondary verification method (e.g., OTP code).
-- Easy setup process using authenticator apps like Google/Microsoft Authenticator.
+To run this project locally, you only need Docker.
 
-![2FA Authentication](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/otp-feat.gif)
+1. Clone the repository:
+```
+# Bash
+git clone git@github.com:erwkuvi/ft_transcendence.git
+cd ft_transcendence
+```
+2. Setup environment: Create a `.secrets.dev` file based on the provided templates.
+3. Launch:
+```
+# Bash
+make up
+```
+The Makefile will handle the `.env` creation, volume setup, and container orchestration.
 
 ---
 
-### Advanced 3D Techniques
+## Key Features
 
-- The pong game was built using Three.js to achieve a 3D visual effect.
+### User Management & Social
+
+![Signup](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/signup-login.gif)
+
+- **Profile Customization**: Upload avatars and change display names for tournaments.
+- **Social Graph**: Add friends and track their real-time online/offline status.
+- **Stats Dashboard**: Comprehensive match history with win/loss ratios.
+
+![Update information](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/update-feat.gif)
+
+---
+
+### Advanced 3D Gameplay
+
+- Built with **Three.js** for an immersive 3D Pong experience.
+- Multiple map selections and customizable game settings.
 
 ![3D Feature](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/3d-techniques.gif)
 
 ---
 
-### Game Customization Options
-
-- Users can select different maps for Pong.
-- A default option is available if no selection is made.
-
----
-
-### Multi-Language Support
-
-- The web application supports four languages to accommodate a broad audience.
-- Users can switch languages easily through a built-in language selector.
-- Users can save their preferred language for future visits.
-
 ![Multiple language support](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/language.gif)
 
----
+### Accessibility & Internatinalization
 
-### Accessibility for Visually Impaired Users
-
-- Screen reader support and assistive technology integration (ARIA labels).
-- Clear, descriptive alt text for images.
-- High-contrast color scheme for improved readability.
-- Keyboard navigation and proper focus management.
-- Adjustable text size options.
+- **Multi-language**: Support for 4 languages with persistent user preferences.
+- **Inclusivity**: Fully accessible via keyboard navigation. ARIA labels, and high-contrast modes for visually impaired users.
 
 ![Accessibility](https://github.com/erwkuvi/ft_transcendence/blob/main/assets/accessibility.gif)
 
@@ -118,6 +117,5 @@ This project was a team effort, and we are proud of the results.
 
 ![42Wolfsburg](https://42wolfsburg.de/wp-content/uploads/2023/07/Warstwa_1-1.svg)
 
-### Project online
-If you want to take a look to this project, click on the following link: [ft_transcendence](https://react-sab2.onrender.com/)
+
 
