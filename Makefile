@@ -11,8 +11,6 @@ up: create_env_dev cp_env
 	docker compose -f docker-compose.dev.yml up --build
 
 prod: cert create_env cp_env
-	if [ "$(HOSTNAME)" = "localhost" ]; then
-		@echo "HOSTNAME == localhost";
 	@echo "🔄 Starting production environment..."
 	@chmod +x backend/script.sh
 	@echo "✅ Script permissions set."
