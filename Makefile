@@ -4,7 +4,7 @@ HOSTNAME = $(if $(HOST_IP),$(HOST_IP),localhost)
 createDir = mkdir -p $1
 
 up: create_env_dev cp_env
-	@echo "🔄 Starting development environment..."
+	@echo "🔄 Starting development environment...."
 	@chmod +x backend/script.sh
 	@echo "✅ Script permissions set."
 	@echo "🚀 Bringing up development containers..."
