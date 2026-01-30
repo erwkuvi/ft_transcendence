@@ -32,7 +32,7 @@ down:
 	docker compose down --remove-orphans
 
 re: down prune
-	@echo "♻️  Rebuilding and restarting all containers..."
+	@echo "Rebuilding and restarting all containers..."
 	docker compose build --no-cache
 	docker compose up
 
