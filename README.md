@@ -3,7 +3,7 @@
 # ft-transcendence
 
 ### Live Demo
-You can visit the live project [here](https://46.225.55.41) 🚀 (Note: Uses self-signed certificates via mkcert; proceed via Advanced if prompted.)
+You can visit the live project <a href="https://46.225.55.41" target="_blank">here</a> 🚀 (Note: Uses self-signed certificates via mkcert; proceed via Advanced if prompted.)
 
 ## Overview
 A full-stack web application featuring a real-time 3D multiplayer Pong game. This project focuses on high-security standards, real-time data synchronization, and a seamless user experience. Developed as part of the core curriculum at 42 Wolfsburg.
